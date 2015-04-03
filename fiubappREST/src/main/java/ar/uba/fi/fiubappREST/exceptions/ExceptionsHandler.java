@@ -34,6 +34,25 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
+	@ExceptionHandler(CareerNotFoundException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(CareerNotFoundException exception){
+		return buildResponse(exception);
+	}
+	
+	@ExceptionHandler(CareerAlreadyExistsException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(CareerAlreadyExistsException exception){
+		return buildResponse(exception);
+	}
+	
+	@ExceptionHandler(OrientationAlreadyExistsException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(OrientationAlreadyExistsException exception){
+		return buildResponse(exception);
+	}
+	
+	
 	@ExceptionHandler(UserNotFoundException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
 	public @ResponseBody ErrorResponse handle(UserNotFoundException exception){

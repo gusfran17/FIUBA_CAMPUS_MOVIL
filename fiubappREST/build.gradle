@@ -4,9 +4,9 @@ apply plugin: 'eclipse-wtp'
 
 version = '1.0'
 
-// Uses JDK 6
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+// Uses JDK 7
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
 
 // Get dependencies from Maven local repository
@@ -26,6 +26,8 @@ dependencies {
 	compile 'mysql:mysql-connector-java:5.1.27'
 	compile 'javax.validation:validation-api:1.1.0.Final'
 	compile 'org.hibernate:hibernate-validator:5.0.1.Final'
+	compile 'commons-collections:commons-collections:3.2.1'
+	compile 'org.mockito:mockito-all:1.9.5'
 	
 	//include in compile only, exclude in the war
 	providedCompile 'javax.servlet:servlet-api:2.5'
