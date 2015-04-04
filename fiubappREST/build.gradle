@@ -28,7 +28,10 @@ dependencies {
 	compile 'org.hibernate:hibernate-validator:5.0.1.Final'
 	compile 'commons-collections:commons-collections:3.2.1'
 	compile 'org.mockito:mockito-all:1.9.5'
+	compile 'junit:junit:4.10'
 	
 	//include in compile only, exclude in the war
 	providedCompile 'javax.servlet:servlet-api:2.5'
+	
+	testCompile 'junit:junit:4.10'
 }
