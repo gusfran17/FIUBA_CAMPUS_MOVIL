@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity">
+
+     <TextView
+        android:id="@+id/textViewNumeroPadron"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="50dp"
+        android:text="@string/numeroPadron"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/editTextPadron"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textViewNumeroPadron"
+        android:layout_marginLeft="32dp"
+        android:layout_toRightOf="@+id/textViewNumeroPadron"
+        android:ems="10" >
+    </EditText>
+
+    <TextView
+        android:id="@+id/textViewClave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textViewNumeroPadron"
+        android:layout_below="@+id/textViewNumeroPadron"
+        android:layout_marginTop="38dp"
+        android:text="@string/clave"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/editTextClave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textViewClave"
+        android:layout_marginLeft="32dp"
+        android:layout_toRightOf="@+id/textViewClave"
+        android:ems="10"
+        android:inputType="textPassword" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/soyIntercambio"
+        android:id="@+id/checkBoxIntercambio"
+        android:layout_below="@+id/textViewClave"
+        android:onClick="soyDeIntercambio"
+        android:layout_alignParentLeft="true" />
+
+    <Button
+        android:id="@+id/buttonLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/checkBoxIntercambio"
+        android:layout_marginLeft="40dp"
+        android:onClick="login"
+        android:text="@string/login" />
+
+    <Button
+        android:id="@+id/buttonSoyNuevo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/buttonLogin"
+        android:layout_below="@+id/checkBoxIntercambio"
+        android:layout_centerHorizontal="true"
+
+        android:onClick="login"
+        android:text="@string/soyNuevo" />
+
+
+</RelativeLayout>
