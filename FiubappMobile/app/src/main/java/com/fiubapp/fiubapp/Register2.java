@@ -104,7 +104,7 @@ public class Register2 extends Activity{
                     if (emailValidator.validate(email)) {
 
                         JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.POST,
-                                "http://localhost:8080/fiubappREST/api/students",
+                                "http://10.0.2.2:8080/fiubappREST/api/students",
                                 new Response.Listener<JSONObject>() {
                                     @Override
                                     public void onResponse(JSONObject response) {}
@@ -133,14 +133,17 @@ public class Register2 extends Activity{
                             }
 
                             @Override
-                            public String getBodyContentType()
-                            {
+                            public String getBodyContentType(){
                                 return "application/json; charset=utf-8";
                             }
                         };
 
                         //llamada al POST
                         //VolleyController.getInstance().addToRequestQueue(jsonReq);
+                        Toast.makeText(Register2.this, "La cuenta ha sido creada, " +
+                                "se le enviará un email de confirmación", Toast.LENGTH_LONG).show();
+                        Intent i = new Intent(getBaseContext(), MainActivity.class);
+                        startActivity(i);
 
                     //aviso de mail no valido
                     }else{
@@ -153,45 +156,6 @@ public class Register2 extends Activity{
             }
         });
 
-    }
-
-    private void loadSpinnerCareers(){
-
-        Spinner spinner_carrera = (Spinner)findViewById(R.id.reg_carrera);
-        final ArrayList<String> careers = new ArrayList<String>();
-        final ArrayAdapter adapter = new ArrayAdapter(Register2.this,R.layout.simple_spinner_item,careers);
-        spinner_carrera.setAdapter(adapter);
-
-        // Creating volley request obj
-        JsonArrayRequest careerReq = new JsonArrayRequest("http://localhost:8080/fiubappREST/api/careers",
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.d(TAG, response.toString());
-
-                        // Parsing json
-                        for (int i = 0; i < response.length(); i++) {
-                            try {
-
-                                JSONObject obj = response.getJSONObject(i);
-                                careers.add(obj.getString("name"));
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    adapter.notifyDataSetChanged();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-
-        // Adding request to request queue
-        VolleyController.getInstance().addToRequestQueue(careerReq);
     }
 
 }
