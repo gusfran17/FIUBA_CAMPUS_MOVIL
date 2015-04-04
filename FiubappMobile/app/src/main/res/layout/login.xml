@@ -1,85 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:fillViewport="true">
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" android:background="#fff">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity">
 
-        <LinearLayout android:id="@+id/header"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="5dip"
-            android:paddingBottom="5dip"
-            android:background="#ff2ec7e8">
+     <TextView
+        android:id="@+id/textViewNumeroPadron"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="50dp"
+        android:text="@string/numeroPadron"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <ImageView android:src="@drawable/tab_grupos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip"/>
+    <EditText
+        android:id="@+id/editTextPadron"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textViewNumeroPadron"
+        android:layout_marginLeft="32dp"
+        android:layout_toRightOf="@+id/textViewNumeroPadron"
+        android:ems="10" >
+    </EditText>
 
-            <TextView android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:textColor="#372c24"
-                android:text="FIUBAPP"
-                android:gravity="center_vertical|left|right" />
-            <!-- Logo Ends -->
-        </LinearLayout>
-        <!--  Header Ends -->
-        <!-- Registration Form -->
-        <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dip"
-            android:layout_below="@id/header"
-            android:id="@+id/linearLayout">
+    <TextView
+        android:id="@+id/textViewClave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textViewNumeroPadron"
+        android:layout_below="@+id/textViewNumeroPadron"
+        android:layout_marginTop="38dp"
+        android:text="@string/clave"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <EditText android:id="@+id/reg_padron"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
-                android:singleLine="true"
-                android:hint="@string/numeroPadron"
-                android:layout_marginBottom="5dip"/>
+    <EditText
+        android:id="@+id/editTextClave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textViewClave"
+        android:layout_marginLeft="32dp"
+        android:layout_toRightOf="@+id/textViewClave"
+        android:ems="10"
+        android:inputType="textPassword" />
 
-            <!-- Password Label -->
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/soyIntercambio"
-                android:layout_marginBottom="20dip"
-                android:id="@+id/checkBox_intercambio" />
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/soyIntercambio"
+        android:id="@+id/checkBoxIntercambio"
+        android:layout_below="@+id/textViewClave"
+        android:onClick="soyDeIntercambio"
+        android:layout_alignParentLeft="true" />
 
-            <EditText android:id="@+id/reg_password"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="@string/clave"
-                android:layout_marginTop="5dip"
-                android:singleLine="true"
-                android:layout_marginBottom="20dip"/>
+    <Button
+        android:id="@+id/buttonLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/checkBoxIntercambio"
+        android:layout_marginLeft="40dp"
+        android:onClick="login"
+        android:text="@string/login" />
 
-            <Button android:id="@+id/btnLogin"
-                android:layout_width="fill_parent"
-                android:layout_height="40dip"
-                android:layout_marginTop="10dip"
-                android:background="#ff2ec7e8"
-                android:text="@string/login"/>
+    <Button
+        android:id="@+id/buttonSoyNuevo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/buttonLogin"
+        android:layout_below="@+id/checkBoxIntercambio"
+        android:layout_centerHorizontal="true"
 
-            <Button android:id="@+id/btnSoyNuevo"
-                android:layout_width="fill_parent"
-                android:layout_height="40dip"
-                android:layout_marginTop="10dip"
-                android:background="#ff2ec7e8"
-                android:text="@string/soyNuevo"/>
+        android:onClick="login"
+        android:text="@string/soyNuevo" />
 
 
-        </LinearLayout>
-
-        <!-- Registration Form Ends -->
-    </RelativeLayout>
-</ScrollView>
+</RelativeLayout>
