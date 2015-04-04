@@ -3,38 +3,32 @@ package ar.uba.fi.fiubappREST.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import ar.uba.fi.fiubappREST.domain.User;
-import ar.uba.fi.fiubappREST.services.UserService;
+import ar.uba.fi.fiubappREST.domain.Student;
+import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
+import ar.uba.fi.fiubappREST.services.StudentService;
 
 @Controller
-@RequestMapping("users")
-public class UserController {	
+@RequestMapping("students")
+public class StudentController {	
 	
-	private UserService userService;
+	private StudentService studentService;
 	
 	@Autowired
-	public UserController(UserService userService) {
+	public StudentController(StudentService studentService) {
 		super();
-		this.userService = userService;
+		this.studentService = studentService;
 	}
 		
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public @ResponseBody User addUser(@RequestBody User user) {
-		return userService.save(user);
-	}
-	
-	@RequestMapping(value="{id}",method = RequestMethod.GET)
-	@ResponseStatus(value = HttpStatus.OK)
-	public @ResponseBody User getUser(@PathVariable Integer id) {
-		return userService.findOne(id);
+	public @ResponseBody Student addStudent(@RequestBody StudentCreationRepresentation studentRepresentation) {
+		return studentService.create(studentRepresentation);
 	}
 }
 
