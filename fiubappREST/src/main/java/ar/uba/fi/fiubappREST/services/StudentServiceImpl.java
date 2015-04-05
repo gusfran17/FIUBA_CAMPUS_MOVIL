@@ -40,11 +40,10 @@ public class StudentServiceImpl implements StudentService {
 		LOGGER.info(String.format("Creating student with userName %s and careerCode.", student.getUserName(), studentRepresentation.getCareerCode()));
 		this.verifyUnusedUserName(student.getUserName());
 		Career career = this.getCareer(studentRepresentation.getCareerCode());
-		StudentCareer studentCareer = createStudentCareer(student, career);
-		student.getCareers().add(studentCareer);
+		this.createStudentCareer(student, career);
 		student = studentRepository.save(student); 
 		LOGGER.info(String.format("Student with userName %s and careerCode %s was created.", student.getUserName(), studentRepresentation.getCareerCode()));
-		return studentRepository.save(student);
+		return student;
 	}
 	
 	private Student getStudent(StudentCreationRepresentation studentRepresentation){
@@ -77,7 +76,7 @@ public class StudentServiceImpl implements StudentService {
 	private StudentCareer createStudentCareer(Student student, Career career) {
 		StudentCareer studentCareer = new StudentCareer();
 		studentCareer.setCareer(career);
-		studentCareer.setStudent(student);
+		student.addCareer(studentCareer);
 		return studentCareer;
 	}
 

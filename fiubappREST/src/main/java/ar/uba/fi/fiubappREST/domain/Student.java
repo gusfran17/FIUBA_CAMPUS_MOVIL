@@ -9,7 +9,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.codehaus.jackson.annotate.JsonIgnore;
+
+import ar.uba.fi.fiubappREST.exceptions.CareerAlreadyExistsForStudent;
 
 @Entity
 @Table(name = "Student")
@@ -146,5 +150,22 @@ public class Student {
 
 	public void setCareers(List<StudentCareer> careers) {
 		this.careers = careers;
-	}	
+	}
+	
+	public void addCareer(final StudentCareer career) {
+		if(this.existsCareer(career.getCareer())){
+			throw new CareerAlreadyExistsForStudent(this.userName, career.getCareer().getCode());
+		}
+		career.setStudent(this);
+		this.careers.add(career);
+	}
+	
+	private boolean existsCareer(final Career career){
+		StudentCareer foundCareer = (StudentCareer) CollectionUtils.find(this.careers, new Predicate() {
+            public boolean evaluate(Object object) {
+                return ((StudentCareer) object).getCareer().getCode().equals(career.getCode());
+            }
+		});
+		return foundCareer!=null;
+	}
 }

@@ -58,6 +58,12 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
+	@ExceptionHandler(CareerAlreadyExistsForStudent.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(CareerAlreadyExistsForStudent exception){
+		return buildResponse(exception);
+	}
+	
 	
 	
 	
