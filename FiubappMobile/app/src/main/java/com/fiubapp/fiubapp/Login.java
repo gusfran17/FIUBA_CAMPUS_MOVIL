@@ -4,6 +4,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -22,6 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Login extends Activity {
+
+    public static final String PREFS_NAME = "MyPrefsFile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,9 +102,14 @@ public class Login extends Activity {
                         try {
                             String token = response.getString("token");
 
+                            // Guardar el token para que las otras activities tengan acceso
+                            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.putString("token", token);
+                            editor.commit();
+
                             Intent i = new Intent(getBaseContext(), Principal.class);
                             i.putExtra("username", usuario);
-                            i.putExtra("token", token);
                             startActivity(i);
 
                         } catch (JSONException e) {
