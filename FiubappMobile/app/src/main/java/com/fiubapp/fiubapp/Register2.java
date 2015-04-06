@@ -11,13 +11,20 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
 import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -95,7 +102,7 @@ public class Register2 extends Activity{
                 final String nombre = edit_nombre.getText().toString();
                 final String apellido = edit_apellido.getText().toString();
                 final String email = edit_email.getText().toString();
-                final int carrera = (int)spinner_carrera.getSelectedItemId();
+                final int carrera = (int)spinner_carrera.getSelectedItemId() + 1;
 
                 //si ninguno de los campos estan vacios
                 if (!nombre.equals("") && !apellido.equals("") && !email.equals("")){
@@ -103,11 +110,37 @@ public class Register2 extends Activity{
                     emailValidator = new EmailValidator();
                     if (emailValidator.validate(email)) {
 
-                        JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.POST,
+                        Map<String, String> params = new HashMap<String, String>();
+
+                        if (intercambio) {
+                            //se cargan los datos para generar el request POST
+                            params.put("fileNumber", null);
+                            params.put("passportNumber", username);
+                            params.put("password", password);
+                            params.put("name", nombre);
+                            params.put("lastName", apellido);
+                            params.put("email", email);
+                            params.put("isExchangeStudent", Boolean.toString(intercambio));
+                            params.put("careerCode", Integer.toString(carrera));
+                        }else{
+                            params.put("fileNumber", username);
+                            params.put("passportNumber", null);
+                            params.put("password", password);
+                            params.put("name", nombre);
+                            params.put("lastName", apellido);
+                            params.put("email", email);
+                            params.put("isExchangeStudent", Boolean.toString(intercambio));
+                            params.put("careerCode", Integer.toString(carrera));
+                        }
+
+                        JsonObjectRequest jsonReq = new JsonObjectRequest(
                                 "http://10.0.2.2:8080/fiubappREST/api/students",
+                                new JSONObject(params),
                                 new Response.Listener<JSONObject>() {
                                     @Override
-                                    public void onResponse(JSONObject response) {}
+                                    public void onResponse(JSONObject response) {
+                                        VolleyLog.d(TAG, "Error: " + response.toString());
+                                    }
                                 },
                                 new Response.ErrorListener(){
                                     @Override
@@ -115,33 +148,12 @@ public class Register2 extends Activity{
                                         VolleyLog.d(TAG, "Error: " + error.getMessage());
                                     }
                                 }
-                        ){
-                            @Override
-                            protected Map<String, String> getParams() {
-                                Map<String, String> params = new HashMap<String, String>();
-
-                                //se cargan los datos para generar el request POST
-                                params.put("userName", username);
-                                params.put("password", password);
-                                params.put("name",nombre);
-                                params.put("lastName", apellido);
-                                params.put("email", email);
-                                params.put("isExchange",Boolean.toString(intercambio));
-                                params.put("carrera", Integer.toString(carrera));
-
-                                return params;
-                            }
-
-                            @Override
-                            public String getBodyContentType(){
-                                return "application/json; charset=utf-8";
-                            }
-                        };
+                        );
 
                         //llamada al POST
-                        //VolleyController.getInstance().addToRequestQueue(jsonReq);
-                        Toast.makeText(Register2.this, "La cuenta ha sido creada, " +
-                                "se le enviará un email de confirmación", Toast.LENGTH_LONG).show();
+                        VolleyController.getInstance().addToRequestQueue(jsonReq);
+                        //Toast.makeText(Register2.this, "La cuenta ha sido creada, " +
+                        //       "se le enviará un email de confirmación", Toast.LENGTH_LONG).show();
                         Intent i = new Intent(getBaseContext(), MainActivity.class);
                         startActivity(i);
 
