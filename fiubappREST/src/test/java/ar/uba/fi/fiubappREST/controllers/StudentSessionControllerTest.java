@@ -14,6 +14,8 @@ import ar.uba.fi.fiubappREST.services.StudentSessionService;
 
 public class StudentSessionControllerTest {
 	
+	private static final String A_TOKEN = "A_TOKEN";
+	
 	@Mock
 	private StudentSessionService service;
 	@Mock
@@ -40,6 +42,15 @@ public class StudentSessionControllerTest {
 		StudentSession createdSession = this.controller.createSession(credentials);
 		
 		assertNotNull(createdSession);
+	}
+	
+	@Test
+	public void testFindSession() {
+		when(this.service.find(A_TOKEN)).thenReturn(session);
+		
+		StudentSession foundSession = this.controller.findSession(A_TOKEN);
+		
+		assertNotNull(foundSession);
 	}
 
 }

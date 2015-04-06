@@ -14,11 +14,13 @@ import ar.uba.fi.fiubappREST.domain.Credentials;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentSession;
 import ar.uba.fi.fiubappREST.exceptions.InvalidCredentialsException;
+import ar.uba.fi.fiubappREST.exceptions.StudentSessionNotFoundException;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentSessionRepository;
 
 public class StudentSessionServiceImplTest {
 	
+	private static final String A_TOKEN = "A_TOKEN";
 	private static final String AN_USER_NAME = "AN_USER_NAME";
 	private static final String A_RAW_PASSWORD = "A_RAW_PASSWORD";
 	private static final String AN_ENCRYPTED_PASSWORD = "AN_ENCRYPTED_PASSWORD";
@@ -82,6 +84,22 @@ public class StudentSessionServiceImplTest {
 		when(passwordEncoder.isPasswordValid(AN_ENCRYPTED_PASSWORD, A_RAW_PASSWORD, null)).thenReturn(false);
 	
 		this.service.create(credentials);
+	}
+	
+	@Test
+	public void testFindOK() {
+		when(studentSessionRepository.findByToken(A_TOKEN)).thenReturn(session);
+	
+		StudentSession foundSesion = this.service.find(A_TOKEN);
+				
+		assertNotNull(foundSesion);
+	}
+	
+	@Test(expected=StudentSessionNotFoundException.class)
+	public void testFindInvalidToken() {
+		when(studentSessionRepository.findByToken(A_TOKEN)).thenReturn(null);
+	
+		this.service.find(A_TOKEN);
 	}
 
 }

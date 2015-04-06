@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,5 +30,11 @@ public class StudentSessionController {
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public @ResponseBody StudentSession createSession(@RequestBody Credentials credentials) {
 		return studentSessionService.create(credentials);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	public @ResponseBody StudentSession findSession(@RequestHeader(value="Authorization") String token) {
+		return studentSessionService.find(token);
 	}
 }

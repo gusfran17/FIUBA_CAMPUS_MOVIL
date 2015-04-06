@@ -13,6 +13,7 @@ import ar.uba.fi.fiubappREST.domain.Credentials;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentSession;
 import ar.uba.fi.fiubappREST.exceptions.InvalidCredentialsException;
+import ar.uba.fi.fiubappREST.exceptions.StudentSessionNotFoundException;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentSessionRepository;
 
@@ -69,6 +70,18 @@ public class StudentSessionServiceImpl implements StudentSessionService{
 		}
 		LOGGER.info(String.format("Student with userName %s was found.", userName));
 		return student;
+	}
+
+	@Override
+	public StudentSession find(String token) {
+		LOGGER.info(String.format("Finding session for token %s.", token));
+		StudentSession session = this.studentSessionRepository.findByToken(token);
+		if(session == null){
+			LOGGER.info(String.format("Session for token %s was not found.", token));
+			throw new StudentSessionNotFoundException(token);
+		}
+		LOGGER.info(String.format("Session for token %s was found.", token));
+		return session;
 	}
 
 }

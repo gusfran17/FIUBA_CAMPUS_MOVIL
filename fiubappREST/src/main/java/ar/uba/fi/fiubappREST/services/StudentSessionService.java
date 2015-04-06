@@ -6,5 +6,7 @@ import ar.uba.fi.fiubappREST.domain.StudentSession;
 public interface StudentSessionService {
 	
 	public StudentSession create(Credentials credentials);
+	
+	public StudentSession find(String token);
 
 }
