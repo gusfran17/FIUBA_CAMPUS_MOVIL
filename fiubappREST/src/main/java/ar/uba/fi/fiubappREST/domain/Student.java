@@ -16,7 +16,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import ar.uba.fi.fiubappREST.exceptions.CareerAlreadyExistsForStudent;
 
 @Entity
-@Table(name = "Student")
+@Table(name = "student")
 public class Student {
 
 	@Id

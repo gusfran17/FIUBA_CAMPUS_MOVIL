@@ -17,7 +17,7 @@ import ar.uba.fi.fiubappREST.exceptions.OrientationAlreadyExistsException;
 
 
 @Entity
-@Table(name = "Career")
+@Table(name = "career")
 public class Career {
 	
 	@Id
