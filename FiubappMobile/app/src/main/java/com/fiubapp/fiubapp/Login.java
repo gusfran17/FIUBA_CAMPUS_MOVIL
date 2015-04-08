@@ -97,8 +97,7 @@ public class Login extends Activity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        // TODO: Descomentar cuando este la activity Principal y el REST
-                        /*
+
                         try {
                             String token = response.getString("token");
 
@@ -108,14 +107,14 @@ public class Login extends Activity {
                             editor.putString("token", token);
                             editor.commit();
 
-                            Intent i = new Intent(getBaseContext(), Principal.class);
+                            // TODO: Llamar a la activity del ver la pantalla principal luego del merge
+                            Intent i = new Intent(getBaseContext(), Register1.class);
                             i.putExtra("username", usuario);
                             startActivity(i);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        */
                     }
                 },
                 new Response.ErrorListener() {

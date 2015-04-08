@@ -142,7 +142,7 @@ public class Register2 extends Activity{
                         //VolleyController.getInstance().addToRequestQueue(jsonReq);
                         Toast.makeText(Register2.this, "La cuenta ha sido creada, " +
                                 "se le enviará un email de confirmación", Toast.LENGTH_LONG).show();
-                        Intent i = new Intent(getBaseContext(), MainActivity.class);
+                        Intent i = new Intent(getBaseContext(), Login.class);
                         startActivity(i);
 
                     //aviso de mail no valido
