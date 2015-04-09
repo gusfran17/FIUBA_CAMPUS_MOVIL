@@ -25,10 +25,9 @@
                 android:textColor="#372c24"
                 android:text="FIUBAPP"
                 android:gravity="center_vertical|left|right" />
-            <!-- Logo Ends -->
+
         </LinearLayout>
-        <!--  Header Ends -->
-        <!-- Registration Form -->
+
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical"
@@ -38,6 +37,10 @@
             android:layout_below="@id/header"
             android:id="@+id/linearLayout">
 
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="E-Mail"/>
             <EditText android:id="@+id/reg_email"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -47,6 +50,10 @@
                 android:hint="E-Mail"
                 android:layout_marginBottom="20dip"/>
 
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="Nombre"/>
             <EditText android:id="@+id/reg_nombre"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -56,6 +63,10 @@
                 android:singleLine="true"
                 android:layout_marginBottom="20dip"/>
 
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="Apellido"/>
             <EditText android:id="@+id/reg_apellido"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

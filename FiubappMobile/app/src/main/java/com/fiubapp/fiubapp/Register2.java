@@ -22,6 +22,7 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -30,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -91,9 +93,10 @@ public class Register2 extends Activity{
             }
         });
 
-        // Adding request to request queue
+        //se agrega el request para obtener las carreras
         VolleyController.getInstance().addToRequestQueue(careerReq);
 
+        //cuando se clickea en el boton de Registrarse
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -106,12 +109,14 @@ public class Register2 extends Activity{
 
                 //si ninguno de los campos estan vacios
                 if (!nombre.equals("") && !apellido.equals("") && !email.equals("")){
+
                     //si el mail es valido llamo al REST
                     emailValidator = new EmailValidator();
                     if (emailValidator.validate(email)) {
 
                         Map<String, String> params = new HashMap<String, String>();
 
+                        //cargo los key,values en 'params', para formar el JSON
                         if (intercambio) {
                             //se cargan los datos para generar el request POST
                             params.put("fileNumber", null);
@@ -140,22 +145,45 @@ public class Register2 extends Activity{
                                     @Override
                                     public void onResponse(JSONObject response) {
                                         VolleyLog.d(TAG, "Error: " + response.toString());
+
+                                        Toast.makeText(Register2.this, "La cuenta ha sido creada, " +
+                                                "se le enviará un email de confirmación", Toast.LENGTH_LONG).show();
+
+                                        //se redirige al login
+                                        Intent i = new Intent(getBaseContext(), MainActivity.class);
+                                        startActivity(i);
                                     }
                                 },
                                 new Response.ErrorListener(){
                                     @Override
                                     public void onErrorResponse(VolleyError error) {
                                         VolleyLog.d(TAG, "Error: " + error.getMessage());
+                                        try {
+                                            //parseo la respuesta del server para obtener JSON
+                                            String body = new String(error.networkResponse.data, HttpHeaderParser.parseCharset(error.networkResponse.headers));
+                                            JSONObject JSONBody = new JSONObject(body);
+
+                                            //obtiene el mensaje de respuesta del server
+                                            String mensaje = JSONBody.getString("message");
+
+                                            //muestra el mensaje
+                                            Toast.makeText(Register2.this, mensaje, Toast.LENGTH_LONG).show();
+
+                                            //redirige a la pantalla inicial de registro
+                                            Intent i = new Intent(getBaseContext(), Register1.class);
+                                            startActivity(i);
+
+                                        } catch (UnsupportedEncodingException e) {
+                                            e.printStackTrace();
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 }
                         );
 
                         //llamada al POST
                         VolleyController.getInstance().addToRequestQueue(jsonReq);
-                        //Toast.makeText(Register2.this, "La cuenta ha sido creada, " +
-                        //       "se le enviará un email de confirmación", Toast.LENGTH_LONG).show();
-                        Intent i = new Intent(getBaseContext(), MainActivity.class);
-                        startActivity(i);
 
                     //aviso de mail no valido
                     }else{

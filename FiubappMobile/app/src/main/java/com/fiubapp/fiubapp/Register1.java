@@ -2,6 +2,7 @@ package com.fiubapp.fiubapp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,17 +19,24 @@ public class Register1 extends Activity{
         setContentView(R.layout.register1);
 
         final EditText edit_padron = (EditText)findViewById(R.id.reg_padron);
+        final TextView text_padron = (TextView)findViewById(R.id.text_padron);
+
         final Button button = (Button) findViewById(R.id.btnRegister);
         final EditText edit_pass = (EditText)findViewById(R.id.reg_password);
+        edit_pass.setTypeface(Typeface.SANS_SERIF);
         final EditText edit_pass_repeat = (EditText)findViewById(R.id.reg_repeatpassword);
+        edit_pass_repeat.setTypeface(Typeface.SANS_SERIF);
 
         final CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox_intercambio);
         checkBox.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (((CheckBox) v).isChecked())
+                if (((CheckBox) v).isChecked()) {
                     edit_padron.setHint("Pasaporte");
-                else
+                    text_padron.setText("Pasaporte");
+                }else {
                     edit_padron.setHint("Padron");
+                    text_padron.setText("Padrón");
+                }
             }
         });
 
