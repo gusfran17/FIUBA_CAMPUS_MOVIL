@@ -36,7 +36,7 @@ public class StudentSessionServiceImpl implements StudentSessionService{
 	@Override
 	public StudentSession create(Credentials credentials) {
 		LOGGER.info(String.format("Creating session for student with userName %s.", credentials.getUserName()));
-		Student student = this.getStudent(credentials.getUserName());
+		Student student = this.getStudent(credentials);
 		this.verifyPassword(student.getUserName(), student.getPassword(), credentials.getPassword());
 		StudentSession session = generateSession(student);
 		session = this.studentSessionRepository.save(session);
@@ -61,7 +61,8 @@ public class StudentSessionServiceImpl implements StudentSessionService{
 		LOGGER.info(String.format("Password for student with userName %s is valid.", userName));
 	}
 
-	private Student getStudent(String userName) {
+	private Student getStudent(Credentials credentials) {
+		String userName = (credentials.getIsExchangeStudent()) ? "I".concat(credentials.getUserName()) : credentials.getUserName();
 		LOGGER.info(String.format("Finding student with userName %s.", userName));
 		Student student = this.studentRepository.findOne(userName);
 		if(student == null){

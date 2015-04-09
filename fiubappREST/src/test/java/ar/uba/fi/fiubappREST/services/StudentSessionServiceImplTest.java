@@ -53,6 +53,7 @@ public class StudentSessionServiceImplTest {
 		this.credentials = new Credentials();
 		this.credentials.setUserName(AN_USER_NAME);
 		this.credentials.setPassword(A_RAW_PASSWORD);
+		this.credentials.setIsExchangeStudent(false);
 	}
 
 	@Test

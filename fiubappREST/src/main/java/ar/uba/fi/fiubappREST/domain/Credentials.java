@@ -5,6 +5,8 @@ public class Credentials {
 	private String userName;
 	
 	private String password;
+	
+	private Boolean isExchangeStudent;
 
 	public String getUserName() {
 		return userName;
@@ -20,6 +22,14 @@ public class Credentials {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Boolean getIsExchangeStudent() {
+		return isExchangeStudent;
+	}
+
+	public void setIsExchangeStudent(Boolean isExchangeStudent) {
+		this.isExchangeStudent = isExchangeStudent;
 	}
 	
 }
