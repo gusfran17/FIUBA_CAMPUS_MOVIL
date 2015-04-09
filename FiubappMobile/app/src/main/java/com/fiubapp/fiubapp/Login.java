@@ -79,6 +79,7 @@ public class Login extends Activity {
     public void login(final String usuario, String clave) {
 
         final EditText edit_padron = (EditText)findViewById(R.id.reg_padron);
+        final CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox_intercambio);
 
         RequestQueue queue = Volley.newRequestQueue(this);
 
@@ -89,6 +90,8 @@ public class Login extends Activity {
         try {
             jsonParams.put("userName", usuario);
             jsonParams.put("password", clave);
+            jsonParams.put("isExchangeStudent", checkBox.isChecked());
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
