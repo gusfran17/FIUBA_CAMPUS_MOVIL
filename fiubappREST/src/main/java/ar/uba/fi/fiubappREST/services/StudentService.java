@@ -11,5 +11,7 @@ public interface StudentService {
 	public Student create(StudentCreationRepresentation studentRepresentation);
 	
 	public List<StudentProfileRepresentation> findAll();
+	
+	public Student findOne(String userName);
 
 }

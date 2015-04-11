@@ -58,6 +58,13 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
+
+	@ExceptionHandler(StudentNotFoundException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(StudentNotFoundException exception){
+		return buildResponse(exception);
+	}
+	
 	@ExceptionHandler(CareerAlreadyExistsForStudent.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
 	public @ResponseBody ErrorResponse handle(CareerAlreadyExistsForStudent exception){
@@ -76,14 +83,6 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
-	
-	
-	
-	@ExceptionHandler(UserNotFoundException.class)
-	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
-	public @ResponseBody ErrorResponse handle(UserNotFoundException exception){
-		return buildResponse(exception);
-	}
 	
 	
 	@ExceptionHandler(InvalidUserException.class)

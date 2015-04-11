@@ -24,6 +24,7 @@ import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentCareer;
 import ar.uba.fi.fiubappREST.exceptions.CareerNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyExistsException;
+import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.persistance.CareerRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
@@ -121,8 +122,23 @@ public class StudentServiceTest {
 		
 		List<StudentProfileRepresentation> foundProfiles = this.service.findAll();
 		
-		assertEquals(2, foundProfiles.size());
+		assertEquals(2, foundProfiles.size());	
+	}
+	
+	@Test
+	public void testFindOneOk(){
+		when(studentRepository.findOne(AN_USER_NAME)).thenReturn(student);
 		
+		Student foundStudent = this.service.findOne(AN_USER_NAME);
+		
+		assertEquals(student, foundStudent);	
+	}
+	
+	@Test(expected=StudentNotFoundException.class)
+	public void testFindOneFail(){
+		when(studentRepository.findOne(AN_USER_NAME)).thenReturn(null);
+		
+		this.service.findOne(AN_USER_NAME);	
 	}
 
 }

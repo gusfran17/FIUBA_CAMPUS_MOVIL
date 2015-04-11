@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,9 +41,17 @@ public class StudentController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	public @ResponseBody List<StudentProfileRepresentation> getStudent(@RequestHeader(value="Authorization") String token) {
+	public @ResponseBody List<StudentProfileRepresentation> getStudents(@RequestHeader(value="Authorization") String token) {
 		this.studentSessionService.validate(token);
 		return studentService.findAll();
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="{userName}")
+	@ResponseStatus(value = HttpStatus.OK)
+	public @ResponseBody Student getStudent(@RequestHeader(value="Authorization") String token, @PathVariable String userName){
+		this.studentSessionService.validate(token);
+		//TODO luego validar que sean mis datos o de mis compañeros
+		return this.studentService.findOne(userName);
 	}
 }
 

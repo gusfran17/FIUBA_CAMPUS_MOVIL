@@ -44,6 +44,8 @@ public class Student {
 	private String currentCity;
 	
 	private String nationality;
+	
+	private String comments;
 
 	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
 	private List<StudentCareer> careers;
@@ -143,6 +145,14 @@ public class Student {
 
 	public void setNationality(String nationality) {
 		this.nationality = nationality;
+	}
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 
 	public List<StudentCareer> getCareers() {

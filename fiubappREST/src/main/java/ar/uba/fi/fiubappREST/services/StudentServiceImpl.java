@@ -16,6 +16,7 @@ import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentCareer;
 import ar.uba.fi.fiubappREST.exceptions.CareerNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyExistsException;
+import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.persistance.CareerRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
@@ -98,6 +99,18 @@ public class StudentServiceImpl implements StudentService {
 		}
 		LOGGER.info(String.format("All students were found."));
 		return profiles;
+	}
+
+	@Override
+	public Student findOne(String userName) {
+		LOGGER.info(String.format("Finding student with userName %s.", userName));
+		Student student = this.studentRepository.findOne(userName);
+		if(student==null){
+			LOGGER.error(String.format("Student with userName %s was not found.", userName));
+			throw new StudentNotFoundException(userName); 
+		}
+		LOGGER.info(String.format("Student with userName %s was found.", userName));
+		return student;
 	}
 
 	
