@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -57,6 +58,12 @@ public class FragmentTab2 extends Fragment {
 
         listView = (ListView)view.findViewById(R.id.list);
         adapter = new CustomListAdapter(getActivity(), alumnoList);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
         listView.setAdapter(adapter);
 
         // Creating volley request obj
@@ -116,11 +123,7 @@ public class FragmentTab2 extends Fragment {
                 }
             };
 
-        /*int socketTimeout = 90000;//30 seconds - change to what you want
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        alumnoReq.setRetryPolicy(policy);*/
-
-        // Adding request to request queue
+       // Adding request to request queue
         VolleyController.getInstance().addToRequestQueue(alumnoReq);
         return view;
     }
