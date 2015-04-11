@@ -109,12 +109,11 @@ public class Register2 extends Activity{
 
                 //si ninguno de los campos estan vacios
                 if (!nombre.equals("") && !apellido.equals("") && !email.equals("")){
-
                     //si el mail es valido llamo al REST
                     emailValidator = new EmailValidator();
                     if (emailValidator.validate(email)) {
 
-                        Map<String, String> params = new HashMap<String, String>();
+  Map<String, String> params = new HashMap<String, String>();
 
                         //cargo los key,values en 'params', para formar el JSON
                         if (intercambio) {

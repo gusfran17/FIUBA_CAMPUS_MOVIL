@@ -16,7 +16,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import ar.uba.fi.fiubappREST.utils.StudentCareerSerializer;
 
 @Entity
-@Table(uniqueConstraints=@UniqueConstraint(columnNames={"code", "userName"}))
+@Table(name = "student_career", uniqueConstraints=@UniqueConstraint(columnNames={"code", "userName"}))
 @JsonSerialize(using = StudentCareerSerializer.class)
 public class StudentCareer {
 	
