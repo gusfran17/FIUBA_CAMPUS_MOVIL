@@ -8,14 +8,16 @@ import com.viewpagerindicator.IconPagerAdapter;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter{
 
-    final int PAGE_COUNT = 3;
+    final int PAGE_COUNT = 5;
 
-    private static final String[] CONTENT = new String[] { "Muro", "Compañeros", "Grupos" };
+    private static final String[] CONTENT = new String[] { "Muro", "Compañeros", "Grupos", "Notificacion", "Perfil" };
 
     private static final int[] ICONS = new int[] {
-            R.drawable.tab_muro_res,
-            R.drawable.tab_companeros_res,
-            R.drawable.tab_muro_res,
+            R.drawable.tab_muro_icon,
+            R.drawable.tab_companeros_icon,
+            R.drawable.tab_grupos_icon,
+            R.drawable.tab_notificacion_icon,
+            R.drawable.tab_perfil_icon
     };
 
     public ViewPagerAdapter(FragmentManager fm) {
@@ -26,20 +28,25 @@ public class ViewPagerAdapter extends FragmentPagerAdapter implements IconPagerA
     public Fragment getItem(int position) {
         switch (position) {
 
-            // Open FragmentTab1.java
             case 0:
                 FragmentTab1 fragmenttab1 = new FragmentTab1();
                 return fragmenttab1;
 
-            // Open FragmentTab2.java
             case 1:
                 FragmentTab2 fragmenttab2 = new FragmentTab2();
                 return fragmenttab2;
 
-            // Open FragmentTab3.java
             case 2:
                 FragmentTab3 fragmenttab3 = new FragmentTab3();
                 return fragmenttab3;
+
+            case 3:
+                FragmentTab3 fragmenttab4 = new FragmentTab3();
+                return fragmenttab4;
+
+            case 4:
+                FragmentTab3 fragmenttab5 = new FragmentTab3();
+                return fragmenttab5;
         }
         return null;
     }
