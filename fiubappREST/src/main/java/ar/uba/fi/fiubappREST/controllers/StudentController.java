@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
+import ar.uba.fi.fiubappREST.representations.StudentUpdateRepresentation;
 import ar.uba.fi.fiubappREST.services.StudentService;
 import ar.uba.fi.fiubappREST.services.StudentSessionService;
 
@@ -52,6 +53,13 @@ public class StudentController {
 		this.studentSessionService.validate(token);
 		//TODO luego validar que sean mis datos o de mis compañeros
 		return this.studentService.findOne(userName);
+	}
+	
+	@RequestMapping(method = RequestMethod.PUT, value="{userName}")
+	@ResponseStatus(value = HttpStatus.OK)
+	public @ResponseBody Student updateStudent(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestBody StudentUpdateRepresentation studentRepresentation){
+		this.studentSessionService.validateMine(token, userName);
+		return this.studentService.update(userName, studentRepresentation);
 	}
 }
 

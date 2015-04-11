@@ -58,7 +58,6 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
-
 	@ExceptionHandler(StudentNotFoundException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
 	public @ResponseBody ErrorResponse handle(StudentNotFoundException exception){
@@ -82,6 +81,13 @@ public class ExceptionsHandler {
 	public @ResponseBody ErrorResponse handle(StudentSessionNotFoundException exception){
 		return buildResponse(exception);
 	}
+	
+	@ExceptionHandler(OperationNotAllowedFotStudentSessionException.class)
+	@ResponseStatus(value = HttpStatus.FORBIDDEN) 
+	public @ResponseBody ErrorResponse handle(OperationNotAllowedFotStudentSessionException exception){
+		return buildResponse(exception);
+	}
+	
 	
 	
 	

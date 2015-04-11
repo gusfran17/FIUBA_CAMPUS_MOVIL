@@ -20,9 +20,9 @@ public class CustomDateDeserializerTest {
 	private CustomDateDeserializer deserializer;
 	private JsonParser mockJsonParser;
 	
-	private static final String CORRECT_FOMAT_AND_VALUE = "2000-11-10";
-	private static final String INVALID_FORMAT = "13/10/2001";
-	private static final String INVALID_VALUE = "2001-13-10";
+	private static final String CORRECT_FOMAT_AND_VALUE = "13/10/2001";
+	private static final String INVALID_FORMAT = "2000-11-10";
+	private static final String INVALID_VALUE = "10/13/2001";
 	
 	@Before
 	public void setUp(){

@@ -13,6 +13,7 @@ import ar.uba.fi.fiubappREST.domain.Credentials;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentSession;
 import ar.uba.fi.fiubappREST.exceptions.InvalidCredentialsException;
+import ar.uba.fi.fiubappREST.exceptions.OperationNotAllowedFotStudentSessionException;
 import ar.uba.fi.fiubappREST.exceptions.StudentSessionNotFoundException;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentSessionRepository;
@@ -88,5 +89,16 @@ public class StudentSessionServiceImpl implements StudentSessionService{
 	@Override
 	public void validate(String token) {
 		this.find(token);		
+	}
+
+	@Override
+	public void validateMine(String token, String userName) {
+		StudentSession studentSession = this.find(token);
+		LOGGER.info(String.format("Validating token for userName %s.", userName));
+		if(!studentSession.getUserName().equals(userName)){
+			LOGGER.error(String.format("Token not valid for userName %s.", userName));
+			throw new OperationNotAllowedFotStudentSessionException(token);
+		}
+		LOGGER.info(String.format("Token valid for userName %s.", userName));
 	}
 }
