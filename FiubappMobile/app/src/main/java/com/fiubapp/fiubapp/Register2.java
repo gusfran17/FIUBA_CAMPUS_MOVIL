@@ -149,7 +149,7 @@ public class Register2 extends Activity{
                                                 "se le enviará un email de confirmación", Toast.LENGTH_LONG).show();
 
                                         //se redirige al login
-                                        Intent i = new Intent(getBaseContext(), MainActivity.class);
+                                        Intent i = new Intent(getBaseContext(), Login.class);
                                         startActivity(i);
                                     }
                                 },
