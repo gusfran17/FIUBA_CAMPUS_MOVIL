@@ -55,7 +55,7 @@ public class CustomListAdapter extends BaseAdapter {
                 .findViewById(R.id.thumbnail);*/
         //ImageView imagen = (ImageView) convertView.findViewById(R.id.thumbnail);
         TextView nombre = (TextView) convertView.findViewById(R.id.nombre);
-        TextView padron = (TextView) convertView.findViewById(R.id.padron);
+        TextView username = (TextView) convertView.findViewById(R.id.username);
         TextView carrera = (TextView) convertView.findViewById(R.id.carrera);
 
         Alumno a = alumnoItems.get(position);
@@ -63,9 +63,8 @@ public class CustomListAdapter extends BaseAdapter {
         // thumbnail image
         //thumbNail.setImageUrl(a.getFoto(), imageLoader);
 
-        nombre.setText(a.getNombre());
-
-        padron.setText(String.valueOf(a.getPadron()));
+        nombre.setText(a.getNombre() +" "+ a.getApellido());
+        username.setText(a.getUsername());
 
         // genre
         /*String carreraStr = "";

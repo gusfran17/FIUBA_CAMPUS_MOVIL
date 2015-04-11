@@ -12,7 +12,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -22,19 +25,29 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FragmentTab2 extends Fragment {
     ListView lv1;
     private TextView text;
-    private static final String TAG = Listado.class.getSimpleName();
+    private static final String TAG = FragmentTab2.class.getSimpleName();
 
-    // Movies json url
-    private static final String url = "http://jsonplaceholder.typicode.com/users/";
+    private String urlAPI="";
     private ProgressDialog pDialog;
     private List<Alumno> alumnoList = new ArrayList<Alumno>();
     private ListView listView;
     private CustomListAdapter adapter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if(isAdded()){
+            urlAPI = getResources().getString(R.string.urlAPI);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,49 +60,65 @@ public class FragmentTab2 extends Fragment {
         listView.setAdapter(adapter);
 
         // Creating volley request obj
-        JsonArrayRequest alumnoReq = new JsonArrayRequest(url,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.d(TAG, response.toString());
+        JsonArrayRequest alumnoReq = new JsonArrayRequest(urlAPI+"/students/",
+            new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    Log.d(TAG, response.toString());
 
-                        // Parsing json
-                        for (int i = 0; i < response.length(); i++) {
-                            try {
+                    // Parsing json
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
 
-                                JSONObject obj = response.getJSONObject(i);
-                                Alumno alumno = new Alumno();
-                                alumno.setNombre(obj.getString("name"));
-                                alumno.setPadron(Integer.parseInt(obj.getString("id")));
-                                //alumno.setYear(obj.getInt("releaseYear"));
+                            JSONObject obj = response.getJSONObject(i);
+                            Alumno alumno = new Alumno();
+                            alumno.setNombre(obj.getString("name"));
+                            alumno.setApellido(obj.getString("lastName"));
 
-                                // Genre is json array
-                                /*JSONArray genreArry = obj.getJSONArray("genre");
-                                ArrayList<String> genre = new ArrayList<String>();
-                                for (int j = 0; j < genreArry.length(); j++) {
-                                    genre.add((String) genreArry.get(j));
-                                }
-                                movie.setGenre(genre);*/
+                            alumno.setUsername(obj.getString("userName"));
 
-                                // adding movie to movies array
-                                alumnoList.add(alumno);
+                            //alumno.setYear(obj.getInt("releaseYear"));
 
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            // Genre is json array
+                            /*JSONArray genreArry = obj.getJSONArray("genre");
+                            ArrayList<String> genre = new ArrayList<String>();
+                            for (int j = 0; j < genreArry.length(); j++) {
+                                genre.add((String) genreArry.get(j));
                             }
+                            movie.setGenre(genre);*/
 
+                            // adding movie to movies array
+                            alumnoList.add(alumno);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
 
-                        // notifying list adapter about data changes
-                        // so that it renders the list view with updated data
-                        adapter.notifyDataSetChanged();
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
 
-            }
-        });
+                    // notifying list adapter about data changes
+                    // so that it renders the list view with updated data
+                    adapter.notifyDataSetChanged();
+                }
+            }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    }
+            }){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<String, String>();
+                    headers.put("Authorization", "asdasd");
+
+                    return headers;
+
+                }
+            };
+
+        /*int socketTimeout = 90000;//30 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        alumnoReq.setRetryPolicy(policy);*/
 
         // Adding request to request queue
         VolleyController.getInstance().addToRequestQueue(alumnoReq);

@@ -23,7 +23,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/padron"
+        android:id="@+id/username"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/nombre"
@@ -35,10 +35,10 @@
         android:id="@+id/carrera"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/padron"
+        android:layout_below="@id/username"
         android:layout_toRightOf="@+id/thumbnail"
         android:textColor="@color/genre"
-        android:text="prueba"
+        android:text="[Empleo actual]"
         android:textSize="@dimen/genre" />
 
     <Button
@@ -47,6 +47,6 @@
         android:layout_height="wrap_content"
         android:text="Agregar"
         android:layout_centerVertical="true"
-        android:layout_alignRight="@+id/padron" />
+        android:layout_alignRight="@+id/username" />
 
 </RelativeLayout>

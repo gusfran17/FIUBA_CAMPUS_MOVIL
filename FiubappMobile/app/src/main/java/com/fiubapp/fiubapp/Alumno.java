@@ -6,8 +6,44 @@ import java.util.ArrayList;
 
 public class Alumno {
 
-    private String nombre, apellido, foto, comentario, celular,
-            nacionalidad, ciudad, empleo_actual, secundaria, orientacion;
+    private String nombre;
+    private String apellido;
+    private String foto;
+    private String comentario;
+    private String celular;
+    private String nacionalidad;
+    private String ciudad;
+    private String empleo_actual;
+    private String secundaria;
+    private String orientacion;
+    private boolean intercambio;
+
+    public boolean isIntercambio() {
+        return intercambio;
+    }
+
+    public void setIntercambio(boolean intercambio) {
+        this.intercambio = intercambio;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPasaporte() {
+        return pasaporte;
+    }
+
+    public void setPasaporte(String pasaporte) {
+        this.pasaporte = pasaporte;
+    }
+
+    private String username;
+    private String pasaporte;
     private int padron;
     private ArrayList<Byte> carreras;
     private ArrayList<Integer> grupos, discusiones, compañeros;
