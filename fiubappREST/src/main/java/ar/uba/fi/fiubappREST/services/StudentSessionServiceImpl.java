@@ -85,4 +85,8 @@ public class StudentSessionServiceImpl implements StudentSessionService{
 		return session;
 	}
 
+	@Override
+	public void validate(String token) {
+		this.find(token);		
+	}
 }

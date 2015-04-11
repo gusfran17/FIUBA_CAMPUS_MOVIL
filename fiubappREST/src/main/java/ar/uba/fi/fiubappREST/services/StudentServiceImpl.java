@@ -1,5 +1,8 @@
 package ar.uba.fi.fiubappREST.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +10,7 @@ import org.springframework.security.providers.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import ar.uba.fi.fiubappREST.converters.StudentConverter;
+import ar.uba.fi.fiubappREST.converters.StudentProfileConverter;
 import ar.uba.fi.fiubappREST.domain.Career;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentCareer;
@@ -15,6 +19,7 @@ import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyExistsException;
 import ar.uba.fi.fiubappREST.persistance.CareerRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
+import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -25,13 +30,16 @@ public class StudentServiceImpl implements StudentService {
 	private CareerRepository careerRepository;
 	private StudentConverter studentConverter;
 	private Md5PasswordEncoder passwordEncoder;
+	private StudentProfileConverter studentProfileConverter;
 	
 	@Autowired
-	public StudentServiceImpl(StudentRepository studentRepository, CareerRepository careerRepository, StudentConverter studentConverter, Md5PasswordEncoder passwordEncoder){
+	public StudentServiceImpl(StudentRepository studentRepository, CareerRepository careerRepository, StudentConverter studentConverter, 
+			Md5PasswordEncoder passwordEncoder, StudentProfileConverter studentProfileConverter){
 		this.studentRepository = studentRepository;
 		this.careerRepository = careerRepository;
 		this.studentConverter = studentConverter;
 		this.passwordEncoder = passwordEncoder;
+		this.studentProfileConverter = studentProfileConverter;
 	}
 
 	@Override
@@ -78,6 +86,18 @@ public class StudentServiceImpl implements StudentService {
 		studentCareer.setCareer(career);
 		student.addCareer(studentCareer);
 		return studentCareer;
+	}
+
+	@Override
+	public List<StudentProfileRepresentation> findAll() {
+		LOGGER.info(String.format("Finding all students."));
+		List<Student> students = this.studentRepository.findAll();
+		List<StudentProfileRepresentation> profiles = new ArrayList<StudentProfileRepresentation>();
+		for (Student student : students) {
+			profiles.add(this.studentProfileConverter.convert(student));
+		}
+		LOGGER.info(String.format("All students were found."));
+		return profiles;
 	}
 
 	

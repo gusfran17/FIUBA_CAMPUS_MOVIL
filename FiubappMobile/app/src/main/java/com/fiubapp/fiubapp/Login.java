@@ -37,19 +37,14 @@ public class Login extends Activity {
         final Button btnLogin = (Button) findViewById(R.id.btnLogin);
         final Button btnSoyNuevo = (Button) findViewById(R.id.btnSoyNuevo);
         final EditText edit_pass = (EditText)findViewById(R.id.reg_password);
-        final TextView text_padron = (TextView)findViewById(R.id.text_padron);
         final CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox_intercambio);
 
         checkBox.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (((CheckBox) v).isChecked()) {
+                if (((CheckBox) v).isChecked())
                     edit_padron.setHint(R.string.pasaporte);
-                    text_padron.setText(R.string.pasaporte);
-                }
-                else {
+                else
                     edit_padron.setHint(R.string.numeroPadron);
-                    text_padron.setText(R.string.numeroPadron);
-                }
             }
         });
 
@@ -116,7 +111,6 @@ public class Login extends Activity {
                             editor.putString("token", token);
                             editor.commit();
 
-                            // TODO: Llamar a la activity del ver la pantalla principal luego del merge
                             Intent i = new Intent(getBaseContext(), Principal.class);
                             i.putExtra("username", usuario);
                             startActivity(i);

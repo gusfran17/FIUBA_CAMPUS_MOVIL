@@ -1,6 +1,7 @@
 package ar.uba.fi.fiubappREST.services;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -101,6 +102,22 @@ public class StudentSessionServiceImplTest {
 		when(studentSessionRepository.findByToken(A_TOKEN)).thenReturn(null);
 	
 		this.service.find(A_TOKEN);
+	}
+	
+	@Test
+	public void testValidateOK() {
+		when(studentSessionRepository.findByToken(A_TOKEN)).thenReturn(session);
+	
+		this.service.validate(A_TOKEN);
+				
+		assertTrue(true);
+	}
+	
+	@Test(expected=StudentSessionNotFoundException.class)
+	public void testValidateInvalidToken() {
+		when(studentSessionRepository.findByToken(A_TOKEN)).thenReturn(null);
+	
+		this.service.validate(A_TOKEN);
 	}
 
 }

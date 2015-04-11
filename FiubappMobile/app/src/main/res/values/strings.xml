@@ -6,16 +6,11 @@
     <string name="Fragment2">This is Fragment 2</string>
     <string name="Fragment3">This is Fragment 3</string>
     <string name="numeroPadron">Padrón</string>
-    <string name="clave">Contraseña</string>
+    <string name="clave">Clave</string>
     <string name="login">Login</string>
     <string name="soyIntercambio">Soy de intercambio</string>
     <string name="soyNuevo">Soy nuevo</string>
     <string name="pasaporte">Pasaporte</string>
-    <string-array name="carrera_arrays">
-        <item>Ingeniería Química</item>
-        <item>Ingenieria Industrial</item>
-        <item>Ingeniería en Informática</item>
-        <item>Lic. Analisis de Sistemas</item>
-    </string-array>
-    <string name="urlAPI">http://192.168.56.1:8080/fiubappREST/api</string>
+    <string name="urlAPI">http://192.168.0.7:8080/fiubappREST/api</string>
+    <string name="prefs_name">MyPrefsFile</string>
 </resources>
