@@ -5,15 +5,14 @@
     android:background="@drawable/list_row_selector"
     android:padding="8dp" >
 
-    <!-- Thumbnail Image -->
-    <com.android.volley.toolbox.NetworkImageView
+    <ImageView
         android:id="@+id/thumbnail"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:src="@drawable/no_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentLeft="true"
         android:layout_marginRight="8dp" />
 
-    <!-- Movie Title -->
     <TextView
         android:id="@+id/nombre"
         android:layout_width="wrap_content"
@@ -37,9 +36,17 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/padron"
-        android:layout_marginTop="5dp"
         android:layout_toRightOf="@+id/thumbnail"
         android:textColor="@color/genre"
+        android:text="prueba"
         android:textSize="@dimen/genre" />
+
+    <Button
+        android:id="@+id/childButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Agregar"
+        android:layout_centerVertical="true"
+        android:layout_alignRight="@+id/padron" />
 
 </RelativeLayout>

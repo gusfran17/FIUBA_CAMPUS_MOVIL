@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -48,10 +49,11 @@ public class CustomListAdapter extends BaseAdapter {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.list_row, null);
 
-        if (imageLoader == null)
+        /*if (imageLoader == null)
             imageLoader = VolleyController.getInstance().getImageLoader();
         NetworkImageView thumbNail = (NetworkImageView) convertView
-                .findViewById(R.id.thumbnail);
+                .findViewById(R.id.thumbnail);*/
+        //ImageView imagen = (ImageView) convertView.findViewById(R.id.thumbnail);
         TextView nombre = (TextView) convertView.findViewById(R.id.nombre);
         TextView padron = (TextView) convertView.findViewById(R.id.padron);
         TextView carrera = (TextView) convertView.findViewById(R.id.carrera);
@@ -59,7 +61,7 @@ public class CustomListAdapter extends BaseAdapter {
         Alumno a = alumnoItems.get(position);
 
         // thumbnail image
-        thumbNail.setImageUrl(a.getFoto(), imageLoader);
+        //thumbNail.setImageUrl(a.getFoto(), imageLoader);
 
         nombre.setText(a.getNombre());
 
