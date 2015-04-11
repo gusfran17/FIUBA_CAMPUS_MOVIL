@@ -90,11 +90,13 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public List<StudentProfileRepresentation> findAll() {
+		LOGGER.info(String.format("Finding all students."));
 		List<Student> students = this.studentRepository.findAll();
 		List<StudentProfileRepresentation> profiles = new ArrayList<StudentProfileRepresentation>();
 		for (Student student : students) {
 			profiles.add(this.studentProfileConverter.convert(student));
 		}
+		LOGGER.info(String.format("All students were found."));
 		return profiles;
 	}
 

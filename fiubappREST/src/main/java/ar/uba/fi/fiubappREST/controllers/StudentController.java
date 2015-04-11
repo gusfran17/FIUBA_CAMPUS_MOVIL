@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,17 +16,20 @@ import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 import ar.uba.fi.fiubappREST.services.StudentService;
+import ar.uba.fi.fiubappREST.services.StudentSessionService;
 
 @Controller
 @RequestMapping("students")
 public class StudentController {	
 	
 	private StudentService studentService;
+	private StudentSessionService studentSessionService;
 	
 	@Autowired
-	public StudentController(StudentService studentService) {
+	public StudentController(StudentService studentService, StudentSessionService studentSessionService) {
 		super();
 		this.studentService = studentService;
+		this.studentSessionService = studentSessionService;
 	}
 		
 	@RequestMapping(method = RequestMethod.POST)
@@ -36,7 +40,8 @@ public class StudentController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	public @ResponseBody List<StudentProfileRepresentation> getStudent() {
+	public @ResponseBody List<StudentProfileRepresentation> getStudent(@RequestHeader(value="Authorization") String token) {
+		this.studentSessionService.validate(token);
 		return studentService.findAll();
 	}
 }
