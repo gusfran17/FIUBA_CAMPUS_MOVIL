@@ -61,8 +61,10 @@ public class Register2 extends Activity{
         adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         spinner_carrera.setAdapter(adapter);
 
+        final String urlAPI = this.getString(R.string.urlAPI);
+
         // Creating volley request obj
-        JsonArrayRequest careerReq = new JsonArrayRequest("http://10.0.2.2:8080/fiubappREST/api/careers/",
+        JsonArrayRequest careerReq = new JsonArrayRequest(urlAPI+"/careers/",
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -138,7 +140,7 @@ public class Register2 extends Activity{
                         }
 
                         JsonObjectRequest jsonReq = new JsonObjectRequest(
-                                "http://10.0.2.2:8080/fiubappREST/api/students",
+                                urlAPI+"/students",
                                 new JSONObject(params),
                                 new Response.Listener<JSONObject>() {
                                     @Override
