@@ -12,15 +12,17 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
-public class CustomListAdapter extends BaseAdapter {
+public class AlumnoAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
     private List<Alumno> alumnoItems;
     ImageLoader imageLoader = VolleyController.getInstance().getImageLoader();
 
-    public CustomListAdapter(Activity activity, List<Alumno> alumnoItems) {
+    public AlumnoAdapter(Activity activity, List<Alumno> alumnoItems) {
         this.activity = activity;
         this.alumnoItems = alumnoItems;
     }
@@ -66,14 +68,9 @@ public class CustomListAdapter extends BaseAdapter {
         nombre.setText(a.getNombre() +" "+ a.getApellido());
         username.setText(a.getUsername());
 
-        // genre
-        /*String carreraStr = "";
-        for (byte str : a.getCarreras()) {
-            carreraStr += Byte.toString(str) + ", ";
-        }
-        carreraStr = carreraStr.length() > 0 ? carreraStr.substring(0,
-                carreraStr.length() - 2) : carreraStr;
-        carrera.setText(carreraStr);*/
+        if (!a.getCarreras().isEmpty())
+            carrera.setText(a.getCarreras().get(0));
+        else carrera.setText("");
 
         return convertView;
     }

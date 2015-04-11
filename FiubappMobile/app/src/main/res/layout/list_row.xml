@@ -38,7 +38,6 @@
         android:layout_below="@id/username"
         android:layout_toRightOf="@+id/thumbnail"
         android:textColor="@color/genre"
-        android:text="[Empleo actual]"
         android:textSize="@dimen/genre" />
 
     <Button
