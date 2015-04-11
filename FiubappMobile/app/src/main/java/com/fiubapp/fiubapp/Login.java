@@ -83,7 +83,7 @@ public class Login extends Activity {
 
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        String url = "http://192.168.56.1:8080/fiubappREST/api/sessions/students";
+        String url = getResources().getString(R.string.urlAPI)+"/sessions/students";
 
         JSONObject jsonParams = new JSONObject();
 
@@ -110,8 +110,7 @@ public class Login extends Activity {
                             editor.putString("token", token);
                             editor.commit();
 
-                            // TODO: Llamar a la activity del ver la pantalla principal luego del merge
-                            Intent i = new Intent(getBaseContext(), Register1.class);
+                            Intent i = new Intent(getBaseContext(), Principal.class);
                             i.putExtra("username", usuario);
                             startActivity(i);
 

@@ -1,5 +1,6 @@
 package com.fiubapp.fiubapp;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -116,7 +117,10 @@ public class FragmentTab2 extends Fragment {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> headers = new HashMap<String, String>();
-                    headers.put("Authorization", "asdasd");
+                    SharedPreferences settings = getActivity().getSharedPreferences(
+                            getResources().getString(R.string.prefs_name), 0);
+                    String token = settings.getString("token",null);
+                    headers.put("Authorization", token);
 
                     return headers;
 

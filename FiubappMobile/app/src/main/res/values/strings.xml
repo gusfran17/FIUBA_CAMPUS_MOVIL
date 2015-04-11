@@ -11,11 +11,6 @@
     <string name="soyIntercambio">Soy de intercambio</string>
     <string name="soyNuevo">Soy nuevo</string>
     <string name="pasaporte">Pasaporte</string>
-    <string-array name="carrera_arrays">
-        <item>Ingeniería Química</item>
-        <item>Ingenieria Industrial</item>
-        <item>Ingeniería en Informática</item>
-        <item>Lic. Analisis de Sistemas</item>
-    </string-array>
     <string name="urlAPI">http://192.168.0.7:8080/fiubappREST/api</string>
+    <string name="prefs_name">MyPrefsFile</string>
 </resources>
