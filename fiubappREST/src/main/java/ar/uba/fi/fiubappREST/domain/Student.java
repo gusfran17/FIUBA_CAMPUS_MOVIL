@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -44,7 +45,7 @@ public class Student {
 	
 	private String nationality;
 
-	@OneToMany(mappedBy="student", cascade={CascadeType.ALL})
+	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
 	private List<StudentCareer> careers;
 	
 	public String getUserName() {
