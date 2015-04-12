@@ -50,7 +50,7 @@ public class StudentServiceImpl implements StudentService {
 	public Student create(StudentCreationRepresentation studentRepresentation) {
 		Student student = this.getStudent(studentRepresentation);
 		LOGGER.info(String.format("Creating student with userName %s and careerCode.", student.getUserName(), studentRepresentation.getCareerCode()));
-		this.verifyUnusedUserName(student.getUserName());
+		this.verifyUnusedUserName(student);
 		Career career = this.getCareer(studentRepresentation.getCareerCode());
 		this.createStudentCareer(student, career);
 		student = studentRepository.save(student); 
@@ -64,14 +64,16 @@ public class StudentServiceImpl implements StudentService {
 		return this.studentConverter.convert(studentRepresentation);
 	}
 	
-	private void verifyUnusedUserName(String userName) {
-		LOGGER.info(String.format("Verifying wether student with userName %s already exists.", userName));
-		Student student = this.studentRepository.findOne(userName);
-		if(student != null){
-			LOGGER.error(String.format("Student with userName %s already exists.", userName));
-			throw new StudentAlreadyExistsException(userName); 
+	private void verifyUnusedUserName(Student student) {
+		LOGGER.info(String.format("Verifying wether student with userName %s already exists.", student.getUserName()));
+		Student foundStudent = this.studentRepository.findOne(student.getUserName());
+		if(foundStudent != null){
+			String identifierName = (student.getIsExchangeStudent()) ? "pasaporte" : "padrón";
+			String identifierValue = (student.getIsExchangeStudent()) ? foundStudent.getPassportNumber() : foundStudent.getFileNumber();
+			LOGGER.error(String.format("Student with userName %s already exists.", student.getUserName()));
+			throw new StudentAlreadyExistsException(identifierName, identifierValue); 
 		}		
-		LOGGER.info(String.format("Student with userName %s doesn't exist.", userName));
+		LOGGER.info(String.format("Student with userName %s doesn't exist.", student.getUserName()));
 	}
 
 	private Career getCareer(Integer careerCode) {
