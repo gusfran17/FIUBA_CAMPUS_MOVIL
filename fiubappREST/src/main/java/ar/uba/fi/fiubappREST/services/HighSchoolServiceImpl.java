@@ -90,4 +90,22 @@ public class HighSchoolServiceImpl implements HighSchoolService {
 		LOGGER.info(String.format("High school information for student with userName %s was deleted.", userName));
 	}
 
+	@Override
+	public HighSchool update(String userName, HighSchool highSchool) {
+		LOGGER.info(String.format("Updatng high school information for student with userName %s.", userName));
+		Student student = this.studentRepository.findOne(userName);
+		if(student.getHighSchool()==null){
+			LOGGER.error(String.format("High school information not found for student with userName %s.", userName));
+			throw new HighSchoolNotFoundForStudentException(userName);
+		}
+		this.validateDatesRange(highSchool.getDateFrom(), highSchool.getDateTo());
+		student.getHighSchool().setDegree(highSchool.getDegree());
+		student.getHighSchool().setSchoolName(highSchool.getSchoolName());
+		student.getHighSchool().setDateFrom(highSchool.getDateFrom());
+		student.getHighSchool().setDateTo(highSchool.getDateTo());
+		student = studentRepository.save(student);
+		LOGGER.info(String.format("High school information for student with userName %s was updated.", userName));
+		return student.getHighSchool();
+	}
+
 }

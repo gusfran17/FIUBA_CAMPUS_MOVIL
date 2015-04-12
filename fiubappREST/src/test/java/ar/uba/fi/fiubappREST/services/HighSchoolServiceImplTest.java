@@ -29,6 +29,10 @@ public class HighSchoolServiceImplTest {
 	private static final String A_DEGREE = "aDegree";
 
 	private static final String AN_USER_NAME = "anUserName";
+
+	private static final String ANOTHER_DEGREE = "anotherDegree";
+
+	private static final String ANOTHER_SCHOOL_NAME = "anotherSchoolName";
 	
 	@Mock
 	private HighSchoolRepository highSchoolRepository;
@@ -136,7 +140,31 @@ public class HighSchoolServiceImplTest {
 		assertTrue(true);
 	}
 	
+	@Test
+	public void testUpdate() throws ParseException {
+		when(this.studentRepository.findOne(AN_USER_NAME)).thenReturn(student);
+		student.setHighSchool(highSchool);
+		HighSchool newHighSchool = new HighSchool();
+		newHighSchool.setDegree(ANOTHER_DEGREE);
+		newHighSchool.setSchoolName(ANOTHER_SCHOOL_NAME);
+		newHighSchool.setDateFrom(sdf.parse("01/01/2003"));
+		newHighSchool.setDateTo(sdf.parse("01/01/2005"));		
+		when(this.studentRepository.save(student)).thenReturn(student);
+		
+		HighSchool updatedHighSchool = this.service.update(AN_USER_NAME, newHighSchool);
+		
+		assertEquals(updatedHighSchool.getDegree(), newHighSchool.getDegree());
+		assertEquals(updatedHighSchool.getSchoolName(), newHighSchool.getSchoolName());
+		assertEquals(updatedHighSchool.getDateFrom(), newHighSchool.getDateFrom());
+		assertEquals(updatedHighSchool.getDateTo(), newHighSchool.getDateTo());
+	}
+	
+	@Test(expected=HighSchoolNotFoundForStudentException.class)
+	public void testUpdateError() throws ParseException {
+		student.setHighSchool(null);
+		when(this.studentRepository.findOne(AN_USER_NAME)).thenReturn(student);
+		
+		this.service.update(AN_USER_NAME, new HighSchool());
+	}
+	
 }
-
-
-

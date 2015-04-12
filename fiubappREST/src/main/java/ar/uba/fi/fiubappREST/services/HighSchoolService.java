@@ -9,5 +9,7 @@ public interface HighSchoolService {
 	public HighSchool findByUserName(String userName);
 
 	public void delete(String userName);
+
+	public HighSchool update(String userName, HighSchool highSchool);
 	
 }
