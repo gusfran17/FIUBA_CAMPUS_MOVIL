@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import ar.uba.fi.fiubappREST.domain.HighSchool;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.HighSchoolAlreadyExistsForStudentException;
+import ar.uba.fi.fiubappREST.exceptions.HighSchoolNotFoundForStudentException;
 import ar.uba.fi.fiubappREST.exceptions.InvalidDateRangeException;
+import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.persistance.HighSchoolRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 
@@ -54,6 +56,27 @@ public class HighSchoolServiceImpl implements HighSchoolService {
 		if(foundHighSchool!=null){
 			LOGGER.error(String.format("High school information already exists for student with userName %s.", userName));
 			throw new HighSchoolAlreadyExistsForStudentException(userName);
+		}
+	}
+
+	@Override
+	public HighSchool findByUserName(String userName) {
+		LOGGER.info(String.format("Finding high school information student with userName %s.", userName));
+		this.verifyStudentExists(userName);
+		HighSchool highSchool = this.highSchoolRepository.findByUserName(userName);
+		if(highSchool==null){
+			LOGGER.error(String.format("High school information not found for student with userName %s.", userName));
+			throw new HighSchoolNotFoundForStudentException(userName);
+		}
+		LOGGER.info(String.format("High school information found for student with userName %s.", userName));
+		return highSchool;
+	}
+
+	private void verifyStudentExists(String userName) {
+		Student student = this.studentRepository.findOne(userName);
+		if(student==null){
+			LOGGER.error(String.format("Studen with userName %s was not found.", userName));
+			throw new StudentNotFoundException(userName);
 		}
 	}
 }

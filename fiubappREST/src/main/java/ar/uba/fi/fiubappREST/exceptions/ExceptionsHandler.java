@@ -100,6 +100,12 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
+	@ExceptionHandler(HighSchoolNotFoundForStudentException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(HighSchoolNotFoundForStudentException exception){
+		return buildResponse(exception);
+	}
+	
 	
 	
 	@ExceptionHandler(InvalidUserException.class)

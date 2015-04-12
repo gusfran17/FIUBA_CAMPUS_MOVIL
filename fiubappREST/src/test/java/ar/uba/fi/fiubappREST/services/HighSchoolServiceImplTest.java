@@ -15,7 +15,9 @@ import org.mockito.Mock;
 import ar.uba.fi.fiubappREST.domain.HighSchool;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.HighSchoolAlreadyExistsForStudentException;
+import ar.uba.fi.fiubappREST.exceptions.HighSchoolNotFoundForStudentException;
 import ar.uba.fi.fiubappREST.exceptions.InvalidDateRangeException;
+import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.persistance.HighSchoolRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 
@@ -96,6 +98,31 @@ public class HighSchoolServiceImplTest {
 		when(this.highSchoolRepository.findByUserName(AN_USER_NAME)).thenReturn(null);
 		
 		this.service.create(AN_USER_NAME, highSchool);
+	}
+	
+	@Test
+	public void testFindByUserName() {
+		when(this.highSchoolRepository.findByUserName(AN_USER_NAME)).thenReturn(highSchool);
+		when(this.studentRepository.findOne(AN_USER_NAME)).thenReturn(student);
+		
+		HighSchool foundHighSchool = this.service.findByUserName(AN_USER_NAME);
+		
+		assertEquals(foundHighSchool, highSchool);
+	}
+	
+	@Test(expected=StudentNotFoundException.class)
+	public void testFindByUserNameInvalidStudent() {
+		when(this.studentRepository.findOne(AN_USER_NAME)).thenReturn(null);
+		
+		this.service.findByUserName(AN_USER_NAME);
+	}
+	
+	@Test(expected=HighSchoolNotFoundForStudentException.class)
+	public void testFindByUserNameNotFound() {
+		when(this.studentRepository.findOne(AN_USER_NAME)).thenReturn(student);
+		when(this.highSchoolRepository.findByUserName(AN_USER_NAME)).thenReturn(null);
+		
+		this.service.findByUserName(AN_USER_NAME);
 	}
 	
 }

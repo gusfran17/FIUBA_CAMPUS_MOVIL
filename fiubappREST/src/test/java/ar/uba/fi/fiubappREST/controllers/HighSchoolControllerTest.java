@@ -34,10 +34,19 @@ public class HighSchoolControllerTest {
 	}
 
 	@Test
-	public void testAddCareer() {
+	public void testAddHigSchoolInformation() {
 		when(service.create(AN_USER_NAME, highSchool)).thenReturn(highSchool);
 				
 		HighSchool createdHighSchool = this.controller.addHigSchoolInformation(A_TOKEN, AN_USER_NAME, highSchool);
+		
+		assertEquals(createdHighSchool, highSchool);		
+	}
+	
+	@Test
+	public void testGetHigSchoolInformation() {
+		when(service.create(AN_USER_NAME, highSchool)).thenReturn(highSchool);
+				
+		HighSchool createdHighSchool = this.controller.getHigSchoolInformation(A_TOKEN, AN_USER_NAME);
 		
 		assertEquals(createdHighSchool, highSchool);		
 	}

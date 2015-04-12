@@ -35,6 +35,13 @@ public class HighSchoolController {
 		this.studentSessionService.validateMine(token, userName);
 		return highSchoolService.create(userName, highSchool);
 	}
+	
+	@RequestMapping(method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	public @ResponseBody HighSchool getHigSchoolInformation(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
+		this.studentSessionService.validate(token);
+		return highSchoolService.findByUserName(userName);
+	}
 }
 
 
