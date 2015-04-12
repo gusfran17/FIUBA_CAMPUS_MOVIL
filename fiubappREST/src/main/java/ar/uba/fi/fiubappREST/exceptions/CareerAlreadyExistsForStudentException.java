@@ -1,11 +1,11 @@
 package ar.uba.fi.fiubappREST.exceptions;
 
 @SuppressWarnings("serial")
-public class CareerAlreadyExistsForStudent extends BusinessException {
+public class CareerAlreadyExistsForStudentException extends BusinessException {
 	
 	private static final String CODE = "2002";
 
-	public CareerAlreadyExistsForStudent(Object... params){
+	public CareerAlreadyExistsForStudentException(Object... params){
 		super(params);
 	}
 	

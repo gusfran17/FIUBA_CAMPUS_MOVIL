@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import ar.uba.fi.fiubappREST.exceptions.CareerAlreadyExistsForStudent;
+import ar.uba.fi.fiubappREST.exceptions.CareerAlreadyExistsForStudentException;
 
 public class StudentTest {
 	
@@ -43,7 +43,7 @@ public class StudentTest {
 		assertEquals(2, this.student.getCareers().size());
 	}
 	
-	@Test(expected=CareerAlreadyExistsForStudent.class)
+	@Test(expected=CareerAlreadyExistsForStudentException.class)
 	public void testAddDuplicatedCareer() {
 		Career career = new Career();
 		career.setCode(CAREER_CODE);
