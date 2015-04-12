@@ -1,0 +1,17 @@
+/*
+-- Query: select * from student
+LIMIT 0, 1000
+
+-- Date: 2015-04-11 22:42
+*/
+INSERT INTO `student` (`userName`,`currentCity`,`dateOfBirth`,`email`,`fileNumber`,`isExchangeStudent`,`lastName`,`name`,`nationality`,`passportNumber`,`password`,`phoneNumber`) VALUES ('80001',NULL,NULL,'Juan.Gomez@test.com','80001',0,'Gomez','Juan',NULL,'','16b127b6097303f5e6a80a13e882dac0',NULL);
+INSERT INTO `student` (`userName`,`currentCity`,`dateOfBirth`,`email`,`fileNumber`,`isExchangeStudent`,`lastName`,`name`,`nationality`,`passportNumber`,`password`,`phoneNumber`) VALUES ('80013',NULL,NULL,'Rodolfo.Soto@test.com','80013',0,'Soto','Rodolfo',NULL,'','1c6e488449e3741a999388f7bd7d07ae',NULL);
+INSERT INTO `student` (`userName`,`currentCity`,`dateOfBirth`,`email`,`fileNumber`,`isExchangeStudent`,`lastName`,`name`,`nationality`,`passportNumber`,`password`,`phoneNumber`) VALUES ('80015',NULL,NULL,'Santiago.Roman@test.com','80015',0,'Roman','Santiago',NULL,'','59ec5c1e0e06e6e9e18c44ee8ed035e5',NULL);
+INSERT INTO `student` (`userName`,`currentCity`,`dateOfBirth`,`email`,`fileNumber`,`isExchangeStudent`,`lastName`,`name`,`nationality`,`passportNumber`,`password`,`phoneNumber`) VALUES ('80017',NULL,NULL,'Roberto.Paez@test.com','80017',0,'Paez','Roberto',NULL,'','1c6e488449e3741a999388f7bd7d07ae',NULL);
+INSERT INTO `student` (`userName`,`currentCity`,`dateOfBirth`,`email`,`fileNumber`,`isExchangeStudent`,`lastName`,`name`,`nationality`,`passportNumber`,`password`,`phoneNumber`) VALUES ('80018',NULL,NULL,'Florencia.Rodriguez@test.com','80018',0,'Rodriguez','Florencia',NULL,'','1c6e488449e3741a999388f7bd7d07ae',NULL);
+INSERT INTO `student` (`userName`,`currentCity`,`dateOfBirth`,`email`,`fileNumber`,`isExchangeStudent`,`lastName`,`name`,`nationality`,`passportNumber`,`password`,`phoneNumber`) VALUES ('80019',NULL,NULL,'Micaela.Franco@test.com','80019',0,'Franco','Micaela',NULL,'','1c6e488449e3741a999388f7bd7d07ae',NULL);
+INSERT INTO `student` (`userName`,`currentCity`,`dateOfBirth`,`email`,`fileNumber`,`isExchangeStudent`,`lastName`,`name`,`nationality`,`passportNumber`,`password`,`phoneNumber`) VALUES ('80020',NULL,NULL,'Mirta.Ruiz@test.com','80020',0,'Ruiz','Mirta',NULL,'','1c6e488449e3741a999388f7bd7d07ae',NULL);
+INSERT INTO `student` (`userName`,`currentCity`,`dateOfBirth`,`email`,`fileNumber`,`isExchangeStudent`,`lastName`,`name`,`nationality`,`passportNumber`,`password`,`phoneNumber`) VALUES ('80021',NULL,NULL,'Miguel.Ballestero@test.com','80021',0,'Ballestero','Miguel',NULL,'','1c6e488449e3741a999388f7bd7d07ae',NULL);
+INSERT INTO `student` (`userName`,`currentCity`,`dateOfBirth`,`email`,`fileNumber`,`isExchangeStudent`,`lastName`,`name`,`nationality`,`passportNumber`,`password`,`phoneNumber`) VALUES ('80022',NULL,NULL,'Augusto.Muniz@test.com','80022',0,'Muniz','Augusto',NULL,'','1c6e488449e3741a999388f7bd7d07ae',NULL);
+INSERT INTO `student` (`userName`,`currentCity`,`dateOfBirth`,`email`,`fileNumber`,`isExchangeStudent`,`lastName`,`name`,`nationality`,`passportNumber`,`password`,`phoneNumber`) VALUES ('I8001400',NULL,NULL,'Matias.Leuco@test.com','',1,'Leuco','Matias',NULL,'8001400','1c6e488449e3741a999388f7bd7d07ae',NULL);
+INSERT INTO `student` (`userName`,`currentCity`,`dateOfBirth`,`email`,`fileNumber`,`isExchangeStudent`,`lastName`,`name`,`nationality`,`passportNumber`,`password`,`phoneNumber`) VALUES ('I8001600',NULL,NULL,'Nicolas.Villar@test.com','',1,'Villar','Nicolas',NULL,'8001600','1c6e488449e3741a999388f7bd7d07ae',NULL);
