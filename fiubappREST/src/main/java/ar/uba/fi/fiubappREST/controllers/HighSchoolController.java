@@ -49,6 +49,13 @@ public class HighSchoolController {
 		this.studentSessionService.validateMine(token, userName);
 		this.highSchoolService.delete(userName);
 	}
+	
+	@RequestMapping(method = RequestMethod.PUT)
+	@ResponseStatus(value = HttpStatus.OK)
+	public @ResponseBody HighSchool updateHigSchoolInformation(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestBody HighSchool highSchool) {
+		this.studentSessionService.validateMine(token, userName);
+		return this.highSchoolService.update(userName, highSchool);
+	}
 }
 
 

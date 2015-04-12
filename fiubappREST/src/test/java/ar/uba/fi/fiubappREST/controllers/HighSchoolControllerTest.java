@@ -38,6 +38,7 @@ public class HighSchoolControllerTest {
 	@Test
 	public void testAddHigSchoolInformation() {
 		when(service.create(AN_USER_NAME, highSchool)).thenReturn(highSchool);
+		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
 				
 		HighSchool createdHighSchool = this.controller.addHigSchoolInformation(A_TOKEN, AN_USER_NAME, highSchool);
 		
@@ -55,11 +56,22 @@ public class HighSchoolControllerTest {
 	
 	@Test
 	public void testDeleteHigSchoolInformation() {
+		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
 		doNothing().when(service).delete(AN_USER_NAME);
 				
 		this.controller.deleteHigSchoolInformation(A_TOKEN, AN_USER_NAME);
 		
 		assertTrue(true);		
+	}
+	
+	@Test
+	public void testUpdateHigSchoolInformation() {
+		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		when(service.create(AN_USER_NAME, highSchool)).thenReturn(highSchool);
+				
+		HighSchool updatedHighSchool = this.controller.updateHigSchoolInformation(A_TOKEN, AN_USER_NAME, highSchool);
+		
+		assertEquals(updatedHighSchool, highSchool);		
 	}
 	
 }
