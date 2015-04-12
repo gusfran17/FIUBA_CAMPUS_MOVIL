@@ -1,6 +1,7 @@
 package ar.uba.fi.fiubappREST.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -123,6 +124,16 @@ public class HighSchoolServiceImplTest {
 		when(this.highSchoolRepository.findByUserName(AN_USER_NAME)).thenReturn(null);
 		
 		this.service.findByUserName(AN_USER_NAME);
+	}
+	
+	@Test
+	public void testDelete() {
+		when(this.highSchoolRepository.findByUserName(AN_USER_NAME)).thenReturn(highSchool);
+		when(this.studentRepository.findOne(AN_USER_NAME)).thenReturn(student);
+		
+		this.service.delete(AN_USER_NAME);
+		
+		assertTrue(true);
 	}
 	
 }

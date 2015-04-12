@@ -11,4 +11,6 @@ public interface HighSchoolRepository extends CrudRepository<HighSchool, Integer
 	
 	@Query(value = "SELECT * FROM high_school WHERE userName = ?1", nativeQuery = true)
 	public HighSchool findByUserName(String userName);
+	
+	public void delete(HighSchool highSchool);
 }

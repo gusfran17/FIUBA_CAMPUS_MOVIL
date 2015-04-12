@@ -1,6 +1,8 @@
 package ar.uba.fi.fiubappREST.controllers;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -49,6 +51,15 @@ public class HighSchoolControllerTest {
 		HighSchool createdHighSchool = this.controller.getHigSchoolInformation(A_TOKEN, AN_USER_NAME);
 		
 		assertEquals(createdHighSchool, highSchool);		
+	}
+	
+	@Test
+	public void testDeleteHigSchoolInformation() {
+		doNothing().when(service).delete(AN_USER_NAME);
+				
+		this.controller.deleteHigSchoolInformation(A_TOKEN, AN_USER_NAME);
+		
+		assertTrue(true);		
 	}
 	
 }

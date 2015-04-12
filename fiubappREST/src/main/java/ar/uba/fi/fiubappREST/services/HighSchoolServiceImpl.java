@@ -79,4 +79,15 @@ public class HighSchoolServiceImpl implements HighSchoolService {
 			throw new StudentNotFoundException(userName);
 		}
 	}
+
+	@Override
+	public void delete(String userName) {
+		LOGGER.info(String.format("Deleting high school information for student with userName %s.", userName));
+		this.findByUserName(userName);
+		Student student = this.studentRepository.findOne(userName);
+		student.setHighSchool(null);
+		studentRepository.save(student);
+		LOGGER.info(String.format("High school information for student with userName %s was deleted.", userName));
+	}
+
 }

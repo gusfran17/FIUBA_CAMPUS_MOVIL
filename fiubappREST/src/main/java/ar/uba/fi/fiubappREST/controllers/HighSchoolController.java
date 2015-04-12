@@ -33,14 +33,21 @@ public class HighSchoolController {
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public @ResponseBody HighSchool addHigSchoolInformation(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestBody HighSchool highSchool) {
 		this.studentSessionService.validateMine(token, userName);
-		return highSchoolService.create(userName, highSchool);
+		return this.highSchoolService.create(userName, highSchool);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody HighSchool getHigSchoolInformation(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
 		this.studentSessionService.validate(token);
-		return highSchoolService.findByUserName(userName);
+		return this.highSchoolService.findByUserName(userName);
+	}
+	
+	@RequestMapping(method = RequestMethod.DELETE)
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public @ResponseBody void deleteHigSchoolInformation(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
+		this.studentSessionService.validateMine(token, userName);
+		this.highSchoolService.delete(userName);
 	}
 }
 

@@ -59,7 +59,7 @@ public class Student {
 	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
 	private List<StudentCareer> careers;
 	
-	@OneToOne(mappedBy = "student", cascade={CascadeType.ALL})
+	@OneToOne(mappedBy = "student", cascade={CascadeType.ALL}, orphanRemoval = true)
 	private HighSchool highSchool;
 	
 	public String getUserName() {
