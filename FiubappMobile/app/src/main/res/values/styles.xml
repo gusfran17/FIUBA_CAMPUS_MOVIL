@@ -17,4 +17,6 @@
     <style name="CustomTabPageIndicator.Text" parent="android:TextAppearance.Medium">
         <item name="android:typeface">monospace</item>
     </style>
+
+    <style name="DatePickerTheme" parent="android:Theme.Light" />
 </resources>
