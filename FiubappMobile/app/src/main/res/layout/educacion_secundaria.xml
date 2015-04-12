@@ -2,57 +2,116 @@
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content">
     <RelativeLayout
-        android:id="@+id/header1"
+        android:id="@+id/all"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="@drawable/rounded_corner"
-        android:layout_marginLeft="50px"
-        android:layout_marginRight="50px">
+        android:layout_marginLeft="10px"
+        android:layout_marginRight="10px"
+        android:layout_height="wrap_content">
 
         <RelativeLayout
-            android:id="@+id/header2"
+            android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#AFA7EF"
+            android:background="#ff2ec7e8"
             android:layout_alignParentTop="true">
 
             <TextView
-                android:id="@+id/hola"
+                android:id="@+id/tvTituloHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="Educación secundaria"
-                android:layout_alignParentLeft="true"
+                android:textSize="25px"
                 android:textColor="#000000"
-                android:textSize="20sp" />
+                android:text="@string/educacionSecundaria"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true" />
 
-            <TextView
+            <ImageView
+                android:id="@+id/imgEditar"
+                android:src="@drawable/ic_editar"
+                android:layout_marginRight="5px"
+                android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="lap"
-                android:textColor="#000000"
-                android:textSize="20sp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_alignParentRight="true" />
+                android:padding="5dp" />
+
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/header3"
+            android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/header2">
+            android:layout_below="@+id/header">
 
             <TextView
+                android:id="@+id/tvTitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_below="@+id/header"
-                android:text="Escuela"
-                android:textColor="#000000"
-                android:textSize="20sp" />
+                android:text="Título"
+                android:layout_alignBaseline="@+id/etTitulo"
+                android:layout_alignBottom="@+id/etTitulo" />
+
+            <EditText android:id="@+id/etTitulo"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="15px"
+                android:editable="false"
+                android:layout_toRightOf="@+id/tvTitulo" />
+
+            <TextView
+                android:id="@+id/tvEscuela"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/escuela"
+                android:layout_alignBaseline="@+id/etEscuela"
+                android:layout_alignBottom="@+id/etEscuela" />
+
+            <EditText android:id="@+id/etEscuela"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="15px"
+                android:layout_below="@+id/etTitulo"
+                android:layout_toRightOf="@+id/tvEscuela" />
+
+            <TextView
+                android:id="@+id/tvFechaInicio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha inicio"
+                android:layout_alignBaseline="@+id/etFechaInicio"
+                android:layout_alignBottom="@+id/etFechaInicio" />
+
+            <EditText android:id="@+id/etFechaInicio"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:focusable="false"
+                android:onClick="onClickFechaInicio"
+                android:layout_marginLeft="15px"
+                android:layout_below="@+id/etEscuela"
+                android:layout_toRightOf="@+id/tvFechaInicio" />
+
+            <TextView
+                android:id="@+id/tvFechaFin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha fin"
+                android:layout_alignBaseline="@+id/etFechaFin"
+                android:layout_alignBottom="@+id/etFechaFin" />
+
+            <EditText android:id="@+id/etFechaFin"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:focusable="false"
+                android:onClick="onClickFechaFin"
+                android:layout_marginLeft="15px"
+                android:layout_below="@+id/etFechaInicio"
+                android:layout_toRightOf="@+id/tvFechaFin" />
+
+
         </RelativeLayout>
+
+
     </RelativeLayout>
 </FrameLayout>
