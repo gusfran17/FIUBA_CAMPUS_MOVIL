@@ -20,7 +20,8 @@
                 android:layout_height="30sp"
                 android:layout_marginLeft="10dip"/>
 
-            <TextView android:layout_width="fill_parent"
+            <TextView android:id="@+id/profile_name"
+                android:layout_width="fill_parent"
                 android:layout_height="match_parent"
                 android:textColor="#372c24"
                 android:text="Nombre"
@@ -40,16 +41,21 @@
                 android:layout_height="60sp"
                 android:layout_marginLeft="10dip"/>
 
-            <TextView android:layout_width="wrap_content"
+            <TextView android:id="@+id/header_name"
+                android:layout_width="wrap_content"
                 android:layout_height="31dp"
+                android:paddingRight="10sp"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 android:textColor="#372c24"
-                android:text="Nombre"
                 android:gravity="center_vertical|left|right" />
 
-            <TextView android:layout_width="wrap_content"
+            <TextView android:id="@+id/header_lastname"
+                android:layout_width="wrap_content"
                 android:layout_height="31dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 android:textColor="#372c24"
-                android:text="Apellido"
                 android:gravity="center_vertical|left|right" />
 
         </LinearLayout>
@@ -67,18 +73,30 @@
                 android:layout_height="wrap_content"
                 android:textColor="#372c24"
                 android:text="Comentarios personales"/>
-            <EditText android:id="@+id/reg_email"
+            <EditText android:id="@+id/edit_comentarios"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
                 android:layout_marginTop="5dip"
                 android:layout_marginBottom="20dip"/>
 
-            <TextView android:layout_width="fill_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#372c24"
                 android:text="Información personal"
                 android:paddingBottom="10sp"/>
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_editar"
+                android:id="@+id/editButton"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -93,7 +111,7 @@
                     android:layout_weight="0.3"
                     android:text="Nacimiento"/>
 
-                <EditText android:id="@+id/edit_nac"
+                <EditText android:id="@+id/edit_fecha"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="right"
@@ -107,6 +125,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/layout_sex">
+
+                <TextView android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#372c24"
+                    android:paddingTop="10sp"
+                    android:paddingBottom="10sp"
+                    android:layout_weight="0.3"
+                    android:text="Sexo"/>
+
+                <EditText android:id="@+id/edit_sex"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:inputType="text"
+                    android:background="@null"
+                    android:singleLine="true"
+                    android:layout_weight="0.7"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/layout_email">
 
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -204,13 +245,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dip"
                 android:layout_marginBottom="20dip"/>
-
-            <Button android:id="@+id/btnSave"
-                android:layout_width="fill_parent"
-                android:layout_height="40dip"
-                android:layout_marginTop="10dip"
-                android:background="#ff2ec7e8"
-                android:text="Guardar" />
 
         </LinearLayout>
 
