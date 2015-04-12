@@ -178,6 +178,8 @@ public class Register2 extends Activity{
                                             e.printStackTrace();
                                         } catch (JSONException e) {
                                             e.printStackTrace();
+                                        } catch (NullPointerException e){
+                                            e.printStackTrace();
                                         }
                                     }
                                 }

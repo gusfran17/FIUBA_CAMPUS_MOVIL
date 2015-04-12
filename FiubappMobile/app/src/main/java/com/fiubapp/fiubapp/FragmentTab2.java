@@ -1,8 +1,6 @@
 package com.fiubapp.fiubapp;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,14 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -40,7 +35,7 @@ public class FragmentTab2 extends Fragment {
     private ProgressDialog pDialog;
     private List<Alumno> alumnoList = new ArrayList<Alumno>();
     private ListView listView;
-    private CustomListAdapter adapter;
+    private AlumnoAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +53,7 @@ public class FragmentTab2 extends Fragment {
         View view = inflater.inflate(R.layout.fragmenttab2, container, false);
 
         listView = (ListView)view.findViewById(R.id.list);
-        adapter = new CustomListAdapter(getActivity(), alumnoList);
+        adapter = new AlumnoAdapter(getActivity(), alumnoList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -82,30 +77,32 @@ public class FragmentTab2 extends Fragment {
                             Alumno alumno = new Alumno();
                             alumno.setNombre(obj.getString("name"));
                             alumno.setApellido(obj.getString("lastName"));
+                            alumno.setIntercambio(obj.getBoolean("isExchangeStudent"));
 
-                            alumno.setUsername(obj.getString("userName"));
-
-                            //alumno.setYear(obj.getInt("releaseYear"));
-
-                            // Genre is json array
-                            /*JSONArray genreArry = obj.getJSONArray("genre");
-                            ArrayList<String> genre = new ArrayList<String>();
-                            for (int j = 0; j < genreArry.length(); j++) {
-                                genre.add((String) genreArry.get(j));
+                            if (alumno.isIntercambio()){
+                                alumno.setUsername(obj.getString("passportNumber"));
+                            }else{
+                                alumno.setUsername(obj.getString("fileNumber"));
                             }
-                            movie.setGenre(genre);*/
 
-                            // adding movie to movies array
+                            JSONArray JSONCareers = new JSONArray(obj.getString("careers"));
+                            ArrayList<String> carreras = new ArrayList<>();
+
+                            for(int j=0; j < JSONCareers.length(); j++){
+
+                                String carrera = JSONCareers.getString(j);
+
+                                carreras.add(carrera);
+                            }
+                            alumno.setCarreras(carreras);
+
                             alumnoList.add(alumno);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
 
-                    // notifying list adapter about data changes
-                    // so that it renders the list view with updated data
                     adapter.notifyDataSetChanged();
                 }
             }, new Response.ErrorListener() {
@@ -121,7 +118,6 @@ public class FragmentTab2 extends Fragment {
                             getResources().getString(R.string.prefs_name), 0);
                     String token = settings.getString("token",null);
                     headers.put("Authorization", token);
-
                     return headers;
 
                 }

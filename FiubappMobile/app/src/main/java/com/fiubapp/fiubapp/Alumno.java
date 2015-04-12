@@ -17,6 +17,12 @@ public class Alumno {
     private String secundaria;
     private String orientacion;
     private boolean intercambio;
+    private String username;
+    private String pasaporte;
+    private int padron;
+    private ArrayList<String> carreras;
+    private ArrayList<Integer> grupos, discusiones, compañeros;
+    private Location ubicacion;
 
     public boolean isIntercambio() {
         return intercambio;
@@ -42,17 +48,10 @@ public class Alumno {
         this.pasaporte = pasaporte;
     }
 
-    private String username;
-    private String pasaporte;
-    private int padron;
-    private ArrayList<Byte> carreras;
-    private ArrayList<Integer> grupos, discusiones, compañeros;
-    private Location ubicacion;
-
     public Alumno() {
     }
 
-    public Alumno(int padron, String nombre, String apellido, Byte carrera) {
+    public Alumno(int padron, String nombre, String apellido, String carrera) {
         this.padron = padron;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -147,11 +146,11 @@ public class Alumno {
         this.padron = padron;
     }
 
-    public ArrayList<Byte> getCarreras() {
+    public ArrayList<String> getCarreras() {
         return carreras;
     }
 
-    public void setCarreras(ArrayList<Byte> carreras) {
+    public void setCarreras(ArrayList<String> carreras) {
         this.carreras = carreras;
     }
 
