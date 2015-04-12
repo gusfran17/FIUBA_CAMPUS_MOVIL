@@ -11,7 +11,7 @@ import org.codehaus.jackson.map.SerializerProvider;
 
 public class CustomDateSerializer extends JsonSerializer<Date> {  
 
-	private final String DATE_FORMAT = "yyyy-MM-dd";
+	private final String DATE_FORMAT = "dd/MM/yyyy";
 	
 	@Override
 	public void serialize(Date date, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {

@@ -23,6 +23,7 @@
         <activity android:name=".Register2"></activity>
         <activity android:name=".Principal"
             android:theme="@style/StyledIndicators"></activity>
+        <activity android:name=".Perfil"></activity>
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package ar.uba.fi.fiubappREST.services;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -12,14 +13,17 @@ import org.springframework.stereotype.Service;
 import ar.uba.fi.fiubappREST.converters.StudentConverter;
 import ar.uba.fi.fiubappREST.converters.StudentProfileConverter;
 import ar.uba.fi.fiubappREST.domain.Career;
+import ar.uba.fi.fiubappREST.domain.Gender;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentCareer;
 import ar.uba.fi.fiubappREST.exceptions.CareerNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyExistsException;
+import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.persistance.CareerRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
+import ar.uba.fi.fiubappREST.representations.StudentUpdateRepresentation;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -100,5 +104,55 @@ public class StudentServiceImpl implements StudentService {
 		return profiles;
 	}
 
-	
+	@Override
+	public Student findOne(String userName) {
+		LOGGER.info(String.format("Finding student with userName %s.", userName));
+		Student student = this.studentRepository.findOne(userName);
+		if(student==null){
+			LOGGER.error(String.format("Student with userName %s was not found.", userName));
+			throw new StudentNotFoundException(userName); 
+		}
+		LOGGER.info(String.format("Student with userName %s was found.", userName));
+		return student;
+	}
+
+	@Override
+	public Student update(String userName, StudentUpdateRepresentation studentRepresentation) {
+		Student student = this.findOne(userName);
+		LOGGER.info(String.format("Updating student with userName %s.", userName));
+		this.updateStudent(student, studentRepresentation);
+		student = this.studentRepository.save(student);
+		LOGGER.info(String.format("Student with userName %s was updated.", userName));
+		return student;
+	}
+
+	private void updateStudent(Student student, StudentUpdateRepresentation studentRepresentation) {
+		String name = (studentRepresentation.getName()!=null) ? studentRepresentation.getName() : student.getName();
+		student.setName(name);
+		
+		String lastName = (studentRepresentation.getLastName()!=null) ? studentRepresentation.getLastName() : student.getLastName();
+		student.setLastName(lastName);
+		
+		Date dateOfBirth = (studentRepresentation.getDateOfBirth()!=null) ? studentRepresentation.getDateOfBirth() : student.getDateOfBirth(); 
+		student.setDateOfBirth(dateOfBirth);
+		
+		String email = (studentRepresentation.getEmail()!=null) ? studentRepresentation.getEmail() : student.getEmail();
+		student.setEmail(email);
+		
+		String phoneNumber = (studentRepresentation.getPhoneNumber()!=null) ? studentRepresentation.getPhoneNumber() : student.getPhoneNumber();
+		student.setPhoneNumber(phoneNumber);
+		
+		String currentCity = (studentRepresentation.getCurrentCity()!=null) ? studentRepresentation.getCurrentCity() : student.getCurrentCity();
+		student.setCurrentCity(currentCity);
+		
+		String nationality = (studentRepresentation.getNationality()!=null) ? studentRepresentation.getNationality() : student.getNationality();
+		student.setNationality(nationality);
+		
+		String comments = (studentRepresentation.getComments()!=null) ? studentRepresentation.getComments() : student.getComments();
+		student.setComments(comments);
+		
+		Gender gender = (studentRepresentation.getGender()!=null) ? studentRepresentation.getGender() : student.getGender();
+		student.setGender(gender);
+	}
+
 }

@@ -45,8 +45,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter implements IconPagerA
                 return fragmenttab4;
 
             case 4:
-                FragmentTab3 fragmenttab5 = new FragmentTab3();
-                return fragmenttab5;
+                PerfilTab perfilTab = new PerfilTab();
+                return perfilTab;
         }
         return null;
     }
