@@ -14,6 +14,7 @@ public class Principal extends FragmentActivity {
         setContentView(R.layout.icon_page);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setOffscreenPageLimit(4);
 
         // Set the ViewPagerAdapter into ViewPager
         viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
