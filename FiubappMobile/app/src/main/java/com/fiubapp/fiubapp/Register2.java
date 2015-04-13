@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -51,6 +52,7 @@ public class Register2 extends Activity{
         final String password = intent.getStringExtra("password");
         final boolean intercambio = intent.getBooleanExtra("isExchange",false);
         final Spinner spinner_carrera = (Spinner)findViewById(R.id.reg_carrera);
+        final TextView text_carrera = (TextView) findViewById(R.id.text_carrera);
         final EditText edit_nombre = (EditText)findViewById(R.id.reg_nombre);
         final Button button = (Button) findViewById(R.id.btnRegister2);
         final EditText edit_apellido = (EditText)findViewById(R.id.reg_apellido);
@@ -60,6 +62,13 @@ public class Register2 extends Activity{
         final ArrayAdapter adapter = new ArrayAdapter<String>(Register2.this,R.layout.simple_spinner_item,careers);
         adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         spinner_carrera.setAdapter(adapter);
+        if (intercambio){
+            spinner_carrera.setVisibility(View.INVISIBLE);
+            text_carrera.setVisibility(View.INVISIBLE);
+        }else {
+            text_carrera.setVisibility(View.VISIBLE);
+            spinner_carrera.setVisibility(View.VISIBLE);
+        }
 
         final String urlAPI = this.getString(R.string.urlAPI);
 

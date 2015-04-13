@@ -15,6 +15,7 @@ import ar.uba.fi.fiubappREST.domain.Credentials;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentSession;
 import ar.uba.fi.fiubappREST.exceptions.InvalidCredentialsException;
+import ar.uba.fi.fiubappREST.exceptions.OperationNotAllowedFotStudentSessionException;
 import ar.uba.fi.fiubappREST.exceptions.StudentSessionNotFoundException;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentSessionRepository;
@@ -25,6 +26,7 @@ public class StudentSessionServiceImplTest {
 	private static final String AN_USER_NAME = "AN_USER_NAME";
 	private static final String A_RAW_PASSWORD = "A_RAW_PASSWORD";
 	private static final String AN_ENCRYPTED_PASSWORD = "AN_ENCRYPTED_PASSWORD";
+	private static final String ANOTHER_USER_NAME = "ANOTHER_USER_NAME";
 	@Mock
 	private StudentRepository studentRepository;
 	@Mock
@@ -118,6 +120,24 @@ public class StudentSessionServiceImplTest {
 		when(studentSessionRepository.findByToken(A_TOKEN)).thenReturn(null);
 	
 		this.service.validate(A_TOKEN);
+	}
+	
+	@Test
+	public void testValidateMineOK() {
+		when(studentSessionRepository.findByToken(A_TOKEN)).thenReturn(session);
+		when(session.getUserName()).thenReturn(AN_USER_NAME);
+	
+		this.service.validateMine(A_TOKEN, AN_USER_NAME);
+				
+		assertTrue(true);
+	}
+	
+	@Test(expected=OperationNotAllowedFotStudentSessionException.class)
+	public void testValidateMineInvalidUser() {
+		when(studentSessionRepository.findByToken(A_TOKEN)).thenReturn(session);
+		when(session.getUserName()).thenReturn(AN_USER_NAME);
+	
+		this.service.validateMine(A_TOKEN, ANOTHER_USER_NAME);
 	}
 
 }

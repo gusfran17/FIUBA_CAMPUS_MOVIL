@@ -16,7 +16,7 @@ import ar.uba.fi.fiubappREST.exceptions.DateFormatException;
 @ControllerAdvice
 public class CustomDateDeserializer extends JsonDeserializer<Date>{
 	
-	private final String DATE_FORMAT = "yyyy-MM-dd";
+	private final String DATE_FORMAT = "dd/MM/yyyy";
 	
     @Override
     public Date deserialize(JsonParser jsonparser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {

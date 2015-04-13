@@ -5,16 +5,22 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-import ar.uba.fi.fiubappREST.exceptions.CareerAlreadyExistsForStudent;
+import ar.uba.fi.fiubappREST.exceptions.CareerAlreadyExistsForStudentException;
+import ar.uba.fi.fiubappREST.utils.CustomDateDeserializer;
+import ar.uba.fi.fiubappREST.utils.CustomDateSerializer;
 
 @Entity
 @Table(name = "student")
@@ -44,9 +50,17 @@ public class Student {
 	private String currentCity;
 	
 	private String nationality;
+	
+	private String comments;
+	
+	@Enumerated
+	private Gender gender;
 
 	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
 	private List<StudentCareer> careers;
+	
+	@OneToOne(mappedBy = "student", cascade={CascadeType.ALL}, orphanRemoval = true)
+	private HighSchool highSchool;
 	
 	public String getUserName() {
 		return userName;
@@ -113,10 +127,12 @@ public class Student {
 		this.email = email;
 	}
 
+	@JsonSerialize(using = CustomDateSerializer.class)
 	public Date getDateOfBirth() {
 		return dateOfBirth;
 	}
 
+	@JsonDeserialize(using = CustomDateDeserializer.class)
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
@@ -145,6 +161,22 @@ public class Student {
 		this.nationality = nationality;
 	}
 
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+
+	public Gender getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
+
 	public List<StudentCareer> getCareers() {
 		return careers;
 	}
@@ -153,9 +185,18 @@ public class Student {
 		this.careers = careers;
 	}
 	
+	@JsonIgnore
+	public HighSchool getHighSchool() {
+		return highSchool;
+	}
+
+	public void setHighSchool(HighSchool highSchool) {
+		this.highSchool = highSchool;
+	}
+
 	public void addCareer(final StudentCareer career) {
 		if(this.existsCareer(career.getCareer())){
-			throw new CareerAlreadyExistsForStudent(this.userName, career.getCareer().getCode());
+			throw new CareerAlreadyExistsForStudentException(this.userName, career.getCareer().getCode());
 		}
 		career.setStudent(this);
 		this.careers.add(career);

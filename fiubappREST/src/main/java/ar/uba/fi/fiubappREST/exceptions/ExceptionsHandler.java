@@ -34,6 +34,12 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
+	@ExceptionHandler(InvalidDateRangeException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(InvalidDateRangeException exception){
+		return buildResponse(exception);
+	}
+	
 	@ExceptionHandler(CareerNotFoundException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
 	public @ResponseBody ErrorResponse handle(CareerNotFoundException exception){
@@ -58,9 +64,15 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
-	@ExceptionHandler(CareerAlreadyExistsForStudent.class)
+	@ExceptionHandler(StudentNotFoundException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
-	public @ResponseBody ErrorResponse handle(CareerAlreadyExistsForStudent exception){
+	public @ResponseBody ErrorResponse handle(StudentNotFoundException exception){
+		return buildResponse(exception);
+	}
+	
+	@ExceptionHandler(CareerAlreadyExistsForStudentException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(CareerAlreadyExistsForStudentException exception){
 		return buildResponse(exception);
 	}
 	
@@ -76,14 +88,24 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
-	
-	
-	
-	@ExceptionHandler(UserNotFoundException.class)
-	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
-	public @ResponseBody ErrorResponse handle(UserNotFoundException exception){
+	@ExceptionHandler(OperationNotAllowedFotStudentSessionException.class)
+	@ResponseStatus(value = HttpStatus.FORBIDDEN) 
+	public @ResponseBody ErrorResponse handle(OperationNotAllowedFotStudentSessionException exception){
 		return buildResponse(exception);
 	}
+	
+	@ExceptionHandler(HighSchoolAlreadyExistsForStudentException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(HighSchoolAlreadyExistsForStudentException exception){
+		return buildResponse(exception);
+	}
+	
+	@ExceptionHandler(HighSchoolNotFoundForStudentException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(HighSchoolNotFoundForStudentException exception){
+		return buildResponse(exception);
+	}
+	
 	
 	
 	@ExceptionHandler(InvalidUserException.class)

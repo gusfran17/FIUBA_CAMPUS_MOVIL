@@ -2,7 +2,6 @@ package ar.uba.fi.fiubappREST.representations;
 
 import java.util.List;
 
-
 public class StudentProfileRepresentation {
 
 	private String userName;
