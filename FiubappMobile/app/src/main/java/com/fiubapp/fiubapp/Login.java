@@ -109,6 +109,7 @@ public class Login extends Activity {
                             SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
                             SharedPreferences.Editor editor = settings.edit();
                             editor.putString("token", token);
+                            editor.putString("username", usuario);
                             editor.commit();
 
                             Intent i = new Intent(getBaseContext(), Principal.class);

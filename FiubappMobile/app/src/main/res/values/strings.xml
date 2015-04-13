@@ -18,4 +18,8 @@
     <string name="fechaFin">Fecha fin</string>
     <string name="fechaInicio">Fecha inicio</string>
     <string name="titulo">Título</string>
+    <string-array name="genders">
+        <item>Femenino</item>
+        <item>Masculino</item>
+    </string-array>
 </resources>
