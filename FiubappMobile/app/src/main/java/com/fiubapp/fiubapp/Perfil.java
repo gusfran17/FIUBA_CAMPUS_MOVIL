@@ -26,7 +26,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -62,9 +65,42 @@ public class Perfil extends Activity{
             imgEditar.setImageResource(R.drawable.ic_editar_selected);
         }
         else { // Si no está habilitado significa que termino de editar, se guarda la información
-            imgEditar.setImageResource(R.drawable.ic_editar);
-            guardarDatosEducacionSecundaria();
+
+            if(validaIngresoDatosEducacionSecundaria()) {
+                imgEditar.setImageResource(R.drawable.ic_editar);
+                guardarDatosEducacionSecundaria();
+            }
+            else{
+                fechaInicio.setEnabled(true);
+                fechaFin.setEnabled(true);
+                titulo.setEnabled(true);
+                escuela.setEnabled(true);
+            }
         }
+    }
+
+    public boolean validaIngresoDatosEducacionSecundaria(){
+        final EditText etFechaInicio = (EditText)findViewById(R.id.etFechaInicio);
+        final EditText etFechaFin = (EditText)findViewById(R.id.etFechaFin);
+
+        SimpleDateFormat formatoDelTexto = new SimpleDateFormat("dd/MM/yyyy");
+
+        Date actual = new Date();
+        Date fechaInicio = null;
+        Date fechaFin = null;
+        try {
+            fechaInicio = formatoDelTexto.parse(etFechaInicio.getText().toString());
+            fechaFin = formatoDelTexto.parse(etFechaFin.getText().toString());
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        if(!fechaInicio.before(fechaFin) || !fechaFin.before(actual)){
+            Toast.makeText(Perfil.this, "Verifique que la fecha desde sea menor a la fecha hasta y no sean futuras", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
     }
 
     public void onClickFechaInicio(View v) {
@@ -125,10 +161,10 @@ public class Perfil extends Activity{
         String username = settings.getString("username", null);
         final String token = settings.getString("token", null);
 
-        final EditText fechaInicio = (EditText)findViewById(R.id.etFechaInicio);
-        final EditText fechaFin = (EditText)findViewById(R.id.etFechaFin);
-        final EditText titulo = (EditText)findViewById(R.id.etTitulo);
-        final EditText escuela = (EditText)findViewById(R.id.etEscuela);
+        final EditText etFechaInicio = (EditText)findViewById(R.id.etFechaInicio);
+        final EditText etFechaFin = (EditText)findViewById(R.id.etFechaFin);
+        final EditText etTitulo = (EditText)findViewById(R.id.etTitulo);
+        final EditText etEscuela = (EditText)findViewById(R.id.etEscuela);
 
         RequestQueue queue = Volley.newRequestQueue(this);
 
@@ -145,6 +181,11 @@ public class Perfil extends Activity{
                             String escuela = response.getString("schoolName");
                             String fechaInicio = response.getString("dateFrom");
                             String fechaFin = response.getString("dateTo");
+
+                            etFechaInicio.setText(fechaInicio);
+                            etFechaFin.setText(fechaFin);
+                            etTitulo.setText(titulo);
+                            etEscuela.setText(escuela);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
