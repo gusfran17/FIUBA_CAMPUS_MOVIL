@@ -8,7 +8,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" android:background="#fff">
 
-        <LinearLayout android:id="@+id/header"
+        <LinearLayout android:id="@+id/header_profile"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingTop="5dip"
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="5dip"
             android:paddingBottom="5dip"
-            android:layout_below="@+id/header">
+            android:layout_below="@+id/header_profile">
 
             <ImageView android:src="@drawable/no_image"
                 android:layout_width="60sp"
@@ -53,7 +53,7 @@
             android:textColor="#372c24"
             android:text="Nombre"
             android:gravity="center_vertical|left|right"
-            android:layout_below="@+id/header"
+            android:layout_below="@+id/header_profile"
             android:layout_toRightOf="@+id/name"
             android:background="@null"/>
 
@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/header_name"
             android:src="@drawable/ic_editar"
-            android:layout_below="@+id/header"
+            android:layout_below="@+id/header_profile"
             android:id="@+id/edit_name"/>
 
         <LinearLayout
@@ -264,9 +264,11 @@
                 android:layout_marginTop="5dip"
                 android:layout_marginBottom="20dip"/>
 
+            <include layout="@layout/educacion_secundaria"/>
+
         </LinearLayout>
 
-        <include layout="@layout/educacion_secundaria"/>
+
 
     </RelativeLayout>
 </ScrollView>
