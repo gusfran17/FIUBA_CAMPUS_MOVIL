@@ -37,14 +37,20 @@ public class Login extends Activity {
         final Button btnLogin = (Button) findViewById(R.id.btnLogin);
         final Button btnSoyNuevo = (Button) findViewById(R.id.btnSoyNuevo);
         final EditText edit_pass = (EditText)findViewById(R.id.reg_password);
+        final TextView textPadron = (TextView)findViewById(R.id.text_padron);
+
         final CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox_intercambio);
 
         checkBox.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (((CheckBox) v).isChecked())
+                if (((CheckBox) v).isChecked()){
                     edit_padron.setHint(R.string.pasaporte);
-                else
+                    textPadron.setText(R.string.pasaporte);
+                }
+                else {
                     edit_padron.setHint(R.string.numeroPadron);
+                    textPadron.setText(R.string.numeroPadron);
+                }
             }
         });
 
