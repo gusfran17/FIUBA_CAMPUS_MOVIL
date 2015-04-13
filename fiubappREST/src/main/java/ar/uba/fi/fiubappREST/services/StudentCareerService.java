@@ -10,4 +10,6 @@ public interface StudentCareerService {
 
 	public List<StudentCareer> findAll(String userName);
 
+	public void delete(String userName, Integer code);
+
 }

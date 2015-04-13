@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ar.uba.fi.fiubappREST.exceptions.CareerAlreadyExistsForStudentException;
+import ar.uba.fi.fiubappREST.exceptions.CareerNotFoundForStudentException;
+import ar.uba.fi.fiubappREST.exceptions.UnableToDeleteTheOnlyCareerForStudentException;
 
 public class StudentTest {
 	
@@ -51,6 +53,34 @@ public class StudentTest {
 		studentCareer.setCareer(career);
 		
 		this.student.addCareer(studentCareer);
+	}
+	
+	@Test
+	public void testRemoveCareerOK() {
+		Career career = new Career();
+		career.setCode(ANOTHER_CAREER_CODE);
+		studentCareer = new StudentCareer();
+		studentCareer.setCareer(career);		
+		this.student.addCareer(studentCareer);
+		
+		this.student.removeCareer(studentCareer);
+				
+		assertEquals(1, this.student.getCareers().size());
+	}
+	
+	@Test(expected=CareerNotFoundForStudentException.class)
+	public void testRemoveCareerNotFound() {
+		Career career = new Career();
+		career.setCode(ANOTHER_CAREER_CODE);
+		studentCareer = new StudentCareer();
+		studentCareer.setCareer(career);		
+		
+		this.student.removeCareer(studentCareer);
+	}
+	
+	@Test(expected=UnableToDeleteTheOnlyCareerForStudentException.class)
+	public void testRemoveTheOnlyCareer() {		
+		this.student.removeCareer(studentCareer);
 	}
 
 }

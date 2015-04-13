@@ -1,6 +1,7 @@
 package ar.uba.fi.fiubappREST.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -16,8 +17,10 @@ import ar.uba.fi.fiubappREST.domain.Career;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentCareer;
 import ar.uba.fi.fiubappREST.exceptions.CareerNotFoundException;
+import ar.uba.fi.fiubappREST.exceptions.CareerNotFoundForStudentException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.persistance.CareerRepository;
+import ar.uba.fi.fiubappREST.persistance.StudentCareerRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 
 public class StudentCareerServiceImplTest {
@@ -30,10 +33,14 @@ public class StudentCareerServiceImplTest {
 	private CareerRepository careerRepository;
 	@Mock
 	private StudentRepository studentRepository;
+	@Mock
+	private StudentCareerRepository studentCareerRepository;
 		
 	private Student student;
 	
 	private Career career;
+	
+	private StudentCareer studentCareer;
 		
 	private StudentCareerService service;
 	
@@ -41,13 +48,17 @@ public class StudentCareerServiceImplTest {
 	public void setUp() throws ParseException{
 		this.careerRepository = mock(CareerRepository.class);
 		this.studentRepository = mock(StudentRepository.class);		
-		this.service= new StudentCareerServiceImpl(careerRepository, studentRepository);
+		this.studentCareerRepository = mock(StudentCareerRepository.class);
+		this.service= new StudentCareerServiceImpl(careerRepository, studentRepository, studentCareerRepository);
 		
 		this.student = new Student();
 		this.student.setUserName(AN_USER_NAME);
 		this.student.setCareers(new ArrayList<StudentCareer>());
 		this.career = new Career();
 		this.career.setCode(A_CAREER_CODE);
+		this.studentCareer = new StudentCareer();
+		studentCareer.setStudent(student);
+		studentCareer.setCareer(career);
 	}
 		
 	@Test
@@ -91,6 +102,32 @@ public class StudentCareerServiceImplTest {
 		List<StudentCareer> careers = this.service.findAll(AN_USER_NAME);
 		
 		assertEquals(careers, student.getCareers());
+	}
+	
+	@Test
+	public void testDelete() {
+		StudentCareer studentCareer = new StudentCareer();
+		studentCareer.setCareer(career);
+		student.addCareer(studentCareer);		
+		Career anotherCareer =new Career();
+		StudentCareer anotherStudentCareer = new StudentCareer();
+		anotherCareer.setCode(ANOTHER_CAREER_CODE);
+		anotherStudentCareer.setCareer(anotherCareer);
+		student.addCareer(anotherStudentCareer);
+		when(this.studentCareerRepository.findByCodeAndUserName(A_CAREER_CODE, AN_USER_NAME)).thenReturn(anotherStudentCareer);
+		when(this.studentRepository.findOne(AN_USER_NAME)).thenReturn(student);
+		when(this.studentRepository.save(student)).thenReturn(student);
+		
+		this.service.delete(AN_USER_NAME, A_CAREER_CODE);
+		
+		assertTrue(true);
+	}
+	
+	@Test(expected=CareerNotFoundForStudentException.class)
+	public void testDeleteNotFound() {
+		when(this.studentCareerRepository.findByCodeAndUserName(A_CAREER_CODE, AN_USER_NAME)).thenReturn(null);
+		
+		this.service.delete(AN_USER_NAME, A_CAREER_CODE);
 	}
 	
 }

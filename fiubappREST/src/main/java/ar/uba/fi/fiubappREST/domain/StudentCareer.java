@@ -55,6 +55,6 @@ public class StudentCareer {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
+	}	
 
 }

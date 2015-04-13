@@ -43,6 +43,13 @@ public class StudentCareerController {
 		this.studentSessionService.validate(token);
 		return this.studentCareerService.findAll(userName);
 	}
+	
+	@RequestMapping(method = RequestMethod.DELETE, value="{code}")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public @ResponseBody void deleteCareer(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @PathVariable Integer code) {
+		this.studentSessionService.validateMine(token, userName);
+		this.studentCareerService.delete(userName, code);
+	}
 }
 
 

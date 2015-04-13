@@ -1,6 +1,7 @@
 package ar.uba.fi.fiubappREST.controllers;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -62,6 +63,16 @@ public class StudentCareerControllerTest {
 		List<StudentCareer> foundCareers = this.controller.getCareers(A_TOKEN, AN_USER_NAME);
 		
 		assertEquals(careers, foundCareers);		
+	}
+	
+	@Test
+	public void testDeleteCareer() {
+		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(service).delete(AN_USER_NAME, A_CAREER_CODE);
+				
+		this.controller.deleteCareer(A_TOKEN, AN_USER_NAME, A_CAREER_CODE);
+		
+		assertTrue(true);		
 	}
 }
 

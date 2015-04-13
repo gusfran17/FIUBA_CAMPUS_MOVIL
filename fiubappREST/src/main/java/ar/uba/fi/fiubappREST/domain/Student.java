@@ -19,6 +19,8 @@ import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import ar.uba.fi.fiubappREST.exceptions.CareerAlreadyExistsForStudentException;
+import ar.uba.fi.fiubappREST.exceptions.CareerNotFoundForStudentException;
+import ar.uba.fi.fiubappREST.exceptions.UnableToDeleteTheOnlyCareerForStudentException;
 import ar.uba.fi.fiubappREST.utils.CustomDateDeserializer;
 import ar.uba.fi.fiubappREST.utils.CustomDateSerializer;
 
@@ -56,7 +58,7 @@ public class Student {
 	@Enumerated
 	private Gender gender;
 
-	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, fetch=FetchType.EAGER, orphanRemoval = true)
 	private List<StudentCareer> careers;
 	
 	@OneToOne(mappedBy = "student", cascade={CascadeType.ALL}, orphanRemoval = true)
@@ -210,4 +212,30 @@ public class Student {
 		});
 		return foundCareer!=null;
 	}
+
+	public void removeCareer(StudentCareer career) {
+		StudentCareer studentcareer = findCareer(career);
+		this.verifyMoreThanOneCareers();
+		this.careers.remove(studentcareer);
+		career.setStudent(null);
+	}
+	
+	private void verifyMoreThanOneCareers() {
+		if(this.careers.size() < 2){
+			throw new UnableToDeleteTheOnlyCareerForStudentException(this.userName);
+		}		
+	}
+
+	private StudentCareer findCareer(final StudentCareer career) {
+		StudentCareer foundCareer = (StudentCareer) CollectionUtils.find(this.careers, new Predicate() {
+            public boolean evaluate(Object object) {
+                return ((StudentCareer) object).getCareer().getCode().equals(career.getCareer().getCode());
+            }
+		});
+		if(foundCareer==null){
+			throw new CareerNotFoundForStudentException(career.getCareer().getCode(), this.userName);
+		}
+		return foundCareer;
+	}	
+
 }
