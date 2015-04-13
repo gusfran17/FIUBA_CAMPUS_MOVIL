@@ -18,7 +18,6 @@
         android:layout_alignTop="@+id/thumbnail"
         android:layout_toRightOf="@+id/thumbnail"
         android:textSize="@dimen/title"
-        android:text="Carlos Gonzalez"
         android:textStyle="bold" />
 
     <TextView

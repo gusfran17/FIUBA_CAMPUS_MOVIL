@@ -16,8 +16,10 @@
             android:background="#ff2ec7e8">
 
             <ImageView android:src="@drawable/no_image"
+                android:id="@+id/back"
                 android:layout_width="30sp"
                 android:layout_height="30sp"
+                android:onClick="onClickBack"
                 android:layout_marginLeft="10dip"/>
 
             <TextView android:id="@+id/profile_name"
@@ -29,8 +31,8 @@
 
         </LinearLayout>
 
-        <LinearLayout android:id="@+id/name"
-            android:layout_width="fill_parent"
+        <RelativeLayout android:id="@+id/name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="5dip"
             android:paddingBottom="5dip"
@@ -40,25 +42,41 @@
                 android:layout_width="60sp"
                 android:layout_height="60sp"
                 android:layout_marginLeft="10dip"/>
+        </RelativeLayout>
 
-            <TextView android:id="@+id/header_name"
-                android:layout_width="wrap_content"
-                android:layout_height="31dp"
-                android:paddingRight="10sp"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#372c24"
-                android:gravity="center_vertical|left|right" />
+        <EditText android:id="@+id/header_name"
+            android:layout_width="wrap_content"
+            android:layout_height="31dp"
+            android:paddingRight="10sp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#372c24"
+            android:text="Nombre"
+            android:gravity="center_vertical|left|right"
+            android:layout_below="@+id/header"
+            android:layout_toRightOf="@+id/name"
+            android:background="@null"/>
 
-            <TextView android:id="@+id/header_lastname"
-                android:layout_width="wrap_content"
-                android:layout_height="31dp"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#372c24"
-                android:gravity="center_vertical|left|right" />
+        <EditText android:id="@+id/header_lastname"
+            android:layout_width="wrap_content"
+            android:layout_height="31dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#372c24"
+            android:text="Apellido"
+            android:gravity="center_vertical|left|right"
+            android:background="@null"
+            android:layout_below="@+id/header_name"
+            android:layout_toRightOf="@+id/name" />
 
-        </LinearLayout>
+        <ImageView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/header_name"
+            android:src="@drawable/ic_editar"
+            android:layout_below="@+id/header"
+            android:id="@+id/edit_name"/>
 
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -116,8 +134,10 @@
                     android:layout_height="wrap_content"
                     android:gravity="right"
                     android:inputType="text"
-                    android:background="@null"
                     android:singleLine="true"
+                    android:focusable="false"
+                    android:background="@null"
+                    android:onClick="onClickFechaNacimiento"
                     android:layout_weight="0.7"/>
             </LinearLayout>
 
@@ -134,14 +154,11 @@
                     android:layout_weight="0.3"
                     android:text="Sexo"/>
 
-                <EditText android:id="@+id/edit_sex"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:inputType="text"
+                <Spinner android:id="@+id/edit_sex"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
                     android:background="@null"
-                    android:singleLine="true"
-                    android:layout_weight="0.7"/>
+                    android:entries="@array/genders" />
             </LinearLayout>
 
             <LinearLayout
@@ -243,6 +260,7 @@
             <Spinner android:id="@+id/reg_carrera"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right"
                 android:layout_marginTop="5dip"
                 android:layout_marginBottom="20dip"/>
 

@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,8 +54,8 @@ public class Perfil extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.perfil);
 
-        final TextView header_name = (TextView)findViewById(R.id.header_name);
-        final TextView header_lastname = (TextView)findViewById(R.id.header_lastname);
+        final EditText header_name = (EditText)findViewById(R.id.header_name);
+        final EditText header_lastname = (EditText)findViewById(R.id.header_lastname);
         final TextView profile_name = (TextView)findViewById(R.id.profile_name);
 
         final EditText edit_comments = (EditText)findViewById(R.id.edit_comentarios);
@@ -61,9 +63,10 @@ public class Perfil extends Activity{
         final EditText edit_telefono = (EditText)findViewById(R.id.edit_tel);
         final EditText edit_ciudad = (EditText)findViewById(R.id.edit_ciudad);
         final EditText edit_nacionalidad = (EditText)findViewById(R.id.edit_nacionalidad);
-        final EditText edit_sexo = (EditText)findViewById(R.id.edit_sex);
-        final EditText edit_fecha = (EditText)findViewById(R.id.edit_fecha);
+        final Spinner edit_sexo = (Spinner)findViewById(R.id.edit_sex);
+        final TextView edit_fecha = (TextView)findViewById(R.id.edit_fecha);
         final ImageView edit_button = (ImageView)findViewById(R.id.editButton);
+        final ImageView edit_name = (ImageView)findViewById(R.id.edit_name);
 
         edit_email.setEnabled(false);
         edit_telefono.setEnabled(false);
@@ -71,6 +74,9 @@ public class Perfil extends Activity{
         edit_ciudad.setEnabled(false);
         edit_nacionalidad.setEnabled(false);
         edit_fecha.setEnabled(false);
+
+        header_name.setEnabled(false);
+        header_lastname.setEnabled(false);
 
         urlAPI = getResources().getString(R.string.urlAPI);
 
@@ -80,101 +86,70 @@ public class Perfil extends Activity{
 
                 if (edit_email.isEnabled()){
 
-                    //obtengo todos los datos actuales
-                    String name = header_name.getText().toString();
-                    String lastName = header_lastname.getText().toString();
                     String email = edit_email.getText().toString();
                     String comments = edit_comments.getText().toString();
-                    //String gender = edit_sexo.getText().toString();
+                    String gender = edit_sexo.getSelectedItem().toString();
                     String currentCity = edit_ciudad.getText().toString();
                     String nationality = edit_nacionalidad.getText().toString();
                     String phoneNumber = edit_telefono.getText().toString();
 
-                    edit_fecha.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // Launch Date Picker Dialog
-                            DatePickerDialog dpd = new DatePickerDialog(Perfil.this,
-                                    new DatePickerDialog.OnDateSetListener() {
+                    //si el mail es valido llamo al REST
+                    emailValidator = new EmailValidator();
+                    if (emailValidator.validate(email)) {
 
-                                        @Override
-                                        public void onDateSet(DatePicker view, int year,
-                                                              int monthOfYear, int dayOfMonth) {
-                                            // Display Selected date in textbox
-                                           fecha = dayOfMonth + "/"
-                                                   + (monthOfYear + 1) + "/" + year;
-                                            edit_fecha.setText(fecha);
+                        Map<String, String> params = new HashMap<String, String>();
 
-                                        }
-                                    }, mYear, mMonth, mDay);
-                            dpd.show();
-                        }
-                    });
+                        params.put("email", email);
+                        params.put("dateOfBirth",fecha);
+                        params.put("phoneNumber",phoneNumber);
+                        params.put("currentCity",currentCity);
+                        params.put("nationality",nationality);
+                        params.put("comments",comments);
+                        params.put("gender",gender);
 
-                    //si ninguno de los campos estan vacios
-                    if (!name.equals("") && !lastName.equals("") && !email.equals("")){
-                        //si el mail es valido llamo al REST
-                        emailValidator = new EmailValidator();
-                        if (emailValidator.validate(email)) {
+                        JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.PUT,
+                                urlAPI+"/students/"+username,
+                                new JSONObject(params),
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        VolleyLog.d(TAG, "Error: " + response.toString());
 
-                            Map<String, String> params = new HashMap<String, String>();
+                                        edit_ciudad.setEnabled(false);
+                                        edit_email.setEnabled(false);
+                                        edit_nacionalidad.setEnabled(false);
+                                        edit_telefono.setEnabled(false);
+                                        //Toast.makeText(Perfil.this, "OK", Toast.LENGTH_LONG).show();
 
-                            params.put("name", name);
-                            params.put("lastName", lastName);
-                            params.put("email", email);
-                            params.put("dateOfBirth",fecha);
-                            params.put("phoneNumber",phoneNumber);
-                            params.put("currentCity",currentCity);
-                            params.put("nationality",nationality);
-                            params.put("comments",comments);
-
-                            JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.PUT,
-                                    urlAPI+"/students/"+username,
-                                    new JSONObject(params),
-                                    new Response.Listener<JSONObject>() {
-                                        @Override
-                                        public void onResponse(JSONObject response) {
-                                            VolleyLog.d(TAG, "Error: " + response.toString());
-
-                                            edit_ciudad.setEnabled(false);
-                                            edit_email.setEnabled(false);
-                                            edit_nacionalidad.setEnabled(false);
-                                            edit_telefono.setEnabled(false);
-                                            //Toast.makeText(Perfil.this, "OK", Toast.LENGTH_LONG).show();
-
-                                        }
-                                    },
-                                    new Response.ErrorListener(){
-                                        @Override
-                                        public void onErrorResponse(VolleyError error) {
-                                            VolleyLog.d(TAG, "Error: " + error.getMessage());
-                                            //Toast.makeText(Perfil.this, "ERROR", Toast.LENGTH_LONG).show();
-                                        }
                                     }
-                            ){
-                                @Override
-                                public Map<String, String> getHeaders() throws AuthFailureError {
-                                    Map<String, String> headers = new HashMap<String, String>();
-                                    SharedPreferences settings = getSharedPreferences(
-                                            getResources().getString(R.string.prefs_name), 0);
-                                    String token = settings.getString("token", null);
-                                    headers.put("Authorization", token);
-
-                                    return headers;
+                                },
+                                new Response.ErrorListener(){
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        VolleyLog.d(TAG, "Error: " + error.getMessage());
+                                        //Toast.makeText(Perfil.this, "ERROR", Toast.LENGTH_LONG).show();
+                                    }
                                 }
+                        ){
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                Map<String, String> headers = new HashMap<String, String>();
+                                SharedPreferences settings = getSharedPreferences(
+                                        getResources().getString(R.string.prefs_name), 0);
+                                String token = settings.getString("token", null);
+                                headers.put("Authorization", token);
 
-                            };
+                                return headers;
+                            }
 
-                            //llamada al POST
-                            VolleyController.getInstance().addToRequestQueue(jsonReq);
+                        };
 
-                            //aviso de mail no valido
-                        }else{
-                            Toast.makeText(Perfil.this, "El email no es válido", Toast.LENGTH_LONG).show();
-                        }
-                        //aviso de campo(s) vacio(s)
+                        //llamada al PUT
+                        VolleyController.getInstance().addToRequestQueue(jsonReq);
+
+                        //aviso de mail no valido
                     }else{
-                        Toast.makeText(Perfil.this, "Nombre, apellido y/o email vacíos", Toast.LENGTH_LONG).show();
+                        Toast.makeText(Perfil.this, "El email no es válido", Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -182,7 +157,71 @@ public class Perfil extends Activity{
                 edit_telefono.setEnabled(!edit_telefono.isEnabled());
                 edit_ciudad.setEnabled(!edit_ciudad.isEnabled());
                 edit_nacionalidad.setEnabled(!edit_nacionalidad.isEnabled());
+                edit_sexo.setEnabled(!edit_sexo.isEnabled());
+                edit_fecha.setEnabled(!edit_fecha.isEnabled());
 
+            }
+        });
+
+        edit_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (header_name.isEnabled()) {
+                    //obtengo todos los datos actuales
+                    String name = header_name.getText().toString();
+                    String lastName = header_lastname.getText().toString();
+
+                    if (!name.equals("") && !lastName.equals("")) {
+                        Map<String, String> params = new HashMap<String, String>();
+
+                        params.put("name", name);
+                        params.put("lastName", lastName);
+
+                        JsonObjectRequest jsonReqName = new JsonObjectRequest(Request.Method.PUT,
+                                urlAPI + "/students/" + username,
+                                new JSONObject(params),
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        VolleyLog.d(TAG, "Response: " + response.toString());
+
+                                        header_name.setEnabled(false);
+                                        header_lastname.setEnabled(false);
+
+                                    }
+                                },
+                                new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        VolleyLog.d(TAG, "Error: " + error.getMessage());
+                                    }
+                                }
+                        ) {
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                Map<String, String> headers = new HashMap<String, String>();
+                                SharedPreferences settings = getSharedPreferences(
+                                        getResources().getString(R.string.prefs_name), 0);
+                                String token = settings.getString("token", null);
+                                headers.put("Authorization", token);
+
+                                return headers;
+                            }
+
+                        };
+
+                        //llamada al PUT
+                        VolleyController.getInstance().addToRequestQueue(jsonReqName);
+
+                    } else {
+                        Toast.makeText(Perfil.this, "Nombre y/o apellido vacíos", Toast.LENGTH_LONG).show();
+                    }
+
+                } else {
+                    header_name.setEnabled(!header_name.isEnabled());
+                    header_lastname.setEnabled(!header_lastname.isEnabled());
+                }
             }
         });
 
@@ -213,7 +252,6 @@ public class Perfil extends Activity{
                             String currentCity = response.getString("currentCity");
                             String nationality = response.getString("nationality");
                             String phoneNumber = response.getString("phoneNumber");
-                            String sexo = response.getString("gender");
                             String fecha = response.getString("dateOfBirth");
 
                             if (email != "null") {
@@ -233,7 +271,12 @@ public class Perfil extends Activity{
                                 edit_nacionalidad.setText(nationality);
                             }
                             if (gender != "null"){
-                                edit_sexo.setText(sexo);
+                                if (gender.equals("Femenino")) {
+                                    edit_sexo.setSelection(0);
+                                    //edit_sexo.s
+                                }
+                                else if (gender.equals("Masculino"))
+                                    edit_sexo.setSelection(1);
                             }
                             if (comments != "null"){
                                 edit_comments.setText(comments);
@@ -266,5 +309,43 @@ public class Perfil extends Activity{
         };
 
         VolleyController.getInstance().addToRequestQueue(jsonReq);
+    }
+
+    public void onClickBack(View v){
+        final ImageView back = (ImageView)findViewById(R.id.back);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    public void onClickFechaNacimiento(View v) {
+
+        final EditText fechaNacimiento = (EditText)findViewById(R.id.edit_fecha);
+
+        // Process to get Current Date
+        final Calendar c = Calendar.getInstance();
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+
+        // Launch Date Picker Dialog
+        DatePickerDialog dpd = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        // Display Selected date in textbox
+                        fecha = dayOfMonth + "/"
+                                + (monthOfYear + 1) + "/" + year;
+                        fechaNacimiento.setText(fecha);
+
+                    }
+                }, mYear, mMonth, mDay);
+        dpd.show();
     }
 }
