@@ -64,7 +64,7 @@ public class Perfil extends Activity{
         setContentView(R.layout.perfil);
 
         cargarDatosEducacionSecundaria();
-final EditText header_name = (EditText)findViewById(R.id.header_name);
+        final EditText header_name = (EditText)findViewById(R.id.header_name);
         final EditText header_lastname = (EditText)findViewById(R.id.header_lastname);
         final TextView profile_name = (TextView)findViewById(R.id.profile_name);
 
@@ -237,7 +237,11 @@ final EditText header_name = (EditText)findViewById(R.id.header_name);
 
         SharedPreferences settings = this.getSharedPreferences(
                 getResources().getString(R.string.prefs_name), 0);
-        username = settings.getString("username",null);
+        if (settings.getBoolean("isExchange",false)){
+            username = "I"+settings.getString("username",null);
+        }else{
+            username = settings.getString("username",null);
+        }
 
         //obtener datos
         JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
@@ -431,7 +435,12 @@ final EditText header_name = (EditText)findViewById(R.id.header_name);
     public void cargarDatosEducacionSecundaria() {
 
         SharedPreferences settings = getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
-        String username = settings.getString("username", null);
+        String username = null;
+        if (settings.getBoolean("isExchange",false)){
+            username = "I"+settings.getString("username",null);
+        }else{
+            username = settings.getString("username",null);
+        }
         final String token = settings.getString("token", null);
 
         final EditText etFechaInicio = (EditText)findViewById(R.id.etFechaInicio);
@@ -517,7 +526,12 @@ final EditText header_name = (EditText)findViewById(R.id.header_name);
     public void guardarOACtualizarDatosEducacionSecundaria(int guardarActualizar){
 
         SharedPreferences settings = getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
-        String username = settings.getString("username", null);
+        String username = null;
+        if (settings.getBoolean("isExchange",false)){
+            username = "I"+settings.getString("username",null);
+        }else{
+            username = settings.getString("username",null);
+        }
         final String token = settings.getString("token", null);
 
         final EditText fechaInicio = (EditText)findViewById(R.id.etFechaInicio);

@@ -110,6 +110,7 @@ public class Login extends Activity {
                             SharedPreferences.Editor editor = settings.edit();
                             editor.putString("token", token);
                             editor.putString("username", usuario);
+                            editor.putBoolean("isExchange",checkBox.isChecked());
                             editor.commit();
 
                             Intent i = new Intent(getBaseContext(), Principal.class);
