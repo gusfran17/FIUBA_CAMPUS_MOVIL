@@ -5,11 +5,14 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import ar.uba.fi.fiubappREST.domain.Career;
+import ar.uba.fi.fiubappREST.domain.StudentCareer;
 import ar.uba.fi.fiubappREST.services.StudentCareerService;
 import ar.uba.fi.fiubappREST.services.StudentSessionService;
 
@@ -26,7 +29,7 @@ public class StudentCareerControllerTest {
 	@Mock
 	private StudentSessionService studentSessionService;
 	@Mock
-	private Career career;
+	private StudentCareer career;
 		
 	@Before
 	public void setUp(){
@@ -34,7 +37,7 @@ public class StudentCareerControllerTest {
 		this.studentSessionService = mock(StudentSessionService.class);
 		this.controller = new StudentCareerController(service, studentSessionService);
 		
-		this.career = mock(Career.class);
+		this.career = mock(StudentCareer.class);
 	}
 
 	@Test
@@ -42,9 +45,23 @@ public class StudentCareerControllerTest {
 		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
 		when(service.create(AN_USER_NAME, A_CAREER_CODE)).thenReturn(career);
 				
-		Career createdCareer = this.controller.addCareer(A_TOKEN, AN_USER_NAME, A_CAREER_CODE);
+		StudentCareer createdCareer = this.controller.addCareer(A_TOKEN, AN_USER_NAME, A_CAREER_CODE);
 		
-		assertEquals(createdCareer, career);		
+		assertEquals(career, createdCareer);		
+	}
+	
+	@Test
+	public void testGetCareers() {
+		doNothing().when(studentSessionService).validate(A_TOKEN);
+		StudentCareer anotherCareer = mock(StudentCareer.class);
+		List<StudentCareer> careers = new ArrayList<StudentCareer>();
+		careers.add(career);
+		careers.add(anotherCareer);
+		when(service.findAll(AN_USER_NAME)).thenReturn(careers);
+				
+		List<StudentCareer> foundCareers = this.controller.getCareers(A_TOKEN, AN_USER_NAME);
+		
+		assertEquals(careers, foundCareers);		
 	}
 }
 

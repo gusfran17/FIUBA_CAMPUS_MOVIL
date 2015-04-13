@@ -1,5 +1,7 @@
 package ar.uba.fi.fiubappREST.services;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,20 +30,21 @@ public class StudentCareerServiceImpl implements StudentCareerService {
 	}
 
 	@Override
-	public Career create(String userName, Integer careerCode) {
+	public StudentCareer create(String userName, Integer careerCode) {
 		LOGGER.info(String.format("Adding career with code %s to student with userName %s.", careerCode, userName));
 		Career career = findCareer(careerCode);
 		Student student = findStudent(userName);
-		this.createStudentCareer(student, career);
+		StudentCareer studentCareer = this.createStudentCareer(student, career);
 		student = studentRepository.save(student); 
 		LOGGER.info(String.format("Career with code %s was added to student with userName %s.", careerCode, userName));
-		return career;
+		return studentCareer;
 	}
 	
-	private void createStudentCareer(Student student, Career career) {
+	private StudentCareer createStudentCareer(Student student, Career career) {
 		StudentCareer studentCareer = new StudentCareer();
 		studentCareer.setCareer(career);
 		student.addCareer(studentCareer);
+		return studentCareer;
 	}
 
 	private Student findStudent(String userName) {
@@ -60,6 +63,14 @@ public class StudentCareerServiceImpl implements StudentCareerService {
 			throw new CareerNotFoundException(careerCode);
 		}
 		return career;
+	}
+
+	@Override
+	public List<StudentCareer> findAll(String userName) {
+		LOGGER.info(String.format("Finding all careers for student with userName %s.", userName));
+		Student student = this.findStudent(userName);
+		LOGGER.info(String.format("All careers for student with userName %s were found.", userName));
+		return student.getCareers();
 	}
 
 }

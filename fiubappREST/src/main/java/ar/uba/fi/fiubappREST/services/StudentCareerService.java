@@ -1,9 +1,13 @@
 package ar.uba.fi.fiubappREST.services;
 
-import ar.uba.fi.fiubappREST.domain.Career;
+import java.util.List;
+
+import ar.uba.fi.fiubappREST.domain.StudentCareer;
 
 public interface StudentCareerService {
 
-	public Career create(String userName, Integer code);
+	public StudentCareer create(String userName, Integer code);
+
+	public List<StudentCareer> findAll(String userName);
 
 }

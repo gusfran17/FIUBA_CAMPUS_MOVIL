@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +23,8 @@ import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 public class StudentCareerServiceImplTest {
 	
 	private static final String AN_USER_NAME = "anUserName";
-	private static final Integer A_CAREER_CODE = 2;;
+	private static final Integer A_CAREER_CODE = 2;
+	private static final Integer ANOTHER_CAREER_CODE = 3;
 	
 	@Mock
 	private CareerRepository careerRepository;
@@ -54,9 +56,9 @@ public class StudentCareerServiceImplTest {
 		when(this.studentRepository.findOne(AN_USER_NAME)).thenReturn(student);
 		when(this.studentRepository.save(student)).thenReturn(student);
 		
-		Career savedCareer = this.service.create(AN_USER_NAME, A_CAREER_CODE);
+		StudentCareer savedCareer = this.service.create(AN_USER_NAME, A_CAREER_CODE);
 		
-		assertEquals(career, savedCareer);
+		assertEquals(career, savedCareer.getCareer());
 	}
 	
 	@Test(expected=CareerNotFoundException.class)
@@ -72,6 +74,23 @@ public class StudentCareerServiceImplTest {
 		when(this.studentRepository.findOne(AN_USER_NAME)).thenReturn(null);
 		
 		this.service.create(AN_USER_NAME, A_CAREER_CODE);
+	}
+	
+	@Test
+	public void testFindAll() {
+		StudentCareer studentCareer = new StudentCareer();
+		studentCareer.setCareer(career);
+		student.addCareer(studentCareer);
+		StudentCareer anotherStudentCareer = new StudentCareer();
+		Career anotherCareer =new Career();
+		anotherCareer.setCode(ANOTHER_CAREER_CODE);
+		anotherStudentCareer.setCareer(anotherCareer);
+		student.addCareer(anotherStudentCareer);
+		when(this.studentRepository.findOne(AN_USER_NAME)).thenReturn(student);
+		
+		List<StudentCareer> careers = this.service.findAll(AN_USER_NAME);
+		
+		assertEquals(careers, student.getCareers());
 	}
 	
 }

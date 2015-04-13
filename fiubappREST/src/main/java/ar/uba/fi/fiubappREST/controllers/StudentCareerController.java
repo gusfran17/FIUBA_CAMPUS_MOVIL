@@ -1,5 +1,7 @@
 package ar.uba.fi.fiubappREST.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -10,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import ar.uba.fi.fiubappREST.domain.Career;
+import ar.uba.fi.fiubappREST.domain.StudentCareer;
 import ar.uba.fi.fiubappREST.services.StudentCareerService;
 import ar.uba.fi.fiubappREST.services.StudentSessionService;
 
@@ -30,9 +32,16 @@ public class StudentCareerController {
 		
 	@RequestMapping(method = RequestMethod.POST, value="{code}")
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public @ResponseBody Career addCareer(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @PathVariable Integer code) {
+	public @ResponseBody StudentCareer addCareer(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @PathVariable Integer code) {
 		this.studentSessionService.validateMine(token, userName);
 		return this.studentCareerService.create(userName, code);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	public @ResponseBody List<StudentCareer> getCareers(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
+		this.studentSessionService.validate(token);
+		return this.studentCareerService.findAll(userName);
 	}
 }
 
