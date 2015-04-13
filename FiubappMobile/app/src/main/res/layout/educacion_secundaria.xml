@@ -33,6 +33,7 @@
                 android:src="@drawable/ic_editar"
                 android:layout_marginRight="5px"
                 android:layout_alignParentRight="true"
+                android:onClick="onClickImgEditar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp" />
@@ -49,7 +50,7 @@
                 android:id="@+id/tvTitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Título"
+                android:text="@string/titulo"
                 android:layout_alignBaseline="@+id/etTitulo"
                 android:layout_alignBottom="@+id/etTitulo" />
 
@@ -57,7 +58,8 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:layout_marginLeft="15px"
-                android:editable="false"
+                android:layout_marginTop="5px"
+                android:enabled="false"
                 android:layout_toRightOf="@+id/tvTitulo" />
 
             <TextView
@@ -72,6 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:layout_marginLeft="15px"
+                android:enabled="false"
                 android:layout_below="@+id/etTitulo"
                 android:layout_toRightOf="@+id/tvEscuela" />
 
@@ -79,7 +82,7 @@
                 android:id="@+id/tvFechaInicio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Fecha inicio"
+                android:text="@string/fechaInicio"
                 android:layout_alignBaseline="@+id/etFechaInicio"
                 android:layout_alignBottom="@+id/etFechaInicio" />
 
@@ -87,6 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:focusable="false"
+                android:enabled="false"
                 android:onClick="onClickFechaInicio"
                 android:layout_marginLeft="15px"
                 android:layout_below="@+id/etEscuela"
@@ -96,7 +100,7 @@
                 android:id="@+id/tvFechaFin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Fecha fin"
+                android:text="@string/fechaFin"
                 android:layout_alignBaseline="@+id/etFechaFin"
                 android:layout_alignBottom="@+id/etFechaFin" />
 
@@ -104,6 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:focusable="false"
+                android:enabled="false"
                 android:onClick="onClickFechaFin"
                 android:layout_marginLeft="15px"
                 android:layout_below="@+id/etFechaInicio"
