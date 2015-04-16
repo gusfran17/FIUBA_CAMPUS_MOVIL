@@ -63,13 +63,13 @@ public class Register1 extends Activity{
                             startActivity(i);
 
                         }else{
-                            Toast.makeText(Register1.this, "La contraseña debe tener 8 o más caracteres", Toast.LENGTH_LONG).show();
+                            Popup.showText(Register1.this, "La contraseña debe tener 8 o más caracteres", Toast.LENGTH_LONG).show();
                         }
                     }else{
-                        Toast.makeText(Register1.this, "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
+                        Popup.showText(Register1.this, "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
                     }
                 }else{
-                    Toast.makeText(Register1.this, edit_padron.getHint() +
+                    Popup.showText(Register1.this, edit_padron.getHint() +
                             " y/o contraseña vacíos", Toast.LENGTH_LONG).show();
                 }
             }

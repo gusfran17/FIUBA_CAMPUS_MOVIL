@@ -129,7 +129,6 @@ public class Perfil extends Activity{
                                         edit_email.setEnabled(false);
                                         edit_nacionalidad.setEnabled(false);
                                         edit_telefono.setEnabled(false);
-                                        //Toast.makeText(Perfil.this, "OK", Toast.LENGTH_LONG).show();
 
                                     }
                                 },
@@ -137,7 +136,6 @@ public class Perfil extends Activity{
                                     @Override
                                     public void onErrorResponse(VolleyError error) {
                                         VolleyLog.d(TAG, "Error: " + error.getMessage());
-                                        //Toast.makeText(Perfil.this, "ERROR", Toast.LENGTH_LONG).show();
                                     }
                                 }
                         ){
@@ -159,7 +157,7 @@ public class Perfil extends Activity{
 
                         //aviso de mail no valido
                     }else{
-                        Toast.makeText(Perfil.this, "El email no es válido", Toast.LENGTH_LONG).show();
+                        Popup.showText(Perfil.this, "El email no es válido", Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -225,7 +223,7 @@ public class Perfil extends Activity{
                         VolleyController.getInstance().addToRequestQueue(jsonReqName);
 
                     } else {
-                        Toast.makeText(Perfil.this, "Nombre y/o apellido vacíos", Toast.LENGTH_LONG).show();
+                        Popup.showText(Perfil.this, "Nombre y/o apellido vacíos", Toast.LENGTH_LONG).show();
                     }
 
                 } else {
@@ -373,7 +371,7 @@ public class Perfil extends Activity{
         }
 
         if(!fechaInicio.before(fechaFin) || !fechaFin.before(actual)){
-            Toast.makeText(Perfil.this, "Verifique que la fecha desde sea menor a la fecha hasta y no sean futuras", Toast.LENGTH_LONG).show();
+            Popup.showText(Perfil.this, "Verifique que la fecha desde sea menor a la fecha hasta y no sean futuras", Toast.LENGTH_LONG).show();
             return false;
         }
 
@@ -513,7 +511,7 @@ public class Perfil extends Activity{
         if(mensaje != null)
             msg = mensaje;
 
-        Toast.makeText(Perfil.this, msg, Toast.LENGTH_LONG).show();
+        Popup.showText(Perfil.this, msg, Toast.LENGTH_LONG).show();
 
         Intent i = new Intent(getBaseContext(), Login.class);
         startActivity(i);
@@ -557,7 +555,7 @@ public class Perfil extends Activity{
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(guardarActualizar, url, jsonParams, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(Perfil.this, "Datos de educación secundaria guardados correctamente", Toast.LENGTH_LONG).show();
+                        Popup.showText(Perfil.this, "Datos de educación secundaria guardados correctamente", Toast.LENGTH_LONG).show();
                     }
                 },
                 new Response.ErrorListener() {

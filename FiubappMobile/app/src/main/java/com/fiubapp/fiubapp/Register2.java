@@ -156,7 +156,7 @@ public class Register2 extends Activity{
                                     public void onResponse(JSONObject response) {
                                         VolleyLog.d(TAG, "Error: " + response.toString());
 
-                                        Toast.makeText(Register2.this, "La cuenta ha sido creada, " +
+                                        Popup.showText(Register2.this, "La cuenta ha sido creada, " +
                                                 "se le enviará un email de confirmación", Toast.LENGTH_LONG).show();
 
                                         //se redirige al login
@@ -177,7 +177,7 @@ public class Register2 extends Activity{
                                             String mensaje = JSONBody.getString("message");
 
                                             //muestra el mensaje
-                                            Toast.makeText(Register2.this, mensaje, Toast.LENGTH_LONG).show();
+                                            Popup.showText(Register2.this, mensaje, Toast.LENGTH_LONG).show();
 
                                             //redirige a la pantalla inicial de registro
                                             Intent i = new Intent(getBaseContext(), Register1.class);
@@ -199,11 +199,11 @@ public class Register2 extends Activity{
 
                     //aviso de mail no valido
                     }else{
-                        Toast.makeText(Register2.this, "El email no es válido", Toast.LENGTH_LONG).show();
+                        Popup.showText(Register2.this, "El email no es válido", Toast.LENGTH_LONG).show();
                     }
                 //aviso de campo(s) vacio(s)
                 }else{
-                    Toast.makeText(Register2.this, "Nombre, apellido y/o email vacíos", Toast.LENGTH_LONG).show();
+                    Popup.showText(Register2.this, "Nombre, apellido y/o email vacíos", Toast.LENGTH_LONG).show();
                 }
             }
         });

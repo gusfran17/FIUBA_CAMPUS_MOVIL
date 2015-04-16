@@ -65,11 +65,11 @@ public class Login extends Activity {
                     if (password.length() >= 8) {
                         login(username, password);
                     }else{
-                        Toast.makeText(Login.this, "La contraseña debe tener 8 o más caracteres", Toast.LENGTH_LONG).show();
+                        Popup.showText(Login.this, "La contraseña debe tener 8 o más caracteres", Toast.LENGTH_LONG).show();
                     }
                 }else{
-                    Toast.makeText(Login.this, edit_padron.getHint() +
-                            " y/o contraseña vacíos", Toast.LENGTH_LONG).show();
+                    Popup.showText(Login.this,edit_padron.getHint() +
+                            " y/o contraseña vacíos",Popup.LENGTH_LONG).show();
                 }
             }
         });
@@ -131,7 +131,7 @@ public class Login extends Activity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(Login.this, edit_padron.getHint() + " y/o contraseña incorrecta", Toast.LENGTH_LONG).show();
+                        Popup.showText(Login.this, edit_padron.getHint() + " y/o contraseña incorrecta", Toast.LENGTH_LONG).show();
                     }
                 }){
             public Map<String, String> getHeaders() throws AuthFailureError {
