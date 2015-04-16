@@ -592,7 +592,7 @@ public class Perfil extends Activity{
 
         queue.add(jsObjRequest);
     }
-public void onClickBack(View v){
+    public void onClickBack(View v){
         final ImageView back = (ImageView)findViewById(R.id.back);
 
         back.setOnClickListener(new View.OnClickListener() {
