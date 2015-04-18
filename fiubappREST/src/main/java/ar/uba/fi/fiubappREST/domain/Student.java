@@ -1,5 +1,6 @@
 package ar.uba.fi.fiubappREST.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -61,6 +62,9 @@ public class Student {
 	
 	@OneToOne(mappedBy = "student", cascade={CascadeType.ALL}, orphanRemoval = true)
 	private HighSchool highSchool;
+	
+	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, orphanRemoval = true)
+	private List<Notification> notifications;
 	
 	public String getUserName() {
 		return userName;
@@ -194,6 +198,15 @@ public class Student {
 		this.highSchool = highSchool;
 	}
 
+	@JsonIgnore
+	public List<Notification> getNotifications() {
+		return notifications;
+	}
+
+	public void setNotifications(List<Notification> notifications) {
+		this.notifications = notifications;
+	}
+
 	public void addCareer(final StudentCareer career) {
 		if(this.existsCareer(career.getCareer())){
 			throw new CareerAlreadyExistsForStudentException(this.userName, career.getCareer().getCode());
@@ -209,5 +222,12 @@ public class Student {
             }
 		});
 		return foundCareer!=null;
+	}
+
+	public void addNotification(Notification notification) {
+		if(this.notifications==null){
+			this.notifications = new ArrayList<Notification>();
+		}
+		this.notifications.add(notification);		
 	}
 }

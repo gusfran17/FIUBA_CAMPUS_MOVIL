@@ -106,6 +106,12 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
+	@ExceptionHandler(NotificationNotFoundForStudentException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(NotificationNotFoundForStudentException exception){
+		return buildResponse(exception);
+	}
+	
 	
 	
 	@ExceptionHandler(InvalidUserException.class)
