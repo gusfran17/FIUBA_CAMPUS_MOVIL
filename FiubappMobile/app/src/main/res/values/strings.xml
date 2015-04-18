@@ -15,4 +15,11 @@
     <string name="prefs_name">MyPrefsFile</string>
     <string name="educacionSecundaria">Educación secundaria</string>
     <string name="escuela">Escuela</string>
+    <string name="fechaFin">Fecha fin</string>
+    <string name="fechaInicio">Fecha inicio</string>
+    <string name="titulo">Título</string>
+    <string-array name="genders">
+        <item>Femenino</item>
+        <item>Masculino</item>
+    </string-array>
 </resources>

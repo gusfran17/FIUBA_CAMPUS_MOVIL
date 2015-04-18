@@ -37,14 +37,20 @@ public class Login extends Activity {
         final Button btnLogin = (Button) findViewById(R.id.btnLogin);
         final Button btnSoyNuevo = (Button) findViewById(R.id.btnSoyNuevo);
         final EditText edit_pass = (EditText)findViewById(R.id.reg_password);
+        final TextView textPadron = (TextView)findViewById(R.id.text_padron);
+
         final CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox_intercambio);
 
         checkBox.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (((CheckBox) v).isChecked())
+                if (((CheckBox) v).isChecked()){
                     edit_padron.setHint(R.string.pasaporte);
-                else
+                    textPadron.setText(R.string.pasaporte);
+                }
+                else {
                     edit_padron.setHint(R.string.numeroPadron);
+                    textPadron.setText(R.string.numeroPadron);
+                }
             }
         });
 
@@ -59,11 +65,11 @@ public class Login extends Activity {
                     if (password.length() >= 8) {
                         login(username, password);
                     }else{
-                        Toast.makeText(Login.this, "La contraseña debe tener 8 o más caracteres", Toast.LENGTH_LONG).show();
+                        Popup.showText(Login.this, "La contraseña debe tener 8 o más caracteres", Toast.LENGTH_LONG).show();
                     }
                 }else{
-                    Toast.makeText(Login.this, edit_padron.getHint() +
-                            " y/o contraseña vacíos", Toast.LENGTH_LONG).show();
+                    Popup.showText(Login.this,edit_padron.getHint() +
+                            " y/o contraseña vacíos",Popup.LENGTH_LONG).show();
                 }
             }
         });
@@ -109,6 +115,8 @@ public class Login extends Activity {
                             SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
                             SharedPreferences.Editor editor = settings.edit();
                             editor.putString("token", token);
+                            editor.putString("username", usuario);
+                            editor.putBoolean("isExchange",checkBox.isChecked());
                             editor.commit();
 
                             Intent i = new Intent(getBaseContext(), Principal.class);
@@ -123,7 +131,7 @@ public class Login extends Activity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(Login.this, edit_padron.getHint() + " y/o contraseña incorrecta", Toast.LENGTH_LONG).show();
+                        Popup.showText(Login.this, edit_padron.getHint() + " y/o contraseña incorrecta", Toast.LENGTH_LONG).show();
                     }
                 }){
             public Map<String, String> getHeaders() throws AuthFailureError {

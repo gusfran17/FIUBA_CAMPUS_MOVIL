@@ -1,8 +1,118 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:background="#fff">
 
-    <include layout="@layout/educacion_secundaria"/>
+        <LinearLayout android:id="@+id/header_profile"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dip"
+            android:paddingBottom="5dip"
+            android:background="#ff2ec7e8">
 
-</RelativeLayout>
+            <ImageView android:src="@drawable/no_image"
+                android:id="@+id/back"
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:onClick="onClickBack"
+                android:layout_marginLeft="10dip"/>
+
+            <TextView android:id="@+id/profile_name"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:textColor="#372c24"
+                android:text="Nombre"
+                android:gravity="center_vertical|left|right" />
+
+        </LinearLayout>
+
+        <RelativeLayout android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dip"
+            android:paddingBottom="5dip"
+            android:layout_below="@+id/header_profile">
+
+            <ImageView android:src="@drawable/no_image"
+                android:layout_width="60sp"
+                android:layout_height="60sp"
+                android:layout_marginLeft="10dip"/>
+        </RelativeLayout>
+
+        <EditText android:id="@+id/header_name"
+            android:layout_width="wrap_content"
+            android:layout_height="31dp"
+            android:paddingRight="10sp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#372c24"
+            android:text="Nombre"
+            android:gravity="center_vertical|left|right"
+            android:layout_below="@+id/header_profile"
+            android:layout_toRightOf="@+id/name"
+            android:background="@null"/>
+
+        <EditText android:id="@+id/header_lastname"
+            android:layout_width="wrap_content"
+            android:layout_height="31dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#372c24"
+            android:text="Apellido"
+            android:gravity="center_vertical|left|right"
+            android:background="@null"
+            android:layout_below="@+id/header_name"
+            android:layout_toRightOf="@+id/name" />
+
+        <ImageView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/header_name"
+            android:src="@drawable/ic_editar"
+            android:layout_below="@+id/header_profile"
+            android:id="@+id/edit_name"/>
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dip"
+            android:layout_below="@id/name"
+            android:id="@+id/comments">
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="Comentarios personales"/>
+            <EditText android:id="@+id/edit_comentarios"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="20dip"/>
+        </LinearLayout>
+
+        <include layout="@layout/datos_personales"
+            android:layout_below="@+id/comments"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/datos_personales"
+            android:layout_centerHorizontal="true"/>
+
+        <include layout="@layout/educacion_secundaria"
+            android:layout_below="@+id/datos_personales"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_alignParentLeft="false"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20sp" />
+
+    </RelativeLayout>
+</ScrollView>
