@@ -36,6 +36,7 @@ public class MateServiceImpl implements MateService {
 		this.studentRepository.save(student);
 		this.studentRepository.save(mate);
 		StudentProfileRepresentation mateProfile = this.studentProfileConverter.convert(student, mate);
+		
 		return mateProfile;	
 	}
 	
