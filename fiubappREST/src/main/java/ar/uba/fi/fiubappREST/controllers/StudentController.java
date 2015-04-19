@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import ar.uba.fi.fiubappREST.domain.Student;
+import ar.uba.fi.fiubappREST.domain.StudentSession;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentUpdateRepresentation;
@@ -43,8 +44,8 @@ public class StudentController {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody List<StudentProfileRepresentation> getStudents(@RequestHeader(value="Authorization") String token) {
-		this.studentSessionService.validate(token);
-		return studentService.findAll();
+		StudentSession session = this.studentSessionService.find(token);
+		return studentService.findAllFor(session.getUserName());
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="{userName}")

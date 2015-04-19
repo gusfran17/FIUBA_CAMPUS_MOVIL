@@ -46,7 +46,7 @@ public class NotificationController {
 	}
 	
 	@RequestMapping(value="{notificationId}", method = RequestMethod.DELETE)
-	@ResponseStatus(value = HttpStatus.OK)
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public @ResponseBody void deleteNotification(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @PathVariable Integer notificationId) {
 		this.studentSessionService.validateMine(token, userName);
 		this.notificationService.delete(userName, notificationId);

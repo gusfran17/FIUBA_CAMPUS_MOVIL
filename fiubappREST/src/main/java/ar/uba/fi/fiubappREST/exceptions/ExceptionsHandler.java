@@ -112,6 +112,12 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
+	@ExceptionHandler(StudentAlreadyMateException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(StudentAlreadyMateException exception){
+		return buildResponse(exception);
+	}
+	
 	
 	
 	@ExceptionHandler(InvalidUserException.class)

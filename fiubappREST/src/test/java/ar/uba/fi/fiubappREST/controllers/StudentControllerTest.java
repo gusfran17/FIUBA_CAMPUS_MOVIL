@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import ar.uba.fi.fiubappREST.domain.Student;
+import ar.uba.fi.fiubappREST.domain.StudentSession;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentUpdateRepresentation;
@@ -45,6 +46,7 @@ public class StudentControllerTest {
 		
 		this.representation = mock(StudentCreationRepresentation.class);
 		this.student = mock(Student.class);
+		when(this.student.getUserName()).thenReturn(AN_USER_NAME);
 	}
 
 	@Test
@@ -58,8 +60,10 @@ public class StudentControllerTest {
 	
 	@Test
 	public void testGetStudents(){
-		doNothing().when(sessionService).validate(A_TOKEN);
-		when(service.findAll()).thenReturn(new ArrayList<StudentProfileRepresentation>());
+		StudentSession session = mock(StudentSession.class);
+		when(session.getUserName()).thenReturn(AN_USER_NAME);
+		when(sessionService.find(A_TOKEN)).thenReturn(session);
+		when(service.findAllFor(AN_USER_NAME)).thenReturn(new ArrayList<StudentProfileRepresentation>());
 		
 		List<StudentProfileRepresentation> students = this.controller.getStudents(A_TOKEN);
 		

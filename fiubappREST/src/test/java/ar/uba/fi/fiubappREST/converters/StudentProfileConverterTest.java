@@ -28,7 +28,8 @@ public class StudentProfileConverterTest {
 	private static final String A_CAREER_NAME = "aCareerName";
 	private static final String ANOTHER_CAREER_NAME = "anotherCareerName";
 	
-	private Student student;
+	private Student mate;
+	private Student me;
 	private StudentProfileConverter studentProfileConverter;
 	@Mock
 	private Career aCareer;
@@ -38,13 +39,13 @@ public class StudentProfileConverterTest {
 	@Before
 	public void setUp(){
 		this.studentProfileConverter= new StudentProfileConverter();
-		this.student = new Student();
-		this.student.setUserName(AN_USER_NAME);
-		this.student.setName(A_NAME);
-		this.student.setLastName(A_LAST_NAME);
-		this.student.setIsExchangeStudent(false);
-		this.student.setFileNumber(A_FILE_NUMBER);
-		this.student.setPassportNumber(A_PASSPORT_NUMBER);
+		this.mate = new Student();
+		this.mate.setUserName(AN_USER_NAME);
+		this.mate.setName(A_NAME);
+		this.mate.setLastName(A_LAST_NAME);
+		this.mate.setIsExchangeStudent(false);
+		this.mate.setFileNumber(A_FILE_NUMBER);
+		this.mate.setPassportNumber(A_PASSPORT_NUMBER);
 		
 		this.aCareer = mock(Career.class);
 		this.anotherCareer = mock(Career.class);
@@ -57,13 +58,17 @@ public class StudentProfileConverterTest {
 		List<StudentCareer> careers = new ArrayList<StudentCareer>();
 		careers.add(aStudentCareer);
 		careers.add(anotherStudentCareer);
-		this.student.setCareers(careers);
+		this.mate.setCareers(careers);
+		me = new Student();
+		List<Student> mates = new ArrayList<Student>();
+		mates.add(mate);
+		this.me.setMates(mates);
 	}
 
 	@Test
 	public void testConvert() {
 				
-		StudentProfileRepresentation profile = studentProfileConverter.convert(student);
+		StudentProfileRepresentation profile = studentProfileConverter.convert(mate);
 		
 		assertEquals(A_NAME, profile.getName());
 		assertEquals(A_LAST_NAME, profile.getLastName());
@@ -73,5 +78,21 @@ public class StudentProfileConverterTest {
 		assertFalse(profile.getIsExchangeStudent());
 		assertTrue(profile.getCareers().contains(A_CAREER_NAME));
 		assertTrue(profile.getCareers().contains(ANOTHER_CAREER_NAME));
+	}
+	
+	@Test
+	public void testConvertForStudent() {
+			
+		StudentProfileRepresentation profile = studentProfileConverter.convert(me, mate);
+		
+		assertEquals(A_NAME, profile.getName());
+		assertEquals(A_LAST_NAME, profile.getLastName());
+		assertEquals(A_FILE_NUMBER, profile.getFileNumber());
+		assertEquals(A_PASSPORT_NUMBER, profile.getPassportNumber());
+		assertEquals(AN_USER_NAME, profile.getUserName());
+		assertFalse(profile.getIsExchangeStudent());
+		assertTrue(profile.getCareers().contains(A_CAREER_NAME));
+		assertTrue(profile.getCareers().contains(ANOTHER_CAREER_NAME));
+		assertTrue(profile.getIsMyMate());
 	}
 }

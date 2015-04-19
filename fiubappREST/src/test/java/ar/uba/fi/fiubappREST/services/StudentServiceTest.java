@@ -119,13 +119,14 @@ public class StudentServiceTest {
 		List<Student> students = new ArrayList<Student>();
 		students.add(student);
 		students.add(anotherStudent);
+		when(studentRepository.findByUserNameAndFetchMatesEagerly(AN_USER_NAME)).thenReturn(student);
 		when(studentRepository.findAll()).thenReturn(students);
 		StudentProfileRepresentation profile = mock(StudentProfileRepresentation.class);
 		StudentProfileRepresentation anotherProfile = mock(StudentProfileRepresentation.class);
 		when(studentProfileConverter.convert(student)).thenReturn(profile);
 		when(studentProfileConverter.convert(anotherStudent)).thenReturn(anotherProfile);
 		
-		List<StudentProfileRepresentation> foundProfiles = this.service.findAll();
+		List<StudentProfileRepresentation> foundProfiles = this.service.findAllFor(AN_USER_NAME);
 		
 		assertEquals(2, foundProfiles.size());	
 	}

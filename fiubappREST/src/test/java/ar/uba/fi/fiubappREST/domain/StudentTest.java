@@ -8,11 +8,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ar.uba.fi.fiubappREST.exceptions.CareerAlreadyExistsForStudentException;
+import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyMateException;
 
 public class StudentTest {
 	
 	private static final int CAREER_CODE = 10;
 	private static final int ANOTHER_CAREER_CODE = 12;
+	private static final String AN_USER_NAME = "anUserName";
 	
 	private StudentCareer studentCareer;
 	
@@ -29,6 +31,7 @@ public class StudentTest {
 		student = new Student();
 		student.setCareers(new ArrayList<StudentCareer>());
 		student.getCareers().add(studentCareer);
+		student.setMates(new ArrayList<Student>());
 	}
 
 	@Test
@@ -51,6 +54,26 @@ public class StudentTest {
 		studentCareer.setCareer(career);
 		
 		this.student.addCareer(studentCareer);
+	}
+	
+	@Test
+	public void testAddMateOK() {
+		Student mate = new Student();
+		mate.setMates(new ArrayList<Student>());
+		
+		this.student.addMate(mate);
+				
+		assertEquals(1, this.student.getMates().size());
+	}
+	
+	@Test(expected=StudentAlreadyMateException.class)
+	public void testAddMateAlreadyExists() {
+		Student mate = new Student();
+		mate.setUserName(AN_USER_NAME);
+		mate.setMates(new ArrayList<Student>());
+		this.student.getMates().add(mate);
+		
+		this.student.addMate(mate);
 	}
 
 }

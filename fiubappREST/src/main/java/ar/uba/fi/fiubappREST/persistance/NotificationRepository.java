@@ -12,10 +12,10 @@ public interface NotificationRepository extends CrudRepository<Notification, Int
 	@Query(value = "SELECT * FROM notification WHERE id = ?1 AND userName = ?2", nativeQuery = true)
 	public List<Notification> findByIdAndUserName(Integer id, String userName);
 	
-	@Query(value = "SELECT * FROM notification WHERE userName = ?1", nativeQuery = true)
+	@Query(value = "SELECT * FROM notification WHERE userName = ?1 ORDER BY creationDate DESC", nativeQuery = true)
 	public List<Notification> findByUserName(String userName);
 	
-	@Query(value = "SELECT * FROM notification WHERE userName = ?1 AND isViewed = ?2", nativeQuery = true)
+	@Query(value = "SELECT * FROM notification WHERE userName = ?1 AND isViewed = ?2 ORDER BY creationDate DESC", nativeQuery = true)
 	public List<Notification> findByUserNameAndIsViewed(String userName, Boolean isViewed);
 	
 }
