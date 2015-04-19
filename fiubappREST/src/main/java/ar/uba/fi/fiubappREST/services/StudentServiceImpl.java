@@ -51,8 +51,10 @@ public class StudentServiceImpl implements StudentService {
 		Student student = this.getStudent(studentRepresentation);
 		LOGGER.info(String.format("Creating student with userName %s and careerCode.", student.getUserName(), studentRepresentation.getCareerCode()));
 		this.verifyUnusedUserName(student);
-		Career career = this.getCareer(studentRepresentation.getCareerCode());
-		this.createStudentCareer(student, career);
+		if(!studentRepresentation.getIsExchangeStudent()){
+			Career career = this.getCareer(studentRepresentation.getCareerCode());
+			this.createStudentCareer(student, career);
+		}
 		student = studentRepository.save(student); 
 		LOGGER.info(String.format("Student with userName %s and careerCode %s was created.", student.getUserName(), studentRepresentation.getCareerCode()));
 		return student;
