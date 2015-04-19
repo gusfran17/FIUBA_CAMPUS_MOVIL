@@ -19,7 +19,13 @@
     <string name="fechaInicio">Fecha inicio</string>
     <string name="titulo">Título</string>
     <string-array name="genders">
+        <item>Seleccione un sexo</item>
         <item>Femenino</item>
         <item>Masculino</item>
+    </string-array>
+    <string-array name="config">
+        <item>Perfil</item>
+        <item>Notificaciones</item>
+        <item>Salir</item>
     </string-array>
 </resources>

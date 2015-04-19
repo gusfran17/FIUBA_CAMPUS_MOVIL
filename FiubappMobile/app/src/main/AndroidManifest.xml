@@ -27,7 +27,8 @@
             android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".Principal"
             android:theme="@style/StyledIndicators"/>
-        <activity android:name=".Perfil"
+        <activity android:name=".PerfilTabs"
+            android:theme="@style/StyledIndicators"
             android:windowSoftInputMode="stateHidden"/>
     </application>
 

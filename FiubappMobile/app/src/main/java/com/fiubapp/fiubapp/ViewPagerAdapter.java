@@ -10,7 +10,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter implements IconPagerA
 
     final int PAGE_COUNT = 5;
 
-    private static final String[] CONTENT = new String[] { "Muro", "Compañeros", "Grupos", "Notificacion", "Perfil" };
+    private static final String[] CONTENT = new String[] { "Muro", "Compañeros", "Grupos", "Notificacion", "Config" };
 
     private static final int[] ICONS = new int[] {
             R.drawable.tab_muro_icon,
@@ -45,8 +45,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter implements IconPagerA
                 return fragmenttab4;
 
             case 4:
-                PerfilTab perfilTab = new PerfilTab();
-                return perfilTab;
+                Config config = new Config();
+                return config;
         }
         return null;
     }

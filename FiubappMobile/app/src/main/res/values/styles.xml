@@ -4,6 +4,7 @@
     <style name="AppTheme" parent="android:Theme.Light.NoTitleBar">
         <!-- Customize your theme here. -->
     </style>
+
     <style name="StyledIndicators" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>
     </style>

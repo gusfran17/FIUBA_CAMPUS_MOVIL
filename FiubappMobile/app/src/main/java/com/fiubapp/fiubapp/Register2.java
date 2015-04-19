@@ -72,13 +72,12 @@ public class Register2 extends Activity{
 
         final String urlAPI = this.getString(R.string.urlAPI);
 
-        // Creating volley request obj
-        JsonArrayRequest careerReq = new JsonArrayRequest(urlAPI+"/careers/",
+          JsonArrayRequest careerReq = new JsonArrayRequest(urlAPI+"/careers/",
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d(TAG, response.toString());
-
+                        careers.add("Seleccione una carrera");
                         // Parsing json
                         for (int i = 0; i < response.length(); i++) {
                             try {
@@ -127,25 +126,25 @@ public class Register2 extends Activity{
                         Map<String, String> params = new HashMap<String, String>();
 
                         //cargo los key,values en 'params', para formar el JSON
+
+                        params.put("password", password);
+                        params.put("name", nombre);
+                        params.put("lastName", apellido);
+                        params.put("email", email);
+                        params.put("isExchangeStudent", Boolean.toString(intercambio));
+
+                        //guarda la carrera solo si no selecciono "Seleccione una carrera"
+                        if (carrera > 1)
+                            params.put("careerCode", Integer.toString(carrera));
+                        else params.put("careerCode",null);
+
                         if (intercambio) {
                             //se cargan los datos para generar el request POST
                             params.put("fileNumber", null);
                             params.put("passportNumber", username);
-                            params.put("password", password);
-                            params.put("name", nombre);
-                            params.put("lastName", apellido);
-                            params.put("email", email);
-                            params.put("isExchangeStudent", Boolean.toString(intercambio));
-                            params.put("careerCode", Integer.toString(carrera));
                         }else{
                             params.put("fileNumber", username);
                             params.put("passportNumber", null);
-                            params.put("password", password);
-                            params.put("name", nombre);
-                            params.put("lastName", apellido);
-                            params.put("email", email);
-                            params.put("isExchangeStudent", Boolean.toString(intercambio));
-                            params.put("careerCode", Integer.toString(carrera));
                         }
 
                         JsonObjectRequest jsonReq = new JsonObjectRequest(
