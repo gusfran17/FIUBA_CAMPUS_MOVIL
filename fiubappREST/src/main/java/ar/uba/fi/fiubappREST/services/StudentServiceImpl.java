@@ -100,5 +100,18 @@ public class StudentServiceImpl implements StudentService {
 		return profiles;
 	}
 
+	@Override
+	public List<StudentProfileRepresentation> findByProperties(String name, String lastName, String email, String careerCode, String fileNumber, String passportNumber) {
+		LOGGER.info(String.format("Finding students by criteria."));
+		List<Student> students = this.studentRepository.findByProperties(name, lastName, email, careerCode, fileNumber, passportNumber);
+		List<StudentProfileRepresentation> profiles = new ArrayList<StudentProfileRepresentation>();
+		for (Student student : students) {
+			profiles.add(this.studentProfileConverter.convert(student));
+		}
+		LOGGER.info(String.format("All students meeting the criteria were found."));
+		return profiles;
+
+	}
+
 	
 }

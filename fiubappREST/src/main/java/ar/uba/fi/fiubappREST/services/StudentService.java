@@ -12,4 +12,6 @@ public interface StudentService {
 	
 	public List<StudentProfileRepresentation> findAll();
 
+	public List<StudentProfileRepresentation> findByProperties(String name, String lastName, String email, String careerCode, String fileNumber, String passport);
+
 }
