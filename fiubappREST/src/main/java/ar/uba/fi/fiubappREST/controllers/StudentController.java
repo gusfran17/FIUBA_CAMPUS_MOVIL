@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -42,11 +43,11 @@ public class StudentController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	public @ResponseBody List<StudentProfileRepresentation> getStudents(@RequestHeader(value="Authorization") String token) {
+	public @ResponseBody List<StudentProfileRepresentation> getStudent(@RequestHeader(value="Authorization") String token, @RequestParam(value="name", required=false) String name, @RequestParam(value="lastName", required=false) String lastName, @RequestParam(value="email", required=false) String email, @RequestParam(value="careerCode", required=false) String careerCode, @RequestParam(value="fileNumber", required=false) String fileNumber, @RequestParam(value="passportNumber", required=false) String passportNumber) {
 		this.studentSessionService.validate(token);
-		return studentService.findAll();
+		return studentService.findByProperties(name, lastName, email, careerCode, fileNumber, passportNumber);
 	}
-	
+    
 	@RequestMapping(method = RequestMethod.GET, value="{userName}")
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody Student getStudent(@RequestHeader(value="Authorization") String token, @PathVariable String userName){

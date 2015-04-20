@@ -17,4 +17,6 @@ public interface StudentService {
 
 	public Student update(String userName, StudentUpdateRepresentation studentRepresentation);
 
+	public List<StudentProfileRepresentation> findByProperties(String name, String lastName, String email, String careerCode, String fileNumber, String passport);
+
 }
