@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ar.uba.fi.fiubappREST.converters.StudentProfileConverter;
+import ar.uba.fi.fiubappREST.domain.ApplicationNotification;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
+import ar.uba.fi.fiubappREST.persistance.NotificationRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 
@@ -20,11 +22,13 @@ public class MateServiceImpl implements MateService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MateServiceImpl.class);
 	
 	private StudentRepository studentRepository;
+	private NotificationRepository notificationRepository;
 	private StudentProfileConverter studentProfileConverter;
 		
 	@Autowired
-	public MateServiceImpl(StudentRepository studentRepository, StudentProfileConverter studentProfileConverter){
+	public MateServiceImpl(StudentRepository studentRepository, NotificationRepository notificationRepository, StudentProfileConverter studentProfileConverter){
 		this.studentRepository = studentRepository;
+		this.notificationRepository = notificationRepository;
 		this.studentProfileConverter = studentProfileConverter;
 	}
 
@@ -36,8 +40,13 @@ public class MateServiceImpl implements MateService {
 		this.studentRepository.save(student);
 		this.studentRepository.save(mate);
 		StudentProfileRepresentation mateProfile = this.studentProfileConverter.convert(student, mate);
-		
-		return mateProfile;	
+		this.deleteApplicationNotification(userName, mateUserName);
+		return mateProfile;
+	}
+	
+	private void deleteApplicationNotification(String userName, String mateUserName){
+		List<ApplicationNotification> notifications = this.notificationRepository.findByUserNameAndApplicantUSerName(userName, mateUserName);
+		this.notificationRepository.delete(notifications.get(0));		
 	}
 	
 	private Student findStudent(String userName) {

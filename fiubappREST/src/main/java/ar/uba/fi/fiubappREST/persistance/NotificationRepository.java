@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import ar.uba.fi.fiubappREST.domain.ApplicationNotification;
 import ar.uba.fi.fiubappREST.domain.Notification;
 
 public interface NotificationRepository extends CrudRepository<Notification, Integer>{
@@ -17,5 +18,8 @@ public interface NotificationRepository extends CrudRepository<Notification, Int
 	
 	@Query(value = "SELECT * FROM notification WHERE userName = ?1 AND isViewed = ?2 ORDER BY creationDate DESC", nativeQuery = true)
 	public List<Notification> findByUserNameAndIsViewed(String userName, Boolean isViewed);
+	
+	@Query(value = "SELECT * FROM notification WHERE userName = ?1 AND applicantUserName = ?2", nativeQuery = true)
+	public List<ApplicationNotification> findByUserNameAndApplicantUSerName(String userName, String applicantUserName);
 	
 }

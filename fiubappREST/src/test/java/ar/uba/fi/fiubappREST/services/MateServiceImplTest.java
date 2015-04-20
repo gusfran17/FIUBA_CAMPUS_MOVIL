@@ -38,7 +38,7 @@ public class MateServiceImplTest {
 	public void setUp() throws ParseException{
 		this.studentRepository = mock(StudentRepository.class);
 		this.converter = mock(StudentProfileConverter.class);
-		this.service= new MateServiceImpl(studentRepository, converter);
+		this.service= new MateServiceImpl(studentRepository, null, converter);
 				
 		this.student = new Student();
 		this.student.setUserName(AN_USER_NAME);

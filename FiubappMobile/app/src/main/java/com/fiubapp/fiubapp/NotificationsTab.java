@@ -43,10 +43,7 @@ public class NotificationsTab extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if(isAdded()){
-            urlAPI = getResources().getString(R.string.urlAPI);
-        }
+        urlAPI = getResources().getString(R.string.urlAPI);
     }
 
     @Override
@@ -55,7 +52,7 @@ public class NotificationsTab extends Fragment {
         View view = inflater.inflate(R.layout.fragmenttab2, container, false);
 
         listView = (ListView)view.findViewById(R.id.list);
-        adapter = new NotificationAdapter(getActivity(), notifications);
+        adapter = new NotificationAdapter(getActivity(), notifications, urlAPI);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -91,9 +88,8 @@ public class NotificationsTab extends Fragment {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<String, String>();
-                headers.put("Authorization", DataAccess.getToken(getParentFragment()));
+                headers.put("Authorization", getToken());
                 return headers;
-
             }
         };
 
@@ -102,7 +98,13 @@ public class NotificationsTab extends Fragment {
     }
 
     private String buildNotificationsUrl(){
-        return urlAPI + "/students/" + DataAccess.getUserName(this) + "/notifications?viewed=false";
+        DataAccess dataAccess = new DataAccess(getActivity());
+        return urlAPI + "/students/" + dataAccess.getUserName() + "/notifications?viewed=false";
+    }
+
+    private String getToken(){
+        DataAccess dataAccess = new DataAccess(getActivity());
+        return dataAccess.getToken();
     }
 
 }
