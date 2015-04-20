@@ -38,8 +38,7 @@
         android:layout_below="@id/description"
         android:layout_toRightOf="@+id/thumbnail"
         android:textColor="@color/genre"
-        android:textSize="@dimen/genre"
-        android:layout_toLeftOf="@+id/viewed" />
+        android:textSize="@dimen/genre" />
 
     <TextView
         android:id="@+id/viewed"
@@ -47,8 +46,8 @@
         android:layout_height="wrap_content"
         android:textColor="@color/genre"
         android:textSize="@dimen/genre"
-        android:layout_below="@+id/description"
-        android:layout_toLeftOf="@+id/childButton" />
+        android:layout_alignTop="@+id/creationDate"
+        android:layout_toLeftOf="@+id/acceptButton" />
 
     <Button
         android:id="@+id/acceptButton"

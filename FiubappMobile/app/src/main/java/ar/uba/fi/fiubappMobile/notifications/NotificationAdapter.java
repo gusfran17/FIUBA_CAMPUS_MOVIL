@@ -1,7 +1,10 @@
 package ar.uba.fi.fiubappMobile.notifications;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -86,7 +89,7 @@ public class NotificationAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void populateApplicationNotification(final ApplicationNotification notification, View convertView, final Context context) {
+    private void populateApplicationNotification(final ApplicationNotification notification, final View convertView, final Context context) {
         TextView name = (TextView) convertView.findViewById(R.id.name);
         TextView description = (TextView) convertView.findViewById(R.id.description);
         TextView creationDate = (TextView) convertView.findViewById(R.id.creationDate);
@@ -112,7 +115,20 @@ public class NotificationAdapter extends BaseAdapter {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            Popup.showText(context, "Anduvo todo joya", Toast.LENGTH_LONG);
+                            //Popup.showText(context, "Anduvo todo joya", Toast.LENGTH_LONG);
+                            String message = notification.getApplicantName() + " " + notification.getApplicantLastName() + " y vos ahora son compañeros!";
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                            alertDialogBuilder.setTitle("Agregar compañeros");
+                            alertDialogBuilder
+                                    .setMessage(message)
+                                    .setCancelable(false)
+                                    .setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+                            alertDialog.show();
                         }
                     },
                     new Response.ErrorListener(){
