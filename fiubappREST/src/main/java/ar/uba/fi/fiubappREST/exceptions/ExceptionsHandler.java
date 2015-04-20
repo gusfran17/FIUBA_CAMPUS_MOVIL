@@ -106,6 +106,17 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
+	@ExceptionHandler(CareerNotFoundForStudentException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(CareerNotFoundForStudentException exception){
+		return buildResponse(exception);
+	}
+	
+	@ExceptionHandler(UnableToDeleteTheOnlyCareerForStudentException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(UnableToDeleteTheOnlyCareerForStudentException exception){
+		return buildResponse(exception);
+	}
 	
 	
 	@ExceptionHandler(InvalidUserException.class)
