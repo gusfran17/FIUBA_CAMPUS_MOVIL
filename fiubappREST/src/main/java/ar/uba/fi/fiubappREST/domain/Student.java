@@ -1,5 +1,6 @@
 package ar.uba.fi.fiubappREST.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -20,6 +24,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import ar.uba.fi.fiubappREST.exceptions.CareerAlreadyExistsForStudentException;
 import ar.uba.fi.fiubappREST.exceptions.CareerNotFoundForStudentException;
+import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyMateException;
 import ar.uba.fi.fiubappREST.exceptions.UnableToDeleteTheOnlyCareerForStudentException;
 import ar.uba.fi.fiubappREST.utils.CustomDateDeserializer;
 import ar.uba.fi.fiubappREST.utils.CustomDateSerializer;
@@ -58,11 +63,21 @@ public class Student {
 	@Enumerated
 	private Gender gender;
 
-	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, fetch=FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
 	private List<StudentCareer> careers;
 	
 	@OneToOne(mappedBy = "student", cascade={CascadeType.ALL}, orphanRemoval = true)
 	private HighSchool highSchool;
+	
+	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, orphanRemoval = true)
+	private List<Notification> notifications;
+	
+	@ManyToMany(fetch=FetchType.LAZY)
+	@JoinTable(
+	      name="mates",
+	      joinColumns={ @JoinColumn(name="userName", referencedColumnName="userName") },
+	      inverseJoinColumns={ @JoinColumn(name="mateUserName", referencedColumnName="userName")})
+	private List<Student> mates;
 	
 	public String getUserName() {
 		return userName;
@@ -196,6 +211,24 @@ public class Student {
 		this.highSchool = highSchool;
 	}
 
+	@JsonIgnore
+	public List<Notification> getNotifications() {
+		return notifications;
+	}
+
+	public void setNotifications(List<Notification> notifications) {
+		this.notifications = notifications;
+	}
+
+	public List<Student> getMates() {
+		return mates;
+	}
+
+	@JsonIgnore
+	public void setMates(List<Student> mates) {
+		this.mates = mates;
+	}
+
 	public void addCareer(final StudentCareer career) {
 		if(this.existsCareer(career.getCareer())){
 			throw new CareerAlreadyExistsForStudentException(this.userName, career.getCareer().getCode());
@@ -236,6 +269,34 @@ public class Student {
 			throw new CareerNotFoundForStudentException(career.getCareer().getCode(), this.userName);
 		}
 		return foundCareer;
+	}
+	
+    public void addNotification(Notification notification) {
+		if(this.notifications==null){
+			this.notifications = new ArrayList<Notification>();
+		}
+		this.notifications.add(notification);		
+	}
+	
+	public void addMate(Student mate){
+		if(this.isAlreadyMateWith(mate)){
+			throw new StudentAlreadyMateException(this.userName, mate.getUserName());
+		}
+		this.mates.add(mate);
+		mate.getMates().add(this);
+	}
+
+	private boolean isAlreadyMateWith(final Student mate) {
+		Student foundMate = (Student) CollectionUtils.find(this.mates, new Predicate() {
+            public boolean evaluate(Object object) {
+                return ((Student) object).getUserName().equals(mate.getUserName());
+            }
+		});
+		return foundMate!=null;
+	}
+
+	public Boolean isMateWith(Student student) {
+		return this.isAlreadyMateWith(student);
 	}	
 
 }

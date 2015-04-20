@@ -17,6 +17,8 @@ public class StudentProfileRepresentation {
 	private String fileNumber;
 	
 	private List<String> careers;
+	
+	private Boolean isMyMate;
 
 	public String getUserName() {
 		return userName;
@@ -72,6 +74,14 @@ public class StudentProfileRepresentation {
 
 	public void setCareers(List<String> careers) {
 		this.careers = careers;
+	}
+
+	public Boolean getIsMyMate() {
+		return isMyMate;
+	}
+
+	public void setIsMyMate(Boolean isMyMate) {
+		this.isMyMate = isMyMate;
 	}
 	
 }

@@ -12,6 +12,9 @@ import ar.uba.fi.fiubappREST.domain.Student;
 public interface StudentRepository extends CrudRepository<Student, String> {
 	
 	public List<Student> findAll();
+	
+	@Query("SELECT s FROM Student s LEFT JOIN FETCH s.mates WHERE s.userName = ?1")
+    public Student findByUserNameAndFetchMatesEagerly(String userName);
 
 	@Query(value = 	"SELECT *  "
 			+ "FROM student s "

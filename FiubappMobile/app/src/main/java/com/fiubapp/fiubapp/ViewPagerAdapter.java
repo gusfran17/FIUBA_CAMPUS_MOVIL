@@ -37,12 +37,12 @@ public class ViewPagerAdapter extends FragmentPagerAdapter implements IconPagerA
                 return fragmenttab2;
 
             case 2:
-                FragmentTab3 fragmenttab3 = new FragmentTab3();
+                FragmentTab1 fragmenttab3 = new FragmentTab1();
                 return fragmenttab3;
 
             case 3:
-                FragmentTab3 fragmenttab4 = new FragmentTab3();
-                return fragmenttab4;
+                NotificationsTab notificationsTab = new NotificationsTab();
+                return notificationsTab;
 
             case 4:
                 Config config = new Config();

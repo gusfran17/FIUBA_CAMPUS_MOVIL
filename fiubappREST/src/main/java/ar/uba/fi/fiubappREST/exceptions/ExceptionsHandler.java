@@ -117,6 +117,18 @@ public class ExceptionsHandler {
 	public @ResponseBody ErrorResponse handle(UnableToDeleteTheOnlyCareerForStudentException exception){
 		return buildResponse(exception);
 	}
+
+	@ExceptionHandler(NotificationNotFoundForStudentException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(NotificationNotFoundForStudentException exception){
+		return buildResponse(exception);
+	}
+	
+	@ExceptionHandler(StudentAlreadyMateException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(StudentAlreadyMateException exception){
+		return buildResponse(exception);
+	}
 	
 	
 	@ExceptionHandler(InvalidUserException.class)

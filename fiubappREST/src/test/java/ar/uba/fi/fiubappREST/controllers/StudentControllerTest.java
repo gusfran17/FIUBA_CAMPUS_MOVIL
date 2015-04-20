@@ -60,9 +60,9 @@ public class StudentControllerTest {
 	public void testGetStudents(){
 		doNothing().when(sessionService).validate(A_TOKEN);
 //		when(service.findAll()).thenReturn(new ArrayList<StudentProfileRepresentation>());
-		when(service.findByProperties(A_TOKEN, null, null, null, null, null)).thenReturn(new ArrayList<StudentProfileRepresentation>());
+		when(service.findByProperties(null, A_TOKEN, null, null, null, null, null)).thenReturn(new ArrayList<StudentProfileRepresentation>());
 		
-		List<StudentProfileRepresentation> students = this.controller.getStudent(A_TOKEN, null, null, null, null, null, null);
+		List<StudentProfileRepresentation> students = this.controller.getStudents(A_TOKEN, null, null, null, null, null, null);
 		
 		assertNotNull(students);
 	}
