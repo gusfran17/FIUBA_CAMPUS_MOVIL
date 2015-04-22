@@ -64,7 +64,7 @@ public class StudentControllerTest {
 		when(sessionService.find(A_TOKEN)).thenReturn(studentSession);
 		when(service.findByProperties(AN_USER_NAME, null, null, null, null, null, null)).thenReturn(new ArrayList<StudentProfileRepresentation>());
 		
-		List<StudentProfileRepresentation> students = this.controller.getStudents(A_TOKEN, null, null, null, null, null, null);
+		List<StudentProfileRepresentation> students = this.controller.findStudents(A_TOKEN, null, null, null, null, null, null);
 		
 		assertNotNull(students);
 	}

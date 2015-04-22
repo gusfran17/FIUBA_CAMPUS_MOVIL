@@ -40,7 +40,7 @@ public class StudentCareerController {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody List<StudentCareer> getCareers(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
-		this.studentSessionService.validate(token);
+		this.studentSessionService.validateMineOrMate(token, userName);
 		return this.studentCareerService.findAll(userName);
 	}
 	

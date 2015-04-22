@@ -44,7 +44,7 @@ public class StudentController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	public @ResponseBody List<StudentProfileRepresentation> getStudents(@RequestHeader(value="Authorization") String token, @RequestParam(value="name", required=false) String name, @RequestParam(value="lastName", required=false) String lastName, @RequestParam(value="email", required=false) String email, @RequestParam(value="careerCode", required=false) String careerCode, @RequestParam(value="fileNumber", required=false) String fileNumber, @RequestParam(value="passportNumber", required=false) String passportNumber) {
+	public @ResponseBody List<StudentProfileRepresentation> findStudents(@RequestHeader(value="Authorization") String token, @RequestParam(value="name", required=false) String name, @RequestParam(value="lastName", required=false) String lastName, @RequestParam(value="email", required=false) String email, @RequestParam(value="careerCode", required=false) String careerCode, @RequestParam(value="fileNumber", required=false) String fileNumber, @RequestParam(value="passportNumber", required=false) String passportNumber) {
 		StudentSession session = this.studentSessionService.find(token);
 		return studentService.findByProperties(session.getUserName(), name, lastName, email, careerCode, fileNumber, passportNumber);
 	}
@@ -52,8 +52,7 @@ public class StudentController {
 	@RequestMapping(method = RequestMethod.GET, value="{userName}")
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody Student getStudent(@RequestHeader(value="Authorization") String token, @PathVariable String userName){
-		this.studentSessionService.validate(token);
-		//TODO luego validar que sean mis datos o de mis compañeros
+		this.studentSessionService.validateMineOrMate(token, userName);
 		return this.studentService.findOne(userName);
 	}
 	
