@@ -30,6 +30,9 @@
         <activity android:name=".PerfilTabs"
             android:theme="@style/StyledIndicators"
             android:windowSoftInputMode="stateHidden"/>
+        <activity android:name="ar.uba.fi.fiubappMobile.partners.StudentSearchTabs"
+            android:theme="@style/StyledIndicators"
+            android:windowSoftInputMode="stateHidden"/>
     </application>
 
 </manifest>

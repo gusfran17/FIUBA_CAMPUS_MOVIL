@@ -1,13 +1,16 @@
 package com.fiubapp.fiubapp;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,6 +28,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ar.uba.fi.fiubappMobile.partners.StudentSearchTabs;
 
 public class FragmentTab2 extends Fragment {
     ListView lv1;
@@ -44,15 +49,32 @@ public class FragmentTab2 extends Fragment {
         if(isAdded()){
             urlAPI = getResources().getString(R.string.urlAPI);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragmenttab2, container, false);
+        View partnersTabView = inflater.inflate(R.layout.fragmenttab2, container, false);
 
-        listView = (ListView)view.findViewById(R.id.list);
+        Button btnSearchStudents = (Button) partnersTabView.findViewById(R.id.button_search_students);
+
+        btnSearchStudents.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                FragmentActivity searchTabs = getActivity();
+                Intent searchIntent = new Intent(searchTabs, StudentSearchTabs.class);
+                try {
+                    startActivity(searchIntent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        listView = (ListView)partnersTabView.findViewById(R.id.list);
         adapter = new AlumnoAdapter(getActivity(), alumnoList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -125,7 +147,7 @@ public class FragmentTab2 extends Fragment {
 
        // Adding request to request queue
         VolleyController.getInstance().addToRequestQueue(alumnoReq);
-        return view;
+        return partnersTabView;
     }
 
 }
