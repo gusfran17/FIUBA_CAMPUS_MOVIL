@@ -95,19 +95,6 @@ public class StudentServiceImpl implements StudentService {
 		student.addCareer(studentCareer);
 		return studentCareer;
 	}
-
-	@Override
-	public List<StudentProfileRepresentation> findAllFor(String userName) {
-		LOGGER.info(String.format("Finding all students."));
-		Student me = this.findOneWithMates(userName);
-		List<Student> students = this.studentRepository.findAll();
-		List<StudentProfileRepresentation> profiles = new ArrayList<StudentProfileRepresentation>();
-		for (Student student : students) {
-			profiles.add(this.studentProfileConverter.convert(me, student));
-		}
-		LOGGER.info(String.format("All students were found."));
-		return profiles;
-	}
 	
 	private Student findOneWithMates(String userName) {
 		LOGGER.info(String.format("Finding student with userName %s.", userName));

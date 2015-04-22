@@ -45,7 +45,7 @@ public class MateServiceImpl implements MateService {
 	}
 	
 	private void deleteApplicationNotification(String userName, String mateUserName){
-		List<ApplicationNotification> notifications = this.notificationRepository.findByUserNameAndApplicantUSerName(userName, mateUserName);
+		List<ApplicationNotification> notifications = this.notificationRepository.findByUserNameAndApplicantUserName(userName, mateUserName);
 		this.notificationRepository.delete(notifications.get(0));		
 	}
 	

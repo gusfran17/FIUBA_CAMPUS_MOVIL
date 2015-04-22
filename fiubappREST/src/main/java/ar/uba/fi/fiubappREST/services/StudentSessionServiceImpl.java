@@ -95,10 +95,32 @@ public class StudentSessionServiceImpl implements StudentSessionService{
 	public void validateMine(String token, String userName) {
 		StudentSession studentSession = this.find(token);
 		LOGGER.info(String.format("Validating token for userName %s.", userName));
-		if(!studentSession.getUserName().equals(userName)){
+		if(!this.isMyInformation(userName, studentSession.getUserName())){
 			LOGGER.error(String.format("Token not valid for userName %s.", userName));
 			throw new OperationNotAllowedFotStudentSessionException(token);
 		}
 		LOGGER.info(String.format("Token valid for userName %s.", userName));
+	}
+
+	@Override
+	public void validateMineOrMate(String token, String userName) {
+		StudentSession studentSession = this.find(token);
+		if(!this.isMyInformation(userName, studentSession.getUserName()) && !this.isMyMateInformation(userName, studentSession.getUserName())){
+			LOGGER.error(String.format("Token not valid for userName %s.", userName));
+			throw new OperationNotAllowedFotStudentSessionException(token);
+		}		
+	}
+
+	private boolean isMyInformation(String userName, String sessionUserName) {		
+		return userName.equals(sessionUserName);
+	}
+
+	private boolean isMyMateInformation(String userName, String sessionUserName) {
+		Student mate = this.studentRepository.findByUserNameAndFetchMatesEagerly(userName);
+		if(mate==null){
+			return false;
+		}
+		Student me = this.studentRepository.findOne(sessionUserName);
+		return mate.isMateWith(me);
 	}
 }

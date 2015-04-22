@@ -1,6 +1,7 @@
 package ar.uba.fi.fiubappREST.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -13,8 +14,10 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import ar.uba.fi.fiubappREST.converters.StudentProfileConverter;
+import ar.uba.fi.fiubappREST.domain.ApplicationNotification;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
+import ar.uba.fi.fiubappREST.persistance.NotificationRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 
@@ -25,6 +28,8 @@ public class MateServiceImplTest {
 	
 	@Mock
 	private StudentRepository studentRepository;
+	@Mock
+	private NotificationRepository notificationRepository;
 	@Mock
 	private StudentProfileConverter converter;
 	@Mock
@@ -37,8 +42,9 @@ public class MateServiceImplTest {
 	@Before
 	public void setUp() throws ParseException{
 		this.studentRepository = mock(StudentRepository.class);
+		this.notificationRepository = mock(NotificationRepository.class);
 		this.converter = mock(StudentProfileConverter.class);
-		this.service= new MateServiceImpl(studentRepository, null, converter);
+		this.service= new MateServiceImpl(studentRepository, notificationRepository, converter);
 				
 		this.student = new Student();
 		this.student.setUserName(AN_USER_NAME);
@@ -49,6 +55,7 @@ public class MateServiceImplTest {
 		
 	@Test
 	public void testBecomeMates(){
+		student.setMates(new ArrayList<Student>());
 		Student mate = new Student();
 		mate.setUserName(A_MATE_USER_NAME);
 		mate.setMates(new ArrayList<Student>());
@@ -57,6 +64,11 @@ public class MateServiceImplTest {
 		when(this.studentRepository.save(student)).thenReturn(student);
 		when(this.studentRepository.save(mate)).thenReturn(mate);
 		when(this.converter.convert(student, mate)).thenReturn(profile);
+		ApplicationNotification notification = new ApplicationNotification();
+		List<ApplicationNotification> notifications = new ArrayList<ApplicationNotification>();
+		notifications.add(notification);
+		when(this.notificationRepository.findByUserNameAndApplicantUserName(AN_USER_NAME, A_MATE_USER_NAME)).thenReturn(notifications);
+		doNothing().when(notificationRepository).delete(notification);
 		
 		StudentProfileRepresentation mateProfile = this.service.becomeMates(AN_USER_NAME, A_MATE_USER_NAME);
 		

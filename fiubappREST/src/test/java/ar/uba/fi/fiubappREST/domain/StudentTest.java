@@ -59,6 +59,7 @@ public class StudentTest {
 
 	@Test
 	public void testAddMateOK() {
+		student.setMates(new ArrayList<Student>());
 		Student mate = new Student();
 		mate.setMates(new ArrayList<Student>());
 		
@@ -69,6 +70,7 @@ public class StudentTest {
 	
 	@Test(expected=StudentAlreadyMateException.class)
 	public void testAddMateAlreadyExists() {
+		student.setMates(new ArrayList<Student>());
 		Student mate = new Student();
 		mate.setUserName(AN_USER_NAME);
 		mate.setMates(new ArrayList<Student>());
