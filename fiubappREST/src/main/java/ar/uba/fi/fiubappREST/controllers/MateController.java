@@ -42,7 +42,7 @@ public class MateController {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody List<StudentProfileRepresentation> getMates(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
-		this.studentSessionService.validateMineOrMate(token, userName);
+		this.studentSessionService.validateMine(token, userName);
 		return this.mateService.getMates(userName);
 	}
 }

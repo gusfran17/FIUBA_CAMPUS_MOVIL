@@ -19,6 +19,8 @@ public class StudentProfileRepresentation {
 	private List<String> careers;
 	
 	private Boolean isMyMate;
+	
+	private String comments;
 
 	public String getUserName() {
 		return userName;
@@ -82,6 +84,14 @@ public class StudentProfileRepresentation {
 
 	public void setIsMyMate(Boolean isMyMate) {
 		this.isMyMate = isMyMate;
+	}
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 	
 }

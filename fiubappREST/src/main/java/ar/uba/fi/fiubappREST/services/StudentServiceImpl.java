@@ -108,10 +108,12 @@ public class StudentServiceImpl implements StudentService {
 	}
 	
 	@Override
-	public List<StudentProfileRepresentation> findByProperties(String myUserName, String name, String lastName, String email, String careerCode, String fileNumber, String passportNumber) {
+	public List<StudentProfileRepresentation> findByProperties(String myUserName, String name, String lastName, 
+			String email, String careerCode, String fileNumber, String passportNumber) {
 		LOGGER.info(String.format("Finding students by criteria."));
 		Student me = this.findOneWithMates(myUserName);
 		List<Student> students = this.studentRepository.findByProperties(name, lastName, email, careerCode, fileNumber, passportNumber);
+		this.removeMe(students, me);
 		List<StudentProfileRepresentation> profiles = new ArrayList<StudentProfileRepresentation>();
 		for (Student student : students) {
 			profiles.add(this.studentProfileConverter.convert(me, student));
@@ -120,7 +122,16 @@ public class StudentServiceImpl implements StudentService {
 		return profiles;
 	}
 
-    @Override
+    private void removeMe(List<Student> students, Student me) {
+		for (Student student : students) {
+			if(me.getUserName().equals(student.getUserName())){
+				students.remove(student);
+				return;
+			}
+		}
+	}
+
+	@Override
 	public Student findOne(String userName) {
 		LOGGER.info(String.format("Finding student with userName %s.", userName));
 		Student student = this.studentRepository.findOne(userName);
