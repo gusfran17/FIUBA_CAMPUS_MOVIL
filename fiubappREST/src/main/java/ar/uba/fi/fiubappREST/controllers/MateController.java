@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import ar.uba.fi.fiubappREST.representations.MateCreationRepresentation;
+import ar.uba.fi.fiubappREST.representations.MateRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 import ar.uba.fi.fiubappREST.services.MateService;
 import ar.uba.fi.fiubappREST.services.StudentSessionService;
@@ -34,7 +34,7 @@ public class MateController {
 		
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public @ResponseBody StudentProfileRepresentation becomeMates(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestBody MateCreationRepresentation mate) {
+	public @ResponseBody StudentProfileRepresentation becomeMates(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestBody MateRepresentation mate) {
 		this.studentSessionService.validateMine(token, userName);
 		return this.mateService.becomeMates(userName, mate.getUserName());
 	}
@@ -44,6 +44,13 @@ public class MateController {
 	public @ResponseBody List<StudentProfileRepresentation> getMates(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
 		this.studentSessionService.validateMine(token, userName);
 		return this.mateService.getMates(userName);
+	}
+	
+	@RequestMapping(method = RequestMethod.DELETE)
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public @ResponseBody void deleteMate(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestBody MateRepresentation mate) {
+		this.studentSessionService.validateMine(token, userName);
+		this.mateService.deleteMate(userName, mate.getUserName());
 	}
 }
 
