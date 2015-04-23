@@ -2,11 +2,8 @@ package ar.uba.fi.fiubappMobile.notifications;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,23 +17,12 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.fiubapp.fiubapp.EmailValidator;
-import com.fiubapp.fiubapp.Login;
-import com.fiubapp.fiubapp.Perfil;
 import com.fiubapp.fiubapp.Popup;
 import com.fiubapp.fiubapp.R;
-import com.fiubapp.fiubapp.Register1;
 import com.fiubapp.fiubapp.VolleyController;
-
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.awt.font.TextAttribute;
-import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -76,20 +62,24 @@ public class NotificationAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        if (inflater == null) {
+        /*if (inflater == null) {
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
+        }*/
         if (convertView == null) {
-            if (notifications.get(position).getClass().equals(ApplicationNotification.class)) {
+            Log.d("NotificationAdapter:", "Convertview = null");
+            inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            //if (notifications.get(position).getClass().equals(ApplicationNotification.class)) {
                 convertView = inflater.inflate(R.layout.application_notification, null);
-                this.populateApplicationNotification((ApplicationNotification) notifications.get(position), convertView, parent.getContext());
-            }
-        }
 
+            //}
+        }else{
+            Log.d("NotificationAdapter:", "Convertview NOT NULL");
+        }
+        this.populateApplicationNotification((ApplicationNotification) notifications.get(position), convertView, parent.getContext(),position);
         return convertView;
     }
 
-    private void populateApplicationNotification(final ApplicationNotification notification, final View convertView, final Context context) {
+    private void populateApplicationNotification(final ApplicationNotification notification, final View convertView, final Context context, final int position) {
         TextView name = (TextView) convertView.findViewById(R.id.name);
         TextView description = (TextView) convertView.findViewById(R.id.description);
         TextView creationDate = (TextView) convertView.findViewById(R.id.creationDate);
@@ -98,24 +88,25 @@ public class NotificationAdapter extends BaseAdapter {
         name.setText(notification.getApplicantName() + " " + notification.getApplicantLastName());
         description.setText(R.string.application_notification_message);
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        markAsViewed.setText(R.string.application_notification_mark_as_viewed);
         creationDate.setText(df.format(notification.getCreationDate()));
 
         final Map<String, String> params = new HashMap<String, String>();
         params.put("userName", notification.getApplicantUserName());
 
         final Button acceptButton = (Button)convertView.findViewById(R.id.acceptButton);
+
         acceptButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View arg0) {
+            public void onClick(final View arg0) {
+
                 JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.POST,
                     buildNotificationsUrl(),
                     new JSONObject(params),
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            //Popup.showText(context, "Anduvo todo joya", Toast.LENGTH_LONG);
+                            //Popup.showText(context, "Anduvo joya", Toast.LENGTH_LONG);
                             String message = notification.getApplicantName() + " " + notification.getApplicantLastName() + " y vos ahora son compañeros!";
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
                             alertDialogBuilder.setTitle("Agregar compañeros");
@@ -129,12 +120,18 @@ public class NotificationAdapter extends BaseAdapter {
                                     });
                             AlertDialog alertDialog = alertDialogBuilder.create();
                             alertDialog.show();
+                            setViewedNotification(notification, context, position);
                         }
                     },
                     new Response.ErrorListener(){
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Popup.showText(context, "Anduvo mal", Toast.LENGTH_LONG);
+                            //TODO verificar el error antes de llamar al siguiente metodo
+                            //si entra aca es porque la notificacion estaba duplicada?
+                            //no lo pudo agregar como amigo, entonces lo borra de la lista
+                            setViewedNotification(notification,context, position);
+
                         }
                     }
                 ){
@@ -152,9 +149,55 @@ public class NotificationAdapter extends BaseAdapter {
         });
     }
 
+    private void setViewedNotification(final ApplicationNotification notification, final Context context, final int position) {
+
+        final Map<String, String> params = new HashMap<String, String>();
+        params.put("isViewed", "true");
+
+        JsonObjectRequest jsonReqPut = new JsonObjectRequest(Request.Method.PUT,
+                buildNotificationsUrlPut()+notification.getId(),
+                new JSONObject(params),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Popup.showText(context, "Anduvo joya", Toast.LENGTH_LONG);
+                        Log.i("View:","OK");
+                        Log.i("Cant:",Integer.toString(position));
+                        notifications.remove(position);
+
+                        notifyDataSetChanged();
+                    }
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Popup.showText(context, "Anduvo mal", Toast.LENGTH_LONG);
+                        Log.i("View:","MAL");
+                        Log.i("Cant:",Integer.toString(position));
+                        notifyDataSetChanged();
+                    }
+                }
+        ){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", getToken());
+                return headers;
+            }
+
+        };
+        VolleyController.getInstance().addToRequestQueue(jsonReqPut);
+
+    }
+
     private String buildNotificationsUrl(){
         DataAccess dataAccess = new DataAccess(activity);
         return urlAPI + "/students/" + dataAccess.getUserName() + "/mates";
+    }
+
+    private String buildNotificationsUrlPut(){
+        DataAccess dataAccess = new DataAccess(activity);
+        return urlAPI + "/students/" + dataAccess.getUserName() + "/notifications/";
     }
 
     private String getToken(){
