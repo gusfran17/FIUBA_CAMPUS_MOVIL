@@ -64,7 +64,7 @@ public class Perfil_fiuba extends Fragment {
 
     public void crearSeccionCarreras() {
         ListView listCarreras = (ListView)getActivity().findViewById(R.id.listCarreras);
-        CarreraAdapter carreraAdapter = new CarreraAdapter(getActivity(), carrerasAlumno);
+        CarreraAdapter carreraAdapter = new CarreraAdapter(this, getActivity(), carrerasAlumno);
         listCarreras.setAdapter(carreraAdapter);
     }
 

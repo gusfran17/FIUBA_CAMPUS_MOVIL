@@ -5,14 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <RelativeLayout
-        android:id="@+id/all"
-        android:layout_width="match_parent"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/rounded_corner"
-        android:layout_marginLeft="10px"
-        android:layout_marginRight="10px"
-        android:layout_height="wrap_content">
+
 
         <RelativeLayout
             android:id="@+id/header"
@@ -59,6 +52,4 @@
 
         </RelativeLayout>
 
-
-    </RelativeLayout>
 </RelativeLayout>
