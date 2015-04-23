@@ -1,20 +1,33 @@
 package com.fiubapp.fiubapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import ar.uba.fi.fiubappMobile.utils.DataAccess;
 
 public class AlumnoAdapter extends BaseAdapter {
     private Activity activity;
@@ -60,10 +73,8 @@ public class AlumnoAdapter extends BaseAdapter {
         TextView username = (TextView) convertView.findViewById(R.id.username);
         TextView carrera = (TextView) convertView.findViewById(R.id.carrera);
 
+        final Button buttonAdd = (Button) convertView.findViewById(R.id.childButton);
         Alumno a = alumnoItems.get(position);
-
-        // thumbnail image
-        //thumbNail.setImageUrl(a.getFoto(), imageLoader);
 
         nombre.setText(a.getNombre() +" "+ a.getApellido());
         username.setText(a.getUsername());
@@ -72,7 +83,72 @@ public class AlumnoAdapter extends BaseAdapter {
             carrera.setText(a.getCarreras().get(0));
         else carrera.setText("");
 
+        if (a.isMyMate()) {
+            buttonAdd.setText("Eliminar");
+            eliminarCompanero((Alumno)alumnoItems.get(position),convertView ,position);
+        } else {
+            buttonAdd.setText("Agregar");
+            agregarCompanero(convertView,position);
+        }
+
         return convertView;
+    }
+
+    private void agregarCompanero(View convertView, int position) {
+
+    }
+
+    private void eliminarCompanero(final Alumno companero, View convertView, final int position) {
+
+        final Button eliminar = (Button)convertView.findViewById(R.id.childButton);
+
+        eliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("userName", companero.getUsername());
+
+                JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.DELETE,
+                        buildNotificationsUrl(),
+                        new JSONObject(params),
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                //Popup.showText(activity, "Anduvo joya", Toast.LENGTH_LONG);
+                                alumnoItems.remove(position);
+                                notifyDataSetChanged();
+                            }
+                        },
+                        new Response.ErrorListener(){
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                //Popup.showText(activity, "Anduvo mal", Toast.LENGTH_LONG);
+                            }
+                        }
+                ){
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> headers = new HashMap<String, String>();
+                        headers.put("Authorization", getToken());
+                        return headers;
+                    }
+
+                };
+                VolleyController.getInstance().addToRequestQueue(jsonReq);
+            }
+        });
+
+    }
+
+    private String buildNotificationsUrl(){
+        DataAccess dataAccess = new DataAccess(activity);
+        return dataAccess.getURLAPI() + "/students/" + dataAccess.getUserName() + "/mates";
+    }
+
+    private String getToken(){
+        DataAccess dataAccess = new DataAccess(activity);
+        return dataAccess.getToken();
     }
 
 }

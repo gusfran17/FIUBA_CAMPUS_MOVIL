@@ -1,7 +1,5 @@
 package com.fiubapp.fiubapp;
 
-import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -49,7 +47,7 @@ public class NotificationsTab extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragmenttab2, container, false);
+        View view = inflater.inflate(R.layout.companeros, container, false);
 
         listView = (ListView)view.findViewById(R.id.list);
         adapter = new NotificationAdapter(getActivity(), notifications, urlAPI);
