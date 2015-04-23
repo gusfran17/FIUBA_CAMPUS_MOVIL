@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -60,6 +61,7 @@ public class AlumnoAdapter extends BaseAdapter {
         TextView username = (TextView) convertView.findViewById(R.id.username);
         TextView carrera = (TextView) convertView.findViewById(R.id.carrera);
 
+        final Button buttonAdd = (Button) convertView.findViewById(R.id.childButton);
         Alumno a = alumnoItems.get(position);
 
         // thumbnail image
@@ -72,6 +74,11 @@ public class AlumnoAdapter extends BaseAdapter {
             carrera.setText(a.getCarreras().get(0));
         else carrera.setText("");
 
+        if (a.isMyMate()) {
+            buttonAdd.setVisibility(View.INVISIBLE);
+        } else {
+            buttonAdd.setVisibility(View.VISIBLE);
+        }
         return convertView;
     }
 

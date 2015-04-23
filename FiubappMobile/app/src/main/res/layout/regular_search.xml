@@ -52,5 +52,15 @@
     </RelativeLayout>
 
 
+    <ListView
+        android:id="@+id/lst_regular_search"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/list_divider"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/list_row_selector"
+        android:layout_alignParentBottom="false"
+        android:layout_above="@id/contentSearch"/>
+
 
 </LinearLayout>
