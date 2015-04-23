@@ -21,6 +21,7 @@ import ar.uba.fi.fiubappREST.domain.ApplicationNotification;
 import ar.uba.fi.fiubappREST.domain.Notification;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.NotificationNotFoundForStudentException;
+import ar.uba.fi.fiubappREST.exceptions.NotificationNotViewedAlreadyExistsForStudentException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.persistance.NotificationRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
@@ -79,6 +80,17 @@ public class NotificationServiceImplTest {
 		when(this.studentRepository.findOne(AN_USER_NAME)).thenReturn(null);
 		Application application = new Application();
 		application.setApplicantUserName(AN_APPLICANT_USER_NAME);
+		
+		this.service.createApplicationNotification(AN_USER_NAME, application);
+	}
+	
+	@Test(expected=NotificationNotViewedAlreadyExistsForStudentException.class)
+	public void testCreateApplicationNotificationAlreadyExists() {
+		Application application = new Application();
+		application.setApplicantUserName(AN_APPLICANT_USER_NAME);
+		List<ApplicationNotification> notifications = new ArrayList<ApplicationNotification>();
+		notifications.add(new ApplicationNotification());
+		when(notificationRepository.findByUserNameAndApplicantUserNameAndNotIsViewed(AN_USER_NAME, AN_APPLICANT_USER_NAME)).thenReturn(notifications);
 		
 		this.service.createApplicationNotification(AN_USER_NAME, application);
 	}

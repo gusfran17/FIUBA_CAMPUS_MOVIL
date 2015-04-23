@@ -22,4 +22,7 @@ public interface NotificationRepository extends CrudRepository<Notification, Int
 	@Query(value = "SELECT * FROM notification WHERE userName = ?1 AND applicantUserName = ?2", nativeQuery = true)
 	public List<ApplicationNotification> findByUserNameAndApplicantUSerName(String userName, String applicantUserName);
 	
+	@Query(value = "SELECT * FROM notification WHERE userName = ?1 AND applicantUserName = ?2 AND isViewed = false", nativeQuery = true)
+	public List<ApplicationNotification> findByUserNameAndApplicantUserNameAndNotIsViewed(String userName, String applicantUserName);
+	
 }
