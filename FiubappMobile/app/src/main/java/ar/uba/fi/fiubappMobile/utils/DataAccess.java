@@ -25,4 +25,9 @@ public class DataAccess{
         final SharedPreferences settings = activity.getSharedPreferences(activity.getResources().getString(R.string.prefs_name), 0);
         return settings.getString("token",null);
     }
+
+    public String getURLAPI(){
+        final String urlAPI = activity.getResources().getString(R.string.urlAPI);
+        return urlAPI;
+    }
 }
