@@ -1,15 +1,15 @@
 package com.fiubapp.fiubapp;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.widget.EditText;
-import android.widget.ImageView;
+import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -29,42 +29,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Perfil_fiuba extends Fragment {
+public class Carreras extends Activity{
 
     private ArrayList<Carrera> carrerasAlumno = new ArrayList<Carrera>();
     private ArrayList<Carrera> todasCarreras = new ArrayList<Carrera>();
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        View view = inflater.inflate(R.layout.perfil_fiuba, container, false);
-
-        final ImageView imgEditarCarreras = (ImageView)view.findViewById(R.id.imgEditarCarreras);
-
-        imgEditarCarreras.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Seleccione una carrera")
-                        .setItems(getNombreCarreras(), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                setCarreraAlumno(Integer.parseInt(todasCarreras.get(which).getCodigo()));
-                            }
-                        });
-
-                builder.create();
-                builder.show();
-            }
-        });
-
+        setContentView(R.layout.carreras);
         getCarrerasAlumno();
         getTodasCarreras();
-        return view;
     }
 
     public void crearSeccionCarreras() {
-        ListView listCarreras = (ListView)getActivity().findViewById(R.id.listCarreras);
-        CarreraAdapter carreraAdapter = new CarreraAdapter(getActivity(), carrerasAlumno);
+        ListView listCarreras = (ListView)findViewById(R.id.listCarreras);
+        CarreraAdapter carreraAdapter = new CarreraAdapter(this, carrerasAlumno);
         listCarreras.setAdapter(carreraAdapter);
     }
 
@@ -74,10 +55,10 @@ public class Perfil_fiuba extends Fragment {
 
     public void borrarCarreraAlumno(int codigo){
 
-        final SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
+        final SharedPreferences settings = this.getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
         final String username = settings.getString("username", null);
 
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        RequestQueue queue = Volley.newRequestQueue(this);
         String url = this.getString(R.string.urlAPI) + "/students/" + username + "/careers/" + codigo;
 
         JSONObject jsonParams = new JSONObject();
@@ -109,7 +90,7 @@ public class Perfil_fiuba extends Fragment {
 
     public void getCarrerasAlumno(){
 
-        final SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
+        final SharedPreferences settings = this.getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
         final String username = settings.getString("username", null);
 
         JsonArrayRequest jsonReq = new JsonArrayRequest(Request.Method.GET,
@@ -136,13 +117,13 @@ public class Perfil_fiuba extends Fragment {
 
                                 carrerasAlumno.add(carrera);
 
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-
-                        crearSeccionCarreras();
                     }
+
+                    crearSeccionCarreras();
+                }
                 },new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -168,10 +149,10 @@ public class Perfil_fiuba extends Fragment {
 
     public void setCarreraAlumno(int codigo){
 
-        final SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
+        final SharedPreferences settings = this.getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
         final String username = settings.getString("username", null);
 
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        RequestQueue queue = Volley.newRequestQueue(this);
         String url = this.getString(R.string.urlAPI) + "/students/" + username + "/careers/" + codigo;
 
         JSONObject jsonParams = new JSONObject();
@@ -246,6 +227,19 @@ public class Perfil_fiuba extends Fragment {
         VolleyController.getInstance().addToRequestQueue(jsonReq);
     }
 
+    public void onClickImgEditarCarreras(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Seleccione una carrera")
+                .setItems(getNombreCarreras(), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    setCarreraAlumno(Integer.parseInt(todasCarreras.get(which).getCodigo()));
+                    }
+                });
+
+        builder.create();
+        builder.show();
+    }
+
     public String[] getNombreCarreras(){
 
         String[] nombreCarreras = new String[todasCarreras.size()];
@@ -256,5 +250,4 @@ public class Perfil_fiuba extends Fragment {
 
         return nombreCarreras;
     }
-
 }
