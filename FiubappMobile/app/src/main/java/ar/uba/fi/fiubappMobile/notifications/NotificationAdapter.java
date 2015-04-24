@@ -22,7 +22,11 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.fiubapp.fiubapp.Popup;
 import com.fiubapp.fiubapp.R;
 import com.fiubapp.fiubapp.VolleyController;
+
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -106,32 +110,25 @@ public class NotificationAdapter extends BaseAdapter {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            //Popup.showText(context, "Anduvo joya", Toast.LENGTH_LONG);
-                            String message = notification.getApplicantName() + " " + notification.getApplicantLastName() + " y vos ahora son compañeros!";
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                            alertDialogBuilder.setTitle("Agregar compañeros");
-                            alertDialogBuilder
-                                    .setMessage(message)
-                                    .setCancelable(false)
-                                    .setPositiveButton("OK",new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog,int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                            AlertDialog alertDialog = alertDialogBuilder.create();
-                            alertDialog.show();
                             setViewedNotification(notification, context, position);
                         }
                     },
                     new Response.ErrorListener(){
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Popup.showText(context, "Anduvo mal", Toast.LENGTH_LONG);
-                            //TODO verificar el error antes de llamar al siguiente metodo
-                            //si entra aca es porque la notificacion estaba duplicada?
-                            //no lo pudo agregar como amigo, entonces lo borra de la lista
-                            setViewedNotification(notification,context, position);
 
+                            String responseBody = null;
+
+                            try {
+                                responseBody = new String( error.networkResponse.data, "utf-8" );
+                                JSONObject jsonObject = new JSONObject( responseBody );
+                                Popup.showText(context, jsonObject.getString("message") , Toast.LENGTH_LONG).show();
+                                setViewedNotification(notification,context, position);
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 ){
@@ -160,9 +157,6 @@ public class NotificationAdapter extends BaseAdapter {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Popup.showText(context, "Anduvo joya", Toast.LENGTH_LONG);
-                        Log.i("View:","OK");
-                        Log.i("Cant:",Integer.toString(position));
                         notifications.remove(position);
 
                         notifyDataSetChanged();
@@ -171,10 +165,9 @@ public class NotificationAdapter extends BaseAdapter {
                 new Response.ErrorListener(){
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Popup.showText(context, "Anduvo mal", Toast.LENGTH_LONG);
-                        Log.i("View:","MAL");
-                        Log.i("Cant:",Integer.toString(position));
+
                         notifyDataSetChanged();
+
                     }
                 }
         ){
