@@ -70,11 +70,9 @@ public class MateControllerTest {
 	@Test
 	public void testDeleteMate(){
 		doNothing().when(this.studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
-		MateRepresentation mate = new MateRepresentation();
-		mate.setUserName(A_MATE_USER_NAME);
 		doNothing().when(this.service).deleteMate(AN_USER_NAME, A_MATE_USER_NAME);
 		
-		this.controller.deleteMate(A_TOKEN, AN_USER_NAME, mate);
+		this.controller.deleteMate(A_TOKEN, AN_USER_NAME, A_MATE_USER_NAME);
 		
 		assertTrue(true);
 	}
