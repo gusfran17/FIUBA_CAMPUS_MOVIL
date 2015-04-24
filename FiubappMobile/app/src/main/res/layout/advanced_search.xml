@@ -51,11 +51,12 @@
             android:layout_alignBottom="@+id/spn_search_career" />
 
         <Spinner android:id="@+id/spn_search_career"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_width="match_parent"
             android:layout_marginLeft="15px"
             android:layout_below="@+id/edt_advsearch_lastname"
             android:layout_toRightOf="@+id/lbl_search_career"
+            android:background="#ff2ec7e8"
             android:entries="@array/genders"/>
 
         <TextView
@@ -97,18 +98,20 @@
             android:layout_alignBottom="@+id/edt_search_passport" />
 
         <EditText android:id="@+id/edt_search_passport"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_width="match_parent"
             android:layout_marginLeft="15px"
             android:layout_below="@+id/edt_search_filenumber"
             android:layout_toRightOf="@+id/lbl_search_passport" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="15px"
             android:text="Buscar"
             android:id="@+id/button_advanced_search"
             android:layout_alignRight="@id/edt_search_passport"
+            android:background="#ff2ec7e8"
             android:layout_below="@+id/edt_search_passport"/>
 
     </RelativeLayout>
