@@ -79,6 +79,9 @@ public class Student {
 	      inverseJoinColumns={ @JoinColumn(name="mateUserName", referencedColumnName="userName")})
 	private List<Student> mates;
 	
+	@ManyToMany(mappedBy="members")
+	private List<Group> groups;
+	
 	public String getUserName() {
 		return userName;
 	}
@@ -227,6 +230,15 @@ public class Student {
 	@JsonIgnore
 	public void setMates(List<Student> mates) {
 		this.mates = mates;
+	}
+
+	@JsonIgnore
+	public List<Group> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<Group> groups) {
+		this.groups = groups;
 	}
 
 	public void addCareer(final StudentCareer career) {

@@ -25,5 +25,8 @@ public interface StudentRepository extends CrudRepository<Student, String> {
 			+ "AND ( (?6 is null) or (?6='') or (LOWER(s.passportNumber) LIKE %?6) )"
 			, nativeQuery = true)
 	public List<Student> findByProperties(String name, String lastName, String email, String careerCode, String fileNumber, String passportNumber);
+	
+	@Query("SELECT s FROM Student s LEFT JOIN FETCH s.groups WHERE s.userName = ?1")
+    public Student findByUserNameAndFetchGroupsEagerly(String userName);
 
 }

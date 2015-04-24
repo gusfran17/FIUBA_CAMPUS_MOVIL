@@ -130,6 +130,18 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
+	@ExceptionHandler(GroupAlreadyExistsException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(GroupAlreadyExistsException exception){
+		return buildResponse(exception);
+	}
+	
+	@ExceptionHandler(StudentAlreadyMemberOfGroupException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(StudentAlreadyMemberOfGroupException exception){
+		return buildResponse(exception);
+	}
+	
 	
 	@ExceptionHandler(InvalidUserException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
