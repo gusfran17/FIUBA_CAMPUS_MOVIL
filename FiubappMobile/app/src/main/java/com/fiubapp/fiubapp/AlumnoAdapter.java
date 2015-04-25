@@ -21,8 +21,10 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,16 +103,17 @@ public class AlumnoAdapter extends BaseAdapter {
     private void eliminarCompanero(final Alumno companero, View convertView, final int position) {
 
         final Button eliminar = (Button)convertView.findViewById(R.id.childButton);
+        final Map<String, String> params = new HashMap<String, String>();
+        params.put("userName", companero.getUsername());
+        final String urlAPI = activity.getResources().getString(R.string.urlAPI);
 
         eliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("userName", companero.getUsername());
 
                 JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.DELETE,
-                        buildNotificationsUrl(),
+                        urlAPI+"/students/"+companero.getUsername()+"/mates",
                         new JSONObject(params),
                         new Response.Listener<JSONObject>() {
                             @Override
@@ -123,13 +126,25 @@ public class AlumnoAdapter extends BaseAdapter {
                         new Response.ErrorListener(){
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                //Popup.showText(activity, "Anduvo mal", Toast.LENGTH_LONG);
+
+                                JSONObject message = null;
+
+                                try {
+                                    String responseBody = new String( error.networkResponse.data, "utf-8" );
+                                    message = new JSONObject(responseBody);
+                                    Popup.showText(activity, message.getString("message"), Toast.LENGTH_LONG).show();
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                 ){
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
                         Map<String, String> headers = new HashMap<String, String>();
+                        headers.put("Content-Type", "application/json; charset=utf-8");
                         headers.put("Authorization", getToken());
                         return headers;
                     }
@@ -143,7 +158,8 @@ public class AlumnoAdapter extends BaseAdapter {
 
     private String buildNotificationsUrl(){
         DataAccess dataAccess = new DataAccess(activity);
-        return dataAccess.getURLAPI() + "/students/" + dataAccess.getUserName() + "/mates";
+        String url = dataAccess.getURLAPI() + "/students/" + dataAccess.getUserName() + "/mates";
+        return url;
     }
 
     private String getToken(){
