@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import ar.uba.fi.fiubappREST.exceptions.CareerAlreadyExistsForStudentException;
 import ar.uba.fi.fiubappREST.exceptions.CareerNotFoundForStudentException;
+import ar.uba.fi.fiubappREST.exceptions.StudentsAreNotMatesException;
 import ar.uba.fi.fiubappREST.exceptions.UnableToDeleteTheOnlyCareerForStudentException;
 import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyMateException;
 
@@ -105,6 +106,37 @@ public class StudentTest {
 	@Test(expected=UnableToDeleteTheOnlyCareerForStudentException.class)
 	public void testRemoveTheOnlyCareer() {		
 		this.student.removeCareer(studentCareer);
+	}
+	
+	@Test
+	public void testAddNotification(){
+		Notification notification = new ApplicationNotification();
+		
+		this.student.addNotification(notification);
+		
+		assertEquals(1, this.student.getNotifications().size());
+	}
+	
+	@Test
+	public void testDeleteMate(){
+		student.setMates(new ArrayList<Student>());
+		Student mate = new Student();
+		mate.setUserName(AN_USER_NAME);
+		mate.setMates(new ArrayList<Student>());
+		this.student.getMates().add(mate);
+		
+		this.student.deleteMate(mate);
+		
+		assertEquals(0, this.student.getMates().size());
+	}
+	
+	@Test(expected=StudentsAreNotMatesException.class)
+	public void testDeleteMateNotExists(){
+		student.setMates(new ArrayList<Student>());
+		Student mate = new Student();
+		mate.setUserName(AN_USER_NAME);
+		
+		this.student.deleteMate(mate);
 	}
 
 }

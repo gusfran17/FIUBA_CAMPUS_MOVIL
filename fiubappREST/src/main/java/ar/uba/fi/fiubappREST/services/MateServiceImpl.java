@@ -70,5 +70,12 @@ public class MateServiceImpl implements MateService {
 		return mates;
 	}
 
-	
+	@Override
+	public void deleteMate(String userName, String mateUserName) {
+		Student student = findStudent(userName);
+		Student mate = findStudent(mateUserName);
+		student.deleteMate(mate);
+		this.studentRepository.save(student);
+		this.studentRepository.save(mate);
+	}	
 }
