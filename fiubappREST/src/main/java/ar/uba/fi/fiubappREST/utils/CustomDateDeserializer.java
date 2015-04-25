@@ -23,10 +23,13 @@ public class CustomDateDeserializer extends JsonDeserializer<Date>{
         SimpleDateFormat format = new SimpleDateFormat(this.DATE_FORMAT);
         format.setLenient(false);
         String date = jsonparser.getText();
-        try {
-			return format.parse(date);
-		} catch (ParseException e) {		
-			throw new DateFormatException(e, date, DATE_FORMAT);
-		}
+        if(date != null){
+        	try {
+        		return format.parse(date);
+        	} catch (ParseException e) {		
+        		throw new DateFormatException(e, date, DATE_FORMAT);
+        	}        	
+        }
+        return null;
     }
 }

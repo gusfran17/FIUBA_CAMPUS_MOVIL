@@ -44,11 +44,13 @@ public class HighSchoolServiceImpl implements HighSchoolService {
 	}
 
 	private void validateDatesRange(Date dateFrom, Date dateTo) {
-		Date today = new Date();
-		if(dateFrom.after(today) || dateTo.after(today) || dateFrom.after(dateTo)){
-			LOGGER.error(String.format("High school dates information is not valid."));
-			throw new InvalidDateRangeException();
-		}		
+		if(dateFrom!=null && dateTo!=null){
+			Date today = new Date();
+			if(dateFrom.after(today) || dateTo.after(today) || dateFrom.after(dateTo)){
+				LOGGER.error(String.format("High school dates information is not valid."));
+				throw new InvalidDateRangeException();
+			}		
+		}
 	}
 
 	private void validateHighSchoolDoesntExist(String userName) {
