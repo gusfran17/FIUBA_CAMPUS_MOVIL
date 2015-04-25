@@ -9,7 +9,7 @@ public class StudentSearchTabsAdapter  extends FragmentPagerAdapter {
 
     final int PAGE_COUNT = 2;
 
-    private static final String[] CONTENT = new String[] { "Busqueda Simple", "Busqueda Avanzada" };
+    private static final String[] CONTENT = new String[] { "Simple", "Avanzada" };
 
     public StudentSearchTabsAdapter(FragmentManager fm) {
         super(fm);

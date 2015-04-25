@@ -90,7 +90,6 @@ public class NotificationAdapter extends BaseAdapter {
         name.setText(notification.getApplicantName() + " " + notification.getApplicantLastName());
         description.setText(R.string.application_notification_message);
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        markAsViewed.setText(R.string.application_notification_mark_as_viewed);
         creationDate.setText(df.format(notification.getCreationDate()));
 
         final Map<String, String> params = new HashMap<String, String>();
