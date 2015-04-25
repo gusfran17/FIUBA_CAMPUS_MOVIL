@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -32,7 +33,7 @@ import java.util.Map;
 public class Perfil_fiuba extends Fragment {
 
     private ArrayList<Carrera> carrerasAlumno = new ArrayList<Carrera>();
-    private ArrayList<Carrera> todasCarreras = new ArrayList<Carrera>();
+    private ArrayList<Carrera> todasCarrerasDisponibles = new ArrayList<Carrera>();
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,7 +49,7 @@ public class Perfil_fiuba extends Fragment {
                 builder.setTitle("Seleccione una carrera")
                         .setItems(getNombreCarreras(), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                setCarreraAlumno(Integer.parseInt(todasCarreras.get(which).getCodigo()));
+                                setCarreraAlumno(todasCarrerasDisponibles.get(which));
                             }
                         });
 
@@ -69,6 +70,9 @@ public class Perfil_fiuba extends Fragment {
     }
 
     public void eliminarCarrera(int posicion) {
+        if(!tieneCarreraDisponible(carrerasAlumno.get(posicion).getCodigo()))
+            todasCarrerasDisponibles.add(carrerasAlumno.get(posicion));
+
         borrarCarreraAlumno(Integer.parseInt(carrerasAlumno.get(posicion).getCodigo()));
     }
 
@@ -166,13 +170,16 @@ public class Perfil_fiuba extends Fragment {
         VolleyController.getInstance().addToRequestQueue(jsonReq);
     }
 
-    public void setCarreraAlumno(int codigo){
+    public void setCarreraAlumno(Carrera carrera){
 
         final SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
         final String username = settings.getString("username", null);
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
-        String url = this.getString(R.string.urlAPI) + "/students/" + username + "/careers/" + codigo;
+        String url = this.getString(R.string.urlAPI) + "/students/" + username + "/careers/" + carrera.getCodigo();
+
+        if(tieneCarreraDisponible(carrera.getCodigo()))
+            todasCarrerasDisponibles.remove(carrera);
 
         JSONObject jsonParams = new JSONObject();
 
@@ -208,9 +215,10 @@ public class Perfil_fiuba extends Fragment {
                     @Override
                     public void onResponse(JSONArray response) {
 
+                        todasCarrerasDisponibles.clear();
+
                         for (int i = 0; i < response.length(); i++) {
                             try {
-
                                 JSONObject carreraJSON = response.getJSONObject(i);
 
                                 String codigo = carreraJSON.getString("code");
@@ -221,7 +229,9 @@ public class Perfil_fiuba extends Fragment {
                                 carrera.setCodigo(codigo);
                                 carrera.setNombre(nombre);
 
-                                todasCarreras.add(carrera);
+                                if(!tieneCarreraAlumno(codigo))
+                                    todasCarrerasDisponibles.add(carrera);
+
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -246,12 +256,38 @@ public class Perfil_fiuba extends Fragment {
         VolleyController.getInstance().addToRequestQueue(jsonReq);
     }
 
+    public boolean tieneCarreraDisponible(String codigo){
+        boolean tieneCarrera = false;
+
+        for (int i = 0; i < todasCarrerasDisponibles.size(); i++) {
+            if (todasCarrerasDisponibles.get(i).getCodigo().equals(codigo)){
+                tieneCarrera = true;
+                break;
+            }
+        }
+
+        return tieneCarrera;
+    }
+
+    public boolean tieneCarreraAlumno(String codigo){
+        boolean tieneCarrera = false;
+
+        for (int i = 0; i < carrerasAlumno.size(); i++) {
+            if (carrerasAlumno.get(i).getCodigo().equals(codigo)){
+                tieneCarrera = true;
+                break;
+            }
+        }
+
+        return tieneCarrera;
+    }
+
     public String[] getNombreCarreras(){
 
-        String[] nombreCarreras = new String[todasCarreras.size()];
+        String[] nombreCarreras = new String[todasCarrerasDisponibles.size()];
 
-        for (int i = 0; i < todasCarreras.size(); i++) {
-            nombreCarreras[i] = todasCarreras.get(i).getNombre();
+        for (int i = 0; i < todasCarrerasDisponibles.size(); i++) {
+            nombreCarreras[i] = todasCarrerasDisponibles.get(i).getNombre();
         }
 
         return nombreCarreras;

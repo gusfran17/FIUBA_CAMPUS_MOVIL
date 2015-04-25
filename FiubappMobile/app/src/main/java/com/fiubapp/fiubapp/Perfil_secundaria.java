@@ -134,13 +134,15 @@ public class Perfil_secundaria extends Fragment {
         Date fechaInicio = null;
         Date fechaFin = null;
         try {
-            fechaInicio = formatoDelTexto.parse(etFechaInicio.getText().toString());
-            fechaFin = formatoDelTexto.parse(etFechaFin.getText().toString());
+            if(etFechaInicio.getText() != null && !etFechaInicio.getText().equals(""))
+                fechaInicio = formatoDelTexto.parse(etFechaInicio.getText().toString());
+
+            if(etFechaFin.getText() != null && !etFechaFin.getText().equals(""))
+                fechaFin = formatoDelTexto.parse(etFechaFin.getText().toString());
         } catch (ParseException ex) {
-            ex.printStackTrace();
         }
 
-        if(!fechaInicio.before(fechaFin) || !fechaFin.before(actual)){
+        if( (fechaInicio != null && !fechaInicio.before(fechaFin)) || (fechaFin != null && !fechaFin.before(actual))){
             Popup.showText(this.getActivity(), "Verifique que la fecha desde sea menor a la fecha hasta y no sean futuras", Toast.LENGTH_LONG).show();
             return false;
         }
