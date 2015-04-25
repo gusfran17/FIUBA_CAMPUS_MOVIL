@@ -46,11 +46,11 @@ public class MateController {
 		return this.mateService.getMates(userName);
 	}
 	
-	@RequestMapping(method = RequestMethod.DELETE)
+	@RequestMapping(value="{mateUserName}", method = RequestMethod.DELETE)
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
-	public @ResponseBody void deleteMate(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestBody MateRepresentation mate) {
+	public @ResponseBody void deleteMate(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @PathVariable String mateUserName) {
 		this.studentSessionService.validateMine(token, userName);
-		this.mateService.deleteMate(userName, mate.getUserName());
+		this.mateService.deleteMate(userName, mateUserName);
 	}
 }
 
