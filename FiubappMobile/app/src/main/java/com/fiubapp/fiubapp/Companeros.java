@@ -86,12 +86,12 @@ public class Companeros extends Fragment {
         listView.setAdapter(adapter);
 
         // Creating volley request obj
-        JsonArrayRequest alumnoReq = new JsonArrayRequest(buildNotificationsUrl(),
+        JsonArrayRequest alumnoReq = new JsonArrayRequest(buildMatesUrl(),
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d(TAG, response.toString());
-
+                        alumnoList.clear();
                         // Parsing json
                         for (int i = 0; i < response.length(); i++) {
                             try {
@@ -101,6 +101,7 @@ public class Companeros extends Fragment {
                                 alumno.setNombre(obj.getString("name"));
                                 alumno.setApellido(obj.getString("lastName"));
                                 alumno.setIntercambio(obj.getBoolean("isExchangeStudent"));
+                                alumno.setIsMyMate(obj.getBoolean("isMyMate"));
 
                                 if (alumno.isIntercambio()){
                                     alumno.setUsername(obj.getString("passportNumber"));
@@ -151,7 +152,7 @@ public class Companeros extends Fragment {
         return partnersTabView;
     }
 
-    private String buildNotificationsUrl(){
+    private String buildMatesUrl(){
         DataAccess dataAccess = new DataAccess(getActivity());
         return urlAPI + "/students/" + dataAccess.getUserName() + "/mates";
     }

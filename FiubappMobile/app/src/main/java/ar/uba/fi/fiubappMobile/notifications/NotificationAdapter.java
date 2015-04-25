@@ -166,6 +166,11 @@ public class NotificationAdapter extends BaseAdapter {
                 new Response.ErrorListener(){
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        String responseBody = null;
+
+                        if (error.networkResponse.statusCode == 400){
+                            notifications.remove(position);
+                        }
 
                         notifyDataSetChanged();
 
