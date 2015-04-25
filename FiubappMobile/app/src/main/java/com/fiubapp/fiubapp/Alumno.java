@@ -23,6 +23,16 @@ public class Alumno {
     private ArrayList<String> carreras;
     private ArrayList<Integer> grupos, discusiones, compañeros;
     private Location ubicacion;
+    private boolean isMyMate;
+
+    public boolean isMyMate() {
+        return isMyMate;
+    }
+
+    public void setIsMyMate(boolean isMyMate) {
+        this.isMyMate = isMyMate;
+    }
+
 
     public boolean isIntercambio() {
         return intercambio;

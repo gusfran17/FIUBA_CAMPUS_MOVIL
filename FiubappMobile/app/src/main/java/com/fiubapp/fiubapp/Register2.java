@@ -41,7 +41,7 @@ public class Register2 extends Activity{
 
     private EmailValidator emailValidator;
     private static final String TAG = Register2.class.getSimpleName();
-
+    private SpinnerObject spinnerObject;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,8 +58,8 @@ public class Register2 extends Activity{
         final EditText edit_apellido = (EditText)findViewById(R.id.reg_apellido);
         final EditText edit_email = (EditText)findViewById(R.id.reg_email);
 
-        final ArrayList<String> careers = new ArrayList<String>();
-        final ArrayAdapter adapter = new ArrayAdapter<String>(Register2.this,R.layout.simple_spinner_item,careers);
+        final ArrayList<SpinnerObject> careers = new ArrayList<SpinnerObject>();
+        final ArrayAdapter adapter = new ArrayAdapter<SpinnerObject>(Register2.this,R.layout.simple_spinner_item,careers);
         adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         spinner_carrera.setAdapter(adapter);
         if (intercambio){
@@ -69,7 +69,7 @@ public class Register2 extends Activity{
             text_carrera.setVisibility(View.VISIBLE);
             spinner_carrera.setVisibility(View.VISIBLE);
         }
-
+        spinnerObject = null;
         final String urlAPI = this.getString(R.string.urlAPI);
 
           JsonArrayRequest careerReq = new JsonArrayRequest(urlAPI+"/careers/",
@@ -77,13 +77,15 @@ public class Register2 extends Activity{
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d(TAG, response.toString());
-                        careers.add("Seleccione una carrera");
+                        spinnerObject = new SpinnerObject(0,"Seleccione una carrera");
+                        careers.add(spinnerObject);
                         // Parsing json
                         for (int i = 0; i < response.length(); i++) {
                             try {
 
                                 JSONObject obj = response.getJSONObject(i);
-                                careers.add(obj.getString("name"));
+                                spinnerObject = new SpinnerObject(obj.getInt("code"),obj.getString("name"));
+                                careers.add(spinnerObject);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -115,8 +117,8 @@ public class Register2 extends Activity{
                 final String nombre = edit_nombre.getText().toString();
                 final String apellido = edit_apellido.getText().toString();
                 final String email = edit_email.getText().toString();
-                final int carrera = (int)spinner_carrera.getSelectedItemId() + 1;
-
+                SpinnerObject spnItem = (SpinnerObject)spinner_carrera.getSelectedItem();
+                final int carrera = spnItem.getID();
                 //si ninguno de los campos estan vacios
                 if (!nombre.equals("") && !apellido.equals("") && !email.equals("")){
                     //si el mail es valido llamo al REST

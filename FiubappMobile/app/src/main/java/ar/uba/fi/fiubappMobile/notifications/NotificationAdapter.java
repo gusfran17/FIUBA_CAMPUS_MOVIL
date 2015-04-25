@@ -26,7 +26,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.fiubapp.fiubapp.EmailValidator;
 import com.fiubapp.fiubapp.Login;
-import com.fiubapp.fiubapp.Perfil;
+import com.fiubapp.fiubapp.PerfilTabs;
 import com.fiubapp.fiubapp.Popup;
 import com.fiubapp.fiubapp.R;
 import com.fiubapp.fiubapp.Register1;
