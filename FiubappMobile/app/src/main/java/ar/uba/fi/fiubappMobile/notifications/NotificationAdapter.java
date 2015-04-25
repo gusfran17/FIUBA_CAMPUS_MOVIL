@@ -120,6 +120,9 @@ public class NotificationAdapter extends BaseAdapter {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
+                            String message = notification.getApplicantName() + " "
+                                    + notification.getApplicantLastName() + " y vos ahora son compañeros!";
+                            Popup.showText(context, message, Toast.LENGTH_LONG).show();
                             setViewedNotification(notification, context, position);
                         }
                     },

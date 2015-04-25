@@ -49,9 +49,9 @@ public class NotificationsTab extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragmenttab2, container, false);
+        View view = inflater.inflate(R.layout.notification, container, false);
 
-        listView = (ListView)view.findViewById(R.id.list);
+        listView = (ListView)view.findViewById(R.id.list_notif);
         adapter = new NotificationAdapter(getActivity(), notifications, urlAPI);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

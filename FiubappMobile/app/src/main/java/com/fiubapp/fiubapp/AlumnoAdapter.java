@@ -75,9 +75,9 @@ public class AlumnoAdapter extends BaseAdapter {
         else carrera.setText("");
 
         if (a.isMyMate()) {
-            buttonAdd.setVisibility(View.INVISIBLE);
+            buttonAdd.setText("Eliminar");
         } else {
-            buttonAdd.setVisibility(View.VISIBLE);
+            buttonAdd.setText("Agregar");
         }
         return convertView;
     }
