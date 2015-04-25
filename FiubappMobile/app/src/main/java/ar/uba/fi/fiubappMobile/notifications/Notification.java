@@ -1,8 +1,5 @@
 package ar.uba.fi.fiubappMobile.notifications;
 
-import android.location.Location;
-
-import java.util.ArrayList;
 import java.util.Date;
 
 public class Notification {

@@ -1,6 +1,7 @@
 package ar.uba.fi.fiubappREST.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -94,5 +95,22 @@ public class MateServiceImplTest {
 		List<StudentProfileRepresentation> mates = this.service.getMates(AN_USER_NAME);
 		
 		assertEquals(1, mates.size());
+	}
+	
+	@Test
+	public void testDeleteMate(){
+		student.setMates(new ArrayList<Student>());
+		Student mate = new Student();
+		mate.setUserName(A_MATE_USER_NAME);
+		mate.setMates(new ArrayList<Student>());
+		student.addMate(mate);
+		when(this.studentRepository.findByUserNameAndFetchMatesEagerly(AN_USER_NAME)).thenReturn(student);
+		when(this.studentRepository.findByUserNameAndFetchMatesEagerly(A_MATE_USER_NAME)).thenReturn(mate);
+		when(this.studentRepository.save(student)).thenReturn(student);
+		when(this.studentRepository.save(mate)).thenReturn(mate);
+		
+		this.service.deleteMate(AN_USER_NAME, A_MATE_USER_NAME);
+		
+		assertTrue(true);
 	}
 }

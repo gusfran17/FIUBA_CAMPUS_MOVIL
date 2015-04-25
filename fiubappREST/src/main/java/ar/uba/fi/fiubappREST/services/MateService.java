@@ -10,4 +10,6 @@ public interface MateService {
 
 	public List<StudentProfileRepresentation> getMates(String userName);
 
+	public void deleteMate(String userName, String mateUserName);
+
 }

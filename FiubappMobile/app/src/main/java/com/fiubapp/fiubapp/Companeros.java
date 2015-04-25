@@ -1,13 +1,16 @@
 package com.fiubapp.fiubapp;
+
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,10 +29,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FragmentTab2 extends Fragment {
+import ar.uba.fi.fiubappMobile.partners.StudentSearchTabs;
+import ar.uba.fi.fiubappMobile.utils.DataAccess;
+
+public class Companeros extends Fragment {
     ListView lv1;
     private TextView text;
-    private static final String TAG = FragmentTab2.class.getSimpleName();
+    private static final String TAG = Companeros.class.getSimpleName();
 
     private String urlAPI="";
     private ProgressDialog pDialog;
@@ -50,9 +56,24 @@ public class FragmentTab2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragmenttab2, container, false);
+        View partnersTabView = inflater.inflate(R.layout.companeros, container, false);
 
-        listView = (ListView)view.findViewById(R.id.list);
+		Button btnSearchStudents = (Button) partnersTabView.findViewById(R.id.button_search_students);
+
+        btnSearchStudents.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                FragmentActivity searchTabs = getActivity();
+                Intent searchIntent = new Intent(searchTabs, StudentSearchTabs.class);
+                try {
+                    startActivity(searchIntent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });        
+		listView = (ListView)partnersTabView.findViewById(R.id.list);
         adapter = new AlumnoAdapter(getActivity(), alumnoList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -63,7 +84,7 @@ public class FragmentTab2 extends Fragment {
         listView.setAdapter(adapter);
 
         // Creating volley request obj
-        JsonArrayRequest alumnoReq = new JsonArrayRequest(urlAPI+"/students/",
+        JsonArrayRequest alumnoReq = new JsonArrayRequest(buildNotificationsUrl(),
             new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
@@ -74,15 +95,16 @@ public class FragmentTab2 extends Fragment {
                         try {
 
                             JSONObject obj = response.getJSONObject(i);
-                            Alumno alumno = new Alumno();
-                            alumno.setNombre(obj.getString("name"));
-                            alumno.setApellido(obj.getString("lastName"));
-                            alumno.setIntercambio(obj.getBoolean("isExchangeStudent"));
-
-                            if (alumno.isIntercambio()){
-                                alumno.setUsername(obj.getString("passportNumber"));
+                            Alumno companero = new Alumno();
+                            companero.setNombre(obj.getString("name"));
+                            companero.setApellido(obj.getString("lastName"));
+                            companero.setIntercambio(obj.getBoolean("isExchangeStudent"));
+                            companero.setIsMyMate(obj.getBoolean("isMyMate"));
+                            companero.setUsername(obj.getString("userName"));
+                            if (companero.isIntercambio()){
+                                companero.setUsername(obj.getString("passportNumber"));
                             }else{
-                                alumno.setUsername(obj.getString("fileNumber"));
+                                companero.setUsername(obj.getString("fileNumber"));
                             }
 
                             JSONArray JSONCareers = new JSONArray(obj.getString("careers"));
@@ -94,9 +116,9 @@ public class FragmentTab2 extends Fragment {
 
                                 carreras.add(carrera);
                             }
-                            alumno.setCarreras(carreras);
+                            companero.setCarreras(carreras);
 
-                            alumnoList.add(alumno);
+                            alumnoList.add(companero);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -114,10 +136,8 @@ public class FragmentTab2 extends Fragment {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> headers = new HashMap<String, String>();
-                    SharedPreferences settings = getActivity().getSharedPreferences(
-                            getResources().getString(R.string.prefs_name), 0);
-                    String token = settings.getString("token",null);
-                    headers.put("Authorization", token);
+
+                    headers.put("Authorization", getToken());
                     return headers;
 
                 }
@@ -125,7 +145,17 @@ public class FragmentTab2 extends Fragment {
 
        // Adding request to request queue
         VolleyController.getInstance().addToRequestQueue(alumnoReq);
-        return view;
+        return partnersTabView;
+    }
+	
+	private String buildNotificationsUrl(){
+        DataAccess dataAccess = new DataAccess(getActivity());
+        return urlAPI + "/students/" + dataAccess.getUserName() + "/mates";
+    }
+
+    private String getToken(){
+        DataAccess dataAccess = new DataAccess(getActivity());
+        return dataAccess.getToken();
     }
 
 }

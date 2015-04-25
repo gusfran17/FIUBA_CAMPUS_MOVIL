@@ -124,12 +124,24 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
+	@ExceptionHandler(NotificationNotViewedAlreadyExistsForStudentException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(NotificationNotViewedAlreadyExistsForStudentException exception){
+		return buildResponse(exception);
+	}
+	
 	@ExceptionHandler(StudentAlreadyMateException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
 	public @ResponseBody ErrorResponse handle(StudentAlreadyMateException exception){
 		return buildResponse(exception);
 	}
-	
+
+	@ExceptionHandler(StudentsAreNotMatesException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(StudentsAreNotMatesException exception){
+		return buildResponse(exception);
+	}
+
 	@ExceptionHandler(GroupAlreadyExistsException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
 	public @ResponseBody ErrorResponse handle(GroupAlreadyExistsException exception){

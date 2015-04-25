@@ -25,6 +25,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import ar.uba.fi.fiubappREST.exceptions.CareerAlreadyExistsForStudentException;
 import ar.uba.fi.fiubappREST.exceptions.CareerNotFoundForStudentException;
 import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyMateException;
+import ar.uba.fi.fiubappREST.exceptions.StudentsAreNotMatesException;
 import ar.uba.fi.fiubappREST.exceptions.UnableToDeleteTheOnlyCareerForStudentException;
 import ar.uba.fi.fiubappREST.utils.CustomDateDeserializer;
 import ar.uba.fi.fiubappREST.utils.CustomDateSerializer;
@@ -309,6 +310,40 @@ public class Student {
 
 	public Boolean isMateWith(Student student) {
 		return this.isAlreadyMateWith(student);
+	}
+
+	public void deleteMate(Student mate) {
+		if(!this.isMateWith(mate)){
+			throw new StudentsAreNotMatesException(this.userName, mate.getUserName());
+		}
+		this.mates.remove(mate);
+		mate.getMates().remove(this);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((userName == null) ? 0 : userName.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Student other = (Student) obj;
+		if (userName == null) {
+			if (other.userName != null)
+				return false;
+		} else if (!userName.equals(other.userName))
+			return false;
+		return true;
 	}	
 
 }

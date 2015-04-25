@@ -11,7 +11,7 @@
     <string name="soyIntercambio">Soy de intercambio</string>
     <string name="soyNuevo">Soy nuevo</string>
     <string name="pasaporte">Pasaporte</string>
-    <string name="urlAPI">http://192.168.56.1:8080/fiubappREST/api</string>
+    <string name="urlAPI">http://192.168.0.4:8080/fiubappREST/api</string>
     <string name="prefs_name">MyPrefsFile</string>
     <string name="educacionSecundaria">Educación secundaria</string>
     <string name="escuela">Escuela</string>
@@ -19,7 +19,7 @@
     <string name="fechaInicio">Fecha inicio</string>
     <string name="titulo">Título</string>
     <string-array name="genders">
-        <item>Seleccione un sexo</item>
+        <item>Seleccione</item>
         <item>Femenino</item>
         <item>Masculino</item>
     </string-array>
@@ -30,6 +30,8 @@
     </string-array>
     <string name="application_notification_message">quiere ser tu compañero</string>
     <string name="application_notification_mark_as_viewed">visto</string>
+    <string name="CARRERAS">CARRERAS</string>
     <string name="BuscarGrupos">BUSCAR GRUPOS</string>
     <string name="CrearGrupo">CREAR GRUPO</string>
+
 </resources>

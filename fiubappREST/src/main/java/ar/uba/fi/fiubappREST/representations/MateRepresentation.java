@@ -1,6 +1,6 @@
 package ar.uba.fi.fiubappREST.representations;
 
-public class MateCreationRepresentation {
+public class MateRepresentation {
 	
 	private String userName;
 

@@ -1,13 +1,54 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+<?xml version="1.0" encoding="utf-8"?>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Carreras" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+        <RelativeLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ff2ec7e8"
+            android:layout_alignParentTop="true">
+
+            <TextView
+                android:id="@+id/tvTituloHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:textSize="25px"
+                android:textColor="#000000"
+                android:text="@string/CARRERAS"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true" />
+
+            <ImageView
+                android:id="@+id/imgEditarCarreras"
+                android:src="@drawable/ic_mas"
+                android:layout_marginRight="5px"
+                android:layout_alignParentRight="true"
+                android:onClick="onClickImgEditarCarreras"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header">
+
+            <ListView
+                android:id="@+id/listCarreras"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+            </ListView>
+
+
+        </RelativeLayout>
 
 </RelativeLayout>

@@ -14,6 +14,7 @@ import ar.uba.fi.fiubappREST.domain.ApplicationNotification;
 import ar.uba.fi.fiubappREST.domain.Notification;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.NotificationNotFoundForStudentException;
+import ar.uba.fi.fiubappREST.exceptions.NotificationNotViewedAlreadyExistsForStudentException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.persistance.NotificationRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
@@ -37,10 +38,19 @@ public class NotificationServiceImpl implements NotificationService {
 		Student student = this.findStudent(userName);
 		Student applicantStudent = this.findStudent(application.getApplicantUserName());
 		LOGGER.info(String.format("Creating application notification for student with userName %s from student with userName %s.", userName, application.getApplicantUserName()));
+		this.verifyNotExistingNotViewedApplicationNotification(userName, application.getApplicantUserName());
 		ApplicationNotification notification = createApplicationNotification(student, applicantStudent);		
 		this.notificationRepository.save(notification);
 		LOGGER.info(String.format("Application notification for student with userName %s from student with userName %s was created.", userName, application.getApplicantUserName()));
 		return application;
+	}
+
+	private void verifyNotExistingNotViewedApplicationNotification(String userName, String applicantUserName) {
+		List<ApplicationNotification> notifications = this.notificationRepository.findByUserNameAndApplicantUserNameAndNotIsViewed(userName, applicantUserName);
+		if(notifications.size()>0){
+			throw new NotificationNotViewedAlreadyExistsForStudentException(userName, applicantUserName);
+		}
+		
 	}
 
 	private ApplicationNotification createApplicationNotification(Student student, Student applicantStudent) {

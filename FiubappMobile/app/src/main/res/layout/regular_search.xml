@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="3">
+    <RelativeLayout
+        android:id="@+id/contentSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <TextView
+            android:id="@+id/lbl_search_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre"
+            android:layout_alignBaseline="@+id/edt_search_name"
+            android:layout_alignBottom="@+id/edt_search_name" />
+
+        <EditText android:id="@+id/edt_search_name"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15px"
+            android:layout_marginTop="5px"
+            android:layout_toRightOf="@+id/lbl_search_name" />
+
+        <TextView
+            android:id="@+id/lbl_search_lastname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Apellido"
+            android:layout_below="@+id/lbl_search_name"
+            android:layout_alignBaseline="@+id/edt_search_lastname"
+            android:layout_alignBottom="@+id/edt_search_lastname" />
+
+        <EditText android:id="@+id/edt_search_lastname"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15px"
+            android:layout_below="@+id/edt_search_name"
+            android:layout_toRightOf="@+id/lbl_search_lastname" />
+        <Button
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="15px"
+            android:text="Buscar"
+            android:id="@+id/button_search"
+            android:layout_alignRight="@id/edt_search_lastname"
+            android:layout_below="@+id/edt_search_lastname"
+            android:background="#ff2ec7e8"/>
+
+    </RelativeLayout>
+
+
+    <ListView
+        android:id="@+id/lst_regular_search"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/list_divider"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/list_row_selector"
+        android:layout_alignParentBottom="false"
+        android:layout_above="@id/contentSearch"/>
+
+
+</LinearLayout>
