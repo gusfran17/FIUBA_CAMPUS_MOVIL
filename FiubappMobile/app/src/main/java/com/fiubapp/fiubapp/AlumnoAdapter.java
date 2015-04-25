@@ -103,22 +103,17 @@ public class AlumnoAdapter extends BaseAdapter {
     private void eliminarCompanero(final Alumno companero, View convertView, final int position) {
 
         final Button eliminar = (Button)convertView.findViewById(R.id.childButton);
-        final Map<String, String> params = new HashMap<String, String>();
-        params.put("userName", companero.getUsername());
         final String urlAPI = activity.getResources().getString(R.string.urlAPI);
 
         eliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
+                String url =  urlAPI+"/students/"+getUsername()+"/mates/"+companero.getUsername();
                 JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.DELETE,
-                        urlAPI+"/students/"+companero.getUsername()+"/mates",
-                        new JSONObject(params),
+                       url,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                //Popup.showText(activity, "Anduvo joya", Toast.LENGTH_LONG);
                                 alumnoItems.remove(position);
                                 notifyDataSetChanged();
                             }
@@ -127,24 +122,19 @@ public class AlumnoAdapter extends BaseAdapter {
                             @Override
                             public void onErrorResponse(VolleyError error) {
 
-                                JSONObject message = null;
-
-                                try {
-                                    String responseBody = new String( error.networkResponse.data, "utf-8" );
-                                    message = new JSONObject(responseBody);
-                                    Popup.showText(activity, message.getString("message"), Toast.LENGTH_LONG).show();
-                                } catch (UnsupportedEncodingException e) {
-                                    e.printStackTrace();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                                //el response es null cuando borra al compañero,
+                                //entonces se borra del listado
+                                if (error.networkResponse == null){
+                                    alumnoItems.remove(position);
+                                    notifyDataSetChanged();
                                 }
+
                             }
                         }
                 ){
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
                         Map<String, String> headers = new HashMap<String, String>();
-                        headers.put("Content-Type", "application/json; charset=utf-8");
                         headers.put("Authorization", getToken());
                         return headers;
                     }
@@ -156,15 +146,14 @@ public class AlumnoAdapter extends BaseAdapter {
 
     }
 
-    private String buildNotificationsUrl(){
-        DataAccess dataAccess = new DataAccess(activity);
-        String url = dataAccess.getURLAPI() + "/students/" + dataAccess.getUserName() + "/mates";
-        return url;
-    }
-
     private String getToken(){
         DataAccess dataAccess = new DataAccess(activity);
         return dataAccess.getToken();
+    }
+
+    private String getUsername(){
+        DataAccess dataAccess = new DataAccess(activity);
+        return dataAccess.getUserName();
     }
 
 }

@@ -81,12 +81,12 @@ public class Companeros extends Fragment {
                             companero.setApellido(obj.getString("lastName"));
                             companero.setIntercambio(obj.getBoolean("isExchangeStudent"));
                             companero.setIsMyMate(obj.getBoolean("isMyMate"));
-
-                            if (companero.isIntercambio()){
+                            companero.setUsername(obj.getString("userName"));
+                            /*if (companero.isIntercambio()){
                                 companero.setUsername(obj.getString("passportNumber"));
                             }else{
                                 companero.setUsername(obj.getString("fileNumber"));
-                            }
+                            }*/
 
                             JSONArray JSONCareers = new JSONArray(obj.getString("careers"));
                             ArrayList<String> carreras = new ArrayList<>();
