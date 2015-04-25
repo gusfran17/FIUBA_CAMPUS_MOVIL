@@ -1,5 +1,6 @@
 package com.fiubapp.fiubapp;
 
+import android.app.Fragment;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -49,4 +50,7 @@ public class PerfilTabs extends FragmentActivity {
         indicator.setViewPager(viewPager);
     }
 
+    public void borrarCarrera(){
+        Fragment fragment = getFragmentManager().findFragmentById(R.id.pager_perfil);
+    }
 }
