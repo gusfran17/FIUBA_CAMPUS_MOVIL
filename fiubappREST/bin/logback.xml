@@ -10,7 +10,7 @@
   	</appender>
 
 	<appender name="appAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${log.dir}/mobileCampusREST.log</file>
+<!-- 		<file>${log.dir}/mobileCampusREST.log</file> -->
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- daily rollover -->
 			<fileNamePattern>${log.dir}/mobileCampusREST.log.%d{yyyy-MM-dd}</fileNamePattern>

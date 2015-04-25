@@ -114,21 +114,23 @@ public class StudentServiceTest {
 	}
 	
 	@Test
-	public void testFindAll(){
+	public void testFindByProperties(){
+		when(student.getUserName()).thenReturn(A_VALUE);
 		Student anotherStudent = mock(Student.class);
+		when(anotherStudent.getUserName()).thenReturn(ANOTHER_VALUE);
 		List<Student> students = new ArrayList<Student>();
 		students.add(student);
 		students.add(anotherStudent);
 		when(studentRepository.findByUserNameAndFetchMatesEagerly(AN_USER_NAME)).thenReturn(student);
-		when(studentRepository.findAll()).thenReturn(students);
+		when(studentRepository.findByProperties(A_VALUE, A_VALUE, A_VALUE, A_VALUE, A_VALUE, A_VALUE)).thenReturn(students);
 		StudentProfileRepresentation profile = mock(StudentProfileRepresentation.class);
 		StudentProfileRepresentation anotherProfile = mock(StudentProfileRepresentation.class);
-		when(studentProfileConverter.convert(student)).thenReturn(profile);
-		when(studentProfileConverter.convert(anotherStudent)).thenReturn(anotherProfile);
+		when(studentProfileConverter.convert(student, student)).thenReturn(profile);
+		when(studentProfileConverter.convert(student, anotherStudent)).thenReturn(anotherProfile);
 		
-		List<StudentProfileRepresentation> foundProfiles = this.service.findAllFor(AN_USER_NAME);
+		List<StudentProfileRepresentation> foundProfiles = this.service.findByProperties(AN_USER_NAME, A_VALUE, A_VALUE, A_VALUE, A_VALUE, A_VALUE, A_VALUE);
 		
-		assertEquals(2, foundProfiles.size());	
+		assertEquals(1, foundProfiles.size());	
 	}
 	
 	@Test

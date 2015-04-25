@@ -1,6 +1,7 @@
 package ar.uba.fi.fiubappREST.utils;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -37,6 +38,15 @@ public class CustomDateDeserializerTest {
 		Date date = deserializer.deserialize(mockJsonParser, null);
 		
 		assertNotNull(date);
+	}
+	
+	@Test
+	public void testDeserializeNull() throws JsonParseException, IOException {
+		when(mockJsonParser.getText()).thenReturn(null);
+		
+		Date date = deserializer.deserialize(mockJsonParser, null);
+		
+		assertNull(date);
 	}
 	
 	@Test(expected=DateFormatException.class)

@@ -12,5 +12,7 @@ public interface StudentSessionService {
 	public void validate(String token);
 
 	public void validateMine(String token, String userName);
+	
+	public void validateMineOrMate(String token, String userName);
 
 }

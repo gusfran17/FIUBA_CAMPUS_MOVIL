@@ -2,8 +2,11 @@ package ar.uba.fi.fiubappMobile.notifications;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,15 +20,21 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.fiubapp.fiubapp.EmailValidator;
+import com.fiubapp.fiubapp.Login;
 import com.fiubapp.fiubapp.Popup;
 import com.fiubapp.fiubapp.R;
+import com.fiubapp.fiubapp.Register1;
 import com.fiubapp.fiubapp.VolleyController;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.awt.font.TextAttribute;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -83,7 +92,7 @@ public class NotificationAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void populateApplicationNotification(final ApplicationNotification notification, final View convertView, final Context context, final int position) {
+	private void populateApplicationNotification(final ApplicationNotification notification, final View convertView, final Context context, final int position) {
         TextView name = (TextView) convertView.findViewById(R.id.name);
         TextView description = (TextView) convertView.findViewById(R.id.description);
         TextView creationDate = (TextView) convertView.findViewById(R.id.creationDate);
@@ -92,6 +101,7 @@ public class NotificationAdapter extends BaseAdapter {
         name.setText(notification.getApplicantName() + " " + notification.getApplicantLastName());
         description.setText(R.string.application_notification_message);
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        markAsViewed.setText(R.string.application_notification_mark_as_viewed);
         creationDate.setText(df.format(notification.getCreationDate()));
 
         final Map<String, String> params = new HashMap<String, String>();

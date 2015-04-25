@@ -42,7 +42,6 @@ public class MateController {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody List<StudentProfileRepresentation> getMates(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
-		//TODO hay que validar que sea mi token o de mis amigos
 		this.studentSessionService.validateMine(token, userName);
 		return this.mateService.getMates(userName);
 	}

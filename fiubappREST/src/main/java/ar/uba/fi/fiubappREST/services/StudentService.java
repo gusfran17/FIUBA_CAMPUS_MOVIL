@@ -10,9 +10,7 @@ import ar.uba.fi.fiubappREST.representations.StudentUpdateRepresentation;
 public interface StudentService {
 		
 	public Student create(StudentCreationRepresentation studentRepresentation);
-	
-	public List<StudentProfileRepresentation> findAllFor(String userName);
-	
+		
 	public Student findOne(String userName);
 
 	public Student update(String userName, StudentUpdateRepresentation studentRepresentation);

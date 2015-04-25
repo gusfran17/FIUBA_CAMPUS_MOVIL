@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/contentAdvancedSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <TextView
+            android:id="@+id/lbl_advsearch_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre"
+            android:layout_alignBaseline="@+id/edt_advsearch_name"
+            android:layout_alignBottom="@+id/edt_advsearch_name" />
+
+        <EditText android:id="@+id/edt_advsearch_name"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15px"
+            android:layout_marginTop="5px"
+            android:layout_toRightOf="@+id/lbl_advsearch_name" />
+
+        <TextView
+            android:id="@+id/lbl_advsearch_lastname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Apellido"
+            android:layout_alignBaseline="@+id/edt_advsearch_lastname"
+            android:layout_alignBottom="@+id/edt_advsearch_lastname" />
+
+        <EditText android:id="@+id/edt_advsearch_lastname"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15px"
+            android:layout_marginTop="5px"
+            android:layout_below="@+id/edt_advsearch_name"
+            android:layout_toRightOf="@+id/lbl_advsearch_lastname" />
+
+        <TextView
+            android:id="@+id/lbl_search_career"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Carrera"
+            android:layout_below="@+id/lbl_advsearch_lastname"
+            android:layout_alignBaseline="@+id/spn_search_career"
+            android:layout_alignBottom="@+id/spn_search_career" />
+
+        <Spinner android:id="@+id/spn_search_career"
+            android:layout_height="50dp"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15px"
+            android:layout_below="@+id/edt_advsearch_lastname"
+            android:layout_toRightOf="@+id/lbl_search_career"
+            android:background="#ff2ec7e8"
+            android:entries="@array/genders"/>
+
+        <TextView
+            android:id="@+id/lbl_search_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:layout_alignBaseline="@+id/edt_search_email"
+            android:layout_alignBottom="@+id/edt_search_email" />
+
+        <EditText android:id="@+id/edt_search_email"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15px"
+            android:layout_below="@+id/spn_search_career"
+            android:layout_toRightOf="@+id/lbl_search_email" />
+
+        <TextView
+            android:id="@+id/lbl_search_filenumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Padron"
+            android:layout_alignBaseline="@+id/edt_search_filenumber"
+            android:layout_alignBottom="@+id/edt_search_filenumber" />
+
+        <EditText android:id="@+id/edt_search_filenumber"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15px"
+            android:layout_below="@+id/edt_search_email"
+            android:layout_toRightOf="@+id/lbl_search_filenumber" />
+
+        <TextView
+            android:id="@+id/lbl_search_passport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ciudad"
+            android:layout_alignBaseline="@+id/edt_search_passport"
+            android:layout_alignBottom="@+id/edt_search_passport" />
+
+        <EditText android:id="@+id/edt_search_passport"
+            android:layout_height="50dp"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15px"
+            android:layout_below="@+id/edt_search_filenumber"
+            android:layout_toRightOf="@+id/lbl_search_passport" />
+
+        <Button
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="15px"
+            android:text="Buscar"
+            android:id="@+id/button_advanced_search"
+            android:layout_alignRight="@id/edt_search_passport"
+            android:background="#ff2ec7e8"
+            android:layout_below="@+id/edt_search_passport"/>
+
+    </RelativeLayout>
+
+
+    <ListView
+        android:id="@+id/lst_advanced_search"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/list_divider"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/list_row_selector"
+        android:layout_alignParentBottom="false"
+        android:layout_above="@id/contentAdvancedSearch"/>
+
+
+</LinearLayout>
