@@ -136,6 +136,12 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
+	@ExceptionHandler(StudentsAreNotMatesException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(StudentsAreNotMatesException exception){
+		return buildResponse(exception);
+	}
+	
 	
 	@ExceptionHandler(InvalidUserException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 

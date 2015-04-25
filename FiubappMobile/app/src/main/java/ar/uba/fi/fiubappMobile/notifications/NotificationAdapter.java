@@ -71,17 +71,17 @@ public class NotificationAdapter extends BaseAdapter {
             Log.d("NotificationAdapter:", "Convertview = null");
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             //if (notifications.get(position).getClass().equals(ApplicationNotification.class)) {
-                convertView = inflater.inflate(R.layout.application_notification, null);
+            convertView = inflater.inflate(R.layout.application_notification, null);
 
             //}
-        }else{
+        } else {
             Log.d("NotificationAdapter:", "Convertview NOT NULL");
         }
-        this.populateApplicationNotification((ApplicationNotification) notifications.get(position), convertView, parent.getContext(),position);
+        this.populateApplicationNotification((ApplicationNotification) notifications.get(position), convertView, parent.getContext(), position);
         return convertView;
     }
 
-	private void populateApplicationNotification(final ApplicationNotification notification, final View convertView, final Context context, final int position) {
+    private void populateApplicationNotification(final ApplicationNotification notification, final View convertView, final Context context, final int position) {
         TextView name = (TextView) convertView.findViewById(R.id.name);
         TextView description = (TextView) convertView.findViewById(R.id.description);
         TextView creationDate = (TextView) convertView.findViewById(R.id.creationDate);

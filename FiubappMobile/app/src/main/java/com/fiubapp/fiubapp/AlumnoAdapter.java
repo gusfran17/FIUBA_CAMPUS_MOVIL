@@ -9,9 +9,20 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import ar.uba.fi.fiubappMobile.utils.DataAccess;
 
 public class AlumnoAdapter extends BaseAdapter {
     private Activity activity;
@@ -60,9 +71,6 @@ public class AlumnoAdapter extends BaseAdapter {
         final Button buttonAdd = (Button) convertView.findViewById(R.id.childButton);
         Alumno a = alumnoItems.get(position);
 
-        // thumbnail image
-        //thumbNail.setImageUrl(a.getFoto(), imageLoader);
-
         nombre.setText(a.getNombre() +" "+ a.getApellido());
         username.setText(a.getUsername());
 
@@ -72,10 +80,73 @@ public class AlumnoAdapter extends BaseAdapter {
 
         if (a.isMyMate()) {
             buttonAdd.setText("Eliminar");
+            eliminarCompanero((Alumno)alumnoItems.get(position),convertView ,position);
         } else {
             buttonAdd.setText("Agregar");
+            agregarCompanero(convertView,position);
         }
+
         return convertView;
+    }
+
+	private void agregarCompanero(View convertView, int position) {
+
+    }
+
+    private void eliminarCompanero(final Alumno companero, View convertView, final int position) {
+
+        final Button eliminar = (Button)convertView.findViewById(R.id.childButton);
+        final String urlAPI = activity.getResources().getString(R.string.urlAPI);
+
+        eliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url =  urlAPI+"/students/"+getUsername()+"/mates/"+companero.getUsername();
+                JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.DELETE,
+                       url,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                alumnoItems.remove(position);
+                                notifyDataSetChanged();
+                            }
+                        },
+                        new Response.ErrorListener(){
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                                //el response es null cuando borra al compañero,
+                                //entonces se borra del listado
+                                if (error.networkResponse == null){
+                                    alumnoItems.remove(position);
+                                    notifyDataSetChanged();
+                                }
+
+                            }
+                        }
+                ){
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> headers = new HashMap<String, String>();
+                        headers.put("Authorization", getToken());
+                        return headers;
+                    }
+
+                };
+                VolleyController.getInstance().addToRequestQueue(jsonReq);
+            }
+        });
+
+    }
+
+    private String getToken(){
+        DataAccess dataAccess = new DataAccess(activity);
+        return dataAccess.getToken();
+    }
+
+    private String getUsername(){
+        DataAccess dataAccess = new DataAccess(activity);
+        return dataAccess.getUserName();
     }
 
 }

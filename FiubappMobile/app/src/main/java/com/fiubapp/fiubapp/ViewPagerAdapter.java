@@ -33,8 +33,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter implements IconPagerA
                 return fragmenttab1;
 
             case 1:
-                FragmentTab2 fragmenttab2 = new FragmentTab2();
-                return fragmenttab2;
+                Companeros companeros = new Companeros();
+                return companeros;
 
             case 2:
                 FragmentTab1 fragmenttab3 = new FragmentTab1();
