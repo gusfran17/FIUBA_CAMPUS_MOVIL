@@ -11,10 +11,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FragmentTab1 extends Fragment {
+public class GruposTab extends Fragment {
     ListView lv1;
     private TextView text;
-    private static final String TAG = FragmentTab1.class.getSimpleName();
+    private static final String TAG = GruposTab.class.getSimpleName();
 
     private ProgressDialog pDialog;
     private List<Alumno> alumnoList = new ArrayList<Alumno>();
@@ -24,7 +24,7 @@ public class FragmentTab1 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragmenttab1, container, false);
+        View view = inflater.inflate(R.layout.grupos_tab, container, false);
         return view;
     }
 }

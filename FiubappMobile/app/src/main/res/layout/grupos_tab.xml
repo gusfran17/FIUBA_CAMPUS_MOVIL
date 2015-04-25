@@ -1,0 +1,32 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:stretchColumns="0,1">
+        <TableRow>
+            <Button android:id="@+id/btnLogin"
+                android:layout_width="fill_parent"
+                android:layout_height="40dip"
+                android:layout_marginTop="10dip"
+                android:layout_margin="3px"
+                android:background="#ff2ec7e8"
+                android:text="@string/BuscarGrupos"/>
+
+            <Button android:id="@+id/btnSoyNuevo"
+                android:layout_width="fill_parent"
+                android:layout_height="40dip"
+                android:layout_marginTop="10dip"
+                android:layout_margin="3px"
+                android:background="#ff2ec7e8"
+                android:text="@string/CrearGrupo"/>
+        </TableRow>
+    </TableLayout>
+
+
+
+</RelativeLayout>

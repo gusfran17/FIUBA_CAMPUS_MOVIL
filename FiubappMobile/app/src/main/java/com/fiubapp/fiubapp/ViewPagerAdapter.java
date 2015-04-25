@@ -29,16 +29,16 @@ public class ViewPagerAdapter extends FragmentPagerAdapter implements IconPagerA
         switch (position) {
 
             case 0:
-                FragmentTab1 fragmenttab1 = new FragmentTab1();
-                return fragmenttab1;
+                MuroTab muroTab = new MuroTab();
+                return muroTab;
 
             case 1:
                 FragmentTab2 fragmenttab2 = new FragmentTab2();
                 return fragmenttab2;
 
             case 2:
-                FragmentTab1 fragmenttab3 = new FragmentTab1();
-                return fragmenttab3;
+                GruposTab gruposTab = new GruposTab();
+                return gruposTab;
 
             case 3:
                 NotificationsTab notificationsTab = new NotificationsTab();
