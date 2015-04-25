@@ -1,7 +1,7 @@
 package com.fiubapp.fiubapp;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -50,7 +50,6 @@ public class Companeros extends Fragment {
         if(isAdded()){
             urlAPI = getResources().getString(R.string.urlAPI);
         }
-
     }
 
     @Override
@@ -59,7 +58,7 @@ public class Companeros extends Fragment {
 
         View partnersTabView = inflater.inflate(R.layout.companeros, container, false);
 
-        Button btnSearchStudents = (Button) partnersTabView.findViewById(R.id.button_search_students);
+		Button btnSearchStudents = (Button) partnersTabView.findViewById(R.id.button_search_students);
 
         btnSearchStudents.setOnClickListener(new View.OnClickListener(){
 
@@ -73,9 +72,8 @@ public class Companeros extends Fragment {
                     e.printStackTrace();
                 }
             }
-        });
-
-        listView = (ListView)partnersTabView.findViewById(R.id.list);
+        });        
+		listView = (ListView)partnersTabView.findViewById(R.id.list);
         adapter = new AlumnoAdapter(getActivity(), alumnoList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -87,73 +85,77 @@ public class Companeros extends Fragment {
 
         // Creating volley request obj
         JsonArrayRequest alumnoReq = new JsonArrayRequest(buildNotificationsUrl(),
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.d(TAG, response.toString());
+            new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    Log.d(TAG, response.toString());
 
-                        // Parsing json
-                        for (int i = 0; i < response.length(); i++) {
-                            try {
+                    // Parsing json
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
 
-                                JSONObject obj = response.getJSONObject(i);
-                                Alumno alumno = new Alumno();
-                                alumno.setNombre(obj.getString("name"));
-                                alumno.setApellido(obj.getString("lastName"));
-                                alumno.setIntercambio(obj.getBoolean("isExchangeStudent"));
-
-                                if (alumno.isIntercambio()){
-                                    alumno.setUsername(obj.getString("passportNumber"));
-                                }else{
-                                    alumno.setUsername(obj.getString("fileNumber"));
-                                }
-
-                                JSONArray JSONCareers = new JSONArray(obj.getString("careers"));
-                                ArrayList<String> carreras = new ArrayList<>();
-
-                                for(int j=0; j < JSONCareers.length(); j++){
-
-                                    String carrera = JSONCareers.getString(j);
-
-                                    carreras.add(carrera);
-                                }
-                                alumno.setCarreras(carreras);
-
-                                alumnoList.add(alumno);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            JSONObject obj = response.getJSONObject(i);
+                            Alumno companero = new Alumno();
+                            companero.setNombre(obj.getString("name"));
+                            companero.setApellido(obj.getString("lastName"));
+                            companero.setIntercambio(obj.getBoolean("isExchangeStudent"));
+                            companero.setIsMyMate(obj.getBoolean("isMyMate"));
+                            companero.setUsername(obj.getString("userName"));
+                            if (companero.isIntercambio()){
+                                companero.setUsername(obj.getString("passportNumber"));
+                            }else{
+                                companero.setUsername(obj.getString("fileNumber"));
                             }
+
+                            JSONArray JSONCareers = new JSONArray(obj.getString("careers"));
+                            ArrayList<String> carreras = new ArrayList<>();
+
+                            for(int j=0; j < JSONCareers.length(); j++){
+
+                                String carrera = JSONCareers.getString(j);
+
+                                carreras.add(carrera);
+                            }
+                            companero.setCarreras(carreras);
+
+                            alumnoList.add(companero);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-
-                        adapter.notifyDataSetChanged();
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<String, String>();
-                SharedPreferences settings = getActivity().getSharedPreferences(
-                        getResources().getString(R.string.prefs_name), 0);
-                String token = settings.getString("token",null);
-                headers.put("Authorization", token);
-                return headers;
 
-            }
-        };
+                    adapter.notifyDataSetChanged();
+                }
+            }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    }
+            }){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<String, String>();
 
-        // Adding request to request queue
+                    headers.put("Authorization", getToken());
+                    return headers;
+
+                }
+            };
+
+       // Adding request to request queue
         VolleyController.getInstance().addToRequestQueue(alumnoReq);
         return partnersTabView;
     }
-
-    private String buildNotificationsUrl(){
+	
+	private String buildNotificationsUrl(){
         DataAccess dataAccess = new DataAccess(getActivity());
         return urlAPI + "/students/" + dataAccess.getUserName() + "/mates";
+    }
+
+    private String getToken(){
+        DataAccess dataAccess = new DataAccess(getActivity());
+        return dataAccess.getToken();
     }
 
 }

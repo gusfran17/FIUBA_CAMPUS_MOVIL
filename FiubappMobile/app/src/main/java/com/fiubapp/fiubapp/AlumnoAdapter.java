@@ -2,6 +2,7 @@ package com.fiubapp.fiubapp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,13 +85,58 @@ public class AlumnoAdapter extends BaseAdapter {
             eliminarCompanero((Alumno)alumnoItems.get(position),convertView ,position);
         } else {
             buttonAdd.setText("Agregar");
-            agregarCompanero(convertView,position);
+            agregarCompanero((Alumno)alumnoItems.get(position),convertView,position);
         }
 
         return convertView;
     }
 
-	private void agregarCompanero(View convertView, int position) {
+	private void agregarCompanero(final Alumno companero, View convertView, final int position) {
+
+        final Button agregar = (Button)convertView.findViewById(R.id.childButton);
+        final Map<String, String> params = new HashMap<String, String>();
+        params.put("applicantUserName", getUsername());
+
+        agregar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.POST,
+                        getURLAPI()+"/students/" + companero.getUsername() +"/applications",
+                        new JSONObject(params),
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                //alumnoItems.add(companero);
+                                notifyDataSetChanged();
+                            }
+                        },
+                        new Response.ErrorListener(){
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                String responseBody = null;
+
+                                try {
+                                    responseBody = new String( error.networkResponse.data, "utf-8" );
+                                    //JSONObject jsonObject = new JSONObject( responseBody );
+                                    Log.d("Error 415: ",responseBody);
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                ){
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> headers = new HashMap<String, String>();
+                        headers.put("Authorization", getToken());
+                        return headers;
+                    }
+
+                };
+                VolleyController.getInstance().addToRequestQueue(jsonReq);
+            }
+        });
+
 
     }
 
@@ -147,6 +194,11 @@ public class AlumnoAdapter extends BaseAdapter {
     private String getUsername(){
         DataAccess dataAccess = new DataAccess(activity);
         return dataAccess.getUserName();
+    }
+
+    private String getURLAPI(){
+        DataAccess dataAccess = new DataAccess(activity);
+        return dataAccess.getURLAPI();
     }
 
 }

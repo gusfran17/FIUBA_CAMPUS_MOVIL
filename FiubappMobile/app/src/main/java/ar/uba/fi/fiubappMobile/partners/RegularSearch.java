@@ -106,7 +106,7 @@ public class RegularSearch extends Fragment {
                                 student.setNombre(obj.getString("name"));
                                 student.setApellido(obj.getString("lastName"));
                                 student.setIntercambio(obj.getBoolean("isExchangeStudent"));
-                                student.setIsMyMate(true);
+                                student.setIsMyMate(obj.getBoolean("isMyMate"));
                                 if (student.isIntercambio()){
                                     student.setUsername(obj.getString("passportNumber"));
                                 }else{
