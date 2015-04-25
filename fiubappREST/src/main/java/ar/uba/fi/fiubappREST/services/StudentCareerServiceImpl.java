@@ -83,7 +83,8 @@ public class StudentCareerServiceImpl implements StudentCareerService {
 		StudentCareer studentCareer = this.findStudentCareer(userName, code);
 		Student student = this.findStudent(userName);
 		student.removeCareer(studentCareer);
-		this.studentRepository.save(student);
+		this.studentCareerRepository.delete(studentCareer);
+		this.studentRepository.save(student);		
 		LOGGER.info(String.format("Career with code %s for student with userName %s was deletes.", code, userName));
 	}
 
