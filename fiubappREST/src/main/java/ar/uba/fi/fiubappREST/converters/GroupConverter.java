@@ -23,8 +23,10 @@ public class GroupConverter {
 		groupRepresentation.setId(group.getId());
 		groupRepresentation.setName(group.getName());
 		groupRepresentation.setDescription(group.getDescription());
+		groupRepresentation.setCreationDate(group.getCreationDate());
 		StudentProfileRepresentation studentRepresentation = this.studentConverter.convert(me, group.getOwner());
 		groupRepresentation.setOwner(studentRepresentation);
+		groupRepresentation.setAmountOfMembers(group.getMembers().size());
 		return groupRepresentation;
 	}
 }

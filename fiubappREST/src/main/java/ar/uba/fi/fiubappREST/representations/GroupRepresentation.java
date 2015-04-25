@@ -19,6 +19,8 @@ public class GroupRepresentation {
 	private Date creationDate;
 	
 	private StudentProfileRepresentation owner;
+	
+	private Integer amountOfMembers;
 
 	public Integer getId() {
 		return id;
@@ -60,6 +62,14 @@ public class GroupRepresentation {
 
 	public void setOwner(StudentProfileRepresentation owner) {
 		this.owner = owner;
+	}
+
+	public Integer getAmountOfMembers() {
+		return amountOfMembers;
+	}
+
+	public void setAmountOfMembers(Integer amountOfMembers) {
+		this.amountOfMembers = amountOfMembers;
 	}
 	
 }
