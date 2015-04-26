@@ -29,6 +29,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import ar.uba.fi.fiubappMobile.utils.DataAccess;
+
 public class Perfil_personal extends Fragment {
 
     private String urlAPI = "";
@@ -67,6 +69,8 @@ public class Perfil_personal extends Fragment {
 
         final TextView profile_name = (TextView)view.findViewById(R.id.profile_name);
 
+        urlAPI = getResources().getString(R.string.urlAPI);
+
         edit_comments.setEnabled(false);
         edit_email.setEnabled(false);
         edit_telefono.setEnabled(false);
@@ -102,8 +106,6 @@ public class Perfil_personal extends Fragment {
 
             return view;
         }
-
-        urlAPI = getResources().getString(R.string.urlAPI);
 
         edit_fecha.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -384,7 +386,10 @@ public class Perfil_personal extends Fragment {
                             header_lastname.setText(lastName);
                             padron.setText(username);
 
-                            ((PerfilTabs)getActivity()).setText(name+" "+lastName);
+                            //si el perfil es el propio
+                            if (username.equals(getUsername()))
+                                ((PerfilTabs)getActivity()).setText(name+" "+lastName);
+                            else ((PerfilTabsCompanero)getActivity()).setText(name+" "+lastName);
 
                             String email = response.getString("email");
                             String comments = response.getString("comments");
@@ -466,5 +471,10 @@ public class Perfil_personal extends Fragment {
 
         return perfil;
 
+    }
+
+    private String getUsername(){
+        DataAccess dataAccess = new DataAccess(getActivity());
+        return dataAccess.getUserName();
     }
 }

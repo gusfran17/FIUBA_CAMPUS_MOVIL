@@ -33,6 +33,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import ar.uba.fi.fiubappMobile.utils.DataAccess;
+
 public class Perfil_secundaria extends Fragment {
 
     private View view = null;
@@ -47,6 +49,13 @@ public class Perfil_secundaria extends Fragment {
 
         view = inflater.inflate(R.layout.perfil_educacion, container, false);
 
+        final ImageView imgEditar = (ImageView)this.view.findViewById(R.id.imgEditar);
+
+        final EditText fechaInicio = (EditText)this.view.findViewById(R.id.etFechaInicio);
+        final EditText fechaFin = (EditText)this.view.findViewById(R.id.etFechaFin);
+        final EditText titulo = (EditText)this.view.findViewById(R.id.etTitulo);
+        final EditText escuela = (EditText)this.view.findViewById(R.id.etEscuela);
+
         //para mostrar el perfil de un alumno no contacto
         if (getArguments() != null) {
 
@@ -56,19 +65,18 @@ public class Perfil_secundaria extends Fragment {
                 rel_layout_header.setVisibility(View.INVISIBLE);
 
             }else{
-                //getUserData(getArguments().getString("userName"));
+                cargarDatosEducacionSecundaria(getArguments().getString("userName"));
+                imgEditar.setVisibility(View.INVISIBLE);
+                fechaInicio.setEnabled(false);
+                fechaFin.setEnabled(false);
+                titulo.setEnabled(false);
+                escuela.setEnabled(false);
             }
 
             return view;
         }
 
-        cargarDatosEducacionSecundaria();
-        final ImageView imgEditar = (ImageView)this.view.findViewById(R.id.imgEditar);
-
-        final EditText fechaInicio = (EditText)this.view.findViewById(R.id.etFechaInicio);
-        final EditText fechaFin = (EditText)this.view.findViewById(R.id.etFechaFin);
-        final EditText titulo = (EditText)this.view.findViewById(R.id.etTitulo);
-        final EditText escuela = (EditText)this.view.findViewById(R.id.etEscuela);
+        cargarDatosEducacionSecundaria(getUsername());
 
         imgEditar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,15 +174,15 @@ public class Perfil_secundaria extends Fragment {
         return true;
     }
 
-    public void cargarDatosEducacionSecundaria() {
+    public void cargarDatosEducacionSecundaria(String username) {
 
         SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
-        String username = null;
+        /*String username = null;
         if (settings.getBoolean("isExchange",false)){
             username = "I"+settings.getString("username",null);
         }else{
             username = settings.getString("username",null);
-        }
+        }*/
         final String token = settings.getString("token", null);
 
         final EditText etFechaInicio = (EditText)this.view.findViewById(R.id.etFechaInicio);
@@ -344,5 +352,10 @@ public class Perfil_secundaria extends Fragment {
 
         return perfil;
 
+    }
+
+    private String getUsername(){
+        DataAccess dataAccess = new DataAccess(getActivity());
+        return dataAccess.getUserName();
     }
 }

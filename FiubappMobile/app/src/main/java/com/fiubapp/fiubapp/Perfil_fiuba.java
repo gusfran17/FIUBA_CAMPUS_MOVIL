@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ar.uba.fi.fiubappMobile.utils.DataAccess;
+
 public class Perfil_fiuba extends Fragment {
 
     private ArrayList<Carrera> carrerasAlumno = new ArrayList<Carrera>();
@@ -52,7 +54,9 @@ public class Perfil_fiuba extends Fragment {
                 rel_layout_header.setVisibility(View.INVISIBLE);
 
             }else{
-                //getUserData(getArguments().getString("userName"));
+                getCarrerasAlumno(getArguments().getString("userName"));
+                imgEditarCarreras.setVisibility(View.INVISIBLE);
+
             }
 
             return view;
@@ -74,7 +78,8 @@ public class Perfil_fiuba extends Fragment {
             }
         });
 
-        getCarrerasAlumno();
+
+        getCarrerasAlumno(getUsername());
         getTodasCarreras();
         return view;
     }
@@ -106,13 +111,13 @@ public class Perfil_fiuba extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        getCarrerasAlumno();
+                        getCarrerasAlumno(username);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        getCarrerasAlumno();
+                        getCarrerasAlumno(username);
                     }
                 }){
             public Map<String, String> getHeaders() throws AuthFailureError {
@@ -127,10 +132,10 @@ public class Perfil_fiuba extends Fragment {
         queue.add(jsObjRequest);
     }
 
-    public void getCarrerasAlumno(){
+    public void getCarrerasAlumno(String username){
 
         final SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
-        final String username = settings.getString("username", null);
+        //final String username = settings.getString("username", null);
 
         JsonArrayRequest jsonReq = new JsonArrayRequest(Request.Method.GET,
                 getResources().getString(R.string.urlAPI) + "/students/" + username + "/careers",
@@ -203,7 +208,7 @@ public class Perfil_fiuba extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        getCarrerasAlumno();
+                        getCarrerasAlumno(username);
                     }
                 },
                 new Response.ErrorListener() {
@@ -317,13 +322,18 @@ public class Perfil_fiuba extends Fragment {
         args.putString("name",companero.getNombre());
         args.putString("lastName",companero.getApellido());
         args.putString("userName",companero.getUsername());
-        args.putString("comments",companero.getComentario());
+        args.putString("comments", companero.getComentario());
         args.putBoolean("isMyMate",companero.isMyMate());
 
         perfil.setArguments(args);
 
         return perfil;
 
+    }
+
+    private String getUsername(){
+        DataAccess dataAccess = new DataAccess(getActivity());
+        return dataAccess.getUserName();
     }
 
 }
