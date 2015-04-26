@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -45,6 +46,21 @@ public class Perfil_secundaria extends Fragment {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.perfil_educacion, container, false);
+
+        //para mostrar el perfil de un alumno no contacto
+        if (getArguments() != null) {
+
+            if (!getArguments().getBoolean("isMyMate")) {
+
+                RelativeLayout rel_layout_header = (RelativeLayout)view.findViewById(R.id.all);
+                rel_layout_header.setVisibility(View.INVISIBLE);
+
+            }else{
+                //getUserData(getArguments().getString("userName"));
+            }
+
+            return view;
+        }
 
         cargarDatosEducacionSecundaria();
         final ImageView imgEditar = (ImageView)this.view.findViewById(R.id.imgEditar);
@@ -311,5 +327,22 @@ public class Perfil_secundaria extends Fragment {
         };
 
         queue.add(jsObjRequest);
+    }
+
+    public static Perfil_secundaria newContact(Alumno companero) {
+
+        Perfil_secundaria perfil = new Perfil_secundaria();
+
+        Bundle args = new Bundle();
+        args.putString("name",companero.getNombre());
+        args.putString("lastName",companero.getApellido());
+        args.putString("userName",companero.getUsername());
+        args.putString("comments",companero.getComentario());
+        args.putBoolean("isMyMate",companero.isMyMate());
+
+        perfil.setArguments(args);
+
+        return perfil;
+
     }
 }

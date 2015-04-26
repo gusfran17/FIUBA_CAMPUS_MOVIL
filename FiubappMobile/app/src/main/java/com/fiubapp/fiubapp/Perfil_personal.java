@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,10 +43,6 @@ public class Perfil_personal extends Fragment {
     private int mDay = c.get(Calendar.DAY_OF_MONTH);
 
     private View view = null;
-
-    public void Perfil_personal(String username){
-        this.username = username;
-    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,6 +77,31 @@ public class Perfil_personal extends Fragment {
 
         header_name.setEnabled(false);
         header_lastname.setEnabled(false);
+
+        //para mostrar el perfil de un alumno no contacto
+        if (getArguments() != null) {
+
+            edit_button.setVisibility(View.INVISIBLE);
+            edit_name.setVisibility(View.INVISIBLE);
+            edit_comments_img.setVisibility(View.INVISIBLE);
+
+            if (!getArguments().getBoolean("isMyMate")) {
+                header_name.setText(getArguments().getString("name"));
+                header_lastname.setText(getArguments().getString("lastName"));
+                padron.setText(getArguments().getString("userName"));
+                edit_comments.setText(getArguments().getString("comments"));
+
+                RelativeLayout rel_layout_header = (RelativeLayout)view.findViewById(R.id.headerDatos);
+                rel_layout_header.setVisibility(View.INVISIBLE);
+
+                RelativeLayout rel_layout_datos = (RelativeLayout)view.findViewById(R.id.contentDatos);
+                rel_layout_datos.setVisibility(View.INVISIBLE);
+            }else{
+                getUserData(getArguments().getString("userName"));
+            }
+
+            return view;
+        }
 
         urlAPI = getResources().getString(R.string.urlAPI);
 
@@ -323,6 +345,28 @@ public class Perfil_personal extends Fragment {
             username = settings.getString("username", null);
         }
 
+        getUserData(username);
+
+        return view;
+    }
+
+    private void getUserData(final String username){
+
+        final EditText header_name = (EditText) view.findViewById(R.id.header_name);
+        final EditText header_lastname = (EditText) view.findViewById(R.id.header_lastname);
+        final TextView padron = (TextView)view.findViewById(R.id.header_padron);
+
+        final EditText edit_comments = (EditText) view.findViewById(R.id.edit_comentarios);
+        final EditText edit_email = (EditText) view.findViewById(R.id.edit_email);
+        final EditText edit_telefono = (EditText) view.findViewById(R.id.edit_tel);
+        final EditText edit_ciudad = (EditText) view.findViewById(R.id.edit_ciudad);
+        final EditText edit_nacionalidad = (EditText) view.findViewById(R.id.edit_nacionalidad);
+        final Spinner edit_sexo = (Spinner) view.findViewById(R.id.edit_sex);
+        final TextView edit_fecha = (TextView) view.findViewById(R.id.edit_fecha);
+        final ImageView edit_button = (ImageView) view.findViewById(R.id.editButton);
+        final ImageView edit_name = (ImageView) view.findViewById(R.id.edit_name);
+        final ImageView edit_comments_img = (ImageView)view.findViewById(R.id.editButtonComm);
+
         //obtener datos
         JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
                 urlAPI + "/students/" + username,
@@ -403,7 +447,24 @@ public class Perfil_personal extends Fragment {
         };
 
         VolleyController.getInstance().addToRequestQueue(jsonReq);
-        return view;
+
+
     }
 
+    public static Perfil_personal newContact(Alumno companero) {
+
+        Perfil_personal perfil = new Perfil_personal();
+
+        Bundle args = new Bundle();
+        args.putString("name",companero.getNombre());
+        args.putString("lastName",companero.getApellido());
+        args.putString("userName",companero.getUsername());
+        args.putString("comments",companero.getComentario());
+        args.putBoolean("isMyMate",companero.isMyMate());
+
+        perfil.setArguments(args);
+
+        return perfil;
+
+    }
 }

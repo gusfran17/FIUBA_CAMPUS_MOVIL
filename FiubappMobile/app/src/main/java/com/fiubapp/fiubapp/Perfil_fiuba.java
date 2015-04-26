@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -41,6 +42,21 @@ public class Perfil_fiuba extends Fragment {
         View view = inflater.inflate(R.layout.perfil_fiuba, container, false);
 
         final ImageView imgEditarCarreras = (ImageView)view.findViewById(R.id.imgEditarCarreras);
+
+        //para mostrar el perfil de un alumno no contacto
+        if (getArguments() != null) {
+
+            if (!getArguments().getBoolean("isMyMate")) {
+
+                RelativeLayout rel_layout_header = (RelativeLayout)view.findViewById(R.id.rel_fiuba);
+                rel_layout_header.setVisibility(View.INVISIBLE);
+
+            }else{
+                //getUserData(getArguments().getString("userName"));
+            }
+
+            return view;
+        }
 
         imgEditarCarreras.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -291,6 +307,23 @@ public class Perfil_fiuba extends Fragment {
         }
 
         return nombreCarreras;
+    }
+
+    public static Perfil_fiuba newContact(Alumno companero) {
+
+        Perfil_fiuba perfil = new Perfil_fiuba();
+
+        Bundle args = new Bundle();
+        args.putString("name",companero.getNombre());
+        args.putString("lastName",companero.getApellido());
+        args.putString("userName",companero.getUsername());
+        args.putString("comments",companero.getComentario());
+        args.putBoolean("isMyMate",companero.isMyMate());
+
+        perfil.setArguments(args);
+
+        return perfil;
+
     }
 
 }
