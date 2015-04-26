@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/thumbnail"
+        android:src="@drawable/ic_grupos"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="8dp" />
+
+    <TextView
+        android:id="@+id/nombre_grupo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dip"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:textSize="@dimen/rating" />
+
+    <TextView
+        android:id="@+id/cantidad_grupo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nombre_grupo"
+        android:layout_marginTop="1dip"
+        android:text="23 miembros"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:textSize="@dimen/rating" />
+
+    <Button
+        android:id="@+id/childButton"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:text="Abandonar"
+        android:focusable="false"
+        android:layout_below="@id/nombre_grupo"
+        android:layout_alignParentRight="true"
+        android:background="#ff2ec7e8"/>
+
+</RelativeLayout>
