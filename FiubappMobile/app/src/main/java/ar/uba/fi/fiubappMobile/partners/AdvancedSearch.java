@@ -146,21 +146,22 @@ public class AdvancedSearch extends Fragment {
 
     private void fillStudentList() {
         studentList.clear();
-
-        String name = edt_search_name.getText().toString();
-        String lastname = edt_search_lastname.getText().toString();
-        String email = edt_search_email.getText().toString();
-        String fileNumber = edt_search_filenumber.getText().toString();
-        String passportNumber = edt_search_passport.getText().toString();
+        String name = "";
+        String lastname = "";
+        String email = "";
+        String fileNumber = "";
+        String passportNumber = "";
+        String careerCode = "";
+        if (!edt_search_name.getText().toString().equals("")) name = "name="+edt_search_name.getText().toString();
+        if (!edt_search_lastname.getText().toString().equals("")) lastname = "lastName="+edt_search_lastname.getText().toString();
+        if (!edt_search_email.getText().toString().equals(""))email = "email=" + edt_search_email.getText().toString();
+        if (!edt_search_filenumber.getText().toString().equals("")) fileNumber = "fileNumber="+edt_search_filenumber.getText().toString();
+        if (!edt_search_passport.getText().toString().equals("")) passportNumber = "passportNumber="+edt_search_passport.getText().toString();
         SpinnerObject spn_object = ((SpinnerObject)spnCareer.getSelectedItem());
         int careerID = spn_object.getID();
-        String careerCode;
-        if (careerID == 0)
-            careerCode = "";
-        else
-            careerCode = Integer.toString(careerID);
+        if (careerID != 0) careerCode = "careerCode="+Integer.toString(careerID);
         // Creating volley request obj
-        String requestURL = urlAPI+"/students/?name="+name+"&lastName="+lastname+"&email="+email+"&careerCode="+careerCode+"&fileNumber="+fileNumber+"&passportNumber="+passportNumber;
+        String requestURL = urlAPI+"/students/?"+name+"&"+lastname+"&"+email+"&"+careerCode+"&"+fileNumber+"&"+passportNumber;
         JsonArrayRequest studentReq = new JsonArrayRequest(requestURL,
                 new Response.Listener<JSONArray>() {
                     @Override
