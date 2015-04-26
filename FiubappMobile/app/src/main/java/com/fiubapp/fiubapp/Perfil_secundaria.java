@@ -202,8 +202,8 @@ public class Perfil_secundaria extends Fragment {
                             String fechaInicio = response.getString("dateFrom");
                             String fechaFin = response.getString("dateTo");
 
-                            if(fechaInicio == null) fechaInicio = "";
-                            if(fechaFin == null) fechaFin = "";
+                            if(fechaInicio == null || fechaInicio.equals("null")) fechaInicio = "";
+                            if(fechaFin == null || fechaFin.equals("null")) fechaFin = "";
 
                             etFechaInicio.setText(fechaInicio);
                             etFechaFin.setText(fechaFin);

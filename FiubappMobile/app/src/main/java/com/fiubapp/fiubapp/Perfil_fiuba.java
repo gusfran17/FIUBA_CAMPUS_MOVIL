@@ -60,7 +60,6 @@ public class Perfil_fiuba extends Fragment {
         });
 
         getCarrerasAlumno();
-        getTodasCarreras();
         return view;
     }
 
@@ -123,7 +122,6 @@ public class Perfil_fiuba extends Fragment {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-
                         carrerasAlumno.clear();
 
                         for (int i = 0; i < response.length(); i++) {
@@ -145,6 +143,8 @@ public class Perfil_fiuba extends Fragment {
                                 e.printStackTrace();
                             }
                         }
+
+                        getTodasCarreras();
 
                         crearSeccionCarreras();
                     }
@@ -238,7 +238,6 @@ public class Perfil_fiuba extends Fragment {
                                 e.printStackTrace();
                             }
                         }
-                        crearSeccionCarreras();
                     }
                 },new Response.ErrorListener(){
             @Override
