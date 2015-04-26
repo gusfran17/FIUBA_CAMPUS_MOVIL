@@ -27,6 +27,7 @@ public class GroupConverter {
 		StudentProfileRepresentation studentRepresentation = this.studentConverter.convert(me, group.getOwner());
 		groupRepresentation.setOwner(studentRepresentation);
 		groupRepresentation.setAmountOfMembers(group.getMembers().size());
+		groupRepresentation.setAmIAMember(me.isMemberOf(group));
 		return groupRepresentation;
 	}
 }

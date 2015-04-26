@@ -21,6 +21,8 @@ public class GroupRepresentation {
 	private StudentProfileRepresentation owner;
 	
 	private Integer amountOfMembers;
+	
+	private Boolean amIAMember;
 
 	public Integer getId() {
 		return id;
@@ -70,6 +72,14 @@ public class GroupRepresentation {
 
 	public void setAmountOfMembers(Integer amountOfMembers) {
 		this.amountOfMembers = amountOfMembers;
+	}
+
+	public Boolean getAmIAMember() {
+		return amIAMember;
+	}
+
+	public void setAmIAMember(Boolean amIAMember) {
+		this.amIAMember = amIAMember;
 	}
 	
 }

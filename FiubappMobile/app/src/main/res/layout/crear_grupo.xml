@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tvNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nombre"
+        android:layout_alignBaseline="@+id/etNombre"
+        android:layout_alignBottom="@+id/etNombre" />
+
+    <EditText android:id="@+id/etNombre"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="15px"
+        android:layout_marginTop="5px"
+        android:layout_toRightOf="@+id/tvNombre" />
+
+</RelativeLayout>

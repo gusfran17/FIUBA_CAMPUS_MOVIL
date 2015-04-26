@@ -1,32 +1,37 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/listGrupos"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1">
+    </ListView>
 
     <TableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/listGrupos"
         android:layout_alignParentBottom="true"
+        android:layout_weight="0"
         android:stretchColumns="0,1">
         <TableRow>
-            <Button android:id="@+id/btnLogin"
+            <Button android:id="@+id/btnBuscarGrupo"
                 android:layout_width="fill_parent"
                 android:layout_height="40dip"
-                android:layout_marginTop="10dip"
-                android:layout_margin="3px"
+                android:layout_marginRight="2px"
                 android:background="#ff2ec7e8"
                 android:text="@string/BuscarGrupos"/>
 
-            <Button android:id="@+id/btnSoyNuevo"
+            <Button android:id="@+id/btnCrearGrupo"
                 android:layout_width="fill_parent"
                 android:layout_height="40dip"
-                android:layout_marginTop="10dip"
-                android:layout_margin="3px"
+                android:layout_marginLeft="2px"
                 android:background="#ff2ec7e8"
                 android:text="@string/CrearGrupo"/>
         </TableRow>
     </TableLayout>
-
-
-
-</RelativeLayout>
+</LinearLayout>

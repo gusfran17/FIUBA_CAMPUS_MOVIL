@@ -36,11 +36,6 @@ public class Perfil_secundaria extends Fragment {
 
     private View view = null;
 
-    final Calendar c = Calendar.getInstance();
-    private int mYear = c.get(Calendar.YEAR);
-    private int mMonth = c.get(Calendar.MONTH);
-    private int mDay = c.get(Calendar.DAY_OF_MONTH);
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -67,7 +62,6 @@ public class Perfil_secundaria extends Fragment {
                         fechaFin.setEnabled(false);
                         titulo.setEnabled(false);
                         escuela.setEnabled(false);
-
                     }
                 } else{
                     imgEditar.setImageResource(R.drawable.ic_save);
@@ -84,7 +78,19 @@ public class Perfil_secundaria extends Fragment {
         fechaInicio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Launch Date Picker Dialog
+
+                EditText etFechaInicio = (EditText)v.findViewById(R.id.etFechaInicio);
+                SimpleDateFormat formatoDelTexto = new SimpleDateFormat("dd/MM/yyyy");
+
+                Calendar c = Calendar.getInstance();
+
+                if(etFechaInicio.getText() != null && etFechaInicio.getText().toString() != null && !etFechaInicio.getText().toString().equals("")){
+                    try {
+                        c.setTime(formatoDelTexto.parse(etFechaInicio.getText().toString()));
+                    } catch (ParseException e) {
+                    }
+                }
+
                 DatePickerDialog dpd = new DatePickerDialog(getActivity(), R.style.DatePickerTheme,
                         new DatePickerDialog.OnDateSetListener() {
 
@@ -96,7 +102,8 @@ public class Perfil_secundaria extends Fragment {
                                         + String.format("%02d", (monthOfYear + 1)) + "/" + year);
 
                             }
-                        }, mYear, mMonth, mDay);
+                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+                dpd.setButton(DatePickerDialog.BUTTON_POSITIVE, "Listo", dpd);
                 dpd.show();
             }
         });
@@ -104,7 +111,19 @@ public class Perfil_secundaria extends Fragment {
         fechaFin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Launch Date Picker Dialog
+
+                EditText etFechaFin = (EditText)v.findViewById(R.id.etFechaFin);
+                SimpleDateFormat formatoDelTexto = new SimpleDateFormat("dd/MM/yyyy");
+
+                Calendar c = Calendar.getInstance();
+
+                if(etFechaFin.getText() != null && etFechaFin.getText().toString() != null && !etFechaFin.getText().toString().equals("")){
+                    try {
+                        c.setTime(formatoDelTexto.parse(etFechaFin.getText().toString()));
+                    } catch (ParseException e) {
+                    }
+                }
+
                 DatePickerDialog dpd = new DatePickerDialog(getActivity(), R.style.DatePickerTheme,
                         new DatePickerDialog.OnDateSetListener() {
 
@@ -116,7 +135,8 @@ public class Perfil_secundaria extends Fragment {
                                         + String.format("%02d", (monthOfYear + 1)) + "/" + year);
 
                             }
-                        }, mYear, mMonth, mDay);
+                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+                dpd.setButton(DatePickerDialog.BUTTON_POSITIVE, "Listo", dpd);
                 dpd.show();
             }
         });
@@ -182,11 +202,13 @@ public class Perfil_secundaria extends Fragment {
                             String fechaInicio = response.getString("dateFrom");
                             String fechaFin = response.getString("dateTo");
 
+                            if(fechaInicio == null) fechaInicio = "";
+                            if(fechaFin == null) fechaFin = "";
+
                             etFechaInicio.setText(fechaInicio);
                             etFechaFin.setText(fechaFin);
                             etTitulo.setText(titulo);
                             etEscuela.setText(escuela);
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

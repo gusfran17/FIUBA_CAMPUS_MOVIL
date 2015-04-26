@@ -27,7 +27,7 @@ public interface StudentRepository extends CrudRepository<Student, String> {
 			, nativeQuery = true)
 	public List<Student> findByProperties(String name, String lastName, String email, String careerCode, String fileNumber, String passportNumber);
 	
-	@Query("SELECT s FROM Student s LEFT JOIN FETCH s.groups WHERE s.userName = ?1")
-    public Student findByUserNameAndFetchGroupsEagerly(String userName);
+	@Query("SELECT s FROM Student s LEFT JOIN FETCH s.groups LEFT JOIN FETCH s.mates WHERE s.userName = ?1")
+    public Student findByUserNameAndFetchMatesAndGroupsEagerly(String userName);
 
 }

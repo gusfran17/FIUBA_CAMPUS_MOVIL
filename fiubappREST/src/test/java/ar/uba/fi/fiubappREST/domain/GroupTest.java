@@ -2,8 +2,8 @@ package ar.uba.fi.fiubappREST.domain;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,10 +23,10 @@ public class GroupTest {
 		group = new Group();
 		owner = new Student();
 		owner.setUserName(OWNER_USER_NAME);
-		List<Group> groups = new ArrayList<Group>();
+		Set<Group> groups = new HashSet<Group>();
 		groups.add(group);
 		owner.setGroups(groups);
-		List<Student> members = new ArrayList<Student>();
+		Set<Student> members = new HashSet<Student>();
 		members.add(owner);
 		group.setMembers(members);
 	}
@@ -35,7 +35,7 @@ public class GroupTest {
 	public void testAddMemberOK() {
 		Student aMember = new Student();
 		aMember.setUserName(AN_USER_NAME);
-		aMember.setGroups(new ArrayList<Group>());
+		aMember.setGroups(new HashSet<Group>());
 		
 		this.group.addMember(aMember);
 				

@@ -1,20 +1,24 @@
 package ar.uba.fi.fiubappREST.domain;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import ar.uba.fi.fiubappREST.exceptions.CareerAlreadyExistsForStudentException;
 import ar.uba.fi.fiubappREST.exceptions.CareerNotFoundForStudentException;
+import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyMateException;
 import ar.uba.fi.fiubappREST.exceptions.StudentsAreNotMatesException;
 import ar.uba.fi.fiubappREST.exceptions.UnableToDeleteTheOnlyCareerForStudentException;
-import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyMateException;
 
 public class StudentTest {
 	
+	private static final int A_GROUP_ID = 10;
 	private static final int CAREER_CODE = 10;
 	private static final int ANOTHER_CAREER_CODE = 12;
 	private static final String AN_USER_NAME = "anUserName";
@@ -34,6 +38,8 @@ public class StudentTest {
 		student = new Student();
 		student.setCareers(new ArrayList<StudentCareer>());
 		student.getCareers().add(studentCareer);
+		
+		this.student.setGroups(new HashSet<Group>());
 	}
 
 	@Test
@@ -76,7 +82,7 @@ public class StudentTest {
 		mate.setUserName(AN_USER_NAME);
 		mate.setMates(new ArrayList<Student>());
 		this.student.getMates().add(mate);
-		
+				
 		this.student.addMate(mate);
 	}
 
@@ -137,6 +143,28 @@ public class StudentTest {
 		mate.setUserName(AN_USER_NAME);
 		
 		this.student.deleteMate(mate);
+	}
+	
+	@Test
+	public void testIsMemberOf(){
+		Group aGroup = new Group();
+		aGroup.setId(A_GROUP_ID);
+		aGroup.setMembers(new HashSet<Student>());
+		aGroup.addMember(student);
+		
+		boolean isMemberOf = student.isMemberOf(aGroup);
+		
+		assertTrue(isMemberOf);
+	}
+	
+	@Test
+	public void testIsNotMemberOf(){
+		Group aGroup = new Group();
+		aGroup.setId(A_GROUP_ID);
+		
+		boolean isMemberOf = student.isMemberOf(aGroup);
+		
+		assertFalse(isMemberOf);
 	}
 
 }
