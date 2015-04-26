@@ -134,10 +134,10 @@ public class Perfil_secundaria extends Fragment {
         Date fechaInicio = null;
         Date fechaFin = null;
         try {
-            if(etFechaInicio.getText() != null && !etFechaInicio.getText().equals(""))
+            if(etFechaInicio.getText() != null && etFechaInicio.getText().toString() != null && !etFechaInicio.getText().toString().equals(""))
                 fechaInicio = formatoDelTexto.parse(etFechaInicio.getText().toString());
 
-            if(etFechaFin.getText() != null && !etFechaFin.getText().equals(""))
+            if(etFechaFin.getText() != null && etFechaFin.getText().toString() != null && !etFechaFin.getText().toString().equals(""))
                 fechaFin = formatoDelTexto.parse(etFechaFin.getText().toString());
         } catch (ParseException ex) {
         }
@@ -263,11 +263,19 @@ public class Perfil_secundaria extends Fragment {
         JSONObject jsonParams = new JSONObject();
 
         try {
+            String strFechaInicio = null;
+            String strFechaFin = null;
+
+            if(fechaInicio.getText() != null && fechaInicio.getText().toString() != null && !fechaInicio.getText().toString().equals(""))
+                strFechaInicio = fechaInicio.getText().toString();
+
+            if(fechaFin.getText() != null && fechaFin.getText().toString() != null && !fechaFin.getText().toString().equals(""))
+                strFechaFin = fechaFin.getText().toString();
+
             jsonParams.put("degree", titulo.getText());
             jsonParams.put("schoolName", escuela.getText());
-            jsonParams.put("dateFrom", fechaInicio.getText());
-            jsonParams.put("dateTo", fechaFin.getText());
-
+            jsonParams.put("dateFrom", strFechaInicio);
+            jsonParams.put("dateTo", strFechaFin);
         } catch (JSONException e) {
             e.printStackTrace();
         }
