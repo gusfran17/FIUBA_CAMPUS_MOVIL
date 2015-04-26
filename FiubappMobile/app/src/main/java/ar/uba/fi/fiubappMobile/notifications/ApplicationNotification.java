@@ -1,36 +1,19 @@
 package ar.uba.fi.fiubappMobile.notifications;
 
+import com.fiubapp.fiubapp.Alumno;
+
 /**
  * Created by marcelo on 4/19/15.
  */
 public class ApplicationNotification extends Notification {
 
-    private String applicantUserName;
-    private String applicantName;
-    private String applicantLastName;
+    private Alumno applicant;
 
-    public String getApplicantUserName() {
-        return applicantUserName;
+    public Alumno getApplicant() {
+        return applicant;
     }
 
-    public void setApplicantUserName(String applicantUserName) {
-        this.applicantUserName = applicantUserName;
+    public void setApplicant(Alumno applicant) {
+        this.applicant = applicant;
     }
-
-    public String getApplicantName() {
-        return applicantName;
-    }
-
-    public void setApplicantName(String applicantName) {
-        this.applicantName = applicantName;
-    }
-
-    public String getApplicantLastName() {
-        return applicantLastName;
-    }
-
-    public void setApplicantLastName(String applicantLastName) {
-        this.applicantLastName = applicantLastName;
-    }
-
 }
