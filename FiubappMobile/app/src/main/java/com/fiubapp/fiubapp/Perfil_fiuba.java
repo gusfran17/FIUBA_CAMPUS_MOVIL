@@ -47,9 +47,10 @@ public class Perfil_fiuba extends Fragment {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Seleccione una carrera")
-                        .setItems(getNombreCarreras(), new DialogInterface.OnClickListener() {
+                        .setSingleChoiceItems(getNombreCarreras(), -1, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 setCarreraAlumno(todasCarrerasDisponibles.get(which));
+                                dialog.dismiss();
                             }
                         });
 

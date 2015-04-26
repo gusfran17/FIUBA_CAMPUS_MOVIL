@@ -24,6 +24,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,11 +37,6 @@ public class Perfil_personal extends Fragment {
     private static final String TAG = Perfil_personal.class.getSimpleName();
     private EmailValidator emailValidator;
     private String fecha;
-
-    final Calendar c = Calendar.getInstance();
-    private int mYear = c.get(Calendar.YEAR);
-    private int mMonth = c.get(Calendar.MONTH);
-    private int mDay = c.get(Calendar.DAY_OF_MONTH);
 
     private View view = null;
 
@@ -86,7 +83,19 @@ public class Perfil_personal extends Fragment {
         edit_fecha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Launch Date Picker Dialog
+
+                EditText etFechaNacimiento = (EditText)v.findViewById(R.id.edit_fecha);
+                SimpleDateFormat formatoDelTexto = new SimpleDateFormat("dd/MM/yyyy");
+
+                Calendar c = Calendar.getInstance();
+
+                if(etFechaNacimiento.getText() != null && etFechaNacimiento.getText().toString() != null && !etFechaNacimiento.getText().toString().equals("")){
+                    try {
+                        c.setTime(formatoDelTexto.parse(etFechaNacimiento.getText().toString()));
+                    } catch (ParseException e) {
+                    }
+                }
+
                 DatePickerDialog dpd = new DatePickerDialog(getActivity(),
                         new DatePickerDialog.OnDateSetListener() {
 
@@ -99,7 +108,8 @@ public class Perfil_personal extends Fragment {
                                 edit_fecha.setText(fecha);
 
                             }
-                        }, mYear, mMonth, mDay);
+                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+                dpd.setButton(DatePickerDialog.BUTTON_POSITIVE, "Listo", dpd);
                 dpd.show();
             }
         });

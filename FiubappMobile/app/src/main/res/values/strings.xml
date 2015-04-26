@@ -34,5 +34,7 @@
     <string name="BuscarGrupos">BUSCAR GRUPOS</string>
     <string name="CrearGrupo">CREAR GRUPO</string>
     <string name="nombre">Nombre</string>
+    <string name="buscar">BUSCAR</string>
+    <string name="verCercanos">VER CERCANOS</string>
 
 </resources>

@@ -55,7 +55,13 @@ public class CarreraAdapter extends BaseAdapter {
         Carrera carreraSeleccionada = carreraItems.get(position);
         nombre.setText(carreraSeleccionada.getNombre());
 
-        imgBorrarCarrera.setOnClickListener(new imageViewClickListener(position));
+        if(carreraItems.size() == 1)
+            imgBorrarCarrera.setVisibility(View.INVISIBLE);
+        else {
+            imgBorrarCarrera.setVisibility(View.VISIBLE);
+            imgBorrarCarrera.setOnClickListener(new imageViewClickListener(position));
+        }
+
         return carreraFilaView;
     }
 
