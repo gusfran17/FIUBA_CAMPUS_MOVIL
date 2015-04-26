@@ -3,6 +3,7 @@ package ar.uba.fi.fiubappREST.domain;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -81,7 +82,7 @@ public class Student {
 	private List<Student> mates;
 	
 	@ManyToMany(mappedBy="members")
-	private List<Group> groups;
+	private Set<Group> groups;
 	
 	public String getUserName() {
 		return userName;
@@ -234,11 +235,11 @@ public class Student {
 	}
 
 	@JsonIgnore
-	public List<Group> getGroups() {
+	public Set<Group> getGroups() {
 		return groups;
 	}
 
-	public void setGroups(List<Group> groups) {
+	public void setGroups(Set<Group> groups) {
 		this.groups = groups;
 	}
 
@@ -318,6 +319,16 @@ public class Student {
 		}
 		this.mates.remove(mate);
 		mate.getMates().remove(this);
+	}
+	
+	public Boolean isMemberOf(final Group group) {
+		Group foundGroup = (Group) CollectionUtils.find(this.groups, new Predicate() {
+			@Override
+			public boolean evaluate(Object object) {
+				return ((Group)object).getId().equals(group.getId());
+			}
+		});
+		return foundGroup!=null;
 	}
 
 	@Override

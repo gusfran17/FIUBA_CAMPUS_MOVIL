@@ -1,7 +1,7 @@
 package ar.uba.fi.fiubappREST.domain;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -38,16 +38,16 @@ public class Group {
 	
 	private Date creationDate;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="ownerUserName")
 	private Student owner;
 	
-	@ManyToMany(fetch=FetchType.LAZY)
+	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(
 	      name="groups_students",
 	      joinColumns={@JoinColumn(name="groupId", referencedColumnName="id")},
 	      inverseJoinColumns={@JoinColumn(name="userName", referencedColumnName="userName")})
-	private List<Student> members;
+	private Set<Student> members;
 
 	public Integer getId() {
 		return id;
@@ -92,11 +92,11 @@ public class Group {
 	}
 
 	@JsonIgnore
-	public List<Student> getMembers() {
+	public Set<Student> getMembers() {
 		return members;
 	}
 
-	public void setMembers(List<Student> members) {
+	public void setMembers(Set<Student> members) {
 		this.members = members;
 	}
 

@@ -2,6 +2,7 @@ package ar.uba.fi.fiubappREST.services;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ public class GroupServiceImpl implements GroupService {
 		Group group = this.createGroup(groupRepresentation, owner);
 		this.groupRepository.save(group);
 		this.studentRepository.save(owner);
-		return this.groupConverter.convert(this.findStudentWithMates(groupRepresentation.getOwnerUserName()), group);
+		return this.groupConverter.convert(owner, group);
 	}
 
 	private Group createGroup(GroupCreationRepresentation groupRepresentation, Student owner) {
@@ -50,7 +51,7 @@ public class GroupServiceImpl implements GroupService {
 		group.setName(groupRepresentation.getName());
 		group.setDescription(groupRepresentation.getDescription());
 		group.setCreationDate(new Date());
-		group.setMembers(new ArrayList<Student>());
+		group.setMembers(new HashSet<Student>());
 		group.setOwner(owner);
 		group.addMember(owner);
 		return group;
@@ -64,7 +65,7 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	private Student findStudent(String userName) {
-		Student student = this.studentRepository.findByUserNameAndFetchGroupsEagerly(userName);
+		Student student = this.studentRepository.findByUserNameAndFetchMatesAndGroupsEagerly(userName);
 		if(student==null){
 			LOGGER.error(String.format("Student with userName %s was not found.", userName));
 			throw new StudentNotFoundException(userName); 
@@ -72,12 +73,16 @@ public class GroupServiceImpl implements GroupService {
 		return student;
 	}
 	
-	private Student findStudentWithMates(String userName) {
-		Student student = this.studentRepository.findByUserNameAndFetchMatesEagerly(userName);
-		if(student==null){
-			LOGGER.error(String.format("Student with userName %s was not found.", userName));
-			throw new StudentNotFoundException(userName); 
+	@Override
+	public List<GroupRepresentation> findByProperties(String userName, String name) {
+		LOGGER.info(String.format("Finding groups by criteria."));
+		Student me = this.findStudent(userName);
+		List<Group> groups = this.groupRepository.findByProperties(name);
+		List<GroupRepresentation> groupRepresentations = new ArrayList<GroupRepresentation>();
+		for (Group group : groups) {
+			groupRepresentations.add(this.groupConverter.convert(me, group));
 		}
-		return student;
+		LOGGER.info(String.format("All groups meeting the criteria were found."));
+		return groupRepresentations;
 	}
 }
