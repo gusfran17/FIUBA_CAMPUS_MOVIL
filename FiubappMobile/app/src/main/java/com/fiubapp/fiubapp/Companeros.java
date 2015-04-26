@@ -82,7 +82,14 @@ public class Companeros extends Fragment {
             }
         });
         listView.setAdapter(adapter);
+        fillMatesList();
 
+
+        return partnersTabView;
+    }
+
+    private void fillMatesList() {
+        alumnoList.clear();
         // Creating volley request obj
         JsonArrayRequest alumnoReq = new JsonArrayRequest(buildNotificationsUrl(),
             new Response.Listener<JSONArray>() {
@@ -143,12 +150,11 @@ public class Companeros extends Fragment {
                 }
             };
 
-       // Adding request to request queue
+        // Adding request to request queue
         VolleyController.getInstance().addToRequestQueue(alumnoReq);
-        return partnersTabView;
     }
-	
-	private String buildNotificationsUrl(){
+
+    private String buildNotificationsUrl(){
         DataAccess dataAccess = new DataAccess(getActivity());
         return urlAPI + "/students/" + dataAccess.getUserName() + "/mates";
     }

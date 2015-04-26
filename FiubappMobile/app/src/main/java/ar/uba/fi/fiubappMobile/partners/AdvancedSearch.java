@@ -111,7 +111,7 @@ public class AdvancedSearch extends Fragment {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d(TAG, response.toString());
-                        spinnerObject = new SpinnerObject(0, "Seleccione una carrera");
+                        spinnerObject = new SpinnerObject(0, "Todas las carreras");
                         careers.add(spinnerObject);
                         // Parsing json
                         for (int i = 0; i < response.length(); i++) {
