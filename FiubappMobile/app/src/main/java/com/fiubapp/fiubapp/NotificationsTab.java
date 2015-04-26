@@ -1,5 +1,6 @@
 package com.fiubapp.fiubapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -25,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ar.uba.fi.fiubappMobile.notifications.ApplicationNotification;
 import ar.uba.fi.fiubappMobile.notifications.Notification;
 import ar.uba.fi.fiubappMobile.notifications.NotificationAdapter;
 import ar.uba.fi.fiubappMobile.notifications.NotificationBuilder;
@@ -56,6 +58,21 @@ public class NotificationsTab extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                Alumno companero = ((ApplicationNotification)notifications.get(position)).getApplicant();
+                String name = companero.getNombre();
+                String lastName = companero.getApellido();
+                String comments = companero.getComentario();
+                boolean isExchange = companero.isIntercambio();
+                boolean isMyMate = companero.isMyMate();
+                String userName = companero.getUsername();
+
+                Intent i = new Intent(getActivity(),PerfilTabsCompanero.class);
+                i.putExtra("name",name);
+                i.putExtra("lastName",lastName);
+                i.putExtra("userName",userName);
+                i.putExtra("comments",comments);
+                i.putExtra("isMyMate",isMyMate);
+                startActivity(i);
             }
         });
         listView.setAdapter(adapter);
