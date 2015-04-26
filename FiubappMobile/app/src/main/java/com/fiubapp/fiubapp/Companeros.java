@@ -43,10 +43,12 @@ public class Companeros extends Fragment {
     private ListView listView;
     private AlumnoAdapter adapter;
 
+    boolean refresh = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d("HOLA","HOLA");
         if(isAdded()){
             urlAPI = getResources().getString(R.string.urlAPI);
         }
@@ -152,6 +154,17 @@ public class Companeros extends Fragment {
 
         // Adding request to request queue
         VolleyController.getInstance().addToRequestQueue(alumnoReq);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (refresh) {
+            Log.d("Companeros: ", "onResume");
+            alumnoList.clear();
+            fillMatesList();
+        }
+        else refresh = true;
     }
 
     private String buildNotificationsUrl(){

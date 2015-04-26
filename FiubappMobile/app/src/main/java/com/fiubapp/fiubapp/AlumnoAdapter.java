@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -106,7 +107,9 @@ public class AlumnoAdapter extends BaseAdapter {
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                //alumnoItems.add(companero);
+                                String message = "Se le envío tu solicitud de amistad a "+
+                                        companero.getNombre()+" "+companero.getApellido();
+                                Popup.showText(activity, message, Toast.LENGTH_LONG).show();
                                 notifyDataSetChanged();
                             }
                         },
