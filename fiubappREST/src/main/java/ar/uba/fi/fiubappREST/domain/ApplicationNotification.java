@@ -2,39 +2,28 @@ package ar.uba.fi.fiubappREST.domain;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import ar.uba.fi.fiubappREST.utils.StudentProfileSerializer;
 
 @Entity
 @DiscriminatorValue("APPLICATION_NOTIFICATION")
 public class ApplicationNotification extends Notification {
 	
-	private String applicantUserName;
+	@OneToOne
+	@JoinColumn(name="applicantUserName")
+	private Student applicant;
+
+	@JsonSerialize(using = StudentProfileSerializer.class)
+	public Student getApplicant() {
+		return applicant;
+	}
+
+	public void setApplicant(Student applicant) {
+		this.applicant = applicant;
+	}
 	
-	private String applicantName;
-	
-	private String applicantLastName;
-
-	public String getApplicantUserName() {
-		return applicantUserName;
-	}
-
-	public void setApplicantUserName(String applicantUserName) {
-		this.applicantUserName = applicantUserName;
-	}
-
-	public String getApplicantName() {
-		return applicantName;
-	}
-
-	public void setApplicantName(String applicantName) {
-		this.applicantName = applicantName;
-	}
-
-	public String getApplicantLastName() {
-		return applicantLastName;
-	}
-
-	public void setApplicantLastName(String applicantLastName) {
-		this.applicantLastName = applicantLastName;
-	}
-
 }
