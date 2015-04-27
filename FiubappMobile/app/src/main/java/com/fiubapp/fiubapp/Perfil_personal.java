@@ -354,15 +354,7 @@ public class Perfil_personal extends Fragment {
             }
         });
 
-        SharedPreferences settings = getActivity().getSharedPreferences(
-                getResources().getString(R.string.prefs_name), 0);
-        if (settings.getBoolean("isExchange", false)) {
-            username = "I" + settings.getString("username", null);
-        } else {
-            username = settings.getString("username", null);
-        }
-
-        getUserData(username);
+        getUserData(getUsername());
 
         return view;
     }

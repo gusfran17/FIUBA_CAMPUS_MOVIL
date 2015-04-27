@@ -42,6 +42,7 @@ public class NotificationBuilder {
         applicant.setIntercambio(applicantObj.getBoolean("isExchangeStudent"));
         applicant.setPasaporte(applicantObj.getString("passportNumber"));
         applicant.setPadron(applicantObj.getInt("fileNumber"));
+        applicant.setComentario(applicantObj.getString("comments"));
         JSONArray careersObj = new JSONArray(applicantObj.getString("careers"));
         ArrayList<String> careers = new ArrayList<>();
         for(int j=0; j < careersObj.length(); j++){
