@@ -2,6 +2,7 @@ package ar.uba.fi.fiubappMobile.partners;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -107,7 +108,11 @@ public class RegularSearch extends Fragment {
         String lastname = edt_search_lastname.getText().toString();
 
         // Creating volley request obj
-        String requestURL = urlAPI+"/students/?name="+name+"&lastName="+lastname;
+        String requestURL = Uri.parse(urlAPI+"/students")
+                .buildUpon()
+                .appendQueryParameter("name", name)
+                .appendQueryParameter("lastName", lastname)
+                .build().toString();
         JsonArrayRequest studentReq = new JsonArrayRequest(requestURL,
                 new Response.Listener<JSONArray>() {
                     @Override
