@@ -43,7 +43,7 @@ public class NotificationBuilder {
         applicant.setPasaporte(applicantObj.getString("passportNumber"));
 
         String padron = applicantObj.getString("fileNumber");
-        if((padron != null)&&(!padron.equals("")))
+        if(padron != null && !padron.equals("null") && !padron.equals("") )
             applicant.setPadron(Integer.parseInt(padron));
 
         applicant.setComentario(applicantObj.getString("comments"));
