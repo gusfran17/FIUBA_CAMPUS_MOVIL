@@ -54,12 +54,8 @@ public class Perfil_fiuba extends Fragment {
                 rel_layout_header.setVisibility(View.INVISIBLE);
 
             }else{
-                getCarrerasAlumno(getArguments().getString("userName"));
                 imgEditarCarreras.setVisibility(View.INVISIBLE);
-
             }
-
-            return view;
         }
 
         imgEditarCarreras.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +74,6 @@ public class Perfil_fiuba extends Fragment {
                 builder.show();
             }
         });
-
 
         getCarrerasAlumno(getUsername());
         getTodasCarreras();
@@ -162,7 +157,8 @@ public class Perfil_fiuba extends Fragment {
 
                                 carrera.setSePuedeEliminar(true);
 
-                                if (getArguments() != null && !getArguments().getBoolean("isMyMate")) {
+                                // Si es o no es un amigo no puede eliminar las carreras de otro
+                                if (getArguments() != null && (!getArguments().getBoolean("isMyMate") || getArguments().getBoolean("isMyMate"))) {
                                     carrera.setSePuedeEliminar(false);
                                 }
 
