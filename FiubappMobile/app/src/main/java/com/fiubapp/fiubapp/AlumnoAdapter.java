@@ -76,7 +76,10 @@ public class AlumnoAdapter extends BaseAdapter {
         Alumno a = alumnoItems.get(position);
 
         nombre.setText(a.getNombre() +" "+ a.getApellido());
-        username.setText(a.getUsername());
+
+        if (a.isIntercambio())
+            username.setText(a.getUsername().substring(1,a.getUsername().length()));
+        else username.setText(a.getUsername());
 
         if (!a.getCarreras().isEmpty())
             carrera.setText(a.getCarreras().get(0));
