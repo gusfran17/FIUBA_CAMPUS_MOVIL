@@ -54,8 +54,10 @@ public class Perfil_fiuba extends Fragment {
                 rel_layout_header.setVisibility(View.INVISIBLE);
 
             }else{
+                getCarrerasAlumno(getArguments().getString("userName"));
                 imgEditarCarreras.setVisibility(View.INVISIBLE);
             }
+            return view;
         }
 
         imgEditarCarreras.setOnClickListener(new View.OnClickListener() {
