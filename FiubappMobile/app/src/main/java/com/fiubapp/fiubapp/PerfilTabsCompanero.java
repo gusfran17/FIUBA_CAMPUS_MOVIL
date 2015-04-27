@@ -37,6 +37,7 @@ public class PerfilTabsCompanero extends FragmentActivity {
         companero.setApellido(i.getStringExtra("lastName"));
         companero.setComentario(i.getStringExtra("comments"));
         companero.setIsMyMate(i.getBooleanExtra("isMyMate",false));
+        companero.setIntercambio(i.getBooleanExtra("isExchange",false));
 
         setContentView(R.layout.perfil_tabs);
 
