@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -30,6 +31,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ar.uba.fi.fiubappMobile.utils.DataAccess;
+
 public class Perfil_fiuba extends Fragment {
 
     private ArrayList<Carrera> carrerasAlumno = new ArrayList<Carrera>();
@@ -41,6 +44,23 @@ public class Perfil_fiuba extends Fragment {
         View view = inflater.inflate(R.layout.perfil_fiuba, container, false);
 
         final ImageView imgEditarCarreras = (ImageView)view.findViewById(R.id.imgEditarCarreras);
+
+        //para mostrar el perfil de un alumno no contacto
+        if (getArguments() != null) {
+
+            if (!getArguments().getBoolean("isMyMate")) {
+
+                RelativeLayout rel_layout_header = (RelativeLayout)view.findViewById(R.id.rel_fiuba);
+                rel_layout_header.setVisibility(View.INVISIBLE);
+
+            }else{
+                getCarrerasAlumno(getArguments().getString("userName"));
+                imgEditarCarreras.setVisibility(View.INVISIBLE);
+
+            }
+
+            return view;
+        }
 
         imgEditarCarreras.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +79,9 @@ public class Perfil_fiuba extends Fragment {
             }
         });
 
-        getCarrerasAlumno();
+
+        getCarrerasAlumno(getUsername());
+        getTodasCarreras();
         return view;
     }
 
@@ -90,13 +112,13 @@ public class Perfil_fiuba extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        getCarrerasAlumno();
+                        getCarrerasAlumno(username);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        getCarrerasAlumno();
+                        getCarrerasAlumno(username);
                     }
                 }){
             public Map<String, String> getHeaders() throws AuthFailureError {
@@ -111,10 +133,10 @@ public class Perfil_fiuba extends Fragment {
         queue.add(jsObjRequest);
     }
 
-    public void getCarrerasAlumno(){
+    public void getCarrerasAlumno(String username){
 
         final SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
-        final String username = settings.getString("username", null);
+        //final String username = settings.getString("username", null);
 
         JsonArrayRequest jsonReq = new JsonArrayRequest(Request.Method.GET,
                 getResources().getString(R.string.urlAPI) + "/students/" + username + "/careers",
@@ -122,6 +144,7 @@ public class Perfil_fiuba extends Fragment {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+
                         carrerasAlumno.clear();
 
                         for (int i = 0; i < response.length(); i++) {
@@ -188,7 +211,7 @@ public class Perfil_fiuba extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        getCarrerasAlumno();
+                        getCarrerasAlumno(username);
                     }
                 },
                 new Response.ErrorListener() {
@@ -238,6 +261,7 @@ public class Perfil_fiuba extends Fragment {
                                 e.printStackTrace();
                             }
                         }
+                        crearSeccionCarreras();
                     }
                 },new Response.ErrorListener(){
             @Override
@@ -291,6 +315,28 @@ public class Perfil_fiuba extends Fragment {
         }
 
         return nombreCarreras;
+    }
+
+    public static Perfil_fiuba newContact(Alumno companero) {
+
+        Perfil_fiuba perfil = new Perfil_fiuba();
+
+        Bundle args = new Bundle();
+        args.putString("name",companero.getNombre());
+        args.putString("lastName",companero.getApellido());
+        args.putString("userName",companero.getUsername());
+        args.putString("comments", companero.getComentario());
+        args.putBoolean("isMyMate",companero.isMyMate());
+
+        perfil.setArguments(args);
+
+        return perfil;
+
+    }
+
+    private String getUsername(){
+        DataAccess dataAccess = new DataAccess(getActivity());
+        return dataAccess.getUserName();
     }
 
 }
