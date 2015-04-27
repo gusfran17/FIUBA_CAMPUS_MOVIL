@@ -92,7 +92,7 @@ public class Perfil_personal extends Fragment {
 
                 boolean isIntercambio = getArguments().getBoolean("isExchange");
                 String padron_pasaporte = getArguments().getString("userName");
-                if (isIntercambio)
+                if (padron_pasaporte.startsWith("I"))
                     padron.setText(padron_pasaporte.substring(1,padron_pasaporte.length()));
                 else padron.setText(padron_pasaporte);
 
