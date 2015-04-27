@@ -8,6 +8,7 @@ public class Carrera {
     public String getCodigo() {
         return codigo;
     }
+
     public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
@@ -15,11 +16,16 @@ public class Carrera {
     public String getNombre() {
         return nombre;
     }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
     public boolean getSePuedeEliminar() {
         return sePuedeEliminar;
+    }
+
+    public void setSePuedeEliminar(boolean sePuedeEliminar) {
+        this.sePuedeEliminar = sePuedeEliminar;
     }
 }

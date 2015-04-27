@@ -160,6 +160,12 @@ public class Perfil_fiuba extends Fragment {
                                 carrera.setCodigo(codigo);
                                 carrera.setNombre(nombre);
 
+                                carrera.setSePuedeEliminar(true);
+
+                                if (getArguments() != null && !getArguments().getBoolean("isMyMate")) {
+                                    carrera.setSePuedeEliminar(false);
+                                }
+
                                 carrerasAlumno.add(carrera);
 
                             } catch (JSONException e) {
