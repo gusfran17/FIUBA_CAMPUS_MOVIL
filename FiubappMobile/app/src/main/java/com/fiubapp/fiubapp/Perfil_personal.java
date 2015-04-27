@@ -95,7 +95,10 @@ public class Perfil_personal extends Fragment {
                 if (isIntercambio)
                     padron.setText(padron_pasaporte.substring(1,padron_pasaporte.length()));
                 else padron.setText(padron_pasaporte);
-                edit_comments.setText(getArguments().getString("comments"));
+
+                String comentarios = getArguments().getString("comments");
+                if (comentarios.equals("null")) comentarios = "";
+                edit_comments.setText(comentarios);
 
                 RelativeLayout rel_layout_header = (RelativeLayout)view.findViewById(R.id.headerDatos);
                 rel_layout_header.setVisibility(View.INVISIBLE);
