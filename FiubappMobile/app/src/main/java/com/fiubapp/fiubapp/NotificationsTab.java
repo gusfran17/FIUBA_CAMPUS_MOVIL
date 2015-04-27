@@ -77,6 +77,7 @@ public class NotificationsTab extends Fragment {
         });
         listView.setAdapter(adapter);
 
+        notifications.clear();
         JsonArrayRequest notificationsReq = new JsonArrayRequest(this.buildNotificationsUrl(),
                 new Response.Listener<JSONArray>() {
                     @Override
