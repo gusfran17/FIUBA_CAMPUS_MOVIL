@@ -190,7 +190,7 @@ public class Perfil_secundaria extends Fragment {
         } catch (ParseException ex) {
         }
 
-        if( (fechaInicio != null && !fechaInicio.before(fechaFin)) || (fechaFin != null && !fechaFin.before(actual))){
+        if( (fechaInicio != null && fechaFin != null && !fechaInicio.before(fechaFin)) || (fechaFin != null && !fechaFin.before(actual))){
             Popup.showText(this.getActivity(), "Verifique que la fecha desde sea menor a la fecha hasta y no sean futuras", Toast.LENGTH_LONG).show();
             return false;
         }
