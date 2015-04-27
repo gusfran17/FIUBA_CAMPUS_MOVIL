@@ -89,7 +89,12 @@ public class Perfil_personal extends Fragment {
             if (!getArguments().getBoolean("isMyMate")) {
                 header_name.setText(getArguments().getString("name"));
                 header_lastname.setText(getArguments().getString("lastName"));
-                padron.setText(getArguments().getString("userName"));
+
+                boolean isIntercambio = getArguments().getBoolean("isExchange");
+                String padron_pasaporte = getArguments().getString("userName");
+                if (isIntercambio)
+                    padron.setText(padron_pasaporte.substring(1,padron_pasaporte.length()));
+                else padron.setText(padron_pasaporte);
                 edit_comments.setText(getArguments().getString("comments"));
 
                 RelativeLayout rel_layout_header = (RelativeLayout)view.findViewById(R.id.headerDatos);
@@ -391,7 +396,6 @@ public class Perfil_personal extends Fragment {
 
                             header_name.setText(name);
                             header_lastname.setText(lastName);
-                            padron.setText(username);
 
                             //si el perfil es el propio
                             if (username.equals(getUsername()))
@@ -405,6 +409,11 @@ public class Perfil_personal extends Fragment {
                             String nationality = response.getString("nationality");
                             String phoneNumber = response.getString("phoneNumber");
                             String fecha = response.getString("dateOfBirth");
+                            boolean isIntercambio = response.getBoolean("isExchangeStudent");
+
+                            if (isIntercambio)
+                                padron.setText(username.substring(1,username.length()));
+                            else padron.setText(username);
 
                             if (email != "null") {
                                 edit_email.setText(email);
@@ -473,6 +482,7 @@ public class Perfil_personal extends Fragment {
         args.putString("userName",companero.getUsername());
         args.putString("comments",companero.getComentario());
         args.putBoolean("isMyMate",companero.isMyMate());
+        args.putBoolean("isExchange",companero.isIntercambio());
 
         perfil.setArguments(args);
 
