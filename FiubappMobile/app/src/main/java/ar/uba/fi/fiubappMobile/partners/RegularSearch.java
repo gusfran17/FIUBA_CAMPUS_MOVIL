@@ -107,11 +107,7 @@ public class RegularSearch extends Fragment {
                                 student.setApellido(obj.getString("lastName"));
                                 student.setIntercambio(obj.getBoolean("isExchangeStudent"));
                                 student.setIsMyMate(obj.getBoolean("isMyMate"));
-                                if (student.isIntercambio()){
-                                    student.setUsername(obj.getString("passportNumber"));
-                                }else{
-                                    student.setUsername(obj.getString("fileNumber"));
-                                }
+                                student.setUsername(obj.getString("userName"));
 
                                 JSONArray JSONCareers = new JSONArray(obj.getString("careers"));
                                 ArrayList<String> carreras = new ArrayList<>();

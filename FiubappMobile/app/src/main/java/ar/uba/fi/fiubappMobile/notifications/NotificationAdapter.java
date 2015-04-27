@@ -123,7 +123,7 @@ public class NotificationAdapter extends BaseAdapter {
                             try {
                                 responseBody = new String( error.networkResponse.data, "utf-8" );
                                 JSONObject jsonObject = new JSONObject( responseBody );
-                                Popup.showText(context, jsonObject.getString("message") , Toast.LENGTH_LONG).show();
+                                //Popup.showText(context, jsonObject.getString("message") , Toast.LENGTH_LONG).show();
                                 setViewedNotification(notification,context, position);
                             } catch (UnsupportedEncodingException e) {
                                 e.printStackTrace();
