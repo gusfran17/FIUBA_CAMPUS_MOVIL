@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import com.fiubapp.fiubapp.dominio.Grupo;
+
 import java.util.List;
 
 public class GrupoAdapter extends BaseAdapter {

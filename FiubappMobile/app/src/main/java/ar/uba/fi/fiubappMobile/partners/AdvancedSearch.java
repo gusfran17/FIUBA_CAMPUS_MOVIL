@@ -32,6 +32,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -162,17 +164,23 @@ public class AdvancedSearch extends Fragment {
 
     private void fillStudentList() {
         studentList.clear();
-        String name = "";
+        String name = "" ;
         String lastname = "";
         String email = "";
-        String fileNumber = "";
+        String fileNumber = "" ;
         String passportNumber = "";
         String careerCode = "";
-        if (!edt_search_name.getText().toString().equals("")) name = "name="+edt_search_name.getText().toString();
-        if (!edt_search_lastname.getText().toString().equals("")) lastname = "lastName="+edt_search_lastname.getText().toString();
-        if (!edt_search_email.getText().toString().equals(""))email = "email=" + edt_search_email.getText().toString();
-        if (!edt_search_filenumber.getText().toString().equals("")) fileNumber = "fileNumber="+edt_search_filenumber.getText().toString();
-        if (!edt_search_passport.getText().toString().equals("")) passportNumber = "passportNumber="+edt_search_passport.getText().toString();
+
+        if (!edt_search_name.getText().toString().equals("")) try {
+            name = "name="+ URLEncoder.encode(edt_search_name.getText().toString(), "UTF-8");
+            if (!edt_search_lastname.getText().toString().equals("")) lastname = "lastName="+URLEncoder.encode(edt_search_lastname.getText().toString(), "UTF-8");
+            if (!edt_search_email.getText().toString().equals(""))email = "email=" + URLEncoder.encode(edt_search_email.getText().toString(), "UTF-8");
+            if (!edt_search_filenumber.getText().toString().equals("")) fileNumber = "fileNumber="+URLEncoder.encode(edt_search_filenumber.getText().toString(), "UTF-8");
+            if (!edt_search_passport.getText().toString().equals("")) passportNumber = "passportNumber="+URLEncoder.encode(edt_search_passport.getText().toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
         SpinnerObject spn_object = ((SpinnerObject)spnCareer.getSelectedItem());
         int careerID = spn_object.getID();
         if (careerID != 0) careerCode = "careerCode="+Integer.toString(careerID);
