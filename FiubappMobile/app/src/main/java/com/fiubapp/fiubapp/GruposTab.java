@@ -72,11 +72,14 @@ public class GruposTab extends Fragment {
                 .setPositiveButton("Crear",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                if (editNombre.getText().toString().replace(" ","").equals("")){
+                                    Popup.showText(getActivity(),"El campo nombre de Grupo es obligatorio",Popup.LENGTH_LONG).show();
+                                } else {
+                                    Grupo grupo = new Grupo();
+                                    grupo.setNombre(editNombre.getText().toString());
+                                    crearGrupo(grupo);
+                                }
 
-                                Grupo grupo = new Grupo();
-                                grupo.setNombre(editNombre.getText().toString());
-
-                                crearGrupo(grupo);
                             }
                         })
                 .setNegativeButton("Cancelar",

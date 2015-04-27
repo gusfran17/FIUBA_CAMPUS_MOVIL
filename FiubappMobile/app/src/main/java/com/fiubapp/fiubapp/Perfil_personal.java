@@ -39,6 +39,7 @@ public class Perfil_personal extends Fragment {
     private String username = "";
     private static final String TAG = Perfil_personal.class.getSimpleName();
     private EmailValidator emailValidator;
+    private PhoneNumberValidator phoneValidator;
     private String fecha;
 
     private View view = null;
@@ -213,7 +214,8 @@ public class Perfil_personal extends Fragment {
 
                     //si el mail es valido llamo al REST
                     emailValidator = new EmailValidator();
-                    if (emailValidator.validate(email)) {
+                    phoneValidator = new PhoneNumberValidator();
+                    if (emailValidator.validate(email)&&(phoneValidator.validate(phoneNumber))) {
 
                         Map<String, String> params = new HashMap<String, String>();
 
@@ -276,7 +278,13 @@ public class Perfil_personal extends Fragment {
 
                         //aviso de mail no valido
                     } else {
-                        Popup.showText(getActivity(), "El email no es válido", Toast.LENGTH_LONG).show();
+                        getUserData(getUsername());
+                        edit_button.setImageResource(R.drawable.ic_editar);
+                        if (!emailValidator.validate(email)){
+                            Popup.showText(getActivity(), "El email no es válido", Toast.LENGTH_LONG).show();
+                        } else{
+                            Popup.showText(getActivity(), "El numero de telefono no es válido", Toast.LENGTH_LONG).show();
+                        }
                     }
                 }else{
                     edit_button.setImageResource(R.drawable.ic_save);
