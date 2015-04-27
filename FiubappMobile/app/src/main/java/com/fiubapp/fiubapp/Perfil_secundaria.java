@@ -58,6 +58,10 @@ public class Perfil_secundaria extends Fragment {
                     if (validaIngresoDatosEducacionSecundaria()) {
                         imgEditar.setImageResource(R.drawable.ic_editar);
                         guardarDatosEducacionSecundaria();
+
+                        titulo.clearFocus();
+                        escuela.clearFocus();
+
                         fechaInicio.setEnabled(false);
                         fechaFin.setEnabled(false);
                         titulo.setEnabled(false);

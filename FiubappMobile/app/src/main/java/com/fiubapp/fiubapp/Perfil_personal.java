@@ -156,8 +156,8 @@ public class Perfil_personal extends Fragment {
 
                     };
 
-                    //llamada al PUT
                     VolleyController.getInstance().addToRequestQueue(jsonReq);
+                    edit_comments.clearFocus();
 
                 }else{
                     edit_comments_img.setImageResource(R.drawable.ic_save);
@@ -205,6 +205,11 @@ public class Perfil_personal extends Fragment {
                                     @Override
                                     public void onResponse(JSONObject response) {
                                         VolleyLog.d(TAG, "Error: " + response.toString());
+
+                                        edit_email.clearFocus();
+                                        edit_telefono.clearFocus();
+                                        edit_nacionalidad.clearFocus();
+                                        edit_ciudad.clearFocus();
 
                                         edit_button.setImageResource(R.drawable.ic_editar);
                                         edit_ciudad.setEnabled(false);
