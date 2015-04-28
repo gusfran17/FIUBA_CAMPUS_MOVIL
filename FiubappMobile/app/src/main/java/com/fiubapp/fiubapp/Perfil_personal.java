@@ -159,7 +159,7 @@ public class Perfil_personal extends Fragment {
                     params.put("comments", comments);
 
                     JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.PUT,
-                            urlAPI + "/students/" + username,
+                            urlAPI + "/students/" + getUsername(),
                             new JSONObject(params),
                             new Response.Listener<JSONObject>() {
                                 @Override
@@ -215,7 +215,7 @@ public class Perfil_personal extends Fragment {
                     //si el mail es valido llamo al REST
                     emailValidator = new EmailValidator();
                     phoneValidator = new PhoneNumberValidator();
-                    if (emailValidator.validate(email)&&(phoneValidator.validate(phoneNumber))) {
+                    if (emailValidator.validate(email)) {
 
                         Map<String, String> params = new HashMap<String, String>();
 
@@ -233,7 +233,7 @@ public class Perfil_personal extends Fragment {
                         params.put("gender", gender);
 
                         JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.PUT,
-                                urlAPI + "/students/" + username,
+                                urlAPI + "/students/" + getUsername(),
                                 new JSONObject(params),
                                 new Response.Listener<JSONObject>() {
                                     @Override
@@ -279,7 +279,7 @@ public class Perfil_personal extends Fragment {
                         //aviso de mail no valido
                     } else {
                         getUserData(getUsername());
-                        edit_button.setImageResource(R.drawable.ic_editar);
+                        //edit_button.setImageResource(R.drawable.ic_editar);
                         if (!emailValidator.validate(email)){
                             Popup.showText(getActivity(), "El email no es válido", Toast.LENGTH_LONG).show();
                         } else{
@@ -318,7 +318,7 @@ public class Perfil_personal extends Fragment {
                         params.put("lastName", lastName);
 
                         JsonObjectRequest jsonReqName = new JsonObjectRequest(Request.Method.PUT,
-                                urlAPI + "/students/" + username,
+                                urlAPI + "/students/" + getUsername(),
                                 new JSONObject(params),
                                 new Response.Listener<JSONObject>() {
                                     @Override

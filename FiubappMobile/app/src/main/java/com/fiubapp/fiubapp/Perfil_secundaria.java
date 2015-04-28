@@ -295,11 +295,12 @@ public class Perfil_secundaria extends Fragment {
 
         SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
         String username = null;
-        if (settings.getBoolean("isExchange",false)){
+        /*if (settings.getBoolean("isExchange",false)){
             username = "I"+settings.getString("username",null);
         }else{
             username = settings.getString("username",null);
-        }
+        }*/
+        username = getUsername();
         final String token = settings.getString("token", null);
 
         final EditText fechaInicio = (EditText)this.view.findViewById(R.id.etFechaInicio);
