@@ -1,9 +1,12 @@
 package com.fiubapp.fiubapp;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,11 +39,14 @@ import ar.uba.fi.fiubappMobile.utils.DataAccess;
 public class Perfil_personal extends Fragment {
 
     private String urlAPI = "";
-    private String username = "";
+    private String usernamePrefs = "";
     private static final String TAG = Perfil_personal.class.getSimpleName();
     private EmailValidator emailValidator;
     private PhoneNumberValidator phoneValidator;
     private String fecha;
+    private Context context;
+
+    private FragmentActivity perfilTabs;
 
     private View view = null;
 
@@ -49,6 +55,8 @@ public class Perfil_personal extends Fragment {
 
         view = inflater.inflate(R.layout.perfil_datos_personales, container, false);
 
+        usernamePrefs = getUsername();
+        perfilTabs = getActivity();
 
         final EditText header_name = (EditText) view.findViewById(R.id.header_name);
         final EditText header_lastname = (EditText) view.findViewById(R.id.header_lastname);
@@ -129,7 +137,7 @@ public class Perfil_personal extends Fragment {
                     }
                 }
 
-                DatePickerDialog dpd = new DatePickerDialog(getActivity(),
+                DatePickerDialog dpd = new DatePickerDialog(((FragmentActivity)context),
                         new DatePickerDialog.OnDateSetListener() {
 
                             @Override
@@ -159,7 +167,7 @@ public class Perfil_personal extends Fragment {
                     params.put("comments", comments);
 
                     JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.PUT,
-                            urlAPI + "/students/" + getUsername(),
+                            urlAPI + "/students/" + usernamePrefs,
                             new JSONObject(params),
                             new Response.Listener<JSONObject>() {
                                 @Override
@@ -179,7 +187,7 @@ public class Perfil_personal extends Fragment {
                         @Override
                         public Map<String, String> getHeaders() throws AuthFailureError {
                             Map<String, String> headers = new HashMap<String, String>();
-                            SharedPreferences settings = getActivity().getSharedPreferences(
+                            SharedPreferences settings = ((FragmentActivity)context).getSharedPreferences(
                                     getResources().getString(R.string.prefs_name), 0);
                             String token = settings.getString("token", null);
                             headers.put("Authorization", token);
@@ -233,7 +241,7 @@ public class Perfil_personal extends Fragment {
                         params.put("gender", gender);
 
                         JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.PUT,
-                                urlAPI + "/students/" + getUsername(),
+                                urlAPI + "/students/" + usernamePrefs,
                                 new JSONObject(params),
                                 new Response.Listener<JSONObject>() {
                                     @Override
@@ -263,7 +271,7 @@ public class Perfil_personal extends Fragment {
                             @Override
                             public Map<String, String> getHeaders() throws AuthFailureError {
                                 Map<String, String> headers = new HashMap<String, String>();
-                                SharedPreferences settings = getActivity().getSharedPreferences(
+                                SharedPreferences settings = ((FragmentActivity)context).getSharedPreferences(
                                         getResources().getString(R.string.prefs_name), 0);
                                 String token = settings.getString("token", null);
                                 headers.put("Authorization", token);
@@ -278,12 +286,12 @@ public class Perfil_personal extends Fragment {
 
                         //aviso de mail no valido
                     } else {
-                        getUserData(getUsername());
+                        getUserData(usernamePrefs);
                         //edit_button.setImageResource(R.drawable.ic_editar);
                         if (!emailValidator.validate(email)){
-                            Popup.showText(getActivity(), "El email no es válido", Toast.LENGTH_LONG).show();
+                            Popup.showText(context, "El email no es válido", Toast.LENGTH_LONG).show();
                         } else{
-                            Popup.showText(getActivity(), "El numero de telefono no es válido", Toast.LENGTH_LONG).show();
+                            Popup.showText(context, "El numero de telefono no es válido", Toast.LENGTH_LONG).show();
                         }
                     }
                 }else{
@@ -318,7 +326,7 @@ public class Perfil_personal extends Fragment {
                         params.put("lastName", lastName);
 
                         JsonObjectRequest jsonReqName = new JsonObjectRequest(Request.Method.PUT,
-                                urlAPI + "/students/" + getUsername(),
+                                urlAPI + "/students/" + usernamePrefs,
                                 new JSONObject(params),
                                 new Response.Listener<JSONObject>() {
                                     @Override
@@ -328,7 +336,7 @@ public class Perfil_personal extends Fragment {
                                         header_name.setEnabled(false);
                                         header_lastname.setEnabled(false);
 
-                                        ((PerfilTabs)getActivity()).setText(header_name.getText().toString()
+                                        (((PerfilTabs)context)).setText(header_name.getText().toString()
                                                 +" "+header_lastname.getText().toString());
 
                                         edit_name.setImageResource(R.drawable.ic_editar);
@@ -345,7 +353,7 @@ public class Perfil_personal extends Fragment {
                             @Override
                             public Map<String, String> getHeaders() throws AuthFailureError {
                                 Map<String, String> headers = new HashMap<String, String>();
-                                SharedPreferences settings = getActivity().getSharedPreferences(
+                                SharedPreferences settings = ((FragmentActivity)context).getSharedPreferences(
                                         getResources().getString(R.string.prefs_name), 0);
                                 String token = settings.getString("token", null);
                                 headers.put("Authorization", token);
@@ -359,7 +367,7 @@ public class Perfil_personal extends Fragment {
                         VolleyController.getInstance().addToRequestQueue(jsonReqName);
 
                     } else {
-                        Popup.showText(getActivity(), "Nombre y/o apellido vacíos", Toast.LENGTH_LONG).show();
+                        Popup.showText(context, "Nombre y/o apellido vacíos", Toast.LENGTH_LONG).show();
                     }
 
                 } else {
@@ -370,7 +378,7 @@ public class Perfil_personal extends Fragment {
             }
         });
 
-        getUserData(getUsername());
+        getUserData(usernamePrefs);
 
         return view;
     }
@@ -409,9 +417,9 @@ public class Perfil_personal extends Fragment {
                             header_lastname.setText(lastName);
 
                             //si el perfil es el propio
-                            if (username.equals(getUsername()))
-                                ((PerfilTabs)getActivity()).setText(name+" "+lastName);
-                            else ((PerfilTabsCompanero)getActivity()).setText(name+" "+lastName);
+                            if (username.equals(usernamePrefs))
+                                ((PerfilTabs)perfilTabs).setText(name+" "+lastName);
+                            else ((PerfilTabsCompanero)perfilTabs).setText(name+" "+lastName);
 
                             String email = response.getString("email");
                             String comments = response.getString("comments");
@@ -468,7 +476,7 @@ public class Perfil_personal extends Fragment {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<String, String>();
-                SharedPreferences settings = getActivity().getSharedPreferences(
+                SharedPreferences settings = ((FragmentActivity)context).getSharedPreferences(
                         getResources().getString(R.string.prefs_name), 0);
                 String token = settings.getString("token", null);
                 headers.put("Authorization", token);
@@ -504,5 +512,11 @@ public class Perfil_personal extends Fragment {
     private String getUsername(){
         DataAccess dataAccess = new DataAccess(getActivity());
         return dataAccess.getUserName();
+    }
+
+    @Override
+    public void onAttach(Activity activity){
+        super.onAttach(activity);
+        context = getActivity();
     }
 }
