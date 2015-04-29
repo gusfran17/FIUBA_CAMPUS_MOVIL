@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
@@ -22,6 +23,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.fiubapp.fiubapp.Alumno;
 import com.fiubapp.fiubapp.AlumnoAdapter;
 import com.fiubapp.fiubapp.PerfilTabsCompanero;
+import com.fiubapp.fiubapp.Popup;
 import com.fiubapp.fiubapp.R;
 import com.fiubapp.fiubapp.VolleyController;
 
@@ -149,7 +151,9 @@ public class RegularSearch extends Fragment {
                                 e.printStackTrace();
                             }
                         }
-
+                        if (studentList.size()==0) {
+                            Popup.showText(getActivity(), "No se encontraron alumnos que coincidan con la busqueda.", Toast.LENGTH_LONG).show();
+                        }
                         studentAdapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
@@ -172,5 +176,6 @@ public class RegularSearch extends Fragment {
 
         // Adding request to request queue
         VolleyController.getInstance().addToRequestQueue(studentReq);
+
     }
 }

@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -24,6 +25,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.fiubapp.fiubapp.Alumno;
 import com.fiubapp.fiubapp.AlumnoAdapter;
 import com.fiubapp.fiubapp.PerfilTabsCompanero;
+import com.fiubapp.fiubapp.Popup;
 import com.fiubapp.fiubapp.R;
 import com.fiubapp.fiubapp.SpinnerObject;
 import com.fiubapp.fiubapp.VolleyController;
@@ -171,8 +173,8 @@ public class AdvancedSearch extends Fragment {
         String passportNumber = "";
         String careerCode = "";
 
-        if (!edt_search_name.getText().toString().equals("")) try {
-            name = "name="+ URLEncoder.encode(edt_search_name.getText().toString(), "UTF-8");
+        try {
+            if (!edt_search_name.getText().toString().equals("")) name = "name="+ URLEncoder.encode(edt_search_name.getText().toString(), "UTF-8");
             if (!edt_search_lastname.getText().toString().equals("")) lastname = "lastName="+URLEncoder.encode(edt_search_lastname.getText().toString(), "UTF-8");
             if (!edt_search_email.getText().toString().equals(""))email = "email=" + URLEncoder.encode(edt_search_email.getText().toString(), "UTF-8");
             if (!edt_search_filenumber.getText().toString().equals("")) fileNumber = "fileNumber="+URLEncoder.encode(edt_search_filenumber.getText().toString(), "UTF-8");
@@ -222,8 +224,10 @@ public class AdvancedSearch extends Fragment {
                                 e.printStackTrace();
                             }
                         }
-
                         studentAdapter.notifyDataSetChanged();
+                        if (studentList.size()==0) {
+                            Popup.showText(getActivity(), "No se encontraron alumnos que coincidan con la busqueda.", Toast.LENGTH_LONG).show();
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -245,6 +249,7 @@ public class AdvancedSearch extends Fragment {
 
         // Adding request to request queue
         VolleyController.getInstance().addToRequestQueue(studentReq);
+
     }
 
 }
