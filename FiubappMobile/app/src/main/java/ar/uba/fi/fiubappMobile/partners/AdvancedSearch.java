@@ -226,7 +226,7 @@ public class AdvancedSearch extends Fragment {
                         }
                         studentAdapter.notifyDataSetChanged();
                         if (studentList.size()==0) {
-                            Popup.showText(getActivity(), "No se encontraron alumnos que coincidan con la busqueda", Toast.LENGTH_LONG).show();
+                            Popup.showText(getActivity(), "No se encontraron alumnos que coincidan con la busqueda.", Toast.LENGTH_LONG).show();
                         }
                     }
                 }, new Response.ErrorListener() {
