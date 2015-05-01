@@ -1,5 +1,6 @@
 package ar.uba.fi.fiubappMobile.partners;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -22,6 +24,8 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.fiubapp.fiubapp.Alumno;
 import com.fiubapp.fiubapp.AlumnoAdapter;
+import com.fiubapp.fiubapp.PerfilTabsCompanero;
+import com.fiubapp.fiubapp.Popup;
 import com.fiubapp.fiubapp.R;
 import com.fiubapp.fiubapp.SpinnerObject;
 import com.fiubapp.fiubapp.VolleyController;
@@ -30,6 +34,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,7 +81,21 @@ public class AdvancedSearch extends Fragment {
         studentsMeetCriteria.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String name = studentList.get(position).getNombre();
+                String lastName = studentList.get(position).getApellido();
+                String comments = studentList.get(position).getComentario();
+                boolean isExchange = studentList.get(position).isIntercambio();
+                boolean isMyMate = studentList.get(position).isMyMate();
 
+                String userName = studentList.get(position).getUsername();
+
+                Intent i = new Intent(getActivity(),PerfilTabsCompanero.class);
+                i.putExtra("name",name);
+                i.putExtra("lastName",lastName);
+                i.putExtra("userName",userName);
+                i.putExtra("comments",comments);
+                i.putExtra("isMyMate",isMyMate);
+                startActivity(i);
             }
         });
         studentsMeetCriteria.setAdapter(studentAdapter);
@@ -146,17 +166,23 @@ public class AdvancedSearch extends Fragment {
 
     private void fillStudentList() {
         studentList.clear();
-        String name = "";
+        String name = "" ;
         String lastname = "";
         String email = "";
-        String fileNumber = "";
+        String fileNumber = "" ;
         String passportNumber = "";
         String careerCode = "";
-        if (!edt_search_name.getText().toString().equals("")) name = "name="+edt_search_name.getText().toString();
-        if (!edt_search_lastname.getText().toString().equals("")) lastname = "lastName="+edt_search_lastname.getText().toString();
-        if (!edt_search_email.getText().toString().equals(""))email = "email=" + edt_search_email.getText().toString();
-        if (!edt_search_filenumber.getText().toString().equals("")) fileNumber = "fileNumber="+edt_search_filenumber.getText().toString();
-        if (!edt_search_passport.getText().toString().equals("")) passportNumber = "passportNumber="+edt_search_passport.getText().toString();
+
+        try {
+            if (!edt_search_name.getText().toString().equals("")) name = "name="+ URLEncoder.encode(edt_search_name.getText().toString(), "UTF-8");
+            if (!edt_search_lastname.getText().toString().equals("")) lastname = "lastName="+URLEncoder.encode(edt_search_lastname.getText().toString(), "UTF-8");
+            if (!edt_search_email.getText().toString().equals(""))email = "email=" + URLEncoder.encode(edt_search_email.getText().toString(), "UTF-8");
+            if (!edt_search_filenumber.getText().toString().equals("")) fileNumber = "fileNumber="+URLEncoder.encode(edt_search_filenumber.getText().toString(), "UTF-8");
+            if (!edt_search_passport.getText().toString().equals("")) passportNumber = "passportNumber="+URLEncoder.encode(edt_search_passport.getText().toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
         SpinnerObject spn_object = ((SpinnerObject)spnCareer.getSelectedItem());
         int careerID = spn_object.getID();
         if (careerID != 0) careerCode = "careerCode="+Integer.toString(careerID);
@@ -178,11 +204,8 @@ public class AdvancedSearch extends Fragment {
                                 student.setApellido(obj.getString("lastName"));
                                 student.setIntercambio(obj.getBoolean("isExchangeStudent"));
                                 student.setIsMyMate(obj.getBoolean("isMyMate"));
-                                if (student.isIntercambio()){
-                                    student.setUsername(obj.getString("passportNumber"));
-                                }else{
-                                    student.setUsername(obj.getString("fileNumber"));
-                                }
+                                student.setUsername(obj.getString("userName"));
+                                student.setComentario(obj.getString("comments"));
 
                                 JSONArray JSONCareers = new JSONArray(obj.getString("careers"));
                                 ArrayList<String> carreras = new ArrayList<>();
@@ -201,8 +224,10 @@ public class AdvancedSearch extends Fragment {
                                 e.printStackTrace();
                             }
                         }
-
                         studentAdapter.notifyDataSetChanged();
+                        if (studentList.size()==0) {
+                            Popup.showText(getActivity(), "No se encontraron alumnos que coincidan con la busqueda.", Toast.LENGTH_LONG).show();
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -224,6 +249,7 @@ public class AdvancedSearch extends Fragment {
 
         // Adding request to request queue
         VolleyController.getInstance().addToRequestQueue(studentReq);
+
     }
 
 }

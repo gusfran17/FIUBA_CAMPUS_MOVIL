@@ -1,6 +1,8 @@
 package ar.uba.fi.fiubappMobile.partners;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
@@ -19,6 +22,8 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.fiubapp.fiubapp.Alumno;
 import com.fiubapp.fiubapp.AlumnoAdapter;
+import com.fiubapp.fiubapp.PerfilTabsCompanero;
+import com.fiubapp.fiubapp.Popup;
 import com.fiubapp.fiubapp.R;
 import com.fiubapp.fiubapp.VolleyController;
 
@@ -65,6 +70,21 @@ public class RegularSearch extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                String name = studentList.get(position).getNombre();
+                String lastName = studentList.get(position).getApellido();
+                String comments = studentList.get(position).getComentario();
+                boolean isExchange = studentList.get(position).isIntercambio();
+                boolean isMyMate = studentList.get(position).isMyMate();
+
+                String userName = studentList.get(position).getUsername();
+
+                Intent i = new Intent(getActivity(),PerfilTabsCompanero.class);
+                i.putExtra("name",name);
+                i.putExtra("lastName",lastName);
+                i.putExtra("userName",userName);
+                i.putExtra("comments",comments);
+                i.putExtra("isMyMate",isMyMate);
+                startActivity(i);
             }
         });
         studentsMeetCriteria.setAdapter(studentAdapter);
@@ -90,7 +110,11 @@ public class RegularSearch extends Fragment {
         String lastname = edt_search_lastname.getText().toString();
 
         // Creating volley request obj
-        String requestURL = urlAPI+"/students/?name="+name+"&lastName="+lastname;
+        String requestURL = Uri.parse(urlAPI+"/students")
+                .buildUpon()
+                .appendQueryParameter("name", name)
+                .appendQueryParameter("lastName", lastname)
+                .build().toString();
         JsonArrayRequest studentReq = new JsonArrayRequest(requestURL,
                 new Response.Listener<JSONArray>() {
                     @Override
@@ -107,11 +131,8 @@ public class RegularSearch extends Fragment {
                                 student.setApellido(obj.getString("lastName"));
                                 student.setIntercambio(obj.getBoolean("isExchangeStudent"));
                                 student.setIsMyMate(obj.getBoolean("isMyMate"));
-                                if (student.isIntercambio()){
-                                    student.setUsername(obj.getString("passportNumber"));
-                                }else{
-                                    student.setUsername(obj.getString("fileNumber"));
-                                }
+                                student.setUsername(obj.getString("userName"));
+                                student.setComentario(obj.getString("comments"));
 
                                 JSONArray JSONCareers = new JSONArray(obj.getString("careers"));
                                 ArrayList<String> carreras = new ArrayList<>();
@@ -130,7 +151,9 @@ public class RegularSearch extends Fragment {
                                 e.printStackTrace();
                             }
                         }
-
+                        if (studentList.size()==0) {
+                            Popup.showText(getActivity(), "No se encontraron alumnos que coincidan con la busqueda.", Toast.LENGTH_LONG).show();
+                        }
                         studentAdapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
@@ -153,5 +176,6 @@ public class RegularSearch extends Fragment {
 
         // Adding request to request queue
         VolleyController.getInstance().addToRequestQueue(studentReq);
+
     }
 }

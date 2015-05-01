@@ -1,15 +1,19 @@
 package com.fiubapp.fiubapp;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -28,12 +32,18 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import ar.uba.fi.fiubappMobile.utils.DataAccess;
 
 public class Perfil_fiuba extends Fragment {
 
     private ArrayList<Carrera> carrerasAlumno = new ArrayList<Carrera>();
     private ArrayList<Carrera> todasCarrerasDisponibles = new ArrayList<Carrera>();
+    private Context context;
+    private ListView listCarreras;
+    private CarreraAdapter carreraAdapter;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -42,10 +52,25 @@ public class Perfil_fiuba extends Fragment {
 
         final ImageView imgEditarCarreras = (ImageView)view.findViewById(R.id.imgEditarCarreras);
 
+        //para mostrar el perfil de un alumno no contacto
+        if (getArguments() != null) {
+
+            if (!getArguments().getBoolean("isMyMate")) {
+
+                RelativeLayout rel_layout_header = (RelativeLayout)view.findViewById(R.id.rel_fiuba);
+                rel_layout_header.setVisibility(View.INVISIBLE);
+
+            }else{
+                getCarrerasAlumno(getArguments().getString("userName"));
+                imgEditarCarreras.setVisibility(View.INVISIBLE);
+            }
+            return view;
+        }
+
         imgEditarCarreras.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(((FragmentActivity)context));
                 builder.setTitle("Seleccione una carrera")
                         .setSingleChoiceItems(getNombreCarreras(), -1, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -59,14 +84,15 @@ public class Perfil_fiuba extends Fragment {
             }
         });
 
-        getCarrerasAlumno();
+        getCarrerasAlumno(getUsername());
         getTodasCarreras();
         return view;
     }
 
     public void crearSeccionCarreras() {
-        ListView listCarreras = (ListView)getActivity().findViewById(R.id.listCarreras);
-        CarreraAdapter carreraAdapter = new CarreraAdapter(this, getActivity(), carrerasAlumno);
+
+        ListView listCarreras = (ListView)((FragmentActivity)context).findViewById(R.id.listCarreras);
+        CarreraAdapter carreraAdapter = new CarreraAdapter(this, (FragmentActivity)context, carrerasAlumno);
         listCarreras.setAdapter(carreraAdapter);
     }
 
@@ -79,10 +105,10 @@ public class Perfil_fiuba extends Fragment {
 
     public void borrarCarreraAlumno(int codigo){
 
-        final SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
+        final SharedPreferences settings = ((FragmentActivity)context).getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
         final String username = settings.getString("username", null);
 
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        RequestQueue queue = Volley.newRequestQueue(((FragmentActivity)context));
         String url = this.getString(R.string.urlAPI) + "/students/" + username + "/careers/" + codigo;
 
         JSONObject jsonParams = new JSONObject();
@@ -91,13 +117,13 @@ public class Perfil_fiuba extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        getCarrerasAlumno();
+                        getCarrerasAlumno(username);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        getCarrerasAlumno();
+                        getCarrerasAlumno(username);
                     }
                 }){
             public Map<String, String> getHeaders() throws AuthFailureError {
@@ -112,10 +138,10 @@ public class Perfil_fiuba extends Fragment {
         queue.add(jsObjRequest);
     }
 
-    public void getCarrerasAlumno(){
+    public void getCarrerasAlumno(String username){
 
-        final SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
-        final String username = settings.getString("username", null);
+        final SharedPreferences settings =  ((FragmentActivity)context).getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
+        //final String username = settings.getString("username", null);
 
         JsonArrayRequest jsonReq = new JsonArrayRequest(Request.Method.GET,
                 getResources().getString(R.string.urlAPI) + "/students/" + username + "/careers",
@@ -123,6 +149,8 @@ public class Perfil_fiuba extends Fragment {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+
+                        if ((!isAdded())) return;
 
                         carrerasAlumno.clear();
 
@@ -139,12 +167,21 @@ public class Perfil_fiuba extends Fragment {
                                 carrera.setCodigo(codigo);
                                 carrera.setNombre(nombre);
 
+                                carrera.setSePuedeEliminar(true);
+
+                                // Si es o no es un amigo no puede eliminar las carreras de otro
+                                if (getArguments() != null && (!getArguments().getBoolean("isMyMate") || getArguments().getBoolean("isMyMate"))) {
+                                    carrera.setSePuedeEliminar(false);
+                                }
+
                                 carrerasAlumno.add(carrera);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
+
+                        getTodasCarreras();
 
                         crearSeccionCarreras();
                     }
@@ -173,10 +210,10 @@ public class Perfil_fiuba extends Fragment {
 
     public void setCarreraAlumno(Carrera carrera){
 
-        final SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
+        final SharedPreferences settings = ((FragmentActivity)context).getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
         final String username = settings.getString("username", null);
 
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        RequestQueue queue = Volley.newRequestQueue(((FragmentActivity)context));
         String url = this.getString(R.string.urlAPI) + "/students/" + username + "/careers/" + carrera.getCodigo();
 
         if(tieneCarreraDisponible(carrera.getCodigo()))
@@ -188,7 +225,7 @@ public class Perfil_fiuba extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        getCarrerasAlumno();
+                        getCarrerasAlumno(username);
                     }
                 },
                 new Response.ErrorListener() {
@@ -216,6 +253,7 @@ public class Perfil_fiuba extends Fragment {
                     @Override
                     public void onResponse(JSONArray response) {
 
+                        if (!isAdded()) return;
                         todasCarrerasDisponibles.clear();
 
                         for (int i = 0; i < response.length(); i++) {
@@ -292,6 +330,34 @@ public class Perfil_fiuba extends Fragment {
         }
 
         return nombreCarreras;
+    }
+
+    public static Perfil_fiuba newContact(Alumno companero) {
+
+        Perfil_fiuba perfil = new Perfil_fiuba();
+
+        Bundle args = new Bundle();
+        args.putString("name",companero.getNombre());
+        args.putString("lastName",companero.getApellido());
+        args.putString("userName",companero.getUsername());
+        args.putString("comments", companero.getComentario());
+        args.putBoolean("isMyMate",companero.isMyMate());
+
+        perfil.setArguments(args);
+
+        return perfil;
+
+    }
+
+    private String getUsername(){
+        DataAccess dataAccess = new DataAccess(getActivity());
+        return dataAccess.getUserName();
+    }
+
+    @Override
+    public void onAttach(Activity activity){
+        super.onAttach(activity);
+        context = getActivity();
     }
 
 }

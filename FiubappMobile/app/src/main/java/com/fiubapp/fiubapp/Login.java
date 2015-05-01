@@ -112,17 +112,23 @@ public class Login extends Activity {
 
                         try {
                             String token = response.getString("token");
+                            String usuario_final = "";
 
                             // Guardar el token para que las otras activities tengan acceso
                             SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
                             SharedPreferences.Editor editor = settings.edit();
                             editor.putString("token", token);
-                            editor.putString("username", usuario);
+
+                            if (checkBox.isChecked())
+                                usuario_final = "I"+usuario;
+                            else usuario_final = usuario;
+
+                            editor.putString("username", usuario_final);
                             editor.putBoolean("isExchange",checkBox.isChecked());
                             editor.commit();
 
                             Intent i = new Intent(getBaseContext(), Principal.class);
-                            i.putExtra("username", usuario);
+                            i.putExtra("username", usuario_final);
                             startActivity(i);
 
                         } catch (JSONException e) {

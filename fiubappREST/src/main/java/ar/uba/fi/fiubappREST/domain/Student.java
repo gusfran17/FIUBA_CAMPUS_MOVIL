@@ -228,6 +228,7 @@ public class Student {
 		this.notifications = notifications;
 	}
 
+	@JsonIgnore
 	public List<Student> getMates() {
 		return mates;
 	}

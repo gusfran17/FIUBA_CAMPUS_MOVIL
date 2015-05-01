@@ -55,7 +55,7 @@ public class CarreraAdapter extends BaseAdapter {
         Carrera carreraSeleccionada = carreraItems.get(position);
         nombre.setText(carreraSeleccionada.getNombre());
 
-        if(carreraItems.size() == 1)
+        if(carreraItems.size() == 1 || !carreraSeleccionada.getSePuedeEliminar())
             imgBorrarCarrera.setVisibility(View.INVISIBLE);
         else {
             imgBorrarCarrera.setVisibility(View.VISIBLE);

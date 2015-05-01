@@ -1,16 +1,19 @@
 package com.fiubapp.fiubapp;
+
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -36,6 +39,7 @@ import java.util.Map;
 public class GruposTab extends Fragment {
 
     private ArrayList<Grupo> gruposAlumno = new ArrayList<Grupo>();
+    private Context context;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,11 +61,11 @@ public class GruposTab extends Fragment {
     }
 
     public void setCrear(){
-        LayoutInflater li = LayoutInflater.from(getActivity());
+        LayoutInflater li = LayoutInflater.from(((FragmentActivity)context));
 
         View crearGrupoView = li.inflate(R.layout.crear_grupo, null);
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(((FragmentActivity)context));
         alertDialogBuilder.setView(crearGrupoView);
 
         final EditText editNombre = (EditText)crearGrupoView.findViewById(R.id.etNombre);
@@ -72,11 +76,14 @@ public class GruposTab extends Fragment {
                 .setPositiveButton("Crear",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                if (editNombre.getText().toString().replace(" ","").equals("")){
+                                    Popup.showText(context,"El campo nombre de Grupo es obligatorio",Popup.LENGTH_LONG).show();
+                                } else {
+                                    Grupo grupo = new Grupo();
+                                    grupo.setNombre(editNombre.getText().toString());
+                                    crearGrupo(grupo);
+                                }
 
-                                Grupo grupo = new Grupo();
-                                grupo.setNombre(editNombre.getText().toString());
-
-                                crearGrupo(grupo);
                             }
                         })
                 .setNegativeButton("Cancelar",
@@ -92,11 +99,11 @@ public class GruposTab extends Fragment {
 
     public void crearGrupo(Grupo grupo){
 
-        SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
+        SharedPreferences settings = ((FragmentActivity)context).getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
         final String token = settings.getString("token", null);
         final String username = settings.getString("username", null);
 
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        RequestQueue queue = Volley.newRequestQueue(((FragmentActivity)context));
         String url = this.getString(R.string.urlAPI) + "/groups";
 
         JSONObject jsonParams = new JSONObject();
@@ -113,6 +120,7 @@ public class GruposTab extends Fragment {
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, url, jsonParams, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                if (!isAdded()) return;
                 getGrupos();
             }
         },
@@ -143,7 +151,7 @@ public class GruposTab extends Fragment {
 
     public void getGrupos(){
 
-        final SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
+        final SharedPreferences settings = ((FragmentActivity)context).getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
 
         JsonArrayRequest jsonReq = new JsonArrayRequest(Request.Method.GET,
                 getResources().getString(R.string.urlAPI) + "/groups",
@@ -152,6 +160,7 @@ public class GruposTab extends Fragment {
                     @Override
                     public void onResponse(JSONArray response) {
 
+                        if (!isAdded()) return;
                         gruposAlumno.clear();
 
                         for (int i = 0; i < response.length(); i++) {
@@ -200,8 +209,14 @@ public class GruposTab extends Fragment {
     }
 
     public void crearSeccionGrupos() {
-        ListView listGrupos = (ListView)getActivity().findViewById(R.id.listGrupos);
-        GrupoAdapter grupoAdapter = new GrupoAdapter(getActivity(), gruposAlumno);
+        ListView listGrupos = (ListView)((FragmentActivity)context).findViewById(R.id.listGrupos);
+        GrupoAdapter grupoAdapter = new GrupoAdapter((FragmentActivity)context, gruposAlumno);
         listGrupos.setAdapter(grupoAdapter);
+    }
+
+    @Override
+    public void onAttach(Activity activity){
+        super.onAttach(activity);
+        context = getActivity();
     }
 }
