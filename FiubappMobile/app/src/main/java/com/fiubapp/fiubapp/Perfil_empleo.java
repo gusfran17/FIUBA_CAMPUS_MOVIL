@@ -2,6 +2,7 @@ package com.fiubapp.fiubapp;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,12 +11,29 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import ar.uba.fi.fiubappMobile.Jobs.Job;
+import ar.uba.fi.fiubappMobile.utils.DataAccess;
 
 public class Perfil_empleo extends Fragment {
     private View view;
@@ -147,7 +165,7 @@ public class Perfil_empleo extends Fragment {
                         })
                 .setNegativeButton("Cancelar",
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
                         });
@@ -161,5 +179,76 @@ public class Perfil_empleo extends Fragment {
 
 
     private void createJob(Job job) {
+        SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
+        String username = null;
+        username = getUsername();
+        final String token = settings.getString("token", null);
+
+        RequestQueue volley = Volley.newRequestQueue(getActivity());
+        String url = this.getString(R.string.urlAPI) + "/students/" + username + "/jobs";
+
+        JSONObject jsonParams = new JSONObject();
+
+        try {
+            String strStartDate = null;
+            String strEndDate = null;
+
+            if(job.getStartdate() != null && job.getStartdate().toString() != null && !job.getStartdate().toString().equals(""))
+                strStartDate = job.getStartdate().toString();
+
+            if(job.getEnddate() != null && job.getEnddate().toString() != null && !job.getEnddate().toString().equals(""))
+                strEndDate = job.getEnddate().toString();
+
+            jsonParams.put("company", job.getFirm());
+            jsonParams.put("position", job.getDescription());
+            jsonParams.put("dateFrom", strStartDate);
+            jsonParams.put("dateTo", strEndDate);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                url,
+                jsonParams,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Popup.showText(getActivity(), "Datos de empleo guardados correctamente", Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //parseo la respuesta del server para obtener JSON
+                        String body = null;
+                        try {
+                            body = new String(error.networkResponse.data, HttpHeaderParser.parseCharset(error.networkResponse.headers));
+
+                            JSONObject JSONBody = new JSONObject(body);
+                            String errorCode = JSONBody.getString("code");
+
+                        } catch (JSONException e) {
+
+                        } catch (UnsupportedEncodingException e) {
+
+                        }
+                    }
+                }){
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", token);
+                return headers;
+            }
+        };
+
+        volley.add(jsObjRequest);
+
+    }
+
+    private String getUsername(){
+        DataAccess dataAccess = new DataAccess(getActivity());
+        return dataAccess.getUserName();
     }
 }
