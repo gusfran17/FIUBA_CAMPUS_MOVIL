@@ -49,7 +49,7 @@ public class JobAdapter extends BaseAdapter {
         if (inflater == null)
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
-            convertView = inflater.inflate(R.layout.list_row, null);
+            convertView = inflater.inflate(R.layout.job_list_row, null);
 
         TextView job_firm = (TextView) convertView.findViewById(R.id.txt_job_header);
         TextView  job_startdate = (TextView) convertView.findViewById(R.id.edt_job_startdate);
@@ -62,6 +62,7 @@ public class JobAdapter extends BaseAdapter {
         img_delete_job.setOnClickListener(new imageDeleteViewClickListener(position));
         img_edit_job.setOnClickListener(new imageEditViewClickListener(position));
         Job job = jobItems.get(position);
+
 
         job_firm.setText(job.getFirm());
         job_startdate.setText(job.getStartdate());

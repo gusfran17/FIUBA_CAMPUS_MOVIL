@@ -3,14 +3,17 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -18,30 +21,39 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ar.uba.fi.fiubappMobile.Jobs.Job;
+import ar.uba.fi.fiubappMobile.Jobs.JobAdapter;
 import ar.uba.fi.fiubappMobile.utils.DataAccess;
 
 public class Perfil_empleo extends Fragment {
+    private static final String TAG = Perfil_empleo.class.getSimpleName();
     private View view;
     private EditText edt_d_job_firm;
     private EditText edt_d_job_startdate;
     private EditText edt_d_job_enddate;
     private EditText edt_d_job_description;
-
+    private JobAdapter jobAdapter;
+    private List<Job> jobsList = new ArrayList<Job>();
+    private ListView jobsListView;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -56,7 +68,87 @@ public class Perfil_empleo extends Fragment {
             }
         });
 
+        jobsListView = (ListView) this.view.findViewById(R.id.list_jobs);
+        jobAdapter = new JobAdapter(getActivity(), jobsList);
+        jobsListView.setAdapter(jobAdapter);
+        fillJobsList();
         return view;
+    }
+
+    private void fillJobsList() {
+        SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
+        String username = null;
+        username = getUsername();
+        final String token = settings.getString("token", null);
+        String url = this.getString(R.string.urlAPI) + "/students/" + username + "/jobs";
+
+        jobsList.clear();
+        // Creating volley request obj
+
+        JsonArrayRequest studentReq = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d(TAG, response.toString());
+
+                        // Parsing json
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+
+                                JSONObject obj = response.getJSONObject(i);
+                                Job job = new Job();
+                                job.setFirm(obj.getString("company"));
+                                job.setStartdate(obj.getString("dateFrom"));
+                                job.setEnddate(obj.getString("dateTo"));
+                                job.setDescription(obj.getString("position"));
+
+                                jobsList.add(job);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (jobsList.size()==0) {
+                            Popup.showText(getActivity(), "No hay empleos cargados.", Toast.LENGTH_LONG).show();
+                        }
+                        jobAdapter.notifyDataSetChanged();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", token);
+                return headers;
+
+            }
+        };
+
+        // Adding request to request queue
+        VolleyController.getInstance().addToRequestQueue(studentReq);
+
+/*
+        Job job1 = new Job();
+        job1.setFirm("Testing");
+        job1.setStartdate("02/02/2015");
+        job1.setEnddate("02/05/2015");
+        job1.setDescription("Testing Senior");
+        jobsList.add(job1);
+        job1 = new Job();
+        job1.setFirm("Testing 2");
+        job1.setStartdate("02/02/2015");
+        job1.setEnddate("02/05/2015");
+        job1.setDescription("Testing Senior con un texto largo para ver que sucede cuando el texto es largo y como responde un textview a un texto largo porque el texto es largo");
+        jobsList.add(job1);
+
+        jobAdapter.notifyDataSetChanged();
+*/
+
     }
 
     private void setCrear() {
@@ -70,6 +162,8 @@ public class Perfil_empleo extends Fragment {
         edt_d_job_startdate = (EditText)editJobView.findViewById(R.id.edt_d_job_startdate);
         edt_d_job_enddate = (EditText)editJobView.findViewById(R.id.edt_d_job_enddate);
         edt_d_job_description = (EditText)editJobView.findViewById(R.id.edt_d_job_desc);
+
+
 
         edt_d_job_startdate.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -161,6 +255,8 @@ public class Perfil_empleo extends Fragment {
                                 job.setDescription(edt_d_job_description.getText().toString());
 
                                 createJob(job);
+                                fillJobsList();
+
                             }
                         })
                 .setNegativeButton("Cancelar",
@@ -244,6 +340,7 @@ public class Perfil_empleo extends Fragment {
         };
 
         volley.add(jsObjRequest);
+        
 
     }
 
