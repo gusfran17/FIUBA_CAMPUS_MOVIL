@@ -276,7 +276,7 @@ public class Perfil_empleo extends Fragment {
 
 
 
-    private void createJob(Job job) {
+    private void createJob(final Job job) {
         SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
         String username = null;
         username = getUsername();
@@ -313,6 +313,8 @@ public class Perfil_empleo extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         Popup.showText(getActivity(), "Datos de empleo guardados correctamente", Toast.LENGTH_LONG).show();
+                        jobsList.add(job);
+                        jobAdapter.notifyDataSetChanged();
                     }
                 },
                 new Response.ErrorListener() {
