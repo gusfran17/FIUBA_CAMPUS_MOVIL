@@ -84,7 +84,7 @@ public class Student {
 	@ManyToMany(mappedBy="members")
 	private Set<Group> groups;
 	
-	@OneToMany(mappedBy="student", orphanRemoval = true)
+	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, orphanRemoval = true)
 	private Set<Job> jobs;
 	
 	public String getUserName() {
@@ -228,6 +228,7 @@ public class Student {
 		this.notifications = notifications;
 	}
 
+	@JsonIgnore
 	public List<Student> getMates() {
 		return mates;
 	}

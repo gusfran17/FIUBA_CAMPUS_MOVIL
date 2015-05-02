@@ -18,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -75,7 +76,10 @@ public class AlumnoAdapter extends BaseAdapter {
         Alumno a = alumnoItems.get(position);
 
         nombre.setText(a.getNombre() +" "+ a.getApellido());
-        username.setText(a.getUsername());
+
+        if (a.isIntercambio())
+            username.setText(a.getUsername().substring(1,a.getUsername().length()));
+        else username.setText(a.getUsername());
 
         if (!a.getCarreras().isEmpty())
             carrera.setText(a.getCarreras().get(0));
@@ -120,9 +124,20 @@ public class AlumnoAdapter extends BaseAdapter {
 
                                 try {
                                     responseBody = new String( error.networkResponse.data, "utf-8" );
-                                    //JSONObject jsonObject = new JSONObject( responseBody );
+                                    JSONObject jsonObject = new JSONObject( responseBody );
+
+                                    String code = jsonObject.getString("code");
+
+                                    if (code.equals("6002")){
+                                        String message = "Se le envío tu solicitud de amistad a "+
+                                                companero.getNombre()+" "+companero.getApellido();
+                                        Popup.showText(activity, message, Toast.LENGTH_LONG).show();
+                                    }
+
                                     Log.d("Error 415: ",responseBody);
                                 } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }

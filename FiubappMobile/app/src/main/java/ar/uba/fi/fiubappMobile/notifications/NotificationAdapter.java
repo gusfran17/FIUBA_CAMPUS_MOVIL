@@ -87,13 +87,13 @@ public class NotificationAdapter extends BaseAdapter {
         TextView creationDate = (TextView) convertView.findViewById(R.id.creationDate);
         TextView markAsViewed = (TextView) convertView.findViewById(R.id.viewed);
 
-        name.setText(notification.getApplicantName() + " " + notification.getApplicantLastName());
+        name.setText(notification.getApplicant().getNombre() + " " + notification.getApplicant().getApellido());
         description.setText(R.string.application_notification_message);
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         creationDate.setText(df.format(notification.getCreationDate()));
 
         final Map<String, String> params = new HashMap<String, String>();
-        params.put("userName", notification.getApplicantUserName());
+        params.put("userName", notification.getApplicant().getUsername());
 
         final Button acceptButton = (Button)convertView.findViewById(R.id.acceptButton);
 
@@ -108,8 +108,8 @@ public class NotificationAdapter extends BaseAdapter {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            String message = notification.getApplicantName() + " "
-                                    + notification.getApplicantLastName() + " y vos ahora son compañeros!";
+                            String message = notification.getApplicant().getNombre() + " "
+                                    + notification.getApplicant().getApellido() + " y vos ahora son compañeros!";
                             Popup.showText(context, message, Toast.LENGTH_LONG).show();
                             setViewedNotification(notification, context, position);
                         }
@@ -123,7 +123,7 @@ public class NotificationAdapter extends BaseAdapter {
                             try {
                                 responseBody = new String( error.networkResponse.data, "utf-8" );
                                 JSONObject jsonObject = new JSONObject( responseBody );
-                                Popup.showText(context, jsonObject.getString("message") , Toast.LENGTH_LONG).show();
+                                //Popup.showText(context, jsonObject.getString("message") , Toast.LENGTH_LONG).show();
                                 setViewedNotification(notification,context, position);
                             } catch (UnsupportedEncodingException e) {
                                 e.printStackTrace();

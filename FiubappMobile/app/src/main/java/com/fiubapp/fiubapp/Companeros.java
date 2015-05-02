@@ -81,6 +81,14 @@ public class Companeros extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                boolean isMyMate = alumnoList.get(position).isMyMate();
+                String userName = alumnoList.get(position).getUsername();
+
+                Intent i = new Intent(getActivity(),PerfilTabsCompanero.class);
+
+                i.putExtra("userName",userName);
+                i.putExtra("isMyMate",isMyMate);
+                startActivity(i);
             }
         });
         listView.setAdapter(adapter);
@@ -110,11 +118,6 @@ public class Companeros extends Fragment {
                             companero.setIntercambio(obj.getBoolean("isExchangeStudent"));
                             companero.setIsMyMate(obj.getBoolean("isMyMate"));
                             companero.setUsername(obj.getString("userName"));
-                            if (companero.isIntercambio()){
-                                companero.setUsername(obj.getString("passportNumber"));
-                            }else{
-                                companero.setUsername(obj.getString("fileNumber"));
-                            }
 
                             JSONArray JSONCareers = new JSONArray(obj.getString("careers"));
                             ArrayList<String> carreras = new ArrayList<>();
@@ -154,17 +157,6 @@ public class Companeros extends Fragment {
 
         // Adding request to request queue
         VolleyController.getInstance().addToRequestQueue(alumnoReq);
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-        if (refresh) {
-            Log.d("Companeros: ", "onResume");
-            alumnoList.clear();
-            fillMatesList();
-        }
-        else refresh = true;
     }
 
     private String buildNotificationsUrl(){

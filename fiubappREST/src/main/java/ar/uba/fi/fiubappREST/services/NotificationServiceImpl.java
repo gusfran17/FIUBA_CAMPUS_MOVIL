@@ -58,9 +58,7 @@ public class NotificationServiceImpl implements NotificationService {
 		notification.setCreationDate(new Date());
 		notification.setIsViewed(false);
 		notification.setStudent(student);
-		notification.setApplicantUserName(applicantStudent.getUserName());
-		notification.setApplicantName(applicantStudent.getName());
-		notification.setApplicantLastName(applicantStudent.getLastName());
+		notification.setApplicant(applicantStudent);
 		return notification;
 	}
 

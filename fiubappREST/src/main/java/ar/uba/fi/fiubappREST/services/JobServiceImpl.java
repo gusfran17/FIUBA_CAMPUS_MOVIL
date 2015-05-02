@@ -89,12 +89,11 @@ public class JobServiceImpl implements JobService {
 	@Override
 	public void delete(String userName, Integer id) {
 		LOGGER.info(String.format("Deleting job information for job with id %s for student with userName %s.", id, userName));
-		Job job = findJob(userName, id);
 		Student student = this.studentRepository.findByUserNameAndFetchJobsEagerly(userName);
-//		job.setStudent(null);
+		Job job = findJob(userName, id);
 		student.deleteJob(job);
-		this.jobRepository.delete(job);	
-		this.studentRepository.save(student);
+		this.studentRepository.save(student);	
 		LOGGER.info(String.format("Job information for job with id %s for student with userName %s was deleted.", job.getId(), userName));
 	}
+	
 }

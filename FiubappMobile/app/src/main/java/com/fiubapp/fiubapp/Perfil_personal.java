@@ -1,15 +1,19 @@
 package com.fiubapp.fiubapp;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,25 +34,29 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import ar.uba.fi.fiubappMobile.utils.DataAccess;
+
 public class Perfil_personal extends Fragment {
 
     private String urlAPI = "";
-    private String username = "";
+    private String usernamePrefs = "";
     private static final String TAG = Perfil_personal.class.getSimpleName();
     private EmailValidator emailValidator;
+    private PhoneNumberValidator phoneValidator;
     private String fecha;
+    private Context context;
+
+    private FragmentActivity perfilTabs;
 
     private View view = null;
-
-    public void Perfil_personal(String username){
-        this.username = username;
-    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.perfil_datos_personales, container, false);
 
+        usernamePrefs = getUsername();
+        perfilTabs = getActivity();
 
         final EditText header_name = (EditText) view.findViewById(R.id.header_name);
         final EditText header_lastname = (EditText) view.findViewById(R.id.header_lastname);
@@ -67,6 +75,8 @@ public class Perfil_personal extends Fragment {
 
         final TextView profile_name = (TextView)view.findViewById(R.id.profile_name);
 
+        urlAPI = getResources().getString(R.string.urlAPI);
+
         edit_comments.setEnabled(false);
         edit_email.setEnabled(false);
         edit_telefono.setEnabled(false);
@@ -78,7 +88,38 @@ public class Perfil_personal extends Fragment {
         header_name.setEnabled(false);
         header_lastname.setEnabled(false);
 
-        urlAPI = getResources().getString(R.string.urlAPI);
+        //para mostrar el perfil de un alumno no contacto
+        if (getArguments() != null) {
+
+            edit_button.setVisibility(View.INVISIBLE);
+            edit_name.setVisibility(View.INVISIBLE);
+            edit_comments_img.setVisibility(View.INVISIBLE);
+
+            if (!getArguments().getBoolean("isMyMate")) {
+                header_name.setText(getArguments().getString("name"));
+                header_lastname.setText(getArguments().getString("lastName"));
+
+                boolean isIntercambio = getArguments().getBoolean("isExchange");
+                String padron_pasaporte = getArguments().getString("userName");
+                if (padron_pasaporte.startsWith("I"))
+                    padron.setText(padron_pasaporte.substring(1,padron_pasaporte.length()));
+                else padron.setText(padron_pasaporte);
+
+                String comentarios = getArguments().getString("comments");
+                if (comentarios.equals("null")) comentarios = "";
+                edit_comments.setText(comentarios);
+
+                RelativeLayout rel_layout_header = (RelativeLayout)view.findViewById(R.id.headerDatos);
+                rel_layout_header.setVisibility(View.INVISIBLE);
+
+                RelativeLayout rel_layout_datos = (RelativeLayout)view.findViewById(R.id.contentDatos);
+                rel_layout_datos.setVisibility(View.INVISIBLE);
+            }else{
+                getUserData(getArguments().getString("userName"));
+            }
+
+            return view;
+        }
 
         edit_fecha.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,7 +137,7 @@ public class Perfil_personal extends Fragment {
                     }
                 }
 
-                DatePickerDialog dpd = new DatePickerDialog(getActivity(),
+                DatePickerDialog dpd = new DatePickerDialog(((FragmentActivity)context),
                         new DatePickerDialog.OnDateSetListener() {
 
                             @Override
@@ -126,7 +167,7 @@ public class Perfil_personal extends Fragment {
                     params.put("comments", comments);
 
                     JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.PUT,
-                            urlAPI + "/students/" + username,
+                            urlAPI + "/students/" + usernamePrefs,
                             new JSONObject(params),
                             new Response.Listener<JSONObject>() {
                                 @Override
@@ -146,7 +187,7 @@ public class Perfil_personal extends Fragment {
                         @Override
                         public Map<String, String> getHeaders() throws AuthFailureError {
                             Map<String, String> headers = new HashMap<String, String>();
-                            SharedPreferences settings = getActivity().getSharedPreferences(
+                            SharedPreferences settings = ((FragmentActivity)context).getSharedPreferences(
                                     getResources().getString(R.string.prefs_name), 0);
                             String token = settings.getString("token", null);
                             headers.put("Authorization", token);
@@ -156,8 +197,8 @@ public class Perfil_personal extends Fragment {
 
                     };
 
-                    //llamada al PUT
                     VolleyController.getInstance().addToRequestQueue(jsonReq);
+                    edit_comments.clearFocus();
 
                 }else{
                     edit_comments_img.setImageResource(R.drawable.ic_save);
@@ -181,7 +222,8 @@ public class Perfil_personal extends Fragment {
 
                     //si el mail es valido llamo al REST
                     emailValidator = new EmailValidator();
-                    if (emailValidator.validate(email)) {
+                    phoneValidator = new PhoneNumberValidator();
+                    if (emailValidator.validate(email)&&((phoneValidator.validate(phoneNumber)))||(phoneNumber.equals(""))) {
 
                         Map<String, String> params = new HashMap<String, String>();
 
@@ -199,12 +241,17 @@ public class Perfil_personal extends Fragment {
                         params.put("gender", gender);
 
                         JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.PUT,
-                                urlAPI + "/students/" + username,
+                                urlAPI + "/students/" + usernamePrefs,
                                 new JSONObject(params),
                                 new Response.Listener<JSONObject>() {
                                     @Override
                                     public void onResponse(JSONObject response) {
                                         VolleyLog.d(TAG, "Error: " + response.toString());
+
+                                        edit_email.clearFocus();
+                                        edit_telefono.clearFocus();
+                                        edit_nacionalidad.clearFocus();
+                                        edit_ciudad.clearFocus();
 
                                         edit_button.setImageResource(R.drawable.ic_editar);
                                         edit_ciudad.setEnabled(false);
@@ -224,7 +271,7 @@ public class Perfil_personal extends Fragment {
                             @Override
                             public Map<String, String> getHeaders() throws AuthFailureError {
                                 Map<String, String> headers = new HashMap<String, String>();
-                                SharedPreferences settings = getActivity().getSharedPreferences(
+                                SharedPreferences settings = ((FragmentActivity)context).getSharedPreferences(
                                         getResources().getString(R.string.prefs_name), 0);
                                 String token = settings.getString("token", null);
                                 headers.put("Authorization", token);
@@ -239,7 +286,13 @@ public class Perfil_personal extends Fragment {
 
                         //aviso de mail no valido
                     } else {
-                        Popup.showText(getActivity(), "El email no es válido", Toast.LENGTH_LONG).show();
+                        getUserData(usernamePrefs);
+                        edit_button.setImageResource(R.drawable.ic_editar);
+                        if (!emailValidator.validate(email)){
+                            Popup.showText(context, "El email no es válido", Toast.LENGTH_LONG).show();
+                        } else{
+                            Popup.showText(context, "El numero de telefono no es válido", Toast.LENGTH_LONG).show();
+                        }
                     }
                 }else{
                     edit_button.setImageResource(R.drawable.ic_save);
@@ -251,7 +304,7 @@ public class Perfil_personal extends Fragment {
                 edit_nacionalidad.setEnabled(!edit_nacionalidad.isEnabled());
                 edit_sexo.setEnabled(!edit_sexo.isEnabled());
                 edit_fecha.setEnabled(!edit_fecha.isEnabled());
-
+                if (!edit_email.isEnabled()) edit_button.setImageResource(R.drawable.ic_editar);
             }
         });
 
@@ -273,7 +326,7 @@ public class Perfil_personal extends Fragment {
                         params.put("lastName", lastName);
 
                         JsonObjectRequest jsonReqName = new JsonObjectRequest(Request.Method.PUT,
-                                urlAPI + "/students/" + username,
+                                urlAPI + "/students/" + usernamePrefs,
                                 new JSONObject(params),
                                 new Response.Listener<JSONObject>() {
                                     @Override
@@ -283,7 +336,7 @@ public class Perfil_personal extends Fragment {
                                         header_name.setEnabled(false);
                                         header_lastname.setEnabled(false);
 
-                                        ((PerfilTabs)getActivity()).setText(header_name.getText().toString()
+                                        (((PerfilTabs)context)).setText(header_name.getText().toString()
                                                 +" "+header_lastname.getText().toString());
 
                                         edit_name.setImageResource(R.drawable.ic_editar);
@@ -300,7 +353,7 @@ public class Perfil_personal extends Fragment {
                             @Override
                             public Map<String, String> getHeaders() throws AuthFailureError {
                                 Map<String, String> headers = new HashMap<String, String>();
-                                SharedPreferences settings = getActivity().getSharedPreferences(
+                                SharedPreferences settings = ((FragmentActivity)context).getSharedPreferences(
                                         getResources().getString(R.string.prefs_name), 0);
                                 String token = settings.getString("token", null);
                                 headers.put("Authorization", token);
@@ -314,7 +367,7 @@ public class Perfil_personal extends Fragment {
                         VolleyController.getInstance().addToRequestQueue(jsonReqName);
 
                     } else {
-                        Popup.showText(getActivity(), "Nombre y/o apellido vacíos", Toast.LENGTH_LONG).show();
+                        Popup.showText(context, "Nombre y/o apellido vacíos", Toast.LENGTH_LONG).show();
                     }
 
                 } else {
@@ -325,13 +378,27 @@ public class Perfil_personal extends Fragment {
             }
         });
 
-        SharedPreferences settings = getActivity().getSharedPreferences(
-                getResources().getString(R.string.prefs_name), 0);
-        if (settings.getBoolean("isExchange", false)) {
-            username = "I" + settings.getString("username", null);
-        } else {
-            username = settings.getString("username", null);
-        }
+        getUserData(usernamePrefs);
+
+        return view;
+    }
+
+    private void getUserData(final String username){
+
+        final EditText header_name = (EditText) view.findViewById(R.id.header_name);
+        final EditText header_lastname = (EditText) view.findViewById(R.id.header_lastname);
+        final TextView padron = (TextView)view.findViewById(R.id.header_padron);
+
+        final EditText edit_comments = (EditText) view.findViewById(R.id.edit_comentarios);
+        final EditText edit_email = (EditText) view.findViewById(R.id.edit_email);
+        final EditText edit_telefono = (EditText) view.findViewById(R.id.edit_tel);
+        final EditText edit_ciudad = (EditText) view.findViewById(R.id.edit_ciudad);
+        final EditText edit_nacionalidad = (EditText) view.findViewById(R.id.edit_nacionalidad);
+        final Spinner edit_sexo = (Spinner) view.findViewById(R.id.edit_sex);
+        final TextView edit_fecha = (TextView) view.findViewById(R.id.edit_fecha);
+        final ImageView edit_button = (ImageView) view.findViewById(R.id.editButton);
+        final ImageView edit_name = (ImageView) view.findViewById(R.id.edit_name);
+        final ImageView edit_comments_img = (ImageView)view.findViewById(R.id.editButtonComm);
 
         //obtener datos
         JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
@@ -348,9 +415,11 @@ public class Perfil_personal extends Fragment {
 
                             header_name.setText(name);
                             header_lastname.setText(lastName);
-                            padron.setText(username);
 
-                            ((PerfilTabs)getActivity()).setText(name+" "+lastName);
+                            //si el perfil es el propio
+                            if (username.equals(usernamePrefs))
+                                ((PerfilTabs)perfilTabs).setText(name+" "+lastName);
+                            else ((PerfilTabsCompanero)perfilTabs).setText(name+" "+lastName);
 
                             String email = response.getString("email");
                             String comments = response.getString("comments");
@@ -359,6 +428,11 @@ public class Perfil_personal extends Fragment {
                             String nationality = response.getString("nationality");
                             String phoneNumber = response.getString("phoneNumber");
                             String fecha = response.getString("dateOfBirth");
+                            boolean isIntercambio = response.getBoolean("isExchangeStudent");
+
+                            if (isIntercambio)
+                                padron.setText(username.substring(1,username.length()));
+                            else padron.setText(username);
 
                             if (email != "null") {
                                 edit_email.setText(email);
@@ -402,7 +476,7 @@ public class Perfil_personal extends Fragment {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<String, String>();
-                SharedPreferences settings = getActivity().getSharedPreferences(
+                SharedPreferences settings = ((FragmentActivity)context).getSharedPreferences(
                         getResources().getString(R.string.prefs_name), 0);
                 String token = settings.getString("token", null);
                 headers.put("Authorization", token);
@@ -413,7 +487,36 @@ public class Perfil_personal extends Fragment {
         };
 
         VolleyController.getInstance().addToRequestQueue(jsonReq);
-        return view;
+
+
     }
 
+    public static Perfil_personal newContact(Alumno companero) {
+
+        Perfil_personal perfil = new Perfil_personal();
+
+        Bundle args = new Bundle();
+        args.putString("name",companero.getNombre());
+        args.putString("lastName",companero.getApellido());
+        args.putString("userName",companero.getUsername());
+        args.putString("comments",companero.getComentario());
+        args.putBoolean("isMyMate",companero.isMyMate());
+        args.putBoolean("isExchange",companero.isIntercambio());
+
+        perfil.setArguments(args);
+
+        return perfil;
+
+    }
+
+    private String getUsername(){
+        DataAccess dataAccess = new DataAccess(getActivity());
+        return dataAccess.getUserName();
+    }
+
+    @Override
+    public void onAttach(Activity activity){
+        super.onAttach(activity);
+        context = getActivity();
+    }
 }
