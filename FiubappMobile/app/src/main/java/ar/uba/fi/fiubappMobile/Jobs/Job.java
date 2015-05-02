@@ -8,6 +8,15 @@ public class Job {
     private String startdate;
     private String enddate;
     private String description;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getFirm() {
         return firm;

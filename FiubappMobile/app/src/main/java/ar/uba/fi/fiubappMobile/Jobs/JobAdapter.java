@@ -2,6 +2,8 @@ package ar.uba.fi.fiubappMobile.Jobs;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +11,24 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.fiubapp.fiubapp.Perfil_empleo;
 import com.fiubapp.fiubapp.R;
+import com.fiubapp.fiubapp.VolleyController;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import ar.uba.fi.fiubappMobile.utils.DataAccess;
 
 /**
  * Created by Gustavo.Franco on 01/05/2015.
@@ -81,11 +98,11 @@ public class JobAdapter extends BaseAdapter {
 
         public void onClick(View v) {
             {
-                //carreraItems.remove(position);
-                //perfilFiuba.eliminarCarrera(position);
+                deleteJob(position);
             }
         }
     }
+
 
     class imageEditViewClickListener implements View.OnClickListener {
         int position;
@@ -96,11 +113,64 @@ public class JobAdapter extends BaseAdapter {
 
         public void onClick(View v) {
             {
-                //carreraItems.remove(position);
-                //perfilFiuba.eliminarCarrera(position);
+
             }
         }
     }
 
+    private String getToken(){
+        DataAccess dataAccess = new DataAccess(activity);
+        return dataAccess.getToken();
+    }
+
+    private String getUsername(){
+        DataAccess dataAccess = new DataAccess(activity);
+        return dataAccess.getUserName();
+    }
+
+    public void deleteJob(final int position) {
+
+        final SharedPreferences settings = ((FragmentActivity)activity).getSharedPreferences(activity.getResources().getString(R.string.prefs_name), 0);
+        final String username = getUsername();
+
+        Job job = (Job)jobItems.get(position);
+
+        RequestQueue queue = Volley.newRequestQueue(((FragmentActivity)activity));
+        String url = R.string.urlAPI + "/students/" + username + "/jobs/"+job.getId();
+
+        JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.DELETE,
+                url,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        jobItems.remove(position);
+                        notifyDataSetChanged();
+                    }
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        //el response es null cuando borra al compañero,
+                        //entonces se borra del listado
+                        if (error.networkResponse == null){
+                            jobItems.remove(position);
+                            notifyDataSetChanged();
+                        }
+
+                    }
+                }
+        ){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", getToken());
+                return headers;
+            }
+
+        };
+        VolleyController.getInstance().addToRequestQueue(jsonReq);
+
+    }
 
 }

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,6 +102,7 @@ public class Perfil_empleo extends Fragment {
                                 job.setStartdate(obj.getString("dateFrom"));
                                 job.setEnddate(obj.getString("dateTo"));
                                 job.setDescription(obj.getString("position"));
+                                job.setId(obj.getInt("id"));
 
                                 jobsList.add(job);
 
@@ -340,7 +342,7 @@ public class Perfil_empleo extends Fragment {
         };
 
         volley.add(jsObjRequest);
-        
+
 
     }
 
@@ -348,4 +350,5 @@ public class Perfil_empleo extends Fragment {
         DataAccess dataAccess = new DataAccess(getActivity());
         return dataAccess.getUserName();
     }
+
 }
