@@ -11,7 +11,7 @@
     <string name="soyIntercambio">Soy de intercambio</string>
     <string name="soyNuevo">Soy nuevo</string>
     <string name="pasaporte">Pasaporte</string>
-    <string name="urlAPI">http://192.168.56.1:8080/fiubappREST/api</string>
+    <string name="urlAPI">http://192.168.56.1:3308/fiubappREST/api</string>
     <string name="prefs_name">MyPrefsFile</string>
     <string name="educacionSecundaria">Educación secundaria</string>
     <string name="escuela">Escuela</string>
@@ -36,5 +36,11 @@
     <string name="nombre">Nombre</string>
     <string name="buscar">BUSCAR</string>
     <string name="verCercanos">VER CERCANOS</string>
+    <string name="job_description">Descripcion</string>
+    <string name="job_header">Empresa</string>
+    <string name="lbl_job_startdate">Fecha de Inicio</string>
+    <string name="lbl_job_enddate">Fecha de Finalizacion</string>
+    <string name="JOBS">EMPLEOS</string>
+    <string name="lbl_job_firm">Empresa</string>
 
 </resources>

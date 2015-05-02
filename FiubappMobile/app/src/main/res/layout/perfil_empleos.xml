@@ -2,11 +2,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Empleos" />
+        android:background="#ff2ec7e8"
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:id="@+id/jobs_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textSize="25px"
+            android:textColor="#000000"
+            android:text="@string/JOBS"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true" />
+
+        <ImageView
+            android:id="@+id/img_add_job"
+            android:src="@drawable/ic_mas"
+            android:layout_marginRight="5px"
+            android:layout_alignParentRight="true"
+            android:onClick="onClickImgEditarCarreras"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header">
+
+        <ListView
+            android:id="@+id/listCarreras"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+        </ListView>
+
+
+    </RelativeLayout>
 
 </RelativeLayout>
