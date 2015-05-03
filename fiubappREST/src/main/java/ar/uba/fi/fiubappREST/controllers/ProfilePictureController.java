@@ -45,7 +45,7 @@ public class ProfilePictureController {
 	public ResponseEntity<byte[]> getProfilePicture(@PathVariable String userName) {
 		ProfilePicture picture = this.profilePictureService.findByUserName(userName);
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.IMAGE_JPEG);
+		headers.setContentType(MediaType.valueOf(picture.getContentType()));
 		return new ResponseEntity<byte[]>(picture.getImage(), headers, HttpStatus.OK);
 	}
 	

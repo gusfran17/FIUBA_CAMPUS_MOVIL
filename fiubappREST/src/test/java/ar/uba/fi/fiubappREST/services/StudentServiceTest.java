@@ -9,6 +9,9 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +19,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.core.io.Resource;
 import org.springframework.security.providers.encoding.Md5PasswordEncoder;
 
 import ar.uba.fi.fiubappREST.converters.StudentConverter;
@@ -28,6 +32,7 @@ import ar.uba.fi.fiubappREST.exceptions.CareerNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyExistsException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.persistance.CareerRepository;
+import ar.uba.fi.fiubappREST.persistance.ProfilePictureRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
@@ -44,6 +49,8 @@ public class StudentServiceTest {
 	@Mock
 	private CareerRepository careerRepository;
 	@Mock
+	private ProfilePictureRepository profilePictureRepository;
+	@Mock
 	private StudentConverter studentConverter;
 	@Mock
 	private StudentProfileConverter studentProfileConverter;
@@ -56,21 +63,26 @@ public class StudentServiceTest {
 	@Mock
 	private Career career;
 	
-	private StudentService service;
+	private StudentServiceImpl service;
 		
 	@Before
-	public void setUp(){
+	public void setUp() throws FileNotFoundException, IOException{
 		this.studentRepository = mock(StudentRepository.class);
 		this.careerRepository = mock(CareerRepository.class);
+		this.profilePictureRepository = mock(ProfilePictureRepository.class);
 		this.studentConverter = mock(StudentConverter.class);
 		this.studentProfileConverter = mock(StudentProfileConverter.class);
 		this.passwordEncoder = mock(Md5PasswordEncoder.class);
 		
-		this.service = new StudentServiceImpl(studentRepository, careerRepository, null, studentConverter, passwordEncoder, studentProfileConverter);
+		this.service = new StudentServiceImpl(studentRepository, careerRepository, profilePictureRepository, studentConverter, passwordEncoder, studentProfileConverter);
 		
 		this.student = mock(Student.class);
 		this.representation = mock(StudentCreationRepresentation.class);
 		this.career = mock(Career.class);
+		
+		Resource resource = mock(Resource.class);
+		when(resource.getInputStream()).thenReturn(new FileInputStream("src/test/resources/defaultProfilePicture.png"));
+		this.service.setDefaultProfilePicture(resource);
 	}
 
 	@Test
@@ -80,7 +92,7 @@ public class StudentServiceTest {
 		when(student.getUserName()).thenReturn(AN_USER_NAME);
 		when(studentRepository.findOne(anyString())).thenReturn(null);
 		when(representation.getCareerCode()).thenReturn(A_CAREER_CODE);
-		when(careerRepository.findByCode(anyInt())).thenReturn(career);
+		when(careerRepository.findByCode(anyInt())).thenReturn(career);		
 		doNothing().when(student).addCareer(any(StudentCareer.class));
 		when(studentRepository.save(student)).thenReturn(student);
 		
