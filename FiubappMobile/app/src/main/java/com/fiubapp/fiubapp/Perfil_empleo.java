@@ -3,10 +3,8 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +63,7 @@ public class Perfil_empleo extends Fragment {
         imgAddJob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCrear();
+                setCreateJob();
             }
         });
 
@@ -76,84 +74,8 @@ public class Perfil_empleo extends Fragment {
         return view;
     }
 
-    private void fillJobsList() {
-        SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
-        String username = null;
-        username = getUsername();
-        final String token = settings.getString("token", null);
-        String url = this.getString(R.string.urlAPI) + "/students/" + username + "/jobs";
 
-        jobsList.clear();
-        // Creating volley request obj
-
-        JsonArrayRequest studentReq = new JsonArrayRequest(url,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.d(TAG, response.toString());
-
-                        // Parsing json
-                        for (int i = 0; i < response.length(); i++) {
-                            try {
-
-                                JSONObject obj = response.getJSONObject(i);
-                                Job job = new Job();
-                                job.setFirm(obj.getString("company"));
-                                job.setStartdate(obj.getString("dateFrom"));
-                                job.setEnddate(obj.getString("dateTo"));
-                                job.setDescription(obj.getString("position"));
-                                job.setId(obj.getInt("id"));
-
-                                jobsList.add(job);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        if (jobsList.size()==0) {
-                            Popup.showText(getActivity(), "No hay empleos cargados.", Toast.LENGTH_LONG).show();
-                        }
-                        jobAdapter.notifyDataSetChanged();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Content-Type", "application/json");
-                headers.put("Authorization", token);
-                return headers;
-
-            }
-        };
-
-        // Adding request to request queue
-        VolleyController.getInstance().addToRequestQueue(studentReq);
-
-/*
-        Job job1 = new Job();
-        job1.setFirm("Testing");
-        job1.setStartdate("02/02/2015");
-        job1.setEnddate("02/05/2015");
-        job1.setDescription("Testing Senior");
-        jobsList.add(job1);
-        job1 = new Job();
-        job1.setFirm("Testing 2");
-        job1.setStartdate("02/02/2015");
-        job1.setEnddate("02/05/2015");
-        job1.setDescription("Testing Senior con un texto largo para ver que sucede cuando el texto es largo y como responde un textview a un texto largo porque el texto es largo");
-        jobsList.add(job1);
-
-        jobAdapter.notifyDataSetChanged();
-*/
-
-    }
-
-    private void setCrear() {
+    private void setCreateJob() {
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         View editJobView = layoutInflater.inflate(R.layout.edit_job, null);
         
@@ -249,15 +171,23 @@ public class Perfil_empleo extends Fragment {
                 .setPositiveButton("Crear",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-
                                 Job job = new Job();
-                                job.setFirm(edt_d_job_firm.getText().toString());
-                                job.setStartdate(edt_d_job_startdate.getText().toString());
-                                job.setEnddate(edt_d_job_enddate.getText().toString());
-                                job.setDescription(edt_d_job_description.getText().toString());
+                                if (!(edt_d_job_startdate.getText().toString().equals("") ||
+                                        edt_d_job_firm.getText().toString().equals("") ||
+                                        edt_d_job_description.getText().toString().equals(""))) {
 
-                                createJob(job);
-                                fillJobsList();
+                                    job.setFirm(edt_d_job_firm.getText().toString());
+                                    job.setStartdate(edt_d_job_startdate.getText().toString());
+                                    job.setEnddate(edt_d_job_enddate.getText().toString());
+                                    job.setDescription(edt_d_job_description.getText().toString());
+
+                                    createJob(job);
+                                    fillJobsList();
+
+                                } else {
+                                    Popup.showText(getActivity(), "Todos los campos son obligatorios exepto por la Fecha de Finalizacion", Toast.LENGTH_LONG).show();
+                                    setCreateJob();
+                                }
 
                             }
                         })
@@ -272,8 +202,6 @@ public class Perfil_empleo extends Fragment {
         alertDialog.show();
 
     }
-
-
 
 
     private void createJob(final Job job) {
@@ -313,6 +241,11 @@ public class Perfil_empleo extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         Popup.showText(getActivity(), "Datos de empleo guardados correctamente", Toast.LENGTH_LONG).show();
+                        try {
+                            job.setId(response.getInt("id"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         jobsList.add(job);
                         jobAdapter.notifyDataSetChanged();
                     }
@@ -327,6 +260,8 @@ public class Perfil_empleo extends Fragment {
 
                             JSONObject JSONBody = new JSONObject(body);
                             String errorCode = JSONBody.getString("code");
+                            String errorMessage = JSONBody.getString("message");
+                            Popup.showText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
 
                         } catch (JSONException e) {
 
@@ -344,9 +279,68 @@ public class Perfil_empleo extends Fragment {
         };
 
         volley.add(jsObjRequest);
+    }
 
+    private void fillJobsList() {
+        SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
+        String username = null;
+        username = getUsername();
+        final String token = settings.getString("token", null);
+        String url = this.getString(R.string.urlAPI) + "/students/" + username + "/jobs";
+
+        jobsList.clear();
+        // Creating volley request obj
+
+        JsonArrayRequest studentReq = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d(TAG, response.toString());
+
+                        // Parsing json
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+
+                                JSONObject obj = response.getJSONObject(i);
+                                Job job = new Job();
+                                job.setFirm(obj.getString("company"));
+                                job.setStartdate(obj.getString("dateFrom").replace("null",""));
+                                job.setEnddate(obj.getString("dateTo").replace("null",""));
+                                job.setDescription(obj.getString("position"));
+                                job.setId(obj.getInt("id"));
+
+                                jobsList.add(job);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (jobsList.size()==0) {
+                            Popup.showText(getActivity(), "No hay empleos cargados.", Toast.LENGTH_LONG).show();
+                        }
+                        jobAdapter.notifyDataSetChanged();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", token);
+                return headers;
+
+            }
+        };
+
+        // Adding request to request queue
+        VolleyController.getInstance().addToRequestQueue(studentReq);
 
     }
+
 
     private String getUsername(){
         DataAccess dataAccess = new DataAccess(getActivity());
