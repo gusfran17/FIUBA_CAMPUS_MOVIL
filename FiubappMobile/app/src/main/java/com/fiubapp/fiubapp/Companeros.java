@@ -74,8 +74,25 @@ public class Companeros extends Fragment {
                     e.printStackTrace();
                 }
             }
-        });        
-		listView = (ListView)partnersTabView.findViewById(R.id.list);
+        });
+
+        Button btnVerCercanos = (Button) partnersTabView.findViewById(R.id.button_ver_cercanos);
+
+        btnVerCercanos.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), CompanerosCercanos.class);
+                try {
+                    //i.putExtra("username", usuario_final);
+                    startActivity(i);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        listView = (ListView)partnersTabView.findViewById(R.id.list);
         adapter = new AlumnoAdapter(getActivity(), alumnoList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

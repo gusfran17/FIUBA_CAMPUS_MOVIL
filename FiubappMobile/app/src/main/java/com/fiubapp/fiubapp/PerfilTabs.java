@@ -1,13 +1,20 @@
 package com.fiubapp.fiubapp;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.Typeface;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.model.LatLng;
+
+import ar.uba.fi.fiubappMobile.utils.Localizador;
 
 public class PerfilTabs extends FragmentActivity {
 
@@ -48,6 +55,14 @@ public class PerfilTabs extends FragmentActivity {
         TabPageIndicator indicator = (TabPageIndicator)findViewById(R.id.indicator_perfil);
         indicator.setTypeFace(Typeface.createFromAsset(getApplicationContext().getAssets(),"fonts/Roboto-Bold.ttf"));
         indicator.setViewPager(viewPager);
+
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        Localizador localizador = new Localizador() {
+            @Override
+            public void cambioUbicacion(LatLng miUbicacion) {
+            }
+        };
+        locationManager.removeUpdates(localizador.getInstance());
     }
 
     public void borrarCarrera(){

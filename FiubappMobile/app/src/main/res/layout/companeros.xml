@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:text="@string/verCercanos"
-            android:id="@+id/button_close_mates"
+            android:id="@+id/button_ver_cercanos"
             android:layout_alignParentLeft="true"
             android:layout_weight="1"
             android:layout_marginRight="2px"
