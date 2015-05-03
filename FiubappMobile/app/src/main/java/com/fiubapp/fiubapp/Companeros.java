@@ -118,6 +118,7 @@ public class Companeros extends Fragment {
                             companero.setIntercambio(obj.getBoolean("isExchangeStudent"));
                             companero.setIsMyMate(obj.getBoolean("isMyMate"));
                             companero.setUsername(obj.getString("userName"));
+                            companero.setImgURL("http://www.chelseafc.com/content/cfc/en/homepage/news/boilerplate-config/latest-news/2015/05/funds-to-be-raised-for-nepal-appeal/_jcr_content.autoteaser.jpeg");
 
                             JSONArray JSONCareers = new JSONArray(obj.getString("careers"));
                             ArrayList<String> carreras = new ArrayList<>();

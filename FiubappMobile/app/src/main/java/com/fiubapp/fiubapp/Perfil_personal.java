@@ -3,7 +3,11 @@ package com.fiubapp.fiubapp;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -28,6 +32,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,6 +44,7 @@ import ar.uba.fi.fiubappMobile.utils.DataAccess;
 
 public class Perfil_personal extends Fragment {
 
+    private static final int SELECT_PHOTO = 100;
     private String urlAPI = "";
     private String usernamePrefs = "";
     private static final String TAG = Perfil_personal.class.getSimpleName();
@@ -72,6 +79,7 @@ public class Perfil_personal extends Fragment {
         final ImageView edit_button = (ImageView) view.findViewById(R.id.editButton);
         final ImageView edit_name = (ImageView) view.findViewById(R.id.edit_name);
         final ImageView edit_comments_img = (ImageView)view.findViewById(R.id.editButtonComm);
+        final ImageView profile_img = (ImageView)view.findViewById(R.id.image_profile);
 
         final TextView profile_name = (TextView)view.findViewById(R.id.profile_name);
 
@@ -88,7 +96,7 @@ public class Perfil_personal extends Fragment {
         header_name.setEnabled(false);
         header_lastname.setEnabled(false);
 
-        //para mostrar el perfil de un alumno no contacto
+        //para mostrar el perfil de un alumno
         if (getArguments() != null) {
 
             edit_button.setVisibility(View.INVISIBLE);
@@ -378,6 +386,15 @@ public class Perfil_personal extends Fragment {
             }
         });
 
+        profile_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+            }
+        });
+
         getUserData(usernamePrefs);
 
         return view;
@@ -489,6 +506,28 @@ public class Perfil_personal extends Fragment {
         VolleyController.getInstance().addToRequestQueue(jsonReq);
 
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+
+        final ImageView profile_img = (ImageView)this.view.findViewById(R.id.image_profile);
+
+        switch(requestCode) {
+            case SELECT_PHOTO:
+                if(resultCode == Activity.RESULT_OK){
+                    Uri selectedImage = imageReturnedIntent.getData();
+                    InputStream imageStream = null;
+                    try {
+                        imageStream = this.context.getContentResolver().openInputStream(selectedImage);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    Bitmap image = BitmapFactory.decodeStream(imageStream);
+                    profile_img.setImageBitmap(image);
+                }
+        }
     }
 
     public static Perfil_personal newContact(Alumno companero) {
