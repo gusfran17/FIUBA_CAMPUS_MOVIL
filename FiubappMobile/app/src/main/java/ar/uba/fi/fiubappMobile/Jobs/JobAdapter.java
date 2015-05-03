@@ -143,7 +143,7 @@ public class JobAdapter extends BaseAdapter {
         final EditText edt_d_job_enddate = (EditText)editJobView.findViewById(R.id.edt_d_job_enddate);
         final EditText edt_d_job_description = (EditText)editJobView.findViewById(R.id.edt_d_job_desc);
 
-        Job job = (Job) jobItems.get(position);
+        final Job job = (Job) jobItems.get(position);
 
         edt_d_job_firm.setText(job.getFirm());
         edt_d_job_startdate.setText(job.getStartdate());
@@ -230,7 +230,6 @@ public class JobAdapter extends BaseAdapter {
                 .setPositiveButton("Guardar",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                Job job = new Job();
                                 if ( !(edt_d_job_startdate.getText().toString().equals("")||
                                         edt_d_job_firm.getText().toString().equals("")||
                                         edt_d_job_description.getText().toString().equals(""))){
