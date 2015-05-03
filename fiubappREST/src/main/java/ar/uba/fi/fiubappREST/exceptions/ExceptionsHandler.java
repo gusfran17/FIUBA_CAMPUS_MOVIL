@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import ar.uba.fi.fiubappREST.domain.ErrorResponse;
 import ar.uba.fi.fiubappREST.services.MessageService;
@@ -151,6 +152,25 @@ public class ExceptionsHandler {
 	@ExceptionHandler(StudentAlreadyMemberOfGroupException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
 	public @ResponseBody ErrorResponse handle(StudentAlreadyMemberOfGroupException exception){
+		return buildResponse(exception);
+	}
+	
+	@ExceptionHandler(UnsupportedMediaTypeForProfilePictureException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(UnsupportedMediaTypeForProfilePictureException exception){
+		return buildResponse(exception);
+	}
+		
+	@ExceptionHandler(MaxUploadSizeExceededException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public @ResponseBody ErrorResponse handle(MaxUploadSizeExceededException exception){
+		String message = messageService.getMessage("10002", exception.getMaxUploadSize() / 1024 / 1024);
+		return new ErrorResponse("10002", message);
+	}
+	
+	@ExceptionHandler(UnexpectedErrorReadingProfilePictureFileException.class)
+	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR) 
+	public @ResponseBody ErrorResponse handle(UnexpectedErrorReadingProfilePictureFileException exception){
 		return buildResponse(exception);
 	}
 	

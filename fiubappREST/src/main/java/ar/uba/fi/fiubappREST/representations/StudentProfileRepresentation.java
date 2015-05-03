@@ -21,6 +21,8 @@ public class StudentProfileRepresentation {
 	private Boolean isMyMate;
 	
 	private String comments;
+	
+	private String profilePicture;
 
 	public String getUserName() {
 		return userName;
@@ -92,6 +94,14 @@ public class StudentProfileRepresentation {
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+
+	public String getProfilePicture() {
+		return profilePicture;
+	}
+
+	public void setProfilePicture(String profilePicture) {
+		this.profilePicture = profilePicture;
 	}
 	
 }

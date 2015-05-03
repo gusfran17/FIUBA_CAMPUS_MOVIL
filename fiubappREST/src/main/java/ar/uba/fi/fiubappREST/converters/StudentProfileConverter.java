@@ -33,6 +33,7 @@ public class StudentProfileConverter {
 		profile.setCareers(careers);
 		profile.setComments(student.getComments());
 		profile.setIsMyMate(false);
+		profile.setProfilePicture(student.getProfilePictureUrl());
 		return profile;
 	}
 }

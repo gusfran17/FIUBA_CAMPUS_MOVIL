@@ -66,7 +66,7 @@ public class StudentServiceTest {
 		this.studentProfileConverter = mock(StudentProfileConverter.class);
 		this.passwordEncoder = mock(Md5PasswordEncoder.class);
 		
-		this.service = new StudentServiceImpl(studentRepository, careerRepository, studentConverter, passwordEncoder, studentProfileConverter);
+		this.service = new StudentServiceImpl(studentRepository, careerRepository, null, studentConverter, passwordEncoder, studentProfileConverter);
 		
 		this.student = mock(Student.class);
 		this.representation = mock(StudentCreationRepresentation.class);
