@@ -242,7 +242,7 @@ public class JobAdapter extends BaseAdapter {
                                     editJob(job);
 
                                 } else {
-                                    Popup.showText(activity, "Todos los campos son obligatorios exepto por la Fecha de Finalizacion", Toast.LENGTH_LONG).show();
+                                    Popup.showText(activity, "Todos los campos son obligatorios excepto por la Fecha de Finalizacion", Toast.LENGTH_LONG).show();
                                     setEditJob(position);
                                 }
 

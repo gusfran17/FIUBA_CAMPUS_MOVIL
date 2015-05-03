@@ -11,6 +11,6 @@ public interface JobRepository extends CrudRepository<Job, Integer> {
 	
 	public void delete(Job job);
 	
-	@Query(value = "SELECT * FROM job WHERE userName = ?1 AND id = ?2", nativeQuery = true)
+	@Query(value = "SELECT * FROM job WHERE userName = ?1 AND id = ?2 ORDER BY dateTo IS NULL DESC, dateTo DESC", nativeQuery = true)
 	public Job findByUserNameAndId(String userName, Integer id);
 }
