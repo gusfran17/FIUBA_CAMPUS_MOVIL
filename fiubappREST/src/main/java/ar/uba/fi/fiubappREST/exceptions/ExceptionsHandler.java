@@ -154,6 +154,13 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
+	@ExceptionHandler(InvalidJobInformationForStudentException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(InvalidJobInformationForStudentException exception){
+		return buildResponse(exception);
+	}
+	
+	
 	
 	@ExceptionHandler(InvalidUserException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 

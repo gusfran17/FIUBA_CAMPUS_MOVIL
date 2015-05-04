@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/job_row"
+    android:layout_width="match_parent"
+    android:layout_alignParentTop="true"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/job_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ff2ec7e8"
+        android:layout_marginTop="2px"
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:id="@+id/edt_job_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textSize="35px"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:text="@string/job_header"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true" />
+
+        <ImageView
+            android:id="@+id/img_edit_job"
+            android:src="@drawable/ic_editar"
+            android:layout_marginRight="5px"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp" />
+
+        <ImageView
+            android:id="@+id/img_delete_job"
+            android:src="@drawable/ic_basura"
+            android:layout_marginRight="5px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_toLeftOf="@+id/img_edit_job"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/job_header"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <TextView
+            android:id="@+id/txt_job_startdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_job_startdate"
+            android:layout_alignBaseline="@+id/edt_job_startdate"
+            android:layout_alignBottom="@+id/edt_job_startdate" />
+
+        <TextView android:id="@+id/edt_job_startdate"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:focusable="false"
+            android:enabled="false"
+            android:layout_marginLeft="15px"
+            android:gravity="right"
+            android:layout_toRightOf="@+id/txt_job_startdate" />
+
+        <TextView
+            android:id="@+id/txt_job_enddate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_job_enddate"
+            android:layout_alignBaseline="@+id/edt_job_enddate"
+            android:layout_alignBottom="@+id/edt_job_enddate" />
+
+        <TextView android:id="@+id/edt_job_enddate"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:focusable="false"
+            android:enabled="false"
+            android:layout_marginLeft="15px"
+            android:gravity="right"
+            android:layout_below="@+id/edt_job_startdate"
+            android:layout_toRightOf="@+id/txt_job_enddate" />
+
+
+        <TextView
+            android:id="@+id/txt_job_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/job_description"
+            android:layout_alignBaseline="@+id/edt_job_desc"
+            android:layout_alignBottom="@+id/edt_job_desc"/>
+
+        <TextView android:id="@+id/edt_job_desc"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15px"
+            android:layout_marginTop="5px"
+            android:enabled="false"
+            android:gravity="right"
+            android:layout_toRightOf="@+id/txt_job_desc"
+            android:layout_below="@+id/edt_job_enddate"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
