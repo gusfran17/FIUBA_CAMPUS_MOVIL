@@ -30,7 +30,7 @@ public class PerfilTabsCompaneroAdapter extends FragmentPagerAdapter{
                 return tabFiuba;
 
             case 2:
-                Perfil_empleo tabEmpleo = new Perfil_empleo();
+                Perfil_empleo tabEmpleo = Perfil_empleo.newContact(companero);
                 return tabEmpleo;
 
             case 3:

@@ -9,6 +9,15 @@ public class Job {
     private String enddate;
     private String description;
     private int id;
+    private boolean canBeRemoved;
+
+    public boolean isCanBeRemoved() {
+        return canBeRemoved;
+    }
+
+    public void setCanBeRemoved(boolean canBeRemoved) {
+        this.canBeRemoved = canBeRemoved;
+    }
 
     public int getId() {
         return id;

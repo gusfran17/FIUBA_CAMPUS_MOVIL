@@ -59,7 +59,6 @@ public class Perfil_empleo extends Fragment {
 
         this.view = inflater.inflate(R.layout.perfil_empleos, container, false);
         final ImageView imgAddJob = (ImageView)this.view.findViewById(R.id.img_add_job);
-
         imgAddJob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,7 +69,16 @@ public class Perfil_empleo extends Fragment {
         jobsListView = (ListView) this.view.findViewById(R.id.list_jobs);
         jobAdapter = new JobAdapter(getActivity(), jobsList);
         jobsListView.setAdapter(jobAdapter);
-        fillJobsList();
+        if (getArguments() != null) {
+            imgAddJob.setVisibility(View.INVISIBLE);
+            if (getArguments().getBoolean("isMyMate")){
+                fillJobsList(getArguments().getString("userName"));
+            }
+
+        } else {
+            fillJobsList(getUsername());
+        }
+
         return view;
     }
 
@@ -180,9 +188,9 @@ public class Perfil_empleo extends Fragment {
                                     job.setStartdate(edt_d_job_startdate.getText().toString());
                                     job.setEnddate(edt_d_job_enddate.getText().toString());
                                     job.setDescription(edt_d_job_description.getText().toString());
+                                    job.setCanBeRemoved(true);
 
                                     createJob(job);
-                                    fillJobsList();
 
                                 } else {
                                     Popup.showText(getActivity(), "Todos los campos son obligatorios exepto por la Fecha de Finalizacion", Toast.LENGTH_LONG).show();
@@ -281,10 +289,8 @@ public class Perfil_empleo extends Fragment {
         volley.add(jsObjRequest);
     }
 
-    private void fillJobsList() {
+    private void fillJobsList(final String username) {
         SharedPreferences settings = getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
-        String username = null;
-        username = getUsername();
         final String token = settings.getString("token", null);
         String url = this.getString(R.string.urlAPI) + "/students/" + username + "/jobs";
 
@@ -304,11 +310,11 @@ public class Perfil_empleo extends Fragment {
                                 JSONObject obj = response.getJSONObject(i);
                                 Job job = new Job();
                                 job.setFirm(obj.getString("company"));
-                                job.setStartdate(obj.getString("dateFrom").replace("null",""));
-                                job.setEnddate(obj.getString("dateTo").replace("null",""));
+                                job.setStartdate(obj.getString("dateFrom").replace("null", ""));
+                                job.setEnddate(obj.getString("dateTo").replace("null", ""));
                                 job.setDescription(obj.getString("position"));
                                 job.setId(obj.getInt("id"));
-
+                                job.setCanBeRemoved(username.equals(getUsername()));
                                 jobsList.add(job);
 
                             } catch (JSONException e) {
@@ -341,6 +347,24 @@ public class Perfil_empleo extends Fragment {
 
     }
 
+
+    public static Perfil_empleo newContact(Alumno companero) {
+
+        Perfil_empleo perfil = new Perfil_empleo();
+
+        Bundle args = new Bundle();
+        args.putString("name",companero.getNombre());
+        args.putString("lastName",companero.getApellido());
+        args.putString("userName",companero.getUsername());
+        args.putString("comments",companero.getComentario());
+        args.putBoolean("isMyMate",companero.isMyMate());
+        args.putBoolean("isExchange",companero.isIntercambio());
+
+        perfil.setArguments(args);
+
+        return perfil;
+
+    }
 
     private String getUsername(){
         DataAccess dataAccess = new DataAccess(getActivity());

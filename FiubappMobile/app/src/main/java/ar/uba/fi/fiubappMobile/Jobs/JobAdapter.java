@@ -89,9 +89,16 @@ public class JobAdapter extends BaseAdapter {
         ImageView img_delete_job = (ImageView) convertView.findViewById(R.id.img_delete_job);
         ImageView img_edit_job = (ImageView) convertView.findViewById(R.id.img_edit_job);
 
+        Job job = jobItems.get(position);
+
+        if (!job.isCanBeRemoved()){
+            img_delete_job.setVisibility(View.INVISIBLE);
+            img_edit_job.setVisibility(View.INVISIBLE);
+        }
+
         img_delete_job.setOnClickListener(new imageDeleteViewClickListener(position));
         img_edit_job.setOnClickListener(new imageEditViewClickListener(position));
-        Job job = jobItems.get(position);
+
 
 
         job_firm.setText(job.getFirm());
