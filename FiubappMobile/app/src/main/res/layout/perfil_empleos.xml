@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:textSize="40px"
+            android:textSize="25px"
             android:textColor="#000000"
             android:text="@string/JOBS"
             android:layout_centerVertical="true"
