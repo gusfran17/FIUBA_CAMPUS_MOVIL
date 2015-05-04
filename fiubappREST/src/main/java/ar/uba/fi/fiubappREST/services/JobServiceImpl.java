@@ -1,8 +1,11 @@
 package ar.uba.fi.fiubappREST.services;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Set;
+import java.util.TreeSet;
 
+import org.apache.commons.collections.comparators.NullComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +59,18 @@ public class JobServiceImpl implements JobService {
 		LOGGER.info(String.format("Finding jobs information for student with userName %s.", userName));
 		Student student = this.studentRepository.findByUserNameAndFetchJobsEagerly(userName);
 		LOGGER.info(String.format("Jobs information for student with userName %s was found.", userName));
-		return student.getJobs();
+		return this.orderJobs(student.getJobs());
+	}
+
+	private Set<Job> orderJobs(Set<Job> jobs) {
+		TreeSet<Job> sortedSet = new TreeSet<Job>(new Comparator<Job>() {			
+			public int compare(Job aJob, Job anotherJob) {
+				NullComparator comparator = new NullComparator(true);
+				return comparator.compare(aJob.getDateTo(), anotherJob.getDateTo());
+			}
+		});
+		sortedSet.addAll(jobs);
+		return sortedSet.descendingSet();
 	}
 
 	@Override
