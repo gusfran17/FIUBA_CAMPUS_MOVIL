@@ -81,7 +81,7 @@ public class JobAdapter extends BaseAdapter {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.job_list_row, null);
 
-        TextView job_firm = (TextView) convertView.findViewById(R.id.txt_job_header);
+        TextView job_firm = (TextView) convertView.findViewById(R.id.edt_job_header);
         TextView  job_startdate = (TextView) convertView.findViewById(R.id.edt_job_startdate);
         TextView job_enddate = (TextView) convertView.findViewById(R.id.edt_job_enddate);
         TextView job_description = (TextView) convertView.findViewById(R.id.edt_job_desc);

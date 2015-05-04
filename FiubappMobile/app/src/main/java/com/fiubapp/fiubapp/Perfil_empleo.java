@@ -13,6 +13,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -59,6 +60,8 @@ public class Perfil_empleo extends Fragment {
 
         this.view = inflater.inflate(R.layout.perfil_empleos, container, false);
         final ImageView imgAddJob = (ImageView)this.view.findViewById(R.id.img_add_job);
+        RelativeLayout header = (RelativeLayout) this.view.findViewById(R.id.header);
+
         imgAddJob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,6 +76,8 @@ public class Perfil_empleo extends Fragment {
             imgAddJob.setVisibility(View.INVISIBLE);
             if (getArguments().getBoolean("isMyMate")){
                 fillJobsList(getArguments().getString("userName"));
+            } else {
+                    header.setVisibility(View.INVISIBLE);
             }
 
         } else {
