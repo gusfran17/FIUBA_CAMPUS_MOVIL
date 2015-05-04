@@ -6,8 +6,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -57,12 +57,12 @@ public class JobControllerTest {
 	@Test
 	public void testGetJobs() {
 		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
-		Set<Job> jobs = new HashSet<Job>();
+		List<Job> jobs = new ArrayList<Job>();
 		jobs.add(aJob);
 		jobs.add(anotherJob);
 		when(service.findAll(AN_USER_NAME)).thenReturn(jobs);
 				
-		Set<Job> foundJobs = this.controller.getJobs(A_TOKEN, AN_USER_NAME);
+		List<Job> foundJobs = this.controller.getJobs(A_TOKEN, AN_USER_NAME);
 		
 		assertEquals(2, foundJobs.size());		
 	}

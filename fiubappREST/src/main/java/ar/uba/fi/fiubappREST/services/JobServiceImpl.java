@@ -1,9 +1,11 @@
 package ar.uba.fi.fiubappREST.services;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.apache.commons.collections.comparators.NullComparator;
 import org.slf4j.Logger;
@@ -55,22 +57,25 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public Set<Job> findAll(String userName) {
+	public List<Job> findAll(String userName) {
 		LOGGER.info(String.format("Finding jobs information for student with userName %s.", userName));
 		Student student = this.studentRepository.findByUserNameAndFetchJobsEagerly(userName);
+		List<Job> sortedJobs = this.orderJobs(student.getJobs());
 		LOGGER.info(String.format("Jobs information for student with userName %s was found.", userName));
-		return this.orderJobs(student.getJobs());
+		return sortedJobs;
 	}
 
-	private Set<Job> orderJobs(Set<Job> jobs) {
-		TreeSet<Job> sortedSet = new TreeSet<Job>(new Comparator<Job>() {			
+	private List<Job> orderJobs(Set<Job> jobs) {
+		List<Job> sortedJobs = new ArrayList<Job>();
+		sortedJobs.addAll(jobs);		
+		Collections.sort(sortedJobs, new Comparator<Job>() {			
 			public int compare(Job aJob, Job anotherJob) {
 				NullComparator comparator = new NullComparator(true);
 				return comparator.compare(aJob.getDateTo(), anotherJob.getDateTo());
 			}
 		});
-		sortedSet.addAll(jobs);
-		return sortedSet.descendingSet();
+		Collections.reverse(sortedJobs);
+		return sortedJobs;
 	}
 
 	@Override

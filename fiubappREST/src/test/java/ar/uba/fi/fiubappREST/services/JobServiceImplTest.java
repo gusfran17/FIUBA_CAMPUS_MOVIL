@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Before;
@@ -121,7 +122,7 @@ public class JobServiceImplTest {
 		this.student.setJobs(jobs);
 		when(this.studentRepository.findByUserNameAndFetchJobsEagerly(AN_USER_NAME)).thenReturn(student);
 		
-		Set<Job> foundJobs = this.service.findAll(AN_USER_NAME);
+		List<Job> foundJobs = this.service.findAll(AN_USER_NAME);
 		
 		assertEquals(2, foundJobs.size());
 	}

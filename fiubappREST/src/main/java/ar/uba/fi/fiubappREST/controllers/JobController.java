@@ -1,6 +1,6 @@
 package ar.uba.fi.fiubappREST.controllers;
 
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,7 +40,7 @@ public class JobController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	public @ResponseBody Set<Job> getJobs(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
+	public @ResponseBody List<Job> getJobs(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
 		this.studentSessionService.validateMineOrMate(token, userName);
 		return this.jobService.findAll(userName);
 	}
