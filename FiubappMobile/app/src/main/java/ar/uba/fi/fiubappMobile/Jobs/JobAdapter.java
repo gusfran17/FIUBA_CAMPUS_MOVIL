@@ -152,6 +152,7 @@ public class JobAdapter extends BaseAdapter {
 
         final Job job = (Job) jobItems.get(position);
 
+        //Lleno los EditText con la info del empleo para ser modificado
         edt_d_job_firm.setText(job.getFirm());
         edt_d_job_startdate.setText(job.getStartdate());
         edt_d_job_enddate.setText(job.getEnddate());
@@ -240,13 +241,13 @@ public class JobAdapter extends BaseAdapter {
                                 if ( !(edt_d_job_startdate.getText().toString().equals("")||
                                         edt_d_job_firm.getText().toString().equals("")||
                                         edt_d_job_description.getText().toString().equals(""))){
-
-                                    job.setFirm(edt_d_job_firm.getText().toString());
-                                    job.setStartdate(edt_d_job_startdate.getText().toString());
-                                    job.setEnddate(edt_d_job_enddate.getText().toString());
-                                    job.setDescription(edt_d_job_description.getText().toString());
-                                    job.setId(((Job)jobItems.get(position)).getId());
-                                    editJob(job);
+                                    Job modifiedJob = new Job();
+                                    modifiedJob.setFirm(edt_d_job_firm.getText().toString());
+                                    modifiedJob.setStartdate(edt_d_job_startdate.getText().toString());
+                                    modifiedJob.setEnddate(edt_d_job_enddate.getText().toString());
+                                    modifiedJob.setDescription(edt_d_job_description.getText().toString());
+                                    modifiedJob.setId(((Job)jobItems.get(position)).getId());
+                                    editJob(job, modifiedJob, position);
 
                                 } else {
                                     Popup.showText(activity, "Todos los campos son obligatorios excepto por la Fecha de Finalizacion", Toast.LENGTH_LONG).show();
@@ -265,7 +266,89 @@ public class JobAdapter extends BaseAdapter {
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+
     }
+
+    public void editJob(final Job job, final Job modifiedJob, final int position){
+
+        SharedPreferences settings = activity.getSharedPreferences(activity.getResources().getString(R.string.prefs_name), 0);
+        String username = null;
+
+        username = getUsername();
+        final String token = settings.getString("token", null);
+
+        RequestQueue volley = Volley.newRequestQueue(activity);
+        String url = activity.getResources().getString(R.string.urlAPI) + "/students/" + username + "/jobs/"+modifiedJob.getId();
+
+        JSONObject jsonParams = new JSONObject();
+
+        try {
+            String strStartDate = null;
+            String strEndDate = null;
+
+            if(modifiedJob.getStartdate() != null && modifiedJob.getStartdate().toString() != null && !modifiedJob.getStartdate().toString().equals(""))
+                strStartDate = modifiedJob.getStartdate().toString();
+
+            if(modifiedJob.getEnddate() != null && modifiedJob.getEnddate().toString() != null && !modifiedJob.getEnddate().toString().equals(""))
+                strEndDate = modifiedJob.getEnddate().toString();
+
+            jsonParams.put("company", modifiedJob.getFirm());
+            jsonParams.put("position", modifiedJob.getDescription());
+            jsonParams.put("dateFrom", strStartDate);
+            jsonParams.put("dateTo", strEndDate);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(
+                Request.Method.PUT,
+                url,
+                jsonParams,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Popup.showText(activity, "Datos de empleo guardados correctamente", Toast.LENGTH_LONG).show();
+                        job.setFirm(modifiedJob.getFirm());
+                        job.setStartdate(modifiedJob.getStartdate());
+                        job.setEnddate(modifiedJob.getEnddate());
+                        job.setDescription(modifiedJob.getDescription());
+                        notifyDataSetChanged();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //parseo la respuesta del server para obtener JSON
+                        String body = null;
+                        try {
+                            body = new String(error.networkResponse.data, HttpHeaderParser.parseCharset(error.networkResponse.headers));
+
+                            JSONObject JSONBody = new JSONObject(body);
+                            String errorCode = JSONBody.getString("code");
+                            Popup.showText(activity, JSONBody.getString("message"), Toast.LENGTH_LONG).show();
+                            setEditJob(position);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }){
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", token);
+                return headers;
+            }
+        };
+
+        volley.add(jsObjRequest);
+
+    }
+
 
     private String getToken(){
         DataAccess dataAccess = new DataAccess(activity);
@@ -322,78 +405,4 @@ public class JobAdapter extends BaseAdapter {
 
     }
 
-    public void editJob(final Job job){
-
-        SharedPreferences settings = activity.getSharedPreferences(activity.getResources().getString(R.string.prefs_name), 0);
-        String username = null;
-
-        username = getUsername();
-        final String token = settings.getString("token", null);
-
-        RequestQueue volley = Volley.newRequestQueue(activity);
-        String url = activity.getResources().getString(R.string.urlAPI) + "/students/" + username + "/jobs/"+job.getId();
-
-        JSONObject jsonParams = new JSONObject();
-
-        try {
-            String strStartDate = null;
-            String strEndDate = null;
-
-            if(job.getStartdate() != null && job.getStartdate().toString() != null && !job.getStartdate().toString().equals(""))
-                strStartDate = job.getStartdate().toString();
-
-            if(job.getEnddate() != null && job.getEnddate().toString() != null && !job.getEnddate().toString().equals(""))
-                strEndDate = job.getEnddate().toString();
-
-            jsonParams.put("company", job.getFirm());
-            jsonParams.put("position", job.getDescription());
-            jsonParams.put("dateFrom", strStartDate);
-            jsonParams.put("dateTo", strEndDate);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest(
-                Request.Method.PUT,
-                url,
-                jsonParams,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Popup.showText(activity, "Datos de empleo guardados correctamente", Toast.LENGTH_LONG).show();
-                        notifyDataSetChanged();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //parseo la respuesta del server para obtener JSON
-                        String body = null;
-                        try {
-                            body = new String(error.networkResponse.data, HttpHeaderParser.parseCharset(error.networkResponse.headers));
-
-                            JSONObject JSONBody = new JSONObject(body);
-                            String errorCode = JSONBody.getString("code");
-                            Popup.showText(activity, JSONBody.getString("message"), Toast.LENGTH_LONG).show();
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                }){
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Content-Type", "application/json");
-                headers.put("Authorization", token);
-                return headers;
-            }
-        };
-
-        volley.add(jsObjRequest);
-
-    }
 }

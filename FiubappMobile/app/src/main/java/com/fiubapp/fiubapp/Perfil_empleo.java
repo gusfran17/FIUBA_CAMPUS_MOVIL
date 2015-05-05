@@ -47,10 +47,10 @@ import ar.uba.fi.fiubappMobile.utils.DataAccess;
 public class Perfil_empleo extends Fragment {
     private static final String TAG = Perfil_empleo.class.getSimpleName();
     private View view;
-    private EditText edt_d_job_firm;
-    private EditText edt_d_job_startdate;
-    private EditText edt_d_job_enddate;
-    private EditText edt_d_job_description;
+    private String firm;
+    private String startDate;
+    private String endDate;
+    private String description;
     private JobAdapter jobAdapter;
     private List<Job> jobsList = new ArrayList<Job>();
     private ListView jobsListView;
@@ -65,7 +65,7 @@ public class Perfil_empleo extends Fragment {
         imgAddJob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCreateJob();
+                setCreateJob(null);
             }
         });
 
@@ -88,25 +88,29 @@ public class Perfil_empleo extends Fragment {
     }
 
 
-    private void setCreateJob() {
+    private void setCreateJob(Job job) {
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         View editJobView = layoutInflater.inflate(R.layout.edit_job, null);
         
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setView(editJobView);
 
-        edt_d_job_firm = (EditText)editJobView.findViewById(R.id.edt_d_job_firm);
-        edt_d_job_startdate = (EditText)editJobView.findViewById(R.id.edt_d_job_startdate);
-        edt_d_job_enddate = (EditText)editJobView.findViewById(R.id.edt_d_job_enddate);
-        edt_d_job_description = (EditText)editJobView.findViewById(R.id.edt_d_job_desc);
+        final EditText edt_d_job_firm = (EditText)editJobView.findViewById(R.id.edt_d_job_firm);
+        final EditText edt_d_job_startdate = (EditText)editJobView.findViewById(R.id.edt_d_job_startdate);
+        final EditText edt_d_job_enddate = (EditText)editJobView.findViewById(R.id.edt_d_job_enddate);
+        final EditText edt_d_job_description = (EditText)editJobView.findViewById(R.id.edt_d_job_desc);
 
-
+        if (job!=null){
+            edt_d_job_firm.setText(job.getFirm());
+            edt_d_job_startdate.setText(job.getStartdate());
+            edt_d_job_enddate.setText(job.getStartdate());
+            edt_d_job_description.setText(job.getDescription());
+        }
 
         edt_d_job_startdate.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
 
-                edt_d_job_startdate = (EditText)v.findViewById(R.id.edt_d_job_startdate);
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
                 Calendar calendar = Calendar.getInstance();
@@ -144,7 +148,6 @@ public class Perfil_empleo extends Fragment {
              @Override
              public void onClick(View v) {
 
-                 edt_d_job_enddate = (EditText) v.findViewById(R.id.edt_d_job_enddate);
                  SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
                  Calendar calendar = Calendar.getInstance();
@@ -185,21 +188,20 @@ public class Perfil_empleo extends Fragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Job job = new Job();
+                                job.setFirm(edt_d_job_firm.getText().toString());
+                                job.setStartdate(edt_d_job_startdate.getText().toString());
+                                job.setEnddate(edt_d_job_enddate.getText().toString());
+                                job.setDescription(edt_d_job_description.getText().toString());
+                                job.setCanBeRemoved(true);
                                 if (!(edt_d_job_startdate.getText().toString().equals("") ||
                                         edt_d_job_firm.getText().toString().equals("") ||
                                         edt_d_job_description.getText().toString().equals(""))) {
-
-                                    job.setFirm(edt_d_job_firm.getText().toString());
-                                    job.setStartdate(edt_d_job_startdate.getText().toString());
-                                    job.setEnddate(edt_d_job_enddate.getText().toString());
-                                    job.setDescription(edt_d_job_description.getText().toString());
-                                    job.setCanBeRemoved(true);
 
                                     createJob(job);
 
                                 } else {
                                     Popup.showText(getActivity(), "Todos los campos son obligatorios exepto por la Fecha de Finalizacion", Toast.LENGTH_LONG).show();
-                                    setCreateJob();
+                                    setCreateJob(job);
                                 }
 
                             }
@@ -275,6 +277,7 @@ public class Perfil_empleo extends Fragment {
                             String errorCode = JSONBody.getString("code");
                             String errorMessage = JSONBody.getString("message");
                             Popup.showText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+                            setCreateJob(job);
 
                         } catch (JSONException e) {
 
@@ -326,9 +329,7 @@ public class Perfil_empleo extends Fragment {
                                 e.printStackTrace();
                             }
                         }
-                        if (jobsList.size()==0) {
-                            Popup.showText(getActivity(), "No hay empleos cargados.", Toast.LENGTH_LONG).show();
-                        }
+
                         jobAdapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
