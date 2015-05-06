@@ -5,7 +5,7 @@
 
     <ScrollView
         android:layout_width="wrap_content"
-        android:layout_height="150sp"
+        android:layout_height="wrap_content"
         android:id="@+id/scrollView">
 
         <RelativeLayout
@@ -121,6 +121,15 @@
 
         </RelativeLayout>
     </ScrollView>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="15px"
+        android:layout_marginRight="15px"
+        android:text="@string/expand"
+        android:id="@+id/button_expand_search"
+        android:background="#ff2ec7e8"
+        android:layout_below="@+id/contentAdvancedSearch"/>
 
     <ListView
         android:id="@+id/lst_advanced_search"
@@ -130,7 +139,7 @@
         android:dividerHeight="1dp"
         android:listSelector="@drawable/list_row_selector"
         android:layout_alignParentBottom="false"
-        android:layout_above="@id/contentAdvancedSearch"/>
+        android:layout_below="@id/button_expand_search"/>
 
 
 </LinearLayout>
