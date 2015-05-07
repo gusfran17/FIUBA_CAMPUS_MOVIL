@@ -7,13 +7,16 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.providers.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import ar.uba.fi.fiubappREST.converters.StudentConverter;
 import ar.uba.fi.fiubappREST.converters.StudentProfileConverter;
 import ar.uba.fi.fiubappREST.domain.Career;
+import ar.uba.fi.fiubappREST.domain.Configuration;
 import ar.uba.fi.fiubappREST.domain.Gender;
+import ar.uba.fi.fiubappREST.domain.LocationConfiguration;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentCareer;
 import ar.uba.fi.fiubappREST.exceptions.CareerNotFoundException;
@@ -35,6 +38,9 @@ public class StudentServiceImpl implements StudentService {
 	private StudentConverter studentConverter;
 	private Md5PasswordEncoder passwordEncoder;
 	private StudentProfileConverter studentProfileConverter;
+
+	@Value("${configurations.defaultDistanceInKm}")
+	private Double defaultDistanceInKm;
 	
 	@Autowired
 	public StudentServiceImpl(StudentRepository studentRepository, CareerRepository careerRepository, StudentConverter studentConverter, 
@@ -55,11 +61,21 @@ public class StudentServiceImpl implements StudentService {
 			Career career = this.getCareer(studentRepresentation.getCareerCode());
 			this.createStudentCareer(student, career);
 		}
+		this.setDefaultConfiguration(student);
 		student = studentRepository.save(student); 
 		LOGGER.info(String.format("Student with userName %s and careerCode %s was created.", student.getUserName(), studentRepresentation.getCareerCode()));
 		return student;
 	}
 	
+	private void setDefaultConfiguration(Student student) {
+		LocationConfiguration locationConfiguration = new LocationConfiguration();
+		locationConfiguration.setIsEnabled(false);
+		locationConfiguration.setDistanceInKm(this.defaultDistanceInKm);
+		locationConfiguration.setStudent(student);
+		student.setConfigurations(new ArrayList<Configuration>());
+		student.getConfigurations().add(locationConfiguration);
+	}
+
 	private Student getStudent(StudentCreationRepresentation studentRepresentation){
 		String encodedPassword = this.passwordEncoder.encodePassword(studentRepresentation.getPassword(), null);
 		studentRepresentation.setPassword(encodedPassword);		
@@ -180,6 +196,14 @@ public class StudentServiceImpl implements StudentService {
 		
 		Gender gender = (studentRepresentation.getGender()!=null) ? studentRepresentation.getGender() : student.getGender();
 		student.setGender(gender);
+	}
+
+	public Double getDefaultDistanceInKm() {
+		return defaultDistanceInKm;
+	}
+
+	public void setDefaultDistanceInKm(Double defaultDistanceInKm) {
+		this.defaultDistanceInKm = defaultDistanceInKm;
 	}
 
 	
