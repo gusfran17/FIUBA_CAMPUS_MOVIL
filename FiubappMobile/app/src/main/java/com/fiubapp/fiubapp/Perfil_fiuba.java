@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -44,6 +45,11 @@ public class Perfil_fiuba extends Fragment {
     private Context context;
     private ListView listCarreras;
     private CarreraAdapter carreraAdapter;
+    private CareerExpandableAdapter careerExpandableAdapter;
+    private ExpandableListView careerExpandableListView;
+    private List<Carrera> listCareer = new ArrayList<Carrera>();
+    private HashMap<String, List<String>> listSubject = new HashMap<String,List<String>>();
+
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -71,8 +77,9 @@ public class Perfil_fiuba extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(((FragmentActivity)context));
-                builder.setTitle("Seleccione una carrera")
-                        .setSingleChoiceItems(getNombreCarreras(), -1, new DialogInterface.OnClickListener() {
+                builder.setTitle("Seleccione una carrera").setSingleChoiceItems(getNombreCarreras(),
+                        -1,
+                        new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 setCarreraAlumno(todasCarrerasDisponibles.get(which));
                                 dialog.dismiss();
@@ -86,6 +93,7 @@ public class Perfil_fiuba extends Fragment {
 
         getCarrerasAlumno(getUsername());
         getTodasCarreras();
+
         return view;
     }
 
@@ -94,6 +102,10 @@ public class Perfil_fiuba extends Fragment {
         ListView listCarreras = (ListView)((FragmentActivity)context).findViewById(R.id.listCarreras);
         CarreraAdapter carreraAdapter = new CarreraAdapter(this, (FragmentActivity)context, carrerasAlumno);
         listCarreras.setAdapter(carreraAdapter);
+
+        careerExpandableListView = (ExpandableListView) ((FragmentActivity)context).findViewById(R.id.expandableCarreras);
+        careerExpandableAdapter = new CareerExpandableAdapter(this, getActivity(), listCareer, listSubject);
+        careerExpandableListView.setAdapter(careerExpandableAdapter);
     }
 
     public void eliminarCarrera(int posicion) {
@@ -153,6 +165,7 @@ public class Perfil_fiuba extends Fragment {
                         if ((!isAdded())) return;
 
                         carrerasAlumno.clear();
+                        listCareer.clear();
 
                         for (int i = 0; i < response.length(); i++) {
                             try {
@@ -175,6 +188,8 @@ public class Perfil_fiuba extends Fragment {
                                 }
 
                                 carrerasAlumno.add(carrera);
+                                listCareer.add(carrera);
+                                setSubjects(carrera);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -206,6 +221,18 @@ public class Perfil_fiuba extends Fragment {
         };
 
         VolleyController.getInstance().addToRequestQueue(jsonReq);
+    }
+
+    private void setSubjects(Carrera carrera) {
+        List<String> top250 = new ArrayList<String>();
+        top250.add("The Shawshank Redemption");
+        top250.add("The Godfather");
+        top250.add("The Godfather: Part II");
+        top250.add("Pulp Fiction");
+        top250.add("The Good, the Bad and the Ugly");
+        top250.add("The Dark Knight");
+        top250.add("12 Angry Men");
+        listSubject.put(carrera.getCodigo(), top250);
     }
 
     public void setCarreraAlumno(Carrera carrera){
@@ -358,6 +385,27 @@ public class Perfil_fiuba extends Fragment {
     public void onAttach(Activity activity){
         super.onAttach(activity);
         context = getActivity();
+    }
+
+    private void prepareListData() {
+        listCareer = new ArrayList<Carrera>();
+        listSubject = new HashMap<String, List<String>>();
+        for (int i=0; i == carrerasAlumno.size(); i++){
+            Carrera career = (Carrera) carrerasAlumno.get(i);
+            listCareer.add(career);
+            // Adding child data
+            List<String> top250 = new ArrayList<String>();
+            top250.add("The Shawshank Redemption");
+            top250.add("The Godfather");
+            top250.add("The Godfather: Part II");
+            top250.add("Pulp Fiction");
+            top250.add("The Good, the Bad and the Ugly");
+            top250.add("The Dark Knight");
+            top250.add("12 Angry Men");
+            listSubject.put(listCareer.get(0).getCodigo(), top250);
+
+        };
+
     }
 
 }
