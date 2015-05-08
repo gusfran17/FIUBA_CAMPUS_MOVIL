@@ -94,7 +94,7 @@ public class NotificationAdapter extends BaseAdapter {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         creationDate.setText(df.format(notification.getCreationDate()));
 
-        //thumbNail.getImageURL(notification.getImgURL());
+        thumbNail.setImageUrl(notification.getImgURL(),imageLoader);
 
         final Map<String, String> params = new HashMap<String, String>();
         params.put("userName", notification.getApplicant().getUsername());

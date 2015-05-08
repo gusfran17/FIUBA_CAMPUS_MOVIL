@@ -118,6 +118,16 @@ public class Perfil_personal extends Fragment {
             edit_name.setVisibility(View.INVISIBLE);
             edit_comments_img.setVisibility(View.INVISIBLE);
 
+            profile_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String url = urlAPI+"students"+getArguments().getString("userName")+"/picture";
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                }
+            });
+
             if (!getArguments().getBoolean("isMyMate")) {
                 header_name.setText(getArguments().getString("name"));
                 header_lastname.setText(getArguments().getString("lastName"));
@@ -433,6 +443,7 @@ public class Perfil_personal extends Fragment {
         final ImageView edit_comments_img = (ImageView)view.findViewById(R.id.editButtonComm);
         final ImageView thumbnail = (ImageView)view.findViewById(R.id.image_profile);
 
+		//request para la imagen de perfil
         ImageRequest ir = new ImageRequest(urlAPI+"/students/"+username+"/picture", new Response.Listener<Bitmap>() {
 
             @Override

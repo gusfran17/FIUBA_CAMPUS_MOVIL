@@ -2,6 +2,8 @@ package com.fiubapp.fiubapp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,9 +77,18 @@ public class AlumnoAdapter extends BaseAdapter {
 
         final Button buttonAdd = (Button) convertView.findViewById(R.id.childButton);
 
-        Alumno a = alumnoItems.get(position);
+        final Alumno a = alumnoItems.get(position);
 
         thumbNail.setImageUrl(a.getImgURL(),imageLoader);
+        thumbNail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = getURLAPI()+"students"+a.getUsername()+"/picture";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                activity.startActivity(i);
+            }
+        });
 
         nombre.setText(a.getNombre() +" "+ a.getApellido());
 

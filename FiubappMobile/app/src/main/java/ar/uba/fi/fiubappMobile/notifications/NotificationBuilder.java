@@ -34,6 +34,7 @@ public class NotificationBuilder {
         Date creationDate = sdf.parse(dateStr);
         notification.setCreationDate(creationDate);
         notification.setIsViewed(obj.getBoolean("isViewed"));
+        notification.setImgURL(obj.getString("profilePicture"));
         JSONObject applicantObj = obj.getJSONObject("applicant");
         Alumno applicant = new Alumno();
         applicant.setUsername(applicantObj.getString("userName"));
