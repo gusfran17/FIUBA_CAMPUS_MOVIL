@@ -40,10 +40,8 @@ import ar.uba.fi.fiubappMobile.utils.DataAccess;
 
 public class Perfil_fiuba extends Fragment {
 
-    private ArrayList<Carrera> carrerasAlumno = new ArrayList<Carrera>();
     private ArrayList<Carrera> todasCarrerasDisponibles = new ArrayList<Carrera>();
     private Context context;
-    private ListView listCarreras;
     private CarreraAdapter carreraAdapter;
     private CareerExpandableAdapter careerExpandableAdapter;
     private ExpandableListView careerExpandableListView;
@@ -99,20 +97,16 @@ public class Perfil_fiuba extends Fragment {
 
     public void crearSeccionCarreras() {
 
-        ListView listCarreras = (ListView)((FragmentActivity)context).findViewById(R.id.listCarreras);
-        CarreraAdapter carreraAdapter = new CarreraAdapter(this, (FragmentActivity)context, carrerasAlumno);
-        listCarreras.setAdapter(carreraAdapter);
-
         careerExpandableListView = (ExpandableListView) ((FragmentActivity)context).findViewById(R.id.expandableCarreras);
         careerExpandableAdapter = new CareerExpandableAdapter(this, getActivity(), listCareer, listSubject);
         careerExpandableListView.setAdapter(careerExpandableAdapter);
     }
 
     public void eliminarCarrera(int posicion) {
-        if(!tieneCarreraDisponible(carrerasAlumno.get(posicion).getCodigo()))
-            todasCarrerasDisponibles.add(carrerasAlumno.get(posicion));
+        if(!tieneCarreraDisponible(listCareer.get(posicion).getCodigo()))
+            todasCarrerasDisponibles.add(listCareer.get(posicion));
 
-        borrarCarreraAlumno(Integer.parseInt(carrerasAlumno.get(posicion).getCodigo()));
+        borrarCarreraAlumno(Integer.parseInt(listCareer.get(posicion).getCodigo()));
     }
 
     public void borrarCarreraAlumno(int codigo){
@@ -164,7 +158,6 @@ public class Perfil_fiuba extends Fragment {
 
                         if ((!isAdded())) return;
 
-                        carrerasAlumno.clear();
                         listCareer.clear();
 
                         for (int i = 0; i < response.length(); i++) {
@@ -187,7 +180,6 @@ public class Perfil_fiuba extends Fragment {
                                     carrera.setSePuedeEliminar(false);
                                 }
 
-                                carrerasAlumno.add(carrera);
                                 listCareer.add(carrera);
                                 setSubjects(carrera);
 
@@ -338,8 +330,8 @@ public class Perfil_fiuba extends Fragment {
     public boolean tieneCarreraAlumno(String codigo){
         boolean tieneCarrera = false;
 
-        for (int i = 0; i < carrerasAlumno.size(); i++) {
-            if (carrerasAlumno.get(i).getCodigo().equals(codigo)){
+        for (int i = 0; i < listCareer.size(); i++) {
+            if (listCareer.get(i).getCodigo().equals(codigo)){
                 tieneCarrera = true;
                 break;
             }
@@ -387,25 +379,5 @@ public class Perfil_fiuba extends Fragment {
         context = getActivity();
     }
 
-    private void prepareListData() {
-        listCareer = new ArrayList<Carrera>();
-        listSubject = new HashMap<String, List<String>>();
-        for (int i=0; i == carrerasAlumno.size(); i++){
-            Carrera career = (Carrera) carrerasAlumno.get(i);
-            listCareer.add(career);
-            // Adding child data
-            List<String> top250 = new ArrayList<String>();
-            top250.add("The Shawshank Redemption");
-            top250.add("The Godfather");
-            top250.add("The Godfather: Part II");
-            top250.add("Pulp Fiction");
-            top250.add("The Good, the Bad and the Ugly");
-            top250.add("The Dark Knight");
-            top250.add("12 Angry Men");
-            listSubject.put(listCareer.get(0).getCodigo(), top250);
-
-        };
-
-    }
 
 }

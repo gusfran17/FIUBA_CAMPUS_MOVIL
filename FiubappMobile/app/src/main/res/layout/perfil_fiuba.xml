@@ -43,26 +43,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/header">
 
-        <ListView
-            android:id="@+id/listCarreras"
-            android:layout_height="200dp"
-            android:layout_width="match_parent">
-        </ListView>
-
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="340dp"
-        android:layout_below="@+id/content">
-
         <ExpandableListView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/expandableCarreras"
-            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"/>
+
 
     </RelativeLayout>
 
