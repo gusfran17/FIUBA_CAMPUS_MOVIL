@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +28,19 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.NetworkImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -52,6 +59,7 @@ public class Perfil_personal extends Fragment {
     private PhoneNumberValidator phoneValidator;
     private String fecha;
     private Context context;
+    ImageLoader imageLoader = VolleyController.getInstance().getImageLoader();
 
     private FragmentActivity perfilTabs;
 
@@ -61,6 +69,10 @@ public class Perfil_personal extends Fragment {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.perfil_datos_personales, container, false);
+
+        if (imageLoader == null)
+            imageLoader = VolleyController.getInstance().getImageLoader();
+        final ImageView thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
 
         usernamePrefs = getUsername();
         perfilTabs = getActivity();
@@ -83,7 +95,10 @@ public class Perfil_personal extends Fragment {
 
         final TextView profile_name = (TextView)view.findViewById(R.id.profile_name);
 
+
         urlAPI = getResources().getString(R.string.urlAPI);
+
+        VolleyController.getInstance().getRequestQueue().getCache().remove(urlAPI+"/students/"+"80001"+"/picture");
 
         edit_comments.setEnabled(false);
         edit_email.setEnabled(false);
@@ -416,6 +431,17 @@ public class Perfil_personal extends Fragment {
         final ImageView edit_button = (ImageView) view.findViewById(R.id.editButton);
         final ImageView edit_name = (ImageView) view.findViewById(R.id.edit_name);
         final ImageView edit_comments_img = (ImageView)view.findViewById(R.id.editButtonComm);
+        final ImageView thumbnail = (ImageView)view.findViewById(R.id.image_profile);
+
+        ImageRequest ir = new ImageRequest(urlAPI+"/students/"+username+"/picture", new Response.Listener<Bitmap>() {
+
+            @Override
+            public void onResponse(Bitmap response) {
+
+                thumbnail.setImageBitmap(response);
+
+            }
+        }, 0, 0, null, null);
 
         //obtener datos
         JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
@@ -445,6 +471,7 @@ public class Perfil_personal extends Fragment {
                             String nationality = response.getString("nationality");
                             String phoneNumber = response.getString("phoneNumber");
                             String fecha = response.getString("dateOfBirth");
+                            String profileURL = response.getString("profilePicture");
                             boolean isIntercambio = response.getBoolean("isExchangeStudent");
 
                             if (isIntercambio)
@@ -503,8 +530,8 @@ public class Perfil_personal extends Fragment {
             }
         };
 
+        VolleyController.getInstance().addToRequestQueue(ir);
         VolleyController.getInstance().addToRequestQueue(jsonReq);
-
 
     }
 
@@ -519,13 +546,52 @@ public class Perfil_personal extends Fragment {
                 if(resultCode == Activity.RESULT_OK){
                     Uri selectedImage = imageReturnedIntent.getData();
                     InputStream imageStream = null;
+                    Bitmap image = null;
                     try {
                         imageStream = this.context.getContentResolver().openInputStream(selectedImage);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
-                    Bitmap image = BitmapFactory.decodeStream(imageStream);
+
+                    image = BitmapFactory.decodeStream(imageStream);
                     profile_img.setImageBitmap(image);
+
+                    //TODO llamar a volley para el POST
+
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("Accept", "application/json");
+                    headers.put("Authorization", getToken());
+
+                    MultipartRequest mPR = new MultipartRequest(urlAPI+"/students/"+usernamePrefs+"/picture", new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO Auto-generated method stub
+                            Log.d("Error", error.toString());
+                            String responseBody = null;
+                            JSONObject jsonObject = null;
+                            try {
+                                responseBody = new String( error.networkResponse.data, "utf-8" );
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                jsonObject = new JSONObject( responseBody );
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            Popup.showText(context, jsonObject.toString(), Toast.LENGTH_LONG).show();
+
+                        }
+                    } , new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String arg0) {
+                            // TODO Auto-generated method stub
+                            //Log.d("Success", arg0.toString());
+                        }
+                    }, selectedImage, this.context, headers);
+
+                    VolleyController.getInstance().addToRequestQueue(mPR);
                 }
         }
     }
@@ -548,6 +614,11 @@ public class Perfil_personal extends Fragment {
 
     }
 
+    private String getToken(){
+        DataAccess dataAccess = new DataAccess(getActivity());
+        return dataAccess.getToken();
+    }
+
     private String getUsername(){
         DataAccess dataAccess = new DataAccess(getActivity());
         return dataAccess.getUserName();
@@ -557,5 +628,41 @@ public class Perfil_personal extends Fragment {
     public void onAttach(Activity activity){
         super.onAttach(activity);
         context = getActivity();
+    }
+
+    private Bitmap getScaledBitmap(String picturePath, int width, int height) {
+        BitmapFactory.Options sizeOptions = new BitmapFactory.Options();
+        sizeOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(picturePath, sizeOptions);
+
+        int inSampleSize = calculateInSampleSize(sizeOptions, width, height);
+
+        sizeOptions.inJustDecodeBounds = false;
+        sizeOptions.inSampleSize = inSampleSize;
+
+        return BitmapFactory.decodeFile(picturePath, sizeOptions);
+    }
+
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            // Calculate ratios of height and width to requested height and
+            // width
+            final int heightRatio = Math.round((float) height / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+
+            // Choose the smallest ratio as inSampleSize value, this will
+            // guarantee
+            // a final image with both dimensions larger than or equal to the
+            // requested height and width.
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        }
+
+        return inSampleSize;
     }
 }

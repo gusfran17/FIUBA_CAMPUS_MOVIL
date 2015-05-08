@@ -15,7 +15,8 @@
             android:paddingTop="5dip"
             android:paddingBottom="5dip">
 
-                <ImageView android:src="@drawable/no_image"
+                <ImageView
+                    android:src="@drawable/no_image"
                     android:layout_width="90dp"
                     android:layout_height="90dp"
                     android:layout_marginLeft="10dip"
