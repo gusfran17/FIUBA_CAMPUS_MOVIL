@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -74,6 +76,8 @@ public class Perfil_personal extends Fragment {
         final ImageView edit_comments_img = (ImageView)view.findViewById(R.id.editButtonComm);
 
         final TextView profile_name = (TextView)view.findViewById(R.id.profile_name);
+
+        final Drawable defaultBackground = edit_comments.getBackground();
 
         urlAPI = getResources().getString(R.string.urlAPI);
 
@@ -162,6 +166,7 @@ public class Perfil_personal extends Fragment {
 
                     String comments = edit_comments.getText().toString();
 
+                    edit_comments.setBackground(defaultBackground);
 
                     Map<String, String> params = new HashMap<String, String>();
                     params.put("comments", comments);
@@ -202,6 +207,7 @@ public class Perfil_personal extends Fragment {
 
                 }else{
                     edit_comments_img.setImageResource(R.drawable.ic_save);
+                    edit_comments.setBackgroundColor(Color.TRANSPARENT);
                 }
 
                 edit_comments.setEnabled(!edit_comments.isEnabled());
@@ -213,6 +219,12 @@ public class Perfil_personal extends Fragment {
             public void onClick(View v) {
 
                 if (edit_email.isEnabled()) {
+
+                    edit_email.setBackground(defaultBackground);
+                    edit_ciudad.setBackground(defaultBackground);
+                    edit_email.setBackground(defaultBackground);
+                    edit_nacionalidad.setBackground(defaultBackground);
+                    edit_telefono.setBackground(defaultBackground);
 
                     String email = edit_email.getText().toString();
                     String gender = edit_sexo.getSelectedItem().toString();
@@ -296,6 +308,11 @@ public class Perfil_personal extends Fragment {
                     }
                 }else{
                     edit_button.setImageResource(R.drawable.ic_save);
+                    edit_email.setBackgroundColor(Color.TRANSPARENT);
+                    edit_ciudad.setBackgroundColor(Color.TRANSPARENT);
+                    edit_email.setBackgroundColor(Color.TRANSPARENT);
+                    edit_nacionalidad.setBackgroundColor(Color.TRANSPARENT);
+                    edit_telefono.setBackgroundColor(Color.TRANSPARENT);
                 }
 
                 edit_email.setEnabled(!edit_email.isEnabled());

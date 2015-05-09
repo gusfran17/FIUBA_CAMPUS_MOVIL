@@ -36,5 +36,12 @@
     <string name="nombre">Nombre</string>
     <string name="buscar">BUSCAR</string>
     <string name="verCercanos">VER CERCANOS</string>
+    <string name="job_description">Puesto</string>
+    <string name="job_header">Empresa</string>
+    <string name="lbl_job_startdate">Fecha de Inicio</string>
+    <string name="lbl_job_enddate">Fecha de Finalizacion</string>
+    <string name="JOBS">EMPLEOS</string>
+    <string name="lbl_job_firm">Empresa</string>
+    <string name="expand">Modificar criterio de Busqueda</string>
 
 </resources>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/d_job_header"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <TextView
+            android:id="@+id/txt_d_job_firm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_job_firm"
+            android:textColor="#ffffff"
+            android:layout_alignBaseline="@+id/edt_d_job_firm"
+            android:layout_alignBottom="@+id/edt_d_job_firm" />
+
+        <EditText
+            android:id="@+id/edt_d_job_firm"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15px"
+            android:layout_toRightOf="@+id/txt_d_job_firm" />
+
+        <TextView
+            android:id="@+id/txt_d_job_startdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_job_startdate"
+            android:textColor="#ffffff"
+            android:layout_alignBaseline="@+id/edt_d_job_startdate"
+            android:layout_alignBottom="@+id/edt_d_job_startdate" />
+
+        <EditText android:id="@+id/edt_d_job_startdate"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15px"
+            android:focusable="false"
+            android:layout_below="@+id/edt_d_job_firm"
+            android:layout_toRightOf="@+id/txt_d_job_startdate" />
+
+        <TextView
+            android:id="@+id/txt_d_job_enddate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_job_enddate"
+            android:textColor="#ffffff"
+            android:layout_alignBaseline="@+id/edt_d_job_enddate"
+            android:layout_alignBottom="@+id/edt_d_job_enddate" />
+
+        <EditText
+            android:id="@+id/edt_d_job_enddate"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15px"
+            android:focusable="false"
+            android:layout_below="@+id/edt_d_job_startdate"
+            android:layout_toRightOf="@+id/txt_d_job_enddate" />
+
+
+        <TextView
+            android:id="@+id/txt_d_job_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/job_description"
+            android:textColor="#ffffff"
+            android:layout_alignBaseline="@+id/edt_d_job_desc"
+            android:layout_alignBottom="@+id/edt_d_job_desc"/>
+
+        <EditText
+            android:id="@+id/edt_d_job_desc"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15px"
+            android:layout_marginTop="5px"
+            android:layout_toRightOf="@+id/txt_d_job_desc"
+            android:layout_below="@+id/edt_d_job_enddate"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

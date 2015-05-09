@@ -84,6 +84,9 @@ public class Student {
 	@ManyToMany(mappedBy="members")
 	private Set<Group> groups;
 	
+	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, orphanRemoval = true)
+	private Set<Job> jobs;
+	
 	public String getUserName() {
 		return userName;
 	}
@@ -240,6 +243,16 @@ public class Student {
 		return groups;
 	}
 
+	@JsonIgnore
+	public Set<Job> getJobs() {
+		return jobs;
+	}
+
+	@JsonIgnore
+	public void setJobs(Set<Job> jobs) {
+		this.jobs = jobs;
+	}
+
 	public void setGroups(Set<Group> groups) {
 		this.groups = groups;
 	}
@@ -331,6 +344,15 @@ public class Student {
 		});
 		return foundGroup!=null;
 	}
+	
+	public void addJob(Job job) {
+		this.jobs.add(job);	
+	}
+	
+	public void deleteJob(Job job){
+		this.jobs.remove(job);
+		job.setStudent(null);
+	}
 
 	@Override
 	public int hashCode() {
@@ -356,6 +378,5 @@ public class Student {
 		} else if (!userName.equals(other.userName))
 			return false;
 		return true;
-	}	
-
+	}
 }

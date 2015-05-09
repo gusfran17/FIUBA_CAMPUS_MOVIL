@@ -29,5 +29,8 @@ public interface StudentRepository extends CrudRepository<Student, String> {
 	
 	@Query("SELECT s FROM Student s LEFT JOIN FETCH s.groups LEFT JOIN FETCH s.mates WHERE s.userName = ?1")
     public Student findByUserNameAndFetchMatesAndGroupsEagerly(String userName);
+	
+	@Query("SELECT s FROM Student s LEFT JOIN FETCH s.jobs WHERE s.userName = ?1")
+    public Student findByUserNameAndFetchJobsEagerly(String userName);
 
 }
