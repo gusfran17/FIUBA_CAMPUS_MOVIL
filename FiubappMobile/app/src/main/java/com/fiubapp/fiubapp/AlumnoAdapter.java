@@ -83,7 +83,7 @@ public class AlumnoAdapter extends BaseAdapter {
         thumbNail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String url = getURLAPI()+"students"+a.getUsername()+"/picture";
+                String url = a.getImgURL();
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 activity.startActivity(i);

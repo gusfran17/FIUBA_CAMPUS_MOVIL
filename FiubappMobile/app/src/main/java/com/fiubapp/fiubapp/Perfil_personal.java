@@ -72,7 +72,6 @@ public class Perfil_personal extends Fragment {
 
         if (imageLoader == null)
             imageLoader = VolleyController.getInstance().getImageLoader();
-        final ImageView thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
 
         usernamePrefs = getUsername();
         perfilTabs = getActivity();
@@ -118,16 +117,6 @@ public class Perfil_personal extends Fragment {
             edit_name.setVisibility(View.INVISIBLE);
             edit_comments_img.setVisibility(View.INVISIBLE);
 
-            profile_img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String url = urlAPI+"students"+getArguments().getString("userName")+"/picture";
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(url));
-                    startActivity(i);
-                }
-            });
-
             if (!getArguments().getBoolean("isMyMate")) {
                 header_name.setText(getArguments().getString("name"));
                 header_lastname.setText(getArguments().getString("lastName"));
@@ -147,9 +136,33 @@ public class Perfil_personal extends Fragment {
 
                 RelativeLayout rel_layout_datos = (RelativeLayout)view.findViewById(R.id.contentDatos);
                 rel_layout_datos.setVisibility(View.INVISIBLE);
+
+                //request para la imagen de perfil
+                ImageRequest ir = new ImageRequest(urlAPI+"/students/"+padron_pasaporte+"/picture", new Response.Listener<Bitmap>() {
+
+                    @Override
+                    public void onResponse(Bitmap response) {
+
+                        profile_img.setImageBitmap(response);
+
+                    }
+                }, 0, 0, null, null);
+
+                VolleyController.getInstance().addToRequestQueue(ir);
+
             }else{
                 getUserData(getArguments().getString("userName"));
             }
+
+            profile_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String url = urlAPI+"/students/"+getArguments().getString("userName")+"/picture";
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                }
+            });
 
             return view;
         }

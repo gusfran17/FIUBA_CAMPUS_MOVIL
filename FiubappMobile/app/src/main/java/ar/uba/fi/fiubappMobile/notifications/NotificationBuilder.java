@@ -34,7 +34,6 @@ public class NotificationBuilder {
         Date creationDate = sdf.parse(dateStr);
         notification.setCreationDate(creationDate);
         notification.setIsViewed(obj.getBoolean("isViewed"));
-        notification.setImgURL(obj.getString("profilePicture"));
         JSONObject applicantObj = obj.getJSONObject("applicant");
         Alumno applicant = new Alumno();
         applicant.setUsername(applicantObj.getString("userName"));
@@ -42,6 +41,7 @@ public class NotificationBuilder {
         applicant.setApellido(applicantObj.getString("lastName"));
         applicant.setIntercambio(applicantObj.getBoolean("isExchangeStudent"));
         applicant.setPasaporte(applicantObj.getString("passportNumber"));
+        applicant.setImgURL(applicantObj.getString("profilePicture"));
 
         String padron = applicantObj.getString("fileNumber");
         if(padron != null && !padron.equals("null") && !padron.equals("") )

@@ -8,7 +8,6 @@ public class Notification {
     private Date creationDate;
     private Boolean isViewed;
     private String type;
-    private String imgURL;
 
     public Notification() {
 
@@ -51,13 +50,5 @@ public class Notification {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getImgURL() {
-        return imgURL;
-    }
-
-    public void setImgURL(String imgURL) {
-        this.imgURL = imgURL;
     }
 }

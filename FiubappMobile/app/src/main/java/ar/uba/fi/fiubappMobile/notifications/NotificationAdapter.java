@@ -2,6 +2,8 @@ package ar.uba.fi.fiubappMobile.notifications;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,7 +96,17 @@ public class NotificationAdapter extends BaseAdapter {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         creationDate.setText(df.format(notification.getCreationDate()));
 
-        thumbNail.setImageUrl(notification.getImgURL(),imageLoader);
+        thumbNail.setImageUrl(notification.getApplicant().getImgURL(),imageLoader);
+        thumbNail.setDefaultImageResId(R.drawable.no_image);
+        thumbNail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = notification.getApplicant().getImgURL();
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                activity.startActivity(i);
+            }
+        });
 
         final Map<String, String> params = new HashMap<String, String>();
         params.put("userName", notification.getApplicant().getUsername());
