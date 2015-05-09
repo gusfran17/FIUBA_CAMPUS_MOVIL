@@ -104,27 +104,28 @@ public class CareerExpandableAdapter extends BaseExpandableListAdapter {
 
         TextView lblProgressDesc = (TextView) convertView.findViewById(R.id.lbl_progress_description);
         ProgressBar careerProgress = (ProgressBar) convertView.findViewById(R.id.career_progressBar);
-        if (perfilFiuba.getArguments() != null) {
+        //Si no hay resultados que mostrar o el grupo no esta expandido no muestro nada
+        if ((career.getTotalAmount()== 0) || (!isExpanded)){
+            lblProgressDesc.setVisibility(View.GONE);
+            careerProgress.setVisibility(View.GONE);
+        } else {
+            lblProgressDesc.setText("Usted tiene un total de "+career.getCurrentAmount() + " de " + career.getTotalAmount() + " créditos");
+            int progress = (career.getCurrentAmount()*100)/career.getTotalAmount();
+            careerProgress.setProgress(progress);
 
-            if (!perfilFiuba.getArguments().getBoolean("isMyMate")) {
-                if (isExpanded){
-                    lblProgressDesc.setVisibility(View.VISIBLE);
-                    careerProgress.setVisibility(View.VISIBLE);
-                } else {
+
+            if (perfilFiuba.getArguments() != null) {
+
+                if (!perfilFiuba.getArguments().getBoolean("isMyMate")) {
+                        lblProgressDesc.setVisibility(View.VISIBLE);
+                        careerProgress.setVisibility(View.VISIBLE);
+                }else{
                     lblProgressDesc.setVisibility(View.GONE);
                     careerProgress.setVisibility(View.GONE);
                 }
-            }else{
-                lblProgressDesc.setVisibility(View.GONE);
-                careerProgress.setVisibility(View.GONE);
-            }
-        } else {
-            if (isExpanded){
-                lblProgressDesc.setVisibility(View.VISIBLE);
-                careerProgress.setVisibility(View.VISIBLE);
             } else {
-                lblProgressDesc.setVisibility(View.GONE);
-                careerProgress.setVisibility(View.GONE);
+                    lblProgressDesc.setVisibility(View.VISIBLE);
+                    careerProgress.setVisibility(View.VISIBLE);
             }
         }
 

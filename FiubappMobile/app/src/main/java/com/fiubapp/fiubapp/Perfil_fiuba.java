@@ -217,7 +217,6 @@ public class Perfil_fiuba extends Fragment {
         final List<String> subjects = new ArrayList<String>();
 
         final SharedPreferences settings =  ((FragmentActivity)context).getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
-        //final String username = settings.getString("username", null);
         String URL = getResources().getString(R.string.urlAPI) + "/students/" + username + "/careers/"+carrera.getCodigo()+"/subjects";
 
         JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
@@ -229,16 +228,18 @@ public class Perfil_fiuba extends Fragment {
                         if ((!isAdded())) return;
 
                         JSONArray jsonArray = null;
-                        Integer currentAmount = 0;
-                        Integer totalAmount = 0;
+                        int currentAmount = 0;
+                        int totalAmount = 0;
                         try{
                             currentAmount = Integer.parseInt(response.getString("currentAmount"));
-                            totalAmount = Integer.parseInt(response.getString("currentAmount"));
+                            totalAmount = Integer.parseInt(response.getString("totalAmount"));
                             jsonArray = response.getJSONArray("subjects");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
+                        carrera.setTotalAmount(totalAmount);
+                        carrera.setCurrentAmount(currentAmount);
 
                         for (int i = 0; i < jsonArray.length(); i++) {
                             try {
@@ -263,6 +264,8 @@ public class Perfil_fiuba extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 //Popup.showText(context,  "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
                 subjects.add("Informacion no disponible.");
+                carrera.setCurrentAmount(0);
+                carrera.setTotalAmount(0);
                 listSubject.put(carrera.getCodigo(), subjects);
             }
         }) {
