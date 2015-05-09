@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -42,7 +42,6 @@ public class Perfil_fiuba extends Fragment {
 
     private ArrayList<Carrera> todasCarrerasDisponibles = new ArrayList<Carrera>();
     private Context context;
-    private CarreraAdapter carreraAdapter;
     private CareerExpandableAdapter careerExpandableAdapter;
     private ExpandableListView careerExpandableListView;
     private List<Carrera> listCareer = new ArrayList<Carrera>();
@@ -144,7 +143,7 @@ public class Perfil_fiuba extends Fragment {
         queue.add(jsObjRequest);
     }
 
-    public void getCarrerasAlumno(String username){
+    public void getCarrerasAlumno(final String username){
 
         final SharedPreferences settings =  ((FragmentActivity)context).getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
         //final String username = settings.getString("username", null);
@@ -179,9 +178,8 @@ public class Perfil_fiuba extends Fragment {
                                 if (getArguments() != null && (!getArguments().getBoolean("isMyMate") || getArguments().getBoolean("isMyMate"))) {
                                     carrera.setSePuedeEliminar(false);
                                 }
-
+                                setSubjects(carrera,username);
                                 listCareer.add(carrera);
-                                setSubjects(carrera);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -215,16 +213,69 @@ public class Perfil_fiuba extends Fragment {
         VolleyController.getInstance().addToRequestQueue(jsonReq);
     }
 
-    private void setSubjects(Carrera carrera) {
-        List<String> top250 = new ArrayList<String>();
-        top250.add("The Shawshank Redemption");
-        top250.add("The Godfather");
-        top250.add("The Godfather: Part II");
-        top250.add("Pulp Fiction");
-        top250.add("The Good, the Bad and the Ugly");
-        top250.add("The Dark Knight");
-        top250.add("12 Angry Men");
-        listSubject.put(carrera.getCodigo(), top250);
+    private void setSubjects(final Carrera carrera, final String username) {
+        final List<String> subjects = new ArrayList<String>();
+
+        final SharedPreferences settings =  ((FragmentActivity)context).getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
+        //final String username = settings.getString("username", null);
+        String URL = getResources().getString(R.string.urlAPI) + "/students/" + username + "/careers/"+carrera.getCodigo()+"/subjects";
+
+        JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
+                URL,
+                new JSONObject(),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        if ((!isAdded())) return;
+
+                        JSONArray jsonArray = null;
+                        Integer currentAmount = 0;
+                        Integer totalAmount = 0;
+                        try{
+                            currentAmount = Integer.parseInt(response.getString("currentAmount"));
+                            totalAmount = Integer.parseInt(response.getString("currentAmount"));
+                            jsonArray = response.getJSONArray("subjects");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            try {
+
+                                JSONObject subjectJSON = jsonArray.getJSONObject(i);
+
+                                String subject = subjectJSON.getString("code") + "  " + subjectJSON.getString("name");
+                                subjects.add(subject);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        listSubject.put(carrera.getCodigo(), subjects);
+
+
+                    }
+                },
+                new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Popup.showText(context,  "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                subjects.add("Informacion no disponible.");
+                listSubject.put(carrera.getCodigo(), subjects);
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+
+        VolleyController.getInstance().addToRequestQueue(jsonReq);
+
     }
 
     public void setCarreraAlumno(Carrera carrera){

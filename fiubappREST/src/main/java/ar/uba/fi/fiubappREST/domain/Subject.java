@@ -1,10 +1,9 @@
 package ar.uba.fi.fiubappREST.domain;
 
-import javax.persistence.CascadeType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -20,7 +19,6 @@ public class Subject {
 	
 	private String careerCode;
 	
-	@Column(unique=true)
 	private String code;
 	
 	private String name;
