@@ -103,7 +103,11 @@ public class JobAdapter extends BaseAdapter {
 
         job_firm.setText(job.getFirm());
         job_startdate.setText(job.getStartdate());
-        job_enddate.setText(job.getEnddate());
+        if (job.getEnddate().equals("")){
+            job_enddate.setText("Actualidad");
+        }else {
+            job_enddate.setText(job.getEnddate());
+        }
         job_description.setText(job.getDescription());
 
         return convertView;
