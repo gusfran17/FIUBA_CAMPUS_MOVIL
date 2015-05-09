@@ -85,7 +85,10 @@ public class Student {
 	private Set<Group> groups;
 	
 	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, orphanRemoval = true)
-	private List<Configuration> configurations;
+	private Set<Configuration> configurations;
+	
+	@OneToOne(mappedBy = "student", cascade={CascadeType.ALL}, orphanRemoval = true)
+	private Location location;
 	
 	public String getUserName() {
 		return userName;
@@ -248,12 +251,21 @@ public class Student {
 	}
 
 	@JsonIgnore
-	public List<Configuration> getConfigurations() {
+	public Set<Configuration> getConfigurations() {
 		return configurations;
 	}
 
-	public void setConfigurations(List<Configuration> configurations) {
+	public void setConfigurations(Set<Configuration> configurations) {
 		this.configurations = configurations;
+	}
+
+	@JsonIgnore
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
 	}
 
 	public void addCareer(final StudentCareer career) {

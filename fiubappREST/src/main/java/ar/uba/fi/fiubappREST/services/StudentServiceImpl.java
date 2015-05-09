@@ -2,6 +2,7 @@ package ar.uba.fi.fiubappREST.services;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import ar.uba.fi.fiubappREST.converters.StudentProfileConverter;
 import ar.uba.fi.fiubappREST.domain.Career;
 import ar.uba.fi.fiubappREST.domain.Configuration;
 import ar.uba.fi.fiubappREST.domain.Gender;
+import ar.uba.fi.fiubappREST.domain.Location;
 import ar.uba.fi.fiubappREST.domain.LocationConfiguration;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentCareer;
@@ -62,17 +64,24 @@ public class StudentServiceImpl implements StudentService {
 			this.createStudentCareer(student, career);
 		}
 		this.setDefaultConfiguration(student);
+		this.createLocation(student);
 		student = studentRepository.save(student); 
 		LOGGER.info(String.format("Student with userName %s and careerCode %s was created.", student.getUserName(), studentRepresentation.getCareerCode()));
 		return student;
 	}
 	
+	private void createLocation(Student student) {
+		Location location = new Location();
+		location.setStudent(student);
+		student.setLocation(location);		
+	}
+
 	private void setDefaultConfiguration(Student student) {
 		LocationConfiguration locationConfiguration = new LocationConfiguration();
 		locationConfiguration.setIsEnabled(false);
 		locationConfiguration.setDistanceInKm(this.defaultDistanceInKm);
 		locationConfiguration.setStudent(student);
-		student.setConfigurations(new ArrayList<Configuration>());
+		student.setConfigurations(new HashSet<Configuration>());
 		student.getConfigurations().add(locationConfiguration);
 	}
 
