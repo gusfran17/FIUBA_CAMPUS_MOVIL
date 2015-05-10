@@ -3,12 +3,19 @@ package com.fiubapp.fiubapp;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +32,20 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.NetworkImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -40,6 +56,7 @@ import ar.uba.fi.fiubappMobile.utils.DataAccess;
 
 public class Perfil_personal extends Fragment {
 
+    private static final int SELECT_PHOTO = 100;
     private String urlAPI = "";
     private String usernamePrefs = "";
     private static final String TAG = Perfil_personal.class.getSimpleName();
@@ -47,6 +64,7 @@ public class Perfil_personal extends Fragment {
     private PhoneNumberValidator phoneValidator;
     private String fecha;
     private Context context;
+    ImageLoader imageLoader = VolleyController.getInstance().getImageLoader();
 
     private FragmentActivity perfilTabs;
 
@@ -56,6 +74,9 @@ public class Perfil_personal extends Fragment {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.perfil_datos_personales, container, false);
+
+        if (imageLoader == null)
+            imageLoader = VolleyController.getInstance().getImageLoader();
 
         usernamePrefs = getUsername();
         perfilTabs = getActivity();
@@ -74,12 +95,13 @@ public class Perfil_personal extends Fragment {
         final ImageView edit_button = (ImageView) view.findViewById(R.id.editButton);
         final ImageView edit_name = (ImageView) view.findViewById(R.id.edit_name);
         final ImageView edit_comments_img = (ImageView)view.findViewById(R.id.editButtonComm);
+        final ImageView profile_img = (ImageView)view.findViewById(R.id.image_profile);
 
         final TextView profile_name = (TextView)view.findViewById(R.id.profile_name);
-
         final Drawable defaultBackground = edit_comments.getBackground();
-
         urlAPI = getResources().getString(R.string.urlAPI);
+
+        VolleyController.getInstance().getRequestQueue().getCache().remove(urlAPI+"/students/"+"80001"+"/picture");
 
         edit_comments.setEnabled(false);
         edit_email.setEnabled(false);
@@ -101,7 +123,7 @@ public class Perfil_personal extends Fragment {
         header_name.setEnabled(false);
         header_lastname.setEnabled(false);
 
-        //para mostrar el perfil de un alumno no contacto
+        //para mostrar el perfil de un alumno
         if (getArguments() != null) {
 
             edit_button.setVisibility(View.INVISIBLE);
@@ -127,9 +149,33 @@ public class Perfil_personal extends Fragment {
 
                 RelativeLayout rel_layout_datos = (RelativeLayout)view.findViewById(R.id.contentDatos);
                 rel_layout_datos.setVisibility(View.INVISIBLE);
+
+                //request para la imagen de perfil
+                ImageRequest ir = new ImageRequest(urlAPI+"/students/"+padron_pasaporte+"/picture", new Response.Listener<Bitmap>() {
+
+                    @Override
+                    public void onResponse(Bitmap response) {
+
+                        profile_img.setImageBitmap(response);
+
+                    }
+                }, 0, 0, null, null);
+
+                VolleyController.getInstance().addToRequestQueue(ir);
+
             }else{
                 getUserData(getArguments().getString("userName"));
             }
+
+            profile_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String url = urlAPI+"/students/"+getArguments().getString("userName")+"/picture";
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                }
+            });
 
             return view;
         }
@@ -408,6 +454,26 @@ public class Perfil_personal extends Fragment {
             }
         });
 
+        profile_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+            }
+        });
+
+        profile_img.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                String url = urlAPI+"/students/"+usernamePrefs+"/picture";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+                return true;
+            }
+        });
+
         getUserData(usernamePrefs);
 
         return view;
@@ -429,6 +495,18 @@ public class Perfil_personal extends Fragment {
         final ImageView edit_button = (ImageView) view.findViewById(R.id.editButton);
         final ImageView edit_name = (ImageView) view.findViewById(R.id.edit_name);
         final ImageView edit_comments_img = (ImageView)view.findViewById(R.id.editButtonComm);
+        final ImageView thumbnail = (ImageView)view.findViewById(R.id.image_profile);
+
+		//request para la imagen de perfil
+        ImageRequest ir = new ImageRequest(urlAPI+"/students/"+username+"/picture", new Response.Listener<Bitmap>() {
+
+            @Override
+            public void onResponse(Bitmap response) {
+
+                thumbnail.setImageBitmap(response);
+
+            }
+        }, 0, 0, null, null);
 
         //obtener datos
         JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
@@ -458,6 +536,7 @@ public class Perfil_personal extends Fragment {
                             String nationality = response.getString("nationality");
                             String phoneNumber = response.getString("phoneNumber");
                             String fecha = response.getString("dateOfBirth");
+                            String profileURL = response.getString("profilePicture");
                             boolean isIntercambio = response.getBoolean("isExchangeStudent");
 
                             if (isIntercambio)
@@ -516,9 +595,100 @@ public class Perfil_personal extends Fragment {
             }
         };
 
+        VolleyController.getInstance().addToRequestQueue(ir);
         VolleyController.getInstance().addToRequestQueue(jsonReq);
 
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+
+        final ImageView profile_img = (ImageView)this.view.findViewById(R.id.image_profile);
+
+        switch(requestCode) {
+            case SELECT_PHOTO:
+                if(resultCode == Activity.RESULT_OK) {
+                    Uri selectedImage = imageReturnedIntent.getData();
+                    InputStream imageStream = null;
+                    Bitmap image = null;
+                    try {
+                        imageStream = this.context.getContentResolver().openInputStream(selectedImage);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    //para validar tamaño de imagen
+                    // First decode with inJustDecodeBounds=true to check dimensions
+                    final BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = true;
+
+                    BitmapFactory.decodeStream(imageStream,null,options);
+
+                    try {
+                        imageStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    // Calculate inSampleSize
+                    options.inSampleSize = calculateInSampleSize(options, 90, 90);
+
+                    // Decode bitmap with inSampleSize set
+                    options.inJustDecodeBounds = false;
+
+                    File file = new File(getRealPathFromURI(context, selectedImage));
+                    double imageSize = (file.length() / 1024) / 1024;
+
+                    try {
+                        imageStream = this.context.getContentResolver().openInputStream(selectedImage);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    //si la imagen pesa menos de 10MB
+                    if (imageSize <= 10) {
+                        image = BitmapFactory.decodeStream(imageStream,null, options);
+                        profile_img.setImageBitmap(image);
+
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        headers.put("Accept", "application/json");
+                        headers.put("Authorization", getToken());
+
+                        MultipartRequest mPR = new MultipartRequest(urlAPI+"/students/"+usernamePrefs+"/picture", new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // TODO Auto-generated method stub
+                                Log.d("Error", error.toString());
+                                String responseBody = null;
+                                JSONObject jsonObject = null;
+                                try {
+                                    responseBody = new String( error.networkResponse.data, "utf-8" );
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    jsonObject = new JSONObject( responseBody );
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                //Popup.showText(context, jsonObject.toString(), Toast.LENGTH_LONG).show();
+                            }
+                        } , new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String arg0) {
+                                // TODO Auto-generated method stub
+                                //Log.d("Success", arg0.toString());
+                            }
+                        }, selectedImage, this.context, headers);
+
+                        VolleyController.getInstance().addToRequestQueue(mPR);
+
+                    } else {
+                        Popup.showText(context, "Debe seleccionar una imagen con un tamaño menor a 10MB", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+        }
     }
 
     public static Perfil_personal newContact(Alumno companero) {
@@ -539,6 +709,11 @@ public class Perfil_personal extends Fragment {
 
     }
 
+    private String getToken(){
+        DataAccess dataAccess = new DataAccess(getActivity());
+        return dataAccess.getToken();
+    }
+
     private String getUsername(){
         DataAccess dataAccess = new DataAccess(getActivity());
         return dataAccess.getUserName();
@@ -548,5 +723,43 @@ public class Perfil_personal extends Fragment {
     public void onAttach(Activity activity){
         super.onAttach(activity);
         context = getActivity();
+    }
+
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 }

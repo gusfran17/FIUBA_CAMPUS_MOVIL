@@ -10,6 +10,7 @@ public class Notification {
     private String type;
 
     public Notification() {
+
     }
 
     public Notification(Integer id, Date creationDate, Boolean isViewed, String type) {

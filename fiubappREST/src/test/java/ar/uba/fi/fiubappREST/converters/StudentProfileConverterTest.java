@@ -20,6 +20,7 @@ import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 
 public class StudentProfileConverterTest {
 	
+	private static final String A_PICTURE_PROFILE_URL = "aPictureProfileUrl";
 	private static final String AN_USER_NAME = "anUserName";
 	private static final String A_NAME = "aName";
 	private static final String A_LAST_NAME = "aLastName";
@@ -29,6 +30,7 @@ public class StudentProfileConverterTest {
 	private static final String ANOTHER_CAREER_NAME = "anotherCareerName";
 	private static final String A_COMMENTS = "aComments";
 	
+	@Mock
 	private Student mate;
 	private Student me;
 	private StudentProfileConverter studentProfileConverter;
@@ -40,14 +42,15 @@ public class StudentProfileConverterTest {
 	@Before
 	public void setUp(){
 		this.studentProfileConverter= new StudentProfileConverter();
-		this.mate = new Student();
-		this.mate.setUserName(AN_USER_NAME);
-		this.mate.setName(A_NAME);
-		this.mate.setLastName(A_LAST_NAME);
-		this.mate.setIsExchangeStudent(false);
-		this.mate.setFileNumber(A_FILE_NUMBER);
-		this.mate.setPassportNumber(A_PASSPORT_NUMBER);
-		this.mate.setComments(A_COMMENTS);
+		this.mate = mock(Student.class);
+		when(this.mate.getUserName()).thenReturn(AN_USER_NAME);
+		when(this.mate.getName()).thenReturn(A_NAME);
+		when(this.mate.getLastName()).thenReturn(A_LAST_NAME);
+		when(this.mate.getIsExchangeStudent()).thenReturn(false);
+		when(this.mate.getFileNumber()).thenReturn(A_FILE_NUMBER);
+		when(this.mate.getPassportNumber()).thenReturn(A_PASSPORT_NUMBER);
+		when(this.mate.getComments()).thenReturn(A_COMMENTS);
+		when(this.mate.getProfilePictureUrl()).thenReturn(A_PICTURE_PROFILE_URL);
 		
 		this.aCareer = mock(Career.class);
 		this.anotherCareer = mock(Career.class);
@@ -60,7 +63,7 @@ public class StudentProfileConverterTest {
 		List<StudentCareer> careers = new ArrayList<StudentCareer>();
 		careers.add(aStudentCareer);
 		careers.add(anotherStudentCareer);
-		this.mate.setCareers(careers);
+		when(this.mate.getCareers()).thenReturn(careers);
 		me = new Student();
 		List<Student> mates = new ArrayList<Student>();
 		mates.add(mate);
@@ -82,5 +85,6 @@ public class StudentProfileConverterTest {
 		assertTrue(profile.getCareers().contains(ANOTHER_CAREER_NAME));
 		assertTrue(profile.getIsMyMate());
 		assertEquals(A_COMMENTS, profile.getComments());
+		assertEquals(A_PICTURE_PROFILE_URL, profile.getProfilePicture());
 	}
 }

@@ -223,6 +223,7 @@ public class AdvancedSearch extends Fragment {
                                 student.setIsMyMate(obj.getBoolean("isMyMate"));
                                 student.setUsername(obj.getString("userName"));
                                 student.setComentario(obj.getString("comments"));
+                                student.setImgURL(obj.getString("profilePicture"));
 
                                 JSONArray JSONCareers = new JSONArray(obj.getString("careers"));
                                 ArrayList<String> carreras = new ArrayList<>();

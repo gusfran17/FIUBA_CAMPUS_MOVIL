@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -30,6 +31,7 @@ import ar.uba.fi.fiubappREST.exceptions.StudentsAreNotMatesException;
 import ar.uba.fi.fiubappREST.exceptions.UnableToDeleteTheOnlyCareerForStudentException;
 import ar.uba.fi.fiubappREST.utils.CustomDateDeserializer;
 import ar.uba.fi.fiubappREST.utils.CustomDateSerializer;
+import ar.uba.fi.fiubappREST.utils.SpringContext;
 
 @Entity
 @Table(name = "student")
@@ -61,7 +63,7 @@ public class Student {
 	private String nationality;
 	
 	private String comments;
-	
+
 	@Enumerated
 	private Gender gender;
 
@@ -255,6 +257,12 @@ public class Student {
 
 	public void setGroups(Set<Group> groups) {
 		this.groups = groups;
+	}
+	
+	@JsonProperty(value = "profilePicture")
+	public String getProfilePictureUrl() {
+		String baseUrl = (String) SpringContext.getApplicationContext().getBean("baseUrl");
+		return baseUrl + "/api/students/" + this.userName + "/picture";
 	}
 
 	public void addCareer(final StudentCareer career) {

@@ -20,7 +20,7 @@
 
 	<mvc:resources mapping="/resources/**" location="/resources/" />
 
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
  		<property name="locations">
  			<list>
 				<value>classpath:configuration.properties</value>
@@ -31,5 +31,15 @@
 	<util:properties id="errorMessages" location="classpath:messages.properties"/>
 	
 	<bean id="passwordEncoder" class="org.springframework.security.providers.encoding.Md5PasswordEncoder"/>
+	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    	<property name="maxUploadSize" value="${file.maxSizeInBytes}"/>
+	</bean>
+	
+	<bean id="springContext" class="ar.uba.fi.fiubappREST.utils.SpringContext" />
+	
+	<bean id="baseUrl" class="java.lang.String">
+		<constructor-arg value="${app.url}"/>
+	</bean>
 
 </beans>

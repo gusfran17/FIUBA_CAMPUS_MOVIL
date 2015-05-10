@@ -2,6 +2,8 @@ package ar.uba.fi.fiubappMobile.notifications;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.NetworkImageView;
 import com.fiubapp.fiubapp.Popup;
 import com.fiubapp.fiubapp.R;
 import com.fiubapp.fiubapp.VolleyController;
@@ -64,16 +67,11 @@ public class NotificationAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        /*if (inflater == null) {
+        if (inflater == null) {
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }*/
+        }
         if (convertView == null) {
-            Log.d("NotificationAdapter:", "Convertview = null");
-            inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            //if (notifications.get(position).getClass().equals(ApplicationNotification.class)) {
             convertView = inflater.inflate(R.layout.application_notification, null);
-
-            //}
         } else {
             Log.d("NotificationAdapter:", "Convertview NOT NULL");
         }
@@ -82,6 +80,12 @@ public class NotificationAdapter extends BaseAdapter {
     }
 
     private void populateApplicationNotification(final ApplicationNotification notification, final View convertView, final Context context, final int position) {
+
+        if (imageLoader == null)
+            imageLoader = VolleyController.getInstance().getImageLoader();
+        NetworkImageView thumbNail = (NetworkImageView) convertView
+                .findViewById(R.id.thumbnail);
+
         TextView name = (TextView) convertView.findViewById(R.id.name);
         TextView description = (TextView) convertView.findViewById(R.id.description);
         TextView creationDate = (TextView) convertView.findViewById(R.id.creationDate);
@@ -91,6 +95,18 @@ public class NotificationAdapter extends BaseAdapter {
         description.setText(R.string.application_notification_message);
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         creationDate.setText(df.format(notification.getCreationDate()));
+
+        thumbNail.setImageUrl(notification.getApplicant().getImgURL(),imageLoader);
+        thumbNail.setDefaultImageResId(R.drawable.no_image);
+        thumbNail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = notification.getApplicant().getImgURL();
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                activity.startActivity(i);
+            }
+        });
 
         final Map<String, String> params = new HashMap<String, String>();
         params.put("userName", notification.getApplicant().getUsername());

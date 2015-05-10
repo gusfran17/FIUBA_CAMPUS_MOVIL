@@ -41,6 +41,7 @@ public class NotificationBuilder {
         applicant.setApellido(applicantObj.getString("lastName"));
         applicant.setIntercambio(applicantObj.getBoolean("isExchangeStudent"));
         applicant.setPasaporte(applicantObj.getString("passportNumber"));
+        applicant.setImgURL(applicantObj.getString("profilePicture"));
 
         String padron = applicantObj.getString("fileNumber");
         if(padron != null && !padron.equals("null") && !padron.equals("") )

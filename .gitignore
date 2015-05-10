@@ -71,6 +71,7 @@ local.properties
 .buildpath
 fiubappAdminWeb/.gradle/
 fiubappREST/.gradle/
+fiubappREST/bin/
 <<<<<<< HEAD
 .gradle
 =======
