@@ -97,7 +97,8 @@ public class StudentServiceImpl implements StudentService {
 		locationConfiguration.setStudent(student);
 		student.setConfigurations(new HashSet<Configuration>());
 		student.getConfigurations().add(locationConfiguration);
-
+	}
+	
 	private void createDefaultProfileImage(Student student) {
 		ProfilePicture picture = new ProfilePicture();
 		picture.setStudent(student);
@@ -242,6 +243,7 @@ public class StudentServiceImpl implements StudentService {
 
 	public void setDefaultDistanceInKm(Double defaultDistanceInKm) {
 		this.defaultDistanceInKm = defaultDistanceInKm;
+	}
 
 	public Resource getDefaultProfilePicture() {
 		return defaultProfilePicture;
