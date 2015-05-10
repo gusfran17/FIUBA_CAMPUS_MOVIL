@@ -69,7 +69,7 @@ public class MultipartRequest<T> extends Request<T> {
 
     private void buildMultipartEntity()
     {
-        mBuilder.addBinaryBody(FILE_PART_NAME, mImageFile, ContentType.create("image/jpeg"), getRealPathFromURI(this.context,this.uri));
+        mBuilder.addBinaryBody(FILE_PART_NAME, mImageFile, ContentType.create("image/png"), getRealPathFromURI(this.context,this.uri));
         mBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         mBuilder.setLaxMode().setBoundary("xx").setCharset(Charset.forName("UTF-8"));
     }
