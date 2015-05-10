@@ -174,6 +174,13 @@ public class ExceptionsHandler {
 		return new ErrorResponse("10002", message);
 	}
 	
+	@ExceptionHandler(SubjectsNotFoundForStudentAndCareerException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(SubjectsNotFoundForStudentAndCareerException exception){
+		return buildResponse(exception);
+	}
+	
+	
 	@ExceptionHandler(UnexpectedErrorReadingProfilePictureFileException.class)
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR) 
 	public @ResponseBody ErrorResponse handle(UnexpectedErrorReadingProfilePictureFileException exception){
