@@ -86,13 +86,13 @@ public class Student {
 	@ManyToMany(mappedBy="members")
 	private Set<Group> groups;
 	
-	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, orphanRemoval = true)
-	
+	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, orphanRemoval = true)	
 	private Set<Configuration> configurations;
 	
 	@OneToOne(mappedBy = "student", cascade={CascadeType.ALL}, orphanRemoval = true)
 	private Location location;
 
+	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, orphanRemoval = true)
 	private Set<Job> jobs;
 	
 	public String getUserName() {
