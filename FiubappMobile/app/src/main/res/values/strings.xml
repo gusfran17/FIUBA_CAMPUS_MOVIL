@@ -26,6 +26,7 @@
     <string-array name="config">
         <item>Perfil</item>
         <item>Notificaciones</item>
+        <item>Localización</item>
         <item>Salir</item>
     </string-array>
     <string name="application_notification_message">quiere ser tu compañero</string>
@@ -38,5 +39,9 @@
     <string name="verCercanos">VER CERCANOS</string>
     <string name="companerosCercanos">Compañeros cercanos</string>
     <string name="actualizar">ACTUALIZAR</string>
+    <string name="kms">KMs.</string>
+    <string name="ver_amigos_hasta">Ver amigos hasta</string>
+    <string name="mostrar_mi_ubicacion">Mostrar mi ubicación</string>
+    <string name="configurar_localizacion">Configurar localización</string>
 
 </resources>

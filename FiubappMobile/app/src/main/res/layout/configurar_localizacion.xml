@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tvMostrarMiUbicacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mostrar_mi_ubicacion"
+        android:layout_alignBaseline="@+id/cbMostrarMiUbicacion"
+        android:layout_alignBottom="@+id/cbMostrarMiUbicacion" />
+
+    <CheckBox  android:id="@+id/cbMostrarMiUbicacion"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5px"
+        android:layout_toRightOf="@+id/tvMostrarMiUbicacion" />
+
+    <TextView
+        android:id="@+id/tvMostrarHasta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ver_amigos_hasta"
+        android:layout_below="@+id/tvMostrarMiUbicacion"
+        android:layout_alignBaseline="@+id/etMostrarHasta"
+        android:layout_alignBottom="@+id/etMostrarHasta" />
+
+    <EditText android:id="@+id/etMostrarHasta"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/tvMostrarMiUbicacion"
+        android:maxLength="4"
+        android:inputType="numberDecimal"
+        android:width="100px"
+        android:layout_marginTop="5px"
+        android:layout_toRightOf="@+id/tvMostrarMiUbicacion" />
+
+    <TextView
+        android:id="@+id/tvKm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvMostrarMiUbicacion"
+        android:text="@string/kms"
+        android:layout_toRightOf="@+id/etMostrarHasta"
+        android:layout_alignBaseline="@+id/etMostrarHasta"
+        android:layout_alignBottom="@+id/etMostrarHasta" />
+
+</RelativeLayout>

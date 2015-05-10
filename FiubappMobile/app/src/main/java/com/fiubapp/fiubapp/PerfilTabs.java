@@ -55,14 +55,6 @@ public class PerfilTabs extends FragmentActivity {
         TabPageIndicator indicator = (TabPageIndicator)findViewById(R.id.indicator_perfil);
         indicator.setTypeFace(Typeface.createFromAsset(getApplicationContext().getAssets(),"fonts/Roboto-Bold.ttf"));
         indicator.setViewPager(viewPager);
-
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        Localizador localizador = new Localizador() {
-            @Override
-            public void cambioUbicacion(LatLng miUbicacion) {
-            }
-        };
-        locationManager.removeUpdates(localizador.getInstance());
     }
 
     public void borrarCarrera(){

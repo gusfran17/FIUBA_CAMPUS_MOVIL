@@ -224,6 +224,10 @@ public class Perfil_secundaria extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+
+                        if(!isAdded())
+                            return;
+
                         try {
                             String titulo = response.getString("degree");
                             String escuela = response.getString("schoolName");
@@ -245,6 +249,10 @@ public class Perfil_secundaria extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+
+                        if(!isAdded() || error == null)
+                            return;
+
                         //parseo la respuesta del server para obtener JSON
                         String body = null;
                         try {
@@ -256,10 +264,8 @@ public class Perfil_secundaria extends Fragment {
                             if(!codigoError.equals("4002")){
                                 iniciarSesionNuevamente(JSONBody.getString("message"));
                             }
-                        } catch (UnsupportedEncodingException e) {
-                            iniciarSesionNuevamente(null);
-                        } catch (JSONException e) {
-                            iniciarSesionNuevamente(null);
+                        } catch (Exception e) {
+                            return;
                         }
                     }
                 }){
@@ -340,6 +346,10 @@ public class Perfil_secundaria extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+
+                        if(!isAdded() || error == null)
+                            return;
+
                         //parseo la respuesta del server para obtener JSON
                         String body = null;
                         try {
