@@ -13,8 +13,7 @@ public class MateLocationConverter {
 		representation.setUserName(student.getUserName());
 		representation.setName(student.getName());
 		representation.setLastName(student.getLastName());
-		//TODO hacer luego del merge
-//		representation.setProfilePicture(student.getC...)
+		representation.setProfilePicture(student.getProfilePictureUrl());
 		representation.setLatitude(student.getLocation().getLatitude());
 		representation.setLongitude(student.getLocation().getLongitude());		
 		return representation;
