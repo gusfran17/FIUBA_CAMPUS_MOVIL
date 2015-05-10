@@ -160,6 +160,12 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
+	@ExceptionHandler(SubjectsNotFoundForStudentAndCareerException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(SubjectsNotFoundForStudentAndCareerException exception){
+		return buildResponse(exception);
+	}
+	
 	
 	
 	@ExceptionHandler(InvalidUserException.class)

@@ -1,8 +1,9 @@
 package ar.uba.fi.fiubappREST.domain;
 
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -13,11 +14,12 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 public class Subject {
 
 	@Id
-	private String id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 	
 	private String userName;
 	
-	private String careerCode;
+	private Integer careerCode;
 	
 	private String code;
 	
@@ -26,14 +28,15 @@ public class Subject {
 	private Integer credits;
 	
 	@JsonIgnore
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
+	@JsonIgnore
 	public String getUserName() {
 		return userName;
 	}
@@ -42,11 +45,12 @@ public class Subject {
 		this.userName = userName;
 	}
 
-	public String getCareerCode() {
+	@JsonIgnore
+	public Integer getCareerCode() {
 		return careerCode;
 	}
 
-	public void setCareerCode(String careerCode) {
+	public void setCareerCode(Integer careerCode) {
 		this.careerCode = careerCode;
 	}
 

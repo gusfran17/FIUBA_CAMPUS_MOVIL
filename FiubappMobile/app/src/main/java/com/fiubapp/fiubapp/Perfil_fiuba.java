@@ -271,9 +271,12 @@ public class Perfil_fiuba extends Fragment {
         }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
+                String token = settings.getString("token", null);
                 Map<String, String> headers = new HashMap<String, String>();
                 headers.put("Content-Type", "application/json");
+                headers.put("Authorization", token);
                 return headers;
+
             }
         };
 

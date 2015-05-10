@@ -1,12 +1,9 @@
 package ar.uba.fi.fiubappREST.services;
 
-import java.util.List;
-
-import ar.uba.fi.fiubappREST.domain.Credits;
-import ar.uba.fi.fiubappREST.domain.Subject;
+import ar.uba.fi.fiubappREST.domain.CareerProgress;
 
 public interface SubjectService {
 
-	public Credits findAll(Integer careerCode, String userName);
+	public CareerProgress getCareerProgress(Integer careerCode, String userName);
 
 }

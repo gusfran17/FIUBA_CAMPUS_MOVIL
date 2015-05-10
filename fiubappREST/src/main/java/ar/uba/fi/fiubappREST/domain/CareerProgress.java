@@ -2,13 +2,13 @@ package ar.uba.fi.fiubappREST.domain;
 
 import java.util.List;
 
-public class Credits {
+public class CareerProgress {
 
 	private Integer currentAmount;
 	private Integer totalAmount;
 	List<Subject> subjects;
 	
-	public Credits (List<Subject> subjects, Integer totalAmount){
+	public CareerProgress (List<Subject> subjects, Integer totalAmount){
 		this.totalAmount = totalAmount;
 		this.subjects = subjects;
 		this.currentAmount = sumUpCredits();
@@ -16,11 +16,9 @@ public class Credits {
 	}
 
 	private Integer sumUpCredits() {
-		Subject subject;
 		Integer currentAmount = 0;
-		for (int i = 0; i < this.subjects.size(); i++){
-			subject = this.subjects.get(i);
-			currentAmount = subject.getCredits() + currentAmount;
+		for (Subject subject : this.subjects) {
+			currentAmount += subject.getCredits();
 		}
 		return currentAmount;
 	}
