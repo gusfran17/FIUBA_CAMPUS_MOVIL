@@ -303,7 +303,7 @@ public class Perfil_personal extends Fragment {
                         if (!emailValidator.validate(email)){
                             Popup.showText(context, "El email no es válido", Toast.LENGTH_LONG).show();
                         } else{
-                            Popup.showText(context, "El numero de telefono no es válido", Toast.LENGTH_LONG).show();
+                            Popup.showText(context, "El numero de teléfono no es válido", Toast.LENGTH_LONG).show();
                         }
                     }
                 }else{

@@ -200,7 +200,7 @@ public class Perfil_empleo extends Fragment {
                                     createJob(job);
 
                                 } else {
-                                    Popup.showText(getActivity(), "Todos los campos son obligatorios exepto por la Fecha de Finalizacion", Toast.LENGTH_LONG).show();
+                                    Popup.showText(getActivity(), "Todos los campos son obligatorios excepto por la Fecha de Finalización", Toast.LENGTH_LONG).show();
                                     setCreateJob(job);
                                 }
 
