@@ -89,6 +89,15 @@ public class Perfil_personal extends Fragment {
         edit_nacionalidad.setEnabled(false);
         edit_fecha.setEnabled(false);
 
+        edit_email.setBackgroundColor(Color.TRANSPARENT);
+        edit_ciudad.setBackgroundColor(Color.TRANSPARENT);
+        edit_fecha.setBackgroundColor(Color.TRANSPARENT);
+        edit_nacionalidad.setBackgroundColor(Color.TRANSPARENT);
+        edit_telefono.setBackgroundColor(Color.TRANSPARENT);
+        edit_comments.setBackgroundColor(Color.TRANSPARENT);
+
+        header_name.setBackgroundColor(Color.TRANSPARENT);
+        header_lastname.setBackgroundColor(Color.TRANSPARENT);
         header_name.setEnabled(false);
         header_lastname.setEnabled(false);
 
@@ -166,7 +175,7 @@ public class Perfil_personal extends Fragment {
 
                     String comments = edit_comments.getText().toString();
 
-                    edit_comments.setBackground(defaultBackground);
+                    edit_comments.setBackgroundColor(Color.TRANSPARENT);
 
                     Map<String, String> params = new HashMap<String, String>();
                     params.put("comments", comments);
@@ -207,7 +216,7 @@ public class Perfil_personal extends Fragment {
 
                 }else{
                     edit_comments_img.setImageResource(R.drawable.ic_save);
-                    edit_comments.setBackgroundColor(Color.TRANSPARENT);
+                    edit_comments.setBackgroundDrawable(defaultBackground);
                 }
 
                 edit_comments.setEnabled(!edit_comments.isEnabled());
@@ -220,11 +229,11 @@ public class Perfil_personal extends Fragment {
 
                 if (edit_email.isEnabled()) {
 
-                    edit_email.setBackground(defaultBackground);
-                    edit_ciudad.setBackground(defaultBackground);
-                    edit_email.setBackground(defaultBackground);
-                    edit_nacionalidad.setBackground(defaultBackground);
-                    edit_telefono.setBackground(defaultBackground);
+                    edit_email.setBackgroundColor(Color.TRANSPARENT);
+                    edit_ciudad.setBackgroundColor(Color.TRANSPARENT);
+                    edit_fecha.setBackgroundColor(Color.TRANSPARENT);
+                    edit_nacionalidad.setBackgroundColor(Color.TRANSPARENT);
+                    edit_telefono.setBackgroundColor(Color.TRANSPARENT);
 
                     String email = edit_email.getText().toString();
                     String gender = edit_sexo.getSelectedItem().toString();
@@ -308,11 +317,12 @@ public class Perfil_personal extends Fragment {
                     }
                 }else{
                     edit_button.setImageResource(R.drawable.ic_save);
-                    edit_email.setBackgroundColor(Color.TRANSPARENT);
-                    edit_ciudad.setBackgroundColor(Color.TRANSPARENT);
-                    edit_email.setBackgroundColor(Color.TRANSPARENT);
-                    edit_nacionalidad.setBackgroundColor(Color.TRANSPARENT);
-                    edit_telefono.setBackgroundColor(Color.TRANSPARENT);
+
+                    edit_email.setBackgroundDrawable(defaultBackground);
+                    edit_ciudad.setBackgroundDrawable(defaultBackground);
+                    edit_fecha.setBackgroundDrawable(defaultBackground);
+                    edit_nacionalidad.setBackgroundDrawable(defaultBackground);
+                    edit_telefono.setBackgroundDrawable(defaultBackground);
                 }
 
                 edit_email.setEnabled(!edit_email.isEnabled());
@@ -334,7 +344,8 @@ public class Perfil_personal extends Fragment {
                     String name = header_name.getText().toString();
                     String lastName = header_lastname.getText().toString();
 
-
+                    header_name.setBackgroundColor(Color.TRANSPARENT);
+                    header_lastname.setBackgroundColor(Color.TRANSPARENT);
 
                     if (!name.equals("") && !lastName.equals("")) {
                         Map<String, String> params = new HashMap<String, String>();
@@ -391,6 +402,8 @@ public class Perfil_personal extends Fragment {
                     header_name.setEnabled(!header_name.isEnabled());
                     header_lastname.setEnabled(!header_lastname.isEnabled());
                     edit_name.setImageResource(R.drawable.ic_save);
+                    header_name.setBackgroundDrawable(defaultBackground);
+                    header_lastname.setBackgroundDrawable(defaultBackground);
                 }
             }
         });
