@@ -116,7 +116,7 @@ public class CareerExpandableAdapter extends BaseExpandableListAdapter {
 
             if (perfilFiuba.getArguments() != null) {
 
-                if (!perfilFiuba.getArguments().getBoolean("isMyMate")) {
+                if (perfilFiuba.getArguments().getBoolean("isMyMate")) {
                         lblProgressDesc.setVisibility(View.VISIBLE);
                         careerProgress.setVisibility(View.VISIBLE);
                 }else{
