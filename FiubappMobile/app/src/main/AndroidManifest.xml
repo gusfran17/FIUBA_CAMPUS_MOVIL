@@ -56,9 +56,15 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <!--Mati -->
+        <!--<meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyDHY82IK-d8x-R9ue2sHtQI6oYn6r_UhcA"/> -->
+
+        <!--Marce -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDHY82IK-d8x-R9ue2sHtQI6oYn6r_UhcA"/>
+            android:value="AIzaSyApdEYzHAOvaVNPfIOMf2E0tdTqExCtHXY"/>
 
     </application>
 
