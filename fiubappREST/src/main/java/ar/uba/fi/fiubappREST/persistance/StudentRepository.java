@@ -36,4 +36,6 @@ public interface StudentRepository extends CrudRepository<Student, String> {
 			"AND m.location.longitude > ?4 AND m.location.longitude < ?5")
     public Student findMatesWithinAreaByUser(String userName, Double latitudeFrom, Double latitudeTo, Double longitudeFrom, Double longitudeTo);	
 
+	@Query("SELECT s FROM Student s LEFT JOIN FETCH s.jobs WHERE s.userName = ?1")
+    public Student findByUserNameAndFetchJobsEagerly(String userName);
 }

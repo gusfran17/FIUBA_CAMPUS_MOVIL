@@ -2,6 +2,8 @@ package com.fiubapp.fiubapp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.NetworkImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,17 +66,29 @@ public class AlumnoAdapter extends BaseAdapter {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.list_row, null);
 
-        /*if (imageLoader == null)
+        if (imageLoader == null)
             imageLoader = VolleyController.getInstance().getImageLoader();
         NetworkImageView thumbNail = (NetworkImageView) convertView
-                .findViewById(R.id.thumbnail);*/
-        //ImageView imagen = (ImageView) convertView.findViewById(R.id.thumbnail);
+                .findViewById(R.id.thumbnail);
+
         TextView nombre = (TextView) convertView.findViewById(R.id.nombre);
         TextView username = (TextView) convertView.findViewById(R.id.username);
         TextView carrera = (TextView) convertView.findViewById(R.id.carrera);
 
         final Button buttonAdd = (Button) convertView.findViewById(R.id.childButton);
-        Alumno a = alumnoItems.get(position);
+
+        final Alumno a = alumnoItems.get(position);
+
+        thumbNail.setImageUrl(a.getImgURL(),imageLoader);
+        thumbNail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = a.getImgURL();
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                activity.startActivity(i);
+            }
+        });
 
         nombre.setText(a.getNombre() +" "+ a.getApellido());
 

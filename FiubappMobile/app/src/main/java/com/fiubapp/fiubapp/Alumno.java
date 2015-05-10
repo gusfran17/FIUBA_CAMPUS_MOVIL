@@ -19,6 +19,7 @@ public class Alumno {
     private boolean intercambio;
     private String username;
     private String pasaporte;
+    private String imgURL;
     private int padron;
     private ArrayList<String> carreras;
     private ArrayList<Integer> grupos, discusiones, compañeros;
@@ -200,5 +201,12 @@ public class Alumno {
         this.ubicacion = ubicacion;
     }
 
+    public String getImgURL() {
+        return imgURL;
+    }
+
+    public void setImgURL(String imgURL) {
+        this.imgURL = imgURL;
+    }
 
 }

@@ -15,15 +15,18 @@
             android:paddingTop="5dip"
             android:paddingBottom="5dip">
 
-                <ImageView android:src="@drawable/no_image"
+                <ImageView
+                    android:src="@drawable/no_image"
                     android:layout_width="90dp"
                     android:layout_height="90dp"
-                    android:layout_marginLeft="10dip"
-                    android:id="@+id/image_profile"/>
+                    android:id="@+id/image_profile"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="10dp" />
 
                 <EditText android:id="@+id/header_name"
                     android:layout_width="wrap_content"
-                    android:layout_height="31dp"
+                    android:layout_height="40dp"
                     android:paddingRight="10sp"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -36,7 +39,7 @@
 
                 <EditText android:id="@+id/header_lastname"
                     android:layout_width="wrap_content"
-                    android:layout_height="31dp"
+                    android:layout_height="40dp"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="#372c24"
@@ -49,7 +52,7 @@
 
                 <TextView android:id="@+id/header_padron"
                     android:layout_width="wrap_content"
-                    android:layout_height="31dp"
+                    android:layout_height="40dp"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="#372c24"

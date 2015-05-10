@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -53,6 +54,8 @@ public class AdvancedSearch extends Fragment {
     private EditText edt_search_filenumber;
     private EditText edt_search_passport;
     private Button btnSearch;
+    private Button btnCollapse;
+    private RelativeLayout contentAdvancedSearch;
     private ListView  studentsMeetCriteria;
     private SpinnerObject spinnerObject;
 
@@ -105,6 +108,10 @@ public class AdvancedSearch extends Fragment {
         fillCareerSpinner(spnCareer);
 
         btnSearch = (Button) advancedSearchView.findViewById(R.id.button_advanced_search);
+        btnCollapse = (Button) advancedSearchView.findViewById(R.id.button_expand_search);
+        contentAdvancedSearch = (RelativeLayout) advancedSearchView.findViewById(R.id.contentAdvancedSearch);
+
+        btnCollapse.setVisibility(View.GONE);
 
         btnSearch.setOnClickListener(new View.OnClickListener(){
 
@@ -112,6 +119,16 @@ public class AdvancedSearch extends Fragment {
             public void onClick(View view) {
                 //studentsMeetCriteria.setVisibility(View.VISIBLE);
                 fillStudentList();
+                btnCollapse.setVisibility(View.VISIBLE);
+                contentAdvancedSearch.setVisibility(View.GONE);
+            }
+        });
+
+        btnCollapse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnCollapse.setVisibility(View.GONE);
+                contentAdvancedSearch.setVisibility(View.VISIBLE);
             }
         });
 
@@ -206,6 +223,7 @@ public class AdvancedSearch extends Fragment {
                                 student.setIsMyMate(obj.getBoolean("isMyMate"));
                                 student.setUsername(obj.getString("userName"));
                                 student.setComentario(obj.getString("comments"));
+                                student.setImgURL(obj.getString("profilePicture"));
 
                                 JSONArray JSONCareers = new JSONArray(obj.getString("careers"));
                                 ArrayList<String> carreras = new ArrayList<>();

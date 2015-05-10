@@ -43,5 +43,11 @@
     <string name="ver_amigos_hasta">Ver amigos hasta</string>
     <string name="mostrar_mi_ubicacion">Mostrar mi ubicación</string>
     <string name="configurar_localizacion">Configurar localización</string>
-
+    <string name="job_description">Puesto</string>
+    <string name="job_header">Empresa</string>
+    <string name="lbl_job_startdate">Fecha de Inicio</string>
+    <string name="lbl_job_enddate">Fecha de Finalizacion</string>
+    <string name="JOBS">EMPLEOS</string>
+    <string name="lbl_job_firm">Empresa</string>
+    <string name="expand">Modificar criterio de Busqueda</string>
 </resources>

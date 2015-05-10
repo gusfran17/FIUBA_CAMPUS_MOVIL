@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -30,6 +31,7 @@ import ar.uba.fi.fiubappREST.exceptions.StudentsAreNotMatesException;
 import ar.uba.fi.fiubappREST.exceptions.UnableToDeleteTheOnlyCareerForStudentException;
 import ar.uba.fi.fiubappREST.utils.CustomDateDeserializer;
 import ar.uba.fi.fiubappREST.utils.CustomDateSerializer;
+import ar.uba.fi.fiubappREST.utils.SpringContext;
 
 @Entity
 @Table(name = "student")
@@ -61,7 +63,7 @@ public class Student {
 	private String nationality;
 	
 	private String comments;
-	
+
 	@Enumerated
 	private Gender gender;
 
@@ -85,10 +87,13 @@ public class Student {
 	private Set<Group> groups;
 	
 	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, orphanRemoval = true)
+	
 	private Set<Configuration> configurations;
 	
 	@OneToOne(mappedBy = "student", cascade={CascadeType.ALL}, orphanRemoval = true)
 	private Location location;
+
+	private Set<Job> jobs;
 	
 	public String getUserName() {
 		return userName;
@@ -246,8 +251,24 @@ public class Student {
 		return groups;
 	}
 
+	@JsonIgnore
+	public Set<Job> getJobs() {
+		return jobs;
+	}
+
+	@JsonIgnore
+	public void setJobs(Set<Job> jobs) {
+		this.jobs = jobs;
+	}
+
 	public void setGroups(Set<Group> groups) {
 		this.groups = groups;
+	}
+	
+	@JsonProperty(value = "profilePicture")
+	public String getProfilePictureUrl() {
+		String baseUrl = (String) SpringContext.getApplicationContext().getBean("baseUrl");
+		return baseUrl + "/api/students/" + this.userName + "/picture";
 	}
 
 	@JsonIgnore
@@ -355,6 +376,15 @@ public class Student {
 		});
 		return foundGroup!=null;
 	}
+	
+	public void addJob(Job job) {
+		this.jobs.add(job);	
+	}
+	
+	public void deleteJob(Job job){
+		this.jobs.remove(job);
+		job.setStudent(null);
+	}
 
 	@Override
 	public int hashCode() {
@@ -380,6 +410,5 @@ public class Student {
 		} else if (!userName.equals(other.userName))
 			return false;
 		return true;
-	}	
-
+	}
 }

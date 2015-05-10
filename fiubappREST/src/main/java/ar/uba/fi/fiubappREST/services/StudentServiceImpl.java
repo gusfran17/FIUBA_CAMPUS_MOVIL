@@ -1,17 +1,19 @@
 package ar.uba.fi.fiubappREST.services;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.security.providers.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import ar.uba.fi.fiubappREST.converters.StudentConverter;
 import ar.uba.fi.fiubappREST.converters.StudentProfileConverter;
 import ar.uba.fi.fiubappREST.domain.Career;
@@ -19,12 +21,15 @@ import ar.uba.fi.fiubappREST.domain.Configuration;
 import ar.uba.fi.fiubappREST.domain.Gender;
 import ar.uba.fi.fiubappREST.domain.Location;
 import ar.uba.fi.fiubappREST.domain.LocationConfiguration;
+import ar.uba.fi.fiubappREST.domain.ProfilePicture;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentCareer;
 import ar.uba.fi.fiubappREST.exceptions.CareerNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyExistsException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
+import ar.uba.fi.fiubappREST.exceptions.UnexpectedErrorReadingProfilePictureFileException;
 import ar.uba.fi.fiubappREST.persistance.CareerRepository;
+import ar.uba.fi.fiubappREST.persistance.ProfilePictureRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
@@ -37,6 +42,7 @@ public class StudentServiceImpl implements StudentService {
 	
 	private StudentRepository studentRepository;
 	private CareerRepository careerRepository;
+	private ProfilePictureRepository profilePictureRepository;
 	private StudentConverter studentConverter;
 	private Md5PasswordEncoder passwordEncoder;
 	private StudentProfileConverter studentProfileConverter;
@@ -44,11 +50,15 @@ public class StudentServiceImpl implements StudentService {
 	@Value("${configurations.defaultDistanceInKm}")
 	private Double defaultDistanceInKm;
 	
+	@Value("classpath:defaultProfilePicture.png")
+	private Resource defaultProfilePicture;
+	
 	@Autowired
-	public StudentServiceImpl(StudentRepository studentRepository, CareerRepository careerRepository, StudentConverter studentConverter, 
-			Md5PasswordEncoder passwordEncoder, StudentProfileConverter studentProfileConverter){
+	public StudentServiceImpl(StudentRepository studentRepository, CareerRepository careerRepository, ProfilePictureRepository profilePictureRepository, 
+			StudentConverter studentConverter, Md5PasswordEncoder passwordEncoder, StudentProfileConverter studentProfileConverter){
 		this.studentRepository = studentRepository;
 		this.careerRepository = careerRepository;
+		this.profilePictureRepository = profilePictureRepository;
 		this.studentConverter = studentConverter;
 		this.passwordEncoder = passwordEncoder;
 		this.studentProfileConverter = studentProfileConverter;
@@ -63,9 +73,13 @@ public class StudentServiceImpl implements StudentService {
 			Career career = this.getCareer(studentRepresentation.getCareerCode());
 			this.createStudentCareer(student, career);
 		}
+
 		this.setDefaultConfiguration(student);
 		this.createLocation(student);
 		student = studentRepository.save(student); 
+		
+		this.createDefaultProfileImage(student);
+
 		LOGGER.info(String.format("Student with userName %s and careerCode %s was created.", student.getUserName(), studentRepresentation.getCareerCode()));
 		return student;
 	}
@@ -83,6 +97,20 @@ public class StudentServiceImpl implements StudentService {
 		locationConfiguration.setStudent(student);
 		student.setConfigurations(new HashSet<Configuration>());
 		student.getConfigurations().add(locationConfiguration);
+
+	private void createDefaultProfileImage(Student student) {
+		ProfilePicture picture = new ProfilePicture();
+		picture.setStudent(student);
+		picture.setContentType(MediaType.IMAGE_PNG_VALUE);
+		byte[] image;
+		try {
+			image = IOUtils.toByteArray(this.defaultProfilePicture.getInputStream());
+			picture.setImage(image);
+		} catch (IOException e) {
+			LOGGER.error(String.format("File %s for profile picture for student with userName %s was not read.", this.defaultProfilePicture.getFilename(), student.getUserName()));
+			throw new UnexpectedErrorReadingProfilePictureFileException(this.defaultProfilePicture.getFilename());
+		}
+		this.profilePictureRepository.save(picture);
 	}
 
 	private Student getStudent(StudentCreationRepresentation studentRepresentation){
@@ -207,13 +235,19 @@ public class StudentServiceImpl implements StudentService {
 		student.setGender(gender);
 	}
 
+
 	public Double getDefaultDistanceInKm() {
 		return defaultDistanceInKm;
 	}
 
 	public void setDefaultDistanceInKm(Double defaultDistanceInKm) {
 		this.defaultDistanceInKm = defaultDistanceInKm;
+
+	public Resource getDefaultProfilePicture() {
+		return defaultProfilePicture;
 	}
 
-	
+	public void setDefaultProfilePicture(Resource defaultProfilePicture) {
+		this.defaultProfilePicture = defaultProfilePicture;
+	}
 }
