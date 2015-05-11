@@ -9,7 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 public abstract class Localizador {
 
     private static LocationListener instance = null;
-    private static LatLng miUbicacion = new LatLng(-34.742511, -58.350158);
+    private static LatLng miUbicacion = new LatLng(-34.61775789, -58.36797953);
 
     protected Localizador() {
     }

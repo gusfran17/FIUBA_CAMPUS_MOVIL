@@ -2,9 +2,11 @@ package com.fiubapp.fiubapp;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -27,6 +29,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +42,7 @@ import java.util.Map;
 
 import ar.uba.fi.fiubappMobile.partners.StudentSearchTabs;
 import ar.uba.fi.fiubappMobile.utils.DataAccess;
+import ar.uba.fi.fiubappMobile.utils.Localizador;
 
 public class Companeros extends Fragment {
     ListView lv1;
@@ -136,6 +140,8 @@ public class Companeros extends Fragment {
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
+                        obtenerLocalizacion();
+
                         String distanceInKmLocation = settings.getString("distanceInKmLocation", "1");
                         guardarConfiguracionEnServidor(true, distanceInKmLocation);
 
@@ -160,6 +166,60 @@ public class Companeros extends Fragment {
         // Create the AlertDialog object and return it
         builder.create();
         builder.show();
+    }
+
+    private void obtenerLocalizacion(){
+        LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        Localizador localizador = new Localizador() {
+            @Override
+            public void cambioUbicacion(LatLng miUbicacion) {
+                actualizarLocalizacionAlumno(miUbicacion);
+            }
+        };
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 0, localizador.getInstance());
+    }
+
+    private void actualizarLocalizacionAlumno(LatLng miUbicacion){
+
+        if(!isAdded())
+            return;
+
+        final SharedPreferences settings = this.getActivity().getSharedPreferences(this.getActivity().getResources().getString(R.string.prefs_name), 0);
+
+        RequestQueue queue = Volley.newRequestQueue(this.getActivity());
+
+        String url = this.getString(R.string.urlAPI) + "/students/" + settings.getString("username", null) + "/location";
+
+        JSONObject jsonParams = new JSONObject();
+
+        try {
+            jsonParams.put("latitude", miUbicacion.latitude);
+            jsonParams.put("longitude", miUbicacion.longitude);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.PUT, url, jsonParams,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }){
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", settings.getString("token", null));
+                return headers;
+            }
+        };
+
+        queue.add(jsObjRequest);
     }
 
     private void guardarConfiguracionEnServidor(boolean isEnabled, String distanceInKm){
