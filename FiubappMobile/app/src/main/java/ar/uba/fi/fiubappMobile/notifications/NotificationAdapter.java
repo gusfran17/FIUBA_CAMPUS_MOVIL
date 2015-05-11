@@ -141,10 +141,7 @@ public class NotificationAdapter extends BaseAdapter {
                                 JSONObject jsonObject = new JSONObject( responseBody );
                                 //Popup.showText(context, jsonObject.getString("message") , Toast.LENGTH_LONG).show();
                                 setViewedNotification(notification,context, position);
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            } catch (Exception e) {
                             }
                         }
                     }

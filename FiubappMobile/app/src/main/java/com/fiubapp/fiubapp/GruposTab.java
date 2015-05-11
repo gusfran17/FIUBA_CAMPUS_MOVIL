@@ -120,13 +120,19 @@ public class GruposTab extends Fragment {
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, url, jsonParams, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                if (!isAdded()) return;
+                if (!isAdded())
+                    return;
+
                 getGrupos();
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+
+                        if(!isAdded())
+                            return;
+
                         //parseo la respuesta del server para obtener JSON
                         String body = null;
                         try {

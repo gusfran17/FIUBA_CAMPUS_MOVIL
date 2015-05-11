@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +29,7 @@ import java.util.Map;
 public class Login extends Activity {
 
     public static final String PREFS_NAME = "MyPrefsFile";
+    public LatLng miUbicacion = new LatLng(-34.742511, -58.350158);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

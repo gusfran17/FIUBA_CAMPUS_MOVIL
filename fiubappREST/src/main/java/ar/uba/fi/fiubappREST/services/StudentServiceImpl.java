@@ -3,8 +3,8 @@ package ar.uba.fi.fiubappREST.services;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
-
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +14,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.security.providers.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import ar.uba.fi.fiubappREST.converters.StudentConverter;
 import ar.uba.fi.fiubappREST.converters.StudentProfileConverter;
 import ar.uba.fi.fiubappREST.domain.Career;
+import ar.uba.fi.fiubappREST.domain.Configuration;
 import ar.uba.fi.fiubappREST.domain.Gender;
+import ar.uba.fi.fiubappREST.domain.Location;
+import ar.uba.fi.fiubappREST.domain.LocationConfiguration;
 import ar.uba.fi.fiubappREST.domain.ProfilePicture;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentCareer;
@@ -44,6 +46,9 @@ public class StudentServiceImpl implements StudentService {
 	private StudentConverter studentConverter;
 	private Md5PasswordEncoder passwordEncoder;
 	private StudentProfileConverter studentProfileConverter;
+
+	@Value("${configurations.defaultDistanceInKm}")
+	private Double defaultDistanceInKm;
 	
 	@Value("classpath:defaultProfilePicture.png")
 	private Resource defaultProfilePicture;
@@ -68,10 +73,30 @@ public class StudentServiceImpl implements StudentService {
 			Career career = this.getCareer(studentRepresentation.getCareerCode());
 			this.createStudentCareer(student, career);
 		}
-		student = studentRepository.save(student);
+
+		this.setDefaultConfiguration(student);
+		this.createLocation(student);
+		student = studentRepository.save(student); 
+		
 		this.createDefaultProfileImage(student);
+
 		LOGGER.info(String.format("Student with userName %s and careerCode %s was created.", student.getUserName(), studentRepresentation.getCareerCode()));
 		return student;
+	}
+	
+	private void createLocation(Student student) {
+		Location location = new Location();
+		location.setStudent(student);
+		student.setLocation(location);		
+	}
+
+	private void setDefaultConfiguration(Student student) {
+		LocationConfiguration locationConfiguration = new LocationConfiguration();
+		locationConfiguration.setIsEnabled(false);
+		locationConfiguration.setDistanceInKm(this.defaultDistanceInKm);
+		locationConfiguration.setStudent(student);
+		student.setConfigurations(new HashSet<Configuration>());
+		student.getConfigurations().add(locationConfiguration);
 	}
 	
 	private void createDefaultProfileImage(Student student) {
@@ -211,6 +236,15 @@ public class StudentServiceImpl implements StudentService {
 		student.setGender(gender);
 	}
 
+
+	public Double getDefaultDistanceInKm() {
+		return defaultDistanceInKm;
+	}
+
+	public void setDefaultDistanceInKm(Double defaultDistanceInKm) {
+		this.defaultDistanceInKm = defaultDistanceInKm;
+	}
+
 	public Resource getDefaultProfilePicture() {
 		return defaultProfilePicture;
 	}
@@ -218,6 +252,4 @@ public class StudentServiceImpl implements StudentService {
 	public void setDefaultProfilePicture(Resource defaultProfilePicture) {
 		this.defaultProfilePicture = defaultProfilePicture;
 	}
-
-	
 }

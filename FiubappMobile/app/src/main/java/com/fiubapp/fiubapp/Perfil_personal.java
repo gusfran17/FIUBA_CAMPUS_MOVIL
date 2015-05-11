@@ -657,21 +657,21 @@ public class Perfil_personal extends Fragment {
                         MultipartRequest mPR = new MultipartRequest(urlAPI+"/students/"+usernamePrefs+"/picture", new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                // TODO Auto-generated method stub
-                                Log.d("Error", error.toString());
-                                String responseBody = null;
-                                JSONObject jsonObject = null;
                                 try {
-                                    responseBody = new String( error.networkResponse.data, "utf-8" );
-                                } catch (UnsupportedEncodingException e) {
-                                    e.printStackTrace();
+                                    // TODO Auto-generated method stub
+                                    Log.d("Error", error.toString());
+                                    String responseBody = null;
+                                    JSONObject jsonObject = null;
+                                    try {
+                                        responseBody = new String(error.networkResponse.data, "utf-8");
+                                    } catch (UnsupportedEncodingException e) {
+                                    }
+                                    try {
+                                        jsonObject = new JSONObject(responseBody);
+                                    } catch (JSONException e) {
+                                    }
                                 }
-                                try {
-                                    jsonObject = new JSONObject( responseBody );
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                //Popup.showText(context, jsonObject.toString(), Toast.LENGTH_LONG).show();
+                                catch(Exception e){}
                             }
                         } , new Response.Listener<String>() {
                             @Override

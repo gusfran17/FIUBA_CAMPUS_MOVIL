@@ -86,6 +86,12 @@ public class Student {
 	@ManyToMany(mappedBy="members")
 	private Set<Group> groups;
 	
+	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, orphanRemoval = true)	
+	private Set<Configuration> configurations;
+	
+	@OneToOne(mappedBy = "student", cascade={CascadeType.ALL}, orphanRemoval = true)
+	private Location location;
+
 	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, orphanRemoval = true)
 	private Set<Job> jobs;
 	
@@ -263,6 +269,24 @@ public class Student {
 	public String getProfilePictureUrl() {
 		String baseUrl = (String) SpringContext.getApplicationContext().getBean("baseUrl");
 		return baseUrl + "/api/students/" + this.userName + "/picture";
+	}
+
+	@JsonIgnore
+	public Set<Configuration> getConfigurations() {
+		return configurations;
+	}
+
+	public void setConfigurations(Set<Configuration> configurations) {
+		this.configurations = configurations;
+	}
+
+	@JsonIgnore
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
 	}
 
 	public void addCareer(final StudentCareer career) {

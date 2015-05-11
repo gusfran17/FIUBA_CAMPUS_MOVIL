@@ -30,7 +30,12 @@ public interface StudentRepository extends CrudRepository<Student, String> {
 	@Query("SELECT s FROM Student s LEFT JOIN FETCH s.groups LEFT JOIN FETCH s.mates WHERE s.userName = ?1")
     public Student findByUserNameAndFetchMatesAndGroupsEagerly(String userName);
 	
+	@Query("SELECT s FROM Student s LEFT JOIN FETCH s.mates AS m LEFT JOIN FETCH m.configurations AS c " +
+			"WHERE s.userName = ?1 AND c.isEnabled = true " +
+			"AND m.location.latitude > ?2 AND m.location.latitude < ?3 " +
+			"AND m.location.longitude > ?4 AND m.location.longitude < ?5")
+    public Student findMatesWithinAreaByUser(String userName, Double latitudeFrom, Double latitudeTo, Double longitudeFrom, Double longitudeTo);	
+
 	@Query("SELECT s FROM Student s LEFT JOIN FETCH s.jobs WHERE s.userName = ?1")
     public Student findByUserNameAndFetchJobsEagerly(String userName);
-
 }

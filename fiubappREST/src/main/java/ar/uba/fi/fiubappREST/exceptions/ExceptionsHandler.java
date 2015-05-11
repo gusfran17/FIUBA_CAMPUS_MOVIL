@@ -155,6 +155,12 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
+	@ExceptionHandler(StudentNotAllowedToSearchMatesLocationsException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(StudentNotAllowedToSearchMatesLocationsException exception){
+		return buildResponse(exception);
+	}
+	
 	@ExceptionHandler(InvalidJobInformationForStudentException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
 	public @ResponseBody ErrorResponse handle(InvalidJobInformationForStudentException exception){
@@ -186,7 +192,7 @@ public class ExceptionsHandler {
 	public @ResponseBody ErrorResponse handle(UnexpectedErrorReadingProfilePictureFileException exception){
 		return buildResponse(exception);
 	}
-	
+
 	@ExceptionHandler(InvalidUserException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
 	public @ResponseBody ErrorResponse handle(InvalidUserException exception){
