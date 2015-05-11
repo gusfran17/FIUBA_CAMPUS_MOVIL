@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.maps.CameraUpdate;
@@ -130,9 +131,7 @@ public class CompanerosCercanos extends FragmentActivity implements OnMapReadyCa
 
                             dibujarCompanieros();
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        } catch (Exception e) {}
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -333,26 +332,38 @@ public class CompanerosCercanos extends FragmentActivity implements OnMapReadyCa
         VolleyController.getInstance().addToRequestQueue(studentReq);
     }
 
-    public void agregarCompaniero(String profilePicture, String latitude, String longitude, String userName, String name, String lastName, String soyYo){
+    public void agregarCompaniero(final String profilePicture, final String latitude, final String longitude, final String userName, final String name, final String lastName, final String soyYo){
 
-        double latitud = Double.parseDouble(latitude);
-        double longitud = Double.parseDouble(longitude);
+        ImageRequest ir = new ImageRequest(this.getString(R.string.urlAPI) + "/students/" + userName + "/picture", new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
 
-        LatLng latLong = new LatLng(latitud, longitud);
+                if(getFragmentManager() == null)
+                    return;
 
-        BitmapDrawable d=(BitmapDrawable) getResources().getDrawable(R.drawable.ic_basura);
-        Bitmap b=d.getBitmap();
+                GoogleMap map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 
-        Bitmap bhalfsize= Bitmap.createScaledBitmap(b, b.getWidth() / 3, b.getHeight() / 3, false);
+                double latitud = Double.parseDouble(latitude);
+                double longitud = Double.parseDouble(longitude);
 
-        String infoAlumno = name + "-" + lastName + "-" + userName + "-" + soyYo;
-        MarkerOptions options = new MarkerOptions()
-                .anchor(0.5f, 0.5f)
-                .snippet(infoAlumno)
-                .position(latLong)
-                .icon(BitmapDescriptorFactory.fromBitmap(bhalfsize));
+                LatLng latLong = new LatLng(latitud, longitud);
 
-        this.getMap().addMarker(options);
+                Bitmap imageProfile = response;
+
+                Bitmap bhalfsize= Bitmap.createScaledBitmap(imageProfile, imageProfile.getWidth() / 3, imageProfile.getHeight() / 3, false);
+
+                String infoAlumno = name + "-" + lastName + "-" + userName + "-" + soyYo;
+                MarkerOptions options = new MarkerOptions()
+                        .anchor(0.5f, 0.5f)
+                        .snippet(infoAlumno)
+                        .position(latLong)
+                        .icon(BitmapDescriptorFactory.fromBitmap(bhalfsize));
+
+                map.addMarker(options);
+            }
+        }, 0, 0, null, null);
+
+        VolleyController.getInstance().addToRequestQueue(ir);
     }
 
     @Override
