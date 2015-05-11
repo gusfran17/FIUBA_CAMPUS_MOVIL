@@ -53,6 +53,16 @@
             android:layout_alignBaseline="@+id/edt_d_job_enddate"
             android:layout_alignBottom="@+id/edt_d_job_enddate" />
 
+        <Button
+            android:id="@+id/btn_d_job_enddate_erase"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="15px"
+            android:text="@string/ErraseEndDate"
+            android:layout_below="@+id/edt_d_job_startdate"
+            android:layout_toRightOf="@+id/txt_d_job_enddate" />
+
+
         <EditText
             android:id="@+id/edt_d_job_enddate"
             android:layout_height="wrap_content"
@@ -60,7 +70,7 @@
             android:layout_marginLeft="15px"
             android:focusable="false"
             android:layout_below="@+id/edt_d_job_startdate"
-            android:layout_toRightOf="@+id/txt_d_job_enddate" />
+            android:layout_toRightOf="@+id/btn_d_job_enddate_erase" />
 
 
         <TextView

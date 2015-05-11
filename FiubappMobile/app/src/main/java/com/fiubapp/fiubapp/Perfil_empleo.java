@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -99,7 +100,14 @@ public class Perfil_empleo extends Fragment {
         final EditText edt_d_job_startdate = (EditText)editJobView.findViewById(R.id.edt_d_job_startdate);
         final EditText edt_d_job_enddate = (EditText)editJobView.findViewById(R.id.edt_d_job_enddate);
         final EditText edt_d_job_description = (EditText)editJobView.findViewById(R.id.edt_d_job_desc);
+        final Button btn_d_job_enddate_erase = (Button)editJobView.findViewById(R.id.btn_d_job_enddate_erase);
 
+        btn_d_job_enddate_erase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                edt_d_job_enddate.setText("");
+            }
+        });
         if (job!=null){
             edt_d_job_firm.setText(job.getFirm());
             edt_d_job_startdate.setText(job.getStartdate());
