@@ -33,7 +33,7 @@
         android:layout_below="@+id/tvMostrarMiUbicacion"
         android:maxLength="4"
         android:inputType="numberDecimal"
-        android:width="100px"
+        android:width="300px"
         android:layout_marginTop="5px"
         android:layout_toRightOf="@+id/tvMostrarMiUbicacion" />
 
