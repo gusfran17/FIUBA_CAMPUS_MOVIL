@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -47,11 +48,20 @@ public class GruposTab extends Fragment {
         View view = inflater.inflate(R.layout.grupos_tab, container, false);
 
         Button btnCrearGrupo = (Button)view.findViewById(R.id.btnCrearGrupo);
+        Button btnBuscarGrupo = (Button)view.findViewById(R.id.btnBuscarGrupo);
 
         btnCrearGrupo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCrear();
+            }
+        });
+
+        btnBuscarGrupo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(),GroupsSearch.class);
+                startActivity(i);
             }
         });
 

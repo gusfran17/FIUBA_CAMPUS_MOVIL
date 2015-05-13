@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -69,12 +70,10 @@ public class GroupsSearch extends Activity{
         EditText edit_group_name = (EditText)findViewById(R.id.edt_search_groups);
         String group_name = edit_group_name.getText().toString();
 
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("name", group_name);
+        groupList.clear();
 
         JsonArrayRequest jsonReq = new JsonArrayRequest(Request.Method.GET,
-                urlAPI + "/groups",
-                new JSONObject(params),
+                urlAPI + "/groups"+"?name="+group_name,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -97,6 +96,9 @@ public class GroupsSearch extends Activity{
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                        }
+                        if (groupList.size()==0) {
+                            Popup.showText(getBaseContext(), "No se encontraron grupos que coincidan con la busqueda.", Toast.LENGTH_LONG).show();
                         }
                         grupoAdapter.notifyDataSetChanged();
                     }
