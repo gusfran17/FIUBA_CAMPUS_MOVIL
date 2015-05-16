@@ -5,6 +5,9 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -43,6 +46,21 @@ public class StudentGroupControllerTest {
 		GroupRepresentation group = this.controller.signOnGroup(A_TOKEN, AN_USER_NAME, A_GROUP_ID);
 		
 		assertEquals(representation, group);
+	}
+	
+	@Test
+	public void testGetGroups(){
+		doNothing().when(this.studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		GroupRepresentation aRepresentation = mock(GroupRepresentation.class);
+		GroupRepresentation anotherRepresentation = mock(GroupRepresentation.class);
+		List<GroupRepresentation> representations = new ArrayList<GroupRepresentation>();
+		representations.add(aRepresentation);
+		representations.add(anotherRepresentation);
+		when(this.service.getStudentGroups(AN_USER_NAME)).thenReturn(representations);
+		
+		List<GroupRepresentation> groups = this.controller.getGroups(A_TOKEN, AN_USER_NAME);
+		
+		assertEquals(representations, groups);
 	}
 	
 }

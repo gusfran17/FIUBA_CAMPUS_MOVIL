@@ -103,4 +103,16 @@ public class GroupServiceImpl implements GroupService {
 		LOGGER.info(String.format("Student with userName %s was registered to group with id %s.", userName, groupId ));
 		return representation;
 	}
+
+	@Override
+	public List<GroupRepresentation> getStudentGroups(String userName) {
+		LOGGER.info(String.format("Finding all groups for student with userName %s.", userName));
+		Student student = this.findStudent(userName);
+		List<GroupRepresentation> groupRepresentations = new ArrayList<GroupRepresentation>();
+		for (Group group : student.getGroups()) {
+			groupRepresentations.add(this.groupConverter.convert(student, group));
+		}
+		LOGGER.info(String.format("All groups for student with userName %s were found.", userName));
+		return groupRepresentations;
+	}
 }

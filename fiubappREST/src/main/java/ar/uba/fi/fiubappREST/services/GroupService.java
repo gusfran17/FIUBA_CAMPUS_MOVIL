@@ -13,4 +13,6 @@ public interface GroupService {
 
 	public GroupRepresentation registerStudent(String userName, Integer groupId);
 
+	public List<GroupRepresentation> getStudentGroups(String userName);
+
 }
