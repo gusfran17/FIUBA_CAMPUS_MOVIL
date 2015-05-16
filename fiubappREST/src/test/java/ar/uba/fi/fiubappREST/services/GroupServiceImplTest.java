@@ -2,6 +2,7 @@ package ar.uba.fi.fiubappREST.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -132,6 +133,26 @@ public class GroupServiceImplTest {
 		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(null);
 		
 		this.service.registerStudent(AN_USER_NAME, A_GROUP_ID);
+	}
+	
+	@Test
+	public void testGetStudentGroups(){
+		when(this.studentRepository.findByUserNameAndFetchMatesAndGroupsEagerly(AN_USER_NAME)).thenReturn(student);
+		Group aGroup = mock(Group.class);
+		Group anotherGroup = mock(Group.class);
+		Set<Group> groups = new HashSet<Group>();
+		groups.add(aGroup);
+		groups.add(anotherGroup);
+		this.student.setGroups(groups);
+		GroupRepresentation aRepresentation = mock(GroupRepresentation.class);
+		when(this.converter.convert(student, aGroup)).thenReturn(aRepresentation);
+		GroupRepresentation anotherRepresentation = mock(GroupRepresentation.class);
+		when(this.converter.convert(student, anotherGroup)).thenReturn(anotherRepresentation);
+		
+		List<GroupRepresentation> representations = this.service.getStudentGroups(AN_USER_NAME);
+		
+		assertTrue(representations.contains(aRepresentation));
+		assertTrue(representations.contains(anotherRepresentation));
 	}
 	
 }

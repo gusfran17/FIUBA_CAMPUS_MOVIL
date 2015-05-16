@@ -1,5 +1,7 @@
 package ar.uba.fi.fiubappREST.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -33,6 +35,13 @@ public class StudentGroupController {
 	public @ResponseBody GroupRepresentation signOnGroup(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @PathVariable Integer groupId) {
 		this.studentSessionService.validateMine(token, userName);
 		return this.groupService.registerStudent(userName, groupId);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	public @ResponseBody List<GroupRepresentation> getGroups(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
+		this.studentSessionService.validateMine(token, userName);
+		return this.groupService.getStudentGroups(userName);
 	}
 }
 
