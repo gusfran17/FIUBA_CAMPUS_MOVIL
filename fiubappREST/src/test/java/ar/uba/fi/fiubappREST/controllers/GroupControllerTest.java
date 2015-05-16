@@ -23,6 +23,7 @@ public class GroupControllerTest {
 	private static final String A_NAME = "aName";
 	private static final String AN_USER_NAME = "anUserName";
 	private static final String A_TOKEN = "aToken";
+	private static final Integer A_GROUP_ID = 14;
 
 	private GroupController controller;
 	
@@ -67,6 +68,19 @@ public class GroupControllerTest {
 		List<GroupRepresentation> foundGroups = this.controller.findGroups(A_TOKEN, A_NAME);
 		
 		assertEquals(2, foundGroups.size());
+	}
+	
+	@Test
+	public void testGet(){
+		StudentSession session = mock(StudentSession.class);
+		when(session.getUserName()).thenReturn(AN_USER_NAME);
+		when(this.studentSessionService.find(A_TOKEN)).thenReturn(session);
+		GroupRepresentation aRepresentation = mock(GroupRepresentation.class);
+		when(this.service.findGroupForStudent(A_GROUP_ID, AN_USER_NAME)).thenReturn(aRepresentation);
+		
+		GroupRepresentation group = this.controller.get(A_TOKEN, A_GROUP_ID);
+		
+		assertEquals(aRepresentation, group);		
 	}
 }
 

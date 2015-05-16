@@ -115,4 +115,18 @@ public class GroupServiceImpl implements GroupService {
 		LOGGER.info(String.format("All groups for student with userName %s were found.", userName));
 		return groupRepresentations;
 	}
+
+	@Override
+	public GroupRepresentation findGroupForStudent(Integer groupId, String userName) {
+		LOGGER.info(String.format("Finding group with id %s for student with userName %s.", groupId, userName));
+		Group group = this.groupRepository.findOne(groupId);
+		if(group==null){
+			LOGGER.info(String.format("Group with id %s does not exist.", userName, groupId ));
+			throw new GroupNotFoundException(groupId);
+		}
+		Student student = this.findStudent(userName);
+		GroupRepresentation representation = this.groupConverter.convert(student, group);
+		LOGGER.info(String.format("Group with id %s was found for student with userName %s.", groupId, userName));
+		return representation;
+	}
 }

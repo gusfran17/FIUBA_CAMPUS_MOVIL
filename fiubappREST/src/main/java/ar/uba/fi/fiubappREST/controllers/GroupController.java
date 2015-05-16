@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +46,13 @@ public class GroupController {
 	public @ResponseBody List<GroupRepresentation> findGroups(@RequestHeader(value="Authorization") String token, @RequestParam(value="name", required=false) String name) {
 		StudentSession session = this.studentSessionService.find(token);
 		return this.groupService.findByProperties(session.getUserName(), name);
+	}
+	
+	@RequestMapping(value="{groupId}", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	public @ResponseBody GroupRepresentation get(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId) {
+		StudentSession session = this.studentSessionService.find(token);
+		return groupService.findGroupForStudent(groupId, session.getUserName());
 	}
 }
 

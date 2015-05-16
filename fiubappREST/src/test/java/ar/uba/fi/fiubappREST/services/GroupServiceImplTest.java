@@ -155,4 +155,25 @@ public class GroupServiceImplTest {
 		assertTrue(representations.contains(anotherRepresentation));
 	}
 	
+	@Test
+	public void testGetGroupForStudent(){
+		when(this.studentRepository.findByUserNameAndFetchMatesAndGroupsEagerly(AN_USER_NAME)).thenReturn(student);
+		Group aGroup = mock(Group.class);
+		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(aGroup);
+		GroupRepresentation aRepresentation = mock(GroupRepresentation.class);
+		when(this.converter.convert(student, aGroup)).thenReturn(aRepresentation);
+		
+		GroupRepresentation representation = this.service.findGroupForStudent(A_GROUP_ID, AN_USER_NAME);
+		
+		assertEquals(aRepresentation, representation);
+	}
+	
+	@Test(expected = GroupNotFoundException.class)
+	public void testGetGroupForStudentNotFound(){
+		when(this.studentRepository.findByUserNameAndFetchMatesAndGroupsEagerly(AN_USER_NAME)).thenReturn(student);
+		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(null);
+		
+		this.service.findGroupForStudent(A_GROUP_ID, AN_USER_NAME);
+	}
+	
 }
