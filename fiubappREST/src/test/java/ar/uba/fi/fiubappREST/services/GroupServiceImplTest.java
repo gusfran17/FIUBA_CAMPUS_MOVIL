@@ -19,6 +19,7 @@ import ar.uba.fi.fiubappREST.converters.GroupConverter;
 import ar.uba.fi.fiubappREST.domain.Group;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.GroupAlreadyExistsException;
+import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
@@ -29,6 +30,7 @@ public class GroupServiceImplTest {
 	private static final String A_NAME = "aName";
 	private static final String A_DESCRIPTION = "aDescription";
 	private static final String AN_USER_NAME = "anUserName";
+	private static final Integer A_GROUP_ID = 12;
 	
 	@Mock
 	private StudentRepository studentRepository;
@@ -57,6 +59,7 @@ public class GroupServiceImplTest {
 		this.student.setGroups(groups);
 		
 		this.group = new Group();
+		this.group.setMembers(new HashSet<Student>());
 		
 		this.representation = mock(GroupRepresentation.class);
 	}
@@ -108,6 +111,27 @@ public class GroupServiceImplTest {
 		List<GroupRepresentation> representations = this.service.findByProperties(AN_USER_NAME, A_NAME);
 		
 		assertEquals(2, representations.size());
+	}
+	
+	@Test
+	public void registerStudent(){
+		when(this.studentRepository.findByUserNameAndFetchMatesAndGroupsEagerly(AN_USER_NAME)).thenReturn(student);
+		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(group);
+		when(this.studentRepository.save(student)).thenReturn(student);
+		when(this.groupRepository.save(Mockito.any(Group.class))).thenReturn(group);
+		GroupRepresentation aRepresentation = mock(GroupRepresentation.class);
+		when(this.converter.convert(student, group)).thenReturn(aRepresentation);
+		
+		GroupRepresentation registeredGroup = this.service.registerStudent(AN_USER_NAME, A_GROUP_ID);
+		
+		assertEquals(aRepresentation, registeredGroup);
+	}
+	
+	@Test(expected= GroupNotFoundException.class)
+	public void registerStudentGroupNotFound(){
+		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(null);
+		
+		this.service.registerStudent(AN_USER_NAME, A_GROUP_ID);
 	}
 	
 }

@@ -14,6 +14,7 @@ import ar.uba.fi.fiubappREST.converters.GroupConverter;
 import ar.uba.fi.fiubappREST.domain.Group;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.GroupAlreadyExistsException;
+import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
@@ -84,5 +85,22 @@ public class GroupServiceImpl implements GroupService {
 		}
 		LOGGER.info(String.format("All groups meeting the criteria were found."));
 		return groupRepresentations;
+	}
+
+	@Override
+	public GroupRepresentation registerStudent(String userName, Integer groupId) {
+		LOGGER.info(String.format("Registering student with userName %s to group with id %s.", userName, groupId ));
+		Group group = this.groupRepository.findOne(groupId);
+		if(group==null){
+			LOGGER.info(String.format("Group with id %s does not exist.", userName, groupId ));
+			throw new GroupNotFoundException(groupId);
+		}
+		Student student = this.findStudent(userName);
+		group.addMember(student);
+		this.groupRepository.save(group);
+		this.studentRepository.save(student);
+		GroupRepresentation representation = this.groupConverter.convert(student, group);
+		LOGGER.info(String.format("Student with userName %s was registered to group with id %s.", userName, groupId ));
+		return representation;
 	}
 }

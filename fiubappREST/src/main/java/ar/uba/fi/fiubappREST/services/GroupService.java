@@ -11,4 +11,6 @@ public interface GroupService {
 
 	public List<GroupRepresentation> findByProperties(String userName, String name);
 
+	public GroupRepresentation registerStudent(String userName, Integer groupId);
+
 }

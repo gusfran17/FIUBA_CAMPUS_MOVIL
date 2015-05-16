@@ -18,6 +18,8 @@ public class GroupRepresentation {
 	
 	private Date creationDate;
 	
+	private String groupPicture;
+	
 	private StudentProfileRepresentation owner;
 	
 	private Integer amountOfMembers;
@@ -56,6 +58,14 @@ public class GroupRepresentation {
 	@JsonDeserialize(using = CustomDateDeserializer.class)
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	public String getGroupPicture() {
+		return groupPicture;
+	}
+
+	public void setGroupPicture(String groupPicture) {
+		this.groupPicture = groupPicture;
 	}
 
 	public StudentProfileRepresentation getOwner() {

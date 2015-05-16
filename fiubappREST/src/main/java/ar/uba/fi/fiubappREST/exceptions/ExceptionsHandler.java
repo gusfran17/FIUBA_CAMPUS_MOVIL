@@ -155,6 +155,12 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
+	@ExceptionHandler(GroupNotFoundException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(GroupNotFoundException exception){
+		return buildResponse(exception);
+	}
+	
 	@ExceptionHandler(StudentNotAllowedToSearchMatesLocationsException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
 	public @ResponseBody ErrorResponse handle(StudentNotAllowedToSearchMatesLocationsException exception){
