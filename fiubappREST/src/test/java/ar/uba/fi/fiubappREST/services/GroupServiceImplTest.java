@@ -6,6 +6,9 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,12 +18,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.core.io.Resource;
 
 import ar.uba.fi.fiubappREST.converters.GroupConverter;
 import ar.uba.fi.fiubappREST.domain.Group;
+import ar.uba.fi.fiubappREST.domain.GroupPicture;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.GroupAlreadyExistsException;
 import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
+import ar.uba.fi.fiubappREST.persistance.GroupPictureRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
@@ -38,6 +44,8 @@ public class GroupServiceImplTest {
 	@Mock
 	private GroupRepository groupRepository;
 	@Mock
+	private GroupPictureRepository groupPictureRepository;
+	@Mock
 	private GroupConverter converter;
 	@Mock
 	private GroupRepresentation representation;
@@ -45,14 +53,15 @@ public class GroupServiceImplTest {
 	private Student student;
 	private Group group;
 		
-	private GroupService service;
+	private GroupServiceImpl service;
 	
 	@Before
-	public void setUp() {
+	public void setUp() throws FileNotFoundException, IOException {
 		this.studentRepository = mock(StudentRepository.class);
 		this.groupRepository = mock(GroupRepository.class);
+		this.groupPictureRepository = mock(GroupPictureRepository.class);
 		this.converter = mock(GroupConverter.class);
-		this.service= new GroupServiceImpl(groupRepository, studentRepository, converter);
+		this.service= new GroupServiceImpl(groupRepository, studentRepository, groupPictureRepository, converter);
 				
 		this.student = new Student();
 		this.student.setUserName(AN_USER_NAME);
@@ -63,6 +72,10 @@ public class GroupServiceImplTest {
 		this.group.setMembers(new HashSet<Student>());
 		
 		this.representation = mock(GroupRepresentation.class);
+		
+		Resource resource = mock(Resource.class);
+		when(resource.getInputStream()).thenReturn(new FileInputStream("src/test/resources/defaultGroupPicture.png"));
+		this.service.setDefaultGroupPicture(resource);
 	}
 		
 	@Test
@@ -174,6 +187,23 @@ public class GroupServiceImplTest {
 		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(null);
 		
 		this.service.findGroupForStudent(A_GROUP_ID, AN_USER_NAME);
+	}
+	
+	@Test
+	public void testFindPictureById() {
+		GroupPicture picture = mock(GroupPicture.class);
+		when(this.groupPictureRepository.findByGroupId(A_GROUP_ID)).thenReturn(picture);
+		
+		GroupPicture foundPicture = this.service.getPicture(A_GROUP_ID);
+		
+		assertEquals(picture, foundPicture);
+	}
+	
+	@Test(expected=GroupNotFoundException.class)
+	public void testFindPictureByIdNotFound() {
+		when(this.groupPictureRepository.findByGroupId(A_GROUP_ID)).thenReturn(null);
+		
+		this.service.getPicture(A_GROUP_ID);
 	}
 	
 }

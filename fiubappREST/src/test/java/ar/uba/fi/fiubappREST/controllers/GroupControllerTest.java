@@ -2,6 +2,7 @@ package ar.uba.fi.fiubappREST.controllers;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -11,7 +12,11 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
+import ar.uba.fi.fiubappREST.domain.GroupPicture;
 import ar.uba.fi.fiubappREST.domain.StudentSession;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
@@ -81,6 +86,21 @@ public class GroupControllerTest {
 		GroupRepresentation group = this.controller.get(A_TOKEN, A_GROUP_ID);
 		
 		assertEquals(aRepresentation, group);		
+	}
+	
+	@Test
+	public void testGetPicture() {
+		GroupPicture picture = mock(GroupPicture.class);
+		byte[] bytes = "Mock".getBytes(); 
+		doReturn(bytes).when(picture).getImage();
+		doReturn(MediaType.IMAGE_PNG_VALUE).when(picture).getContentType();
+		doReturn(picture).when(service).getPicture(A_GROUP_ID);
+				
+		ResponseEntity<byte[]> response = this.controller.getGroupPicture(A_GROUP_ID);
+		
+		assertEquals(bytes, response.getBody());
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(MediaType.IMAGE_PNG, response.getHeaders().getContentType());
 	}
 }
 

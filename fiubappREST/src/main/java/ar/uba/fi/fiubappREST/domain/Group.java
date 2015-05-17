@@ -17,12 +17,14 @@ import javax.persistence.Table;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyMemberOfGroupException;
 import ar.uba.fi.fiubappREST.utils.CustomDateDeserializer;
 import ar.uba.fi.fiubappREST.utils.CustomDateSerializer;
+import ar.uba.fi.fiubappREST.utils.SpringContext;
 
 @Entity
 @Table(name = "study_group")
@@ -98,6 +100,12 @@ public class Group {
 
 	public void setMembers(Set<Student> members) {
 		this.members = members;
+	}
+	
+	@JsonProperty(value = "groupPicture")
+	public String getGroupPictureUrl() {
+		String baseUrl = (String) SpringContext.getApplicationContext().getBean("baseUrl");
+		return baseUrl + "/api/groups/" + this.id + "/picture";
 	}
 
 	public void addMember(Student member) {
