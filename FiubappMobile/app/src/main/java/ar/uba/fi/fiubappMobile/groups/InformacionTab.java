@@ -335,7 +335,7 @@ public class InformacionTab extends Fragment {
                         VolleyController.getInstance().addToRequestQueue(mPR);
 
                     } else {
-                        Popup.showText(getActivity(), "Debe seleccionar una imagen con un tamaño menor a 10MB", Toast.LENGTH_LONG).show();
+                        Popup.showText(getActivity(), getResources().getString(R.string.mensaje_validar_tamanio_imagen), Toast.LENGTH_LONG).show();
                     }
 
                 }

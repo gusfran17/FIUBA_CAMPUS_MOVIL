@@ -64,4 +64,5 @@
     <string name="nombre_vacio">Nombre vacío</string>
     <string name="creado_por">Creado por:</string>
     <string name="fecha_creacion">Fecha de creación:</string>
+    <string name="mensaje_validar_tamanio_imagen">Debe seleccionar una imagen con un tamaño menor a 10MB</string>
 </resources>

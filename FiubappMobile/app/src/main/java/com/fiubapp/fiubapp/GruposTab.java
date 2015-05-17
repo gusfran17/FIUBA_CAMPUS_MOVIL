@@ -252,8 +252,9 @@ public class GruposTab extends Fragment {
 
                 Grupo grupo = gruposAlumno.get(position);
                 Intent i = new Intent(getActivity(), GruposTabs.class);
-                i.putExtra("idGrupo", grupo.getId());
+                i.putExtra("idGrupo", Integer.parseInt(grupo.getId()));
                 i.putExtra("nombreGrupo", grupo.getNombre());
+                i.putExtra("esMiembro", grupo.getAmIaMember());
                 startActivity(i);
             }
         });
