@@ -12,14 +12,18 @@ public class GruposTabsAdapter extends FragmentPagerAdapter {
     private int idGrupo = -1;
     private String[] CONTENT = null;
 
-    public GruposTabsAdapter(FragmentManager fm, Context context, int idGrupo) {
+    public GruposTabsAdapter(FragmentManager fm, Context context, int idGrupo, boolean esMiembro) {
 
         super(fm);
 
-        CONTENT = new String[] {
-                context.getResources().getString(R.string.informacion),
-                context.getResources().getString(R.string.discusiones),
-                context.getResources().getString(R.string.archivos)};
+        if(esMiembro)
+            CONTENT = new String[] {
+                    context.getResources().getString(R.string.informacion),
+                    context.getResources().getString(R.string.discusiones),
+                    context.getResources().getString(R.string.archivos)};
+        else
+            CONTENT = new String[] {
+                    context.getResources().getString(R.string.informacion)};
 
         this.idGrupo = idGrupo;
     }
