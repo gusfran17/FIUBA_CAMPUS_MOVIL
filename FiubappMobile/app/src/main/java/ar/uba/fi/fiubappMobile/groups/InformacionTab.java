@@ -120,7 +120,7 @@ public class InformacionTab extends Fragment {
                         VolleyController.getInstance().addToRequestQueue(jsonReqName);
 
                     } else {
-                        Popup.showText(getActivity(), "Nombre vacío", Toast.LENGTH_LONG).show();
+                        Popup.showText(getActivity(), getResources().getString(R.string.nombre_vacio), Toast.LENGTH_LONG).show();
                     }
 
                 } else {
@@ -204,9 +204,9 @@ public class InformacionTab extends Fragment {
                             String apellidoDuenio = duenio.getString("lastName");
 
                             etNombreGrupo.setText(nombreGrupo);
-                            tvFechaCreacion.setText( tvFechaCreacion.getText().toString() + " " + fechaCreacion);
+                            tvFechaCreacion.setText(fechaCreacion);
                             tvCantidadMiembros.setText(cantidadMiembros + " miembros");
-                            tvCreadoPor.setText( tvCreadoPor.getText().toString() + " " + nombreDuenio + " " + apellidoDuenio);
+                            tvCreadoPor.setText(nombreDuenio + " " + apellidoDuenio);
 
                             String userNameUsuario = settings.getString("username", null);
 

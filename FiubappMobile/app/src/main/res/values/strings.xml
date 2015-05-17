@@ -61,4 +61,7 @@
     <string name="discusiones">DISCUSIONES</string>
     <string name="archivos">ARCHIVOS</string>
     <string name="muro">MURO</string>
+    <string name="nombre_vacio">Nombre vacío</string>
+    <string name="creado_por">Creado por:</string>
+    <string name="fecha_creacion">Fecha de creación:</string>
 </resources>
