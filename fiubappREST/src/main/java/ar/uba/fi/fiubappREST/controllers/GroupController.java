@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
 import ar.uba.fi.fiubappREST.domain.StudentSession;
@@ -65,6 +66,13 @@ public class GroupController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.valueOf(picture.getContentType()));
 		return new ResponseEntity<byte[]>(picture.getImage(), headers, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="{groupId}/picture", method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.CREATED)
+	public @ResponseBody void updateGroupPicture(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @RequestParam("image") MultipartFile image) {
+		StudentSession session = this.studentSessionService.find(token);
+		this.groupService.updatePicture(groupId, image, session.getUserName());
 	}
 }
 
