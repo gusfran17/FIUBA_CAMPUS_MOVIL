@@ -1,5 +1,6 @@
 package com.fiubapp.fiubapp;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -8,10 +9,18 @@ public class PerfilTabsAdapter extends FragmentPagerAdapter{
 
     final int PAGE_COUNT = 5;
 
-    private static final String[] CONTENT = new String[] { "Datos", "FIUBA", "Empleos", "Educacion", "Apuntes" };
+    private String[] CONTENT = null;
 
-    public PerfilTabsAdapter(FragmentManager fm) {
+    public PerfilTabsAdapter(FragmentManager fm, Context context) {
+
         super(fm);
+
+        CONTENT = new String[] {
+                                context.getResources().getString(R.string.datos),
+                                context.getResources().getString(R.string.fiuba),
+                                context.getResources().getString(R.string.empleos),
+                                context.getResources().getString(R.string.educacion),
+                                context.getResources().getString(R.string.apuntes)};
     }
 
     @Override

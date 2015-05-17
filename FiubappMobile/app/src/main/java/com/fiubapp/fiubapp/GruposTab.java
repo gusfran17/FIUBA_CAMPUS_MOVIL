@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -36,6 +37,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import ar.uba.fi.fiubappMobile.groups.GruposTabs;
 
 public class GruposTab extends Fragment {
 
@@ -227,6 +230,15 @@ public class GruposTab extends Fragment {
     public void crearSeccionGrupos() {
         ListView listGrupos = (ListView)((FragmentActivity)context).findViewById(R.id.listGrupos);
         GrupoAdapter grupoAdapter = new GrupoAdapter((FragmentActivity)context, gruposAlumno);
+
+        listGrupos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(getActivity(), GruposTabs.class);
+                startActivity(i);
+            }
+        });
+
         listGrupos.setAdapter(grupoAdapter);
     }
 
