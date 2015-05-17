@@ -1,9 +1,11 @@
 package com.fiubapp.fiubapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,6 +28,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ar.uba.fi.fiubappMobile.groups.GruposTabs;
 
 public class GroupsSearch extends Activity{
 
@@ -61,7 +65,20 @@ public class GroupsSearch extends Activity{
         });
 
         groups = (ListView)findViewById(R.id.lst_regular_search_groups);
-        grupoAdapter = new GrupoAdapter(this,groupList);
+
+        groups.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Grupo grupo = groupList.get(position);
+                Intent i = new Intent(getApplicationContext(), GruposTabs.class);
+                i.putExtra("idGrupo", Integer.parseInt(grupo.getId()));
+                i.putExtra("nombreGrupo", grupo.getNombre());
+                i.putExtra("esMiembro", grupo.getAmIaMember());
+                startActivity(i);
+            }
+        });
+
+        grupoAdapter = new GrupoAdapter(this, groupList);
         groups.setAdapter(grupoAdapter);
     }
 
