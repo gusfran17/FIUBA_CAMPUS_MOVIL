@@ -1,21 +1,29 @@
 package ar.uba.fi.fiubappREST.services;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import ar.uba.fi.fiubappREST.converters.GroupConverter;
 import ar.uba.fi.fiubappREST.domain.Group;
+import ar.uba.fi.fiubappREST.domain.GroupPicture;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.GroupAlreadyExistsException;
 import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
+import ar.uba.fi.fiubappREST.exceptions.UnexpectedErrorReadingProfilePictureFileException;
+import ar.uba.fi.fiubappREST.persistance.GroupPictureRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
@@ -28,12 +36,17 @@ public class GroupServiceImpl implements GroupService {
 	
 	private GroupRepository groupRepository;
 	private StudentRepository studentRepository;
+	private GroupPictureRepository groupPictureRepository;
 	private GroupConverter groupConverter;
+	
+	@Value("classpath:defaultGroupPicture.png")
+	private Resource defaultGroupPicture;
 		
 	@Autowired
-	public GroupServiceImpl(GroupRepository groupRepository, StudentRepository studentRepository, GroupConverter groupConverter){
+	public GroupServiceImpl(GroupRepository groupRepository, StudentRepository studentRepository, GroupPictureRepository groupPictureRepository, GroupConverter groupConverter){
 		this.groupRepository = groupRepository;
 		this.studentRepository = studentRepository;
+		this.groupPictureRepository = groupPictureRepository;
 		this.groupConverter = groupConverter;
 	}
 
@@ -44,7 +57,23 @@ public class GroupServiceImpl implements GroupService {
 		Group group = this.createGroup(groupRepresentation, owner);
 		this.groupRepository.save(group);
 		this.studentRepository.save(owner);
+		this.createDefaultGroupImage(group);
 		return this.groupConverter.convert(owner, group);
+	}
+	
+	private void createDefaultGroupImage(Group group) {
+		GroupPicture picture = new GroupPicture();
+		picture.setGroup(group);
+		picture.setContentType(MediaType.IMAGE_PNG_VALUE);
+		byte[] image;
+		try {
+			image = IOUtils.toByteArray(this.defaultGroupPicture.getInputStream());
+			picture.setImage(image);
+		} catch (IOException e) {
+			LOGGER.error(String.format("File %s for group picture for group with is %s was not read.", this.defaultGroupPicture.getFilename(), group.getId()));
+			throw new UnexpectedErrorReadingProfilePictureFileException(this.defaultGroupPicture.getFilename());
+		}
+		this.groupPictureRepository.save(picture);
 	}
 
 	private Group createGroup(GroupCreationRepresentation groupRepresentation, Student owner) {
@@ -128,5 +157,25 @@ public class GroupServiceImpl implements GroupService {
 		GroupRepresentation representation = this.groupConverter.convert(student, group);
 		LOGGER.info(String.format("Group with id %s was found for student with userName %s.", groupId, userName));
 		return representation;
+	}
+
+	@Override
+	public GroupPicture getPicture(Integer groupId) {
+		LOGGER.info(String.format("Finding picture for group with id %s.", groupId));
+		GroupPicture picture = this.groupPictureRepository.findByGroupId(groupId);
+		if(picture==null){
+			LOGGER.info(String.format("Group with id %s does not exist.", groupId ));
+			throw new GroupNotFoundException(groupId); 
+		}		
+		LOGGER.info(String.format("Picture for for group with id %s was found.", groupId));
+		return picture;
+	}
+
+	public Resource getDefaultGroupPicture() {
+		return defaultGroupPicture;
+	}
+
+	public void setDefaultGroupPicture(Resource defaultProfilePicture) {
+		this.defaultGroupPicture = defaultProfilePicture;
 	}
 }

@@ -49,7 +49,7 @@ public class ProfilePictureControllerTest {
 	}
 	
 	@Test
-	public void testGetCareers() {
+	public void testGetPicture() {
 		ProfilePicture picture = mock(ProfilePicture.class);
 		byte[] bytes = "Mock".getBytes(); 
 		doReturn(bytes).when(picture).getImage();

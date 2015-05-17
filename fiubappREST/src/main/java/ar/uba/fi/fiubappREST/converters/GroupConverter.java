@@ -24,8 +24,7 @@ public class GroupConverter {
 		groupRepresentation.setName(group.getName());
 		groupRepresentation.setDescription(group.getDescription());
 		groupRepresentation.setCreationDate(group.getCreationDate());
-		//TODO setear imagen de grupo:
-		groupRepresentation.setGroupPicture(null);
+		groupRepresentation.setGroupPicture(group.getGroupPictureUrl());
 		StudentProfileRepresentation studentRepresentation = this.studentConverter.convert(me, group.getOwner());
 		groupRepresentation.setOwner(studentRepresentation);
 		groupRepresentation.setAmountOfMembers(group.getMembers().size());
