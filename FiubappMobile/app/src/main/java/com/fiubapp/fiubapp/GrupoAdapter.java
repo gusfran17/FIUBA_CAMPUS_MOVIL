@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +18,9 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.NetworkImageView;
 import com.fiubapp.fiubapp.dominio.Grupo;
 
 import org.json.JSONObject;
@@ -31,6 +35,7 @@ public class GrupoAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
     private List<Grupo> grupoItems;
+    ImageLoader imageLoader = VolleyController.getInstance().getImageLoader();
 
     public GrupoAdapter(Activity activity, List<Grupo> grupoItems) {
         this.activity = activity;
@@ -61,18 +66,36 @@ public class GrupoAdapter extends BaseAdapter {
         if (grupoFilaView == null)
             grupoFilaView = inflater.inflate(R.layout.grupo_fila, null);
 
+        if (imageLoader == null)
+            imageLoader = VolleyController.getInstance().getImageLoader();
+
+        NetworkImageView thumbNail = (NetworkImageView)grupoFilaView.findViewById(R.id.thumbnail);
+
         TextView nombre = (TextView) grupoFilaView.findViewById(R.id.nombre_grupo);
         TextView cantidadGrupo = (TextView) grupoFilaView.findViewById(R.id.cantidad_grupo);
         Button button = (Button)grupoFilaView.findViewById(R.id.childButton);
 
-        Grupo grupoSeleccionado = grupoItems.get(position);
+        final Grupo grupoSeleccionado = grupoItems.get(position);
         nombre.setText(grupoSeleccionado.getNombre());
+
+        thumbNail.setImageUrl(grupoSeleccionado.getImgURL(),imageLoader);
+        thumbNail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = grupoSeleccionado.getImgURL();
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                activity.startActivity(i);
+            }
+        });
 
         int cantMiembros = grupoSeleccionado.getCantMiembros();
         String cantidad = "";
         if (cantMiembros == 1)
             cantidad = cantMiembros + " miembro";
+
         else cantidad = cantMiembros + " miembros";
+
         cantidadGrupo.setText(cantidad);
 
         if (grupoSeleccionado.getAmIaMember()){

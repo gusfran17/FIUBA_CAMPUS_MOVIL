@@ -8,6 +8,7 @@ public class Grupo {
     private Alumno owner;
     private int cantMiembros;
     private boolean amIaMember;
+    private String imgURL;
 
     public boolean getAmIaMember() {
         return amIaMember;
@@ -39,4 +40,12 @@ public class Grupo {
 
     public void setOwner(Alumno owner) { this.owner = owner; }
     public Alumno getOwner () { return owner; }
+
+    public String getImgURL() {
+        return imgURL;
+    }
+
+    public void setImgURL(String imgURL) {
+        this.imgURL = imgURL;
+    }
 }

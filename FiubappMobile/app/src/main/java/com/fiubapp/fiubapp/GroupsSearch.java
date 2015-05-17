@@ -106,6 +106,7 @@ public class GroupsSearch extends Activity{
                                 grupo.setNombre(grupoJSON.getString("name"));
                                 grupo.setCantMiembros(grupoJSON.getInt("amountOfMembers"));
                                 grupo.setAmIaMember(grupoJSON.getBoolean("amIAMember"));
+                                grupo.setImgURL(grupoJSON.getString("groupPicture"));
 
                                 groupList.add(grupo);
 

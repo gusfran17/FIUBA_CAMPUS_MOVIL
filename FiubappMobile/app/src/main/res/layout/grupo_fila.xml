@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <ImageView
+    <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/thumbnail"
         android:src="@drawable/ic_grupos"
         android:layout_width="60dp"
