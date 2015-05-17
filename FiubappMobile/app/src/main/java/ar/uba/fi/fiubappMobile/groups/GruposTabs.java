@@ -34,10 +34,11 @@ public class GruposTabs extends FragmentActivity {
         Intent i = getIntent();
         int idGrupo = i.getIntExtra("idGrupo", -1);
         String nombreGrupo = i.getStringExtra("nombreGrupo");
+        boolean esMiembro = i.getBooleanExtra("esMiembro", false);
 
         tvNombreGrupo.setText(nombreGrupo);
 
-        GruposTabsAdapter gruposTabsAdapter = new GruposTabsAdapter(getSupportFragmentManager(), this, idGrupo);
+        GruposTabsAdapter gruposTabsAdapter = new GruposTabsAdapter(getSupportFragmentManager(), this, idGrupo, esMiembro);
         viewPager.setAdapter(gruposTabsAdapter);
 
         TabPageIndicator indicator = (TabPageIndicator)findViewById(R.id.indicator_grupos);
