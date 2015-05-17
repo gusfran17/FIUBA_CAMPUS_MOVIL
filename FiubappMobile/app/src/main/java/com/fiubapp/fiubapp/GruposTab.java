@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ar.uba.fi.fiubappMobile.groups.GruposTabs;
+import ar.uba.fi.fiubappMobile.notifications.ApplicationNotification;
 
 public class GruposTab extends Fragment {
 
@@ -248,7 +249,11 @@ public class GruposTab extends Fragment {
         listGrupos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Grupo grupo = gruposAlumno.get(position);
                 Intent i = new Intent(getActivity(), GruposTabs.class);
+                i.putExtra("idGrupo", grupo.getId());
+                i.putExtra("nombreGrupo", grupo.getNombre());
                 startActivity(i);
             }
         });
