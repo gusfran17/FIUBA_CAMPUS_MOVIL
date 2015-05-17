@@ -22,6 +22,7 @@ import ar.uba.fi.fiubappREST.domain.GroupPicture;
 import ar.uba.fi.fiubappREST.domain.StudentSession;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
+import ar.uba.fi.fiubappREST.representations.GroupUpdateRepresentation;
 import ar.uba.fi.fiubappREST.services.GroupService;
 import ar.uba.fi.fiubappREST.services.StudentSessionService;
 
@@ -116,6 +117,20 @@ public class GroupControllerTest {
 		this.controller.updateGroupPicture(A_TOKEN, A_GROUP_ID, image);
 		
 		assertTrue(true);		
+	}
+	
+	@Test
+	public void testUpdate(){
+		StudentSession session = mock(StudentSession.class);
+		when(session.getUserName()).thenReturn(AN_USER_NAME);
+		when(studentSessionService.find(A_TOKEN)).thenReturn(session);
+		GroupUpdateRepresentation updatingGroup = mock(GroupUpdateRepresentation.class);
+		GroupRepresentation representation = mock(GroupRepresentation.class);
+		when(this.service.updateGroup(A_GROUP_ID, updatingGroup, AN_USER_NAME)).thenReturn(representation);
+		
+		GroupRepresentation updatedGroup = this.controller.update(A_TOKEN, A_GROUP_ID, updatingGroup);
+		
+		assertEquals(representation, updatedGroup);
 	}
 }
 
