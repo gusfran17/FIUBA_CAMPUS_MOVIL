@@ -1,6 +1,7 @@
 package ar.uba.fi.fiubappREST.controllers;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -15,6 +16,7 @@ import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
 import ar.uba.fi.fiubappREST.domain.StudentSession;
@@ -101,6 +103,19 @@ public class GroupControllerTest {
 		assertEquals(bytes, response.getBody());
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals(MediaType.IMAGE_PNG, response.getHeaders().getContentType());
+	}
+	
+	@Test
+	public void testUpdatePicture() {
+		StudentSession session = mock(StudentSession.class);
+		when(session.getUserName()).thenReturn(AN_USER_NAME);
+		when(studentSessionService.find(A_TOKEN)).thenReturn(session);
+		MultipartFile image = mock(MultipartFile.class);
+		doNothing().when(service).updatePicture(A_GROUP_ID, image, AN_USER_NAME);
+				
+		this.controller.updateGroupPicture(A_TOKEN, A_GROUP_ID, image);
+		
+		assertTrue(true);		
 	}
 }
 

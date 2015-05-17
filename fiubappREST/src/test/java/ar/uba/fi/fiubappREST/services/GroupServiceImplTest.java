@@ -19,6 +19,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.converters.GroupConverter;
 import ar.uba.fi.fiubappREST.domain.Group;
@@ -26,6 +28,9 @@ import ar.uba.fi.fiubappREST.domain.GroupPicture;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.GroupAlreadyExistsException;
 import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
+import ar.uba.fi.fiubappREST.exceptions.StudentNotCreatorOfGroupException;
+import ar.uba.fi.fiubappREST.exceptions.UnexpectedErrorReadingProfilePictureFileException;
+import ar.uba.fi.fiubappREST.exceptions.UnsupportedMediaTypeForProfilePictureException;
 import ar.uba.fi.fiubappREST.persistance.GroupPictureRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
@@ -37,6 +42,7 @@ public class GroupServiceImplTest {
 	private static final String A_NAME = "aName";
 	private static final String A_DESCRIPTION = "aDescription";
 	private static final String AN_USER_NAME = "anUserName";
+	private static final String ANOTHER_USER_NAME = "anotherUserName";
 	private static final Integer A_GROUP_ID = 12;
 	
 	@Mock
@@ -204,6 +210,97 @@ public class GroupServiceImplTest {
 		when(this.groupPictureRepository.findByGroupId(A_GROUP_ID)).thenReturn(null);
 		
 		this.service.getPicture(A_GROUP_ID);
+	}
+	
+	@Test
+	public void testUpdatePicturePNG() throws IOException {
+		MultipartFile image = mock(MultipartFile.class);
+		when(image.getContentType()).thenReturn(MediaType.IMAGE_PNG_VALUE);
+		when(image.getBytes()).thenReturn("Mock".getBytes());
+		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(group);
+		GroupPicture picture = mock(GroupPicture.class);
+		group.setOwner(student);
+		when(this.groupPictureRepository.findByGroupId(A_GROUP_ID)).thenReturn(picture);
+		when(this.groupPictureRepository.save(picture)).thenReturn(picture);
+		
+		this.service.updatePicture(A_GROUP_ID, image, AN_USER_NAME);
+		
+		assertTrue(true);
+	}
+	
+	@Test
+	public void testUpdatePictureJPEG() throws IOException {
+		MultipartFile image = mock(MultipartFile.class);
+		when(image.getContentType()).thenReturn(MediaType.IMAGE_JPEG_VALUE);
+		when(image.getBytes()).thenReturn("Mock".getBytes());
+		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(group);
+		GroupPicture picture = mock(GroupPicture.class);
+		group.setOwner(student);
+		when(this.groupPictureRepository.findByGroupId(A_GROUP_ID)).thenReturn(picture);
+		when(this.groupPictureRepository.save(picture)).thenReturn(picture);
+		
+		this.service.updatePicture(A_GROUP_ID, image, AN_USER_NAME);
+		
+		assertTrue(true);
+	}
+	
+	@Test(expected=UnsupportedMediaTypeForProfilePictureException.class)
+	public void testUpdatePictureNotAllowedContent() throws IOException {
+		MultipartFile image = mock(MultipartFile.class);
+		when(image.getContentType()).thenReturn(MediaType.IMAGE_GIF_VALUE);
+				
+		this.service.updatePicture(A_GROUP_ID, image, AN_USER_NAME);
+	}
+	
+	@Test(expected=UnexpectedErrorReadingProfilePictureFileException.class)
+	public void testUpdatePictureError() throws IOException {
+		MultipartFile image = mock(MultipartFile.class);
+		when(image.getContentType()).thenReturn(MediaType.IMAGE_JPEG_VALUE);
+		when(image.getBytes()).thenThrow(new IOException());
+		when(this.studentRepository.findOne(AN_USER_NAME)).thenReturn(student);
+		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(group);
+		GroupPicture picture = mock(GroupPicture.class);
+		group.setOwner(student);
+		when(this.groupPictureRepository.findByGroupId(A_GROUP_ID)).thenReturn(picture);
+		
+		this.service.updatePicture(A_GROUP_ID, image, AN_USER_NAME);
+	}
+	
+	@Test(expected = StudentNotCreatorOfGroupException.class)
+	public void testUpdatePictureNotOwner() throws IOException {
+		MultipartFile image = mock(MultipartFile.class);
+		when(image.getContentType()).thenReturn(MediaType.IMAGE_PNG_VALUE);
+		when(image.getBytes()).thenReturn("Mock".getBytes());
+		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(group);
+		GroupPicture picture = mock(GroupPicture.class);
+		group.setOwner(student);
+		when(this.groupPictureRepository.findByGroupId(A_GROUP_ID)).thenReturn(picture);
+		
+		this.service.updatePicture(A_GROUP_ID, image, ANOTHER_USER_NAME);
+	}
+	
+	@Test(expected = GroupNotFoundException.class)
+	public void testUpdatePictureGroupNotFound() throws IOException {
+		MultipartFile image = mock(MultipartFile.class);
+		when(image.getContentType()).thenReturn(MediaType.IMAGE_PNG_VALUE);
+		when(image.getBytes()).thenReturn("Mock".getBytes());
+		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(null);
+		GroupPicture picture = mock(GroupPicture.class);
+		group.setOwner(student);
+		when(this.groupPictureRepository.findByGroupId(A_GROUP_ID)).thenReturn(picture);
+		
+		this.service.updatePicture(A_GROUP_ID, image, ANOTHER_USER_NAME);
+	}
+	
+	@Test(expected = GroupNotFoundException.class)
+	public void testUpdatePictureNotFound() throws IOException {
+		MultipartFile image = mock(MultipartFile.class);
+		when(image.getContentType()).thenReturn(MediaType.IMAGE_PNG_VALUE);
+		when(image.getBytes()).thenReturn("Mock".getBytes());
+		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(group);
+		when(this.groupPictureRepository.findByGroupId(A_GROUP_ID)).thenReturn(null);
+		
+		this.service.updatePicture(A_GROUP_ID, image, ANOTHER_USER_NAME);
 	}
 	
 }

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.converters.GroupConverter;
 import ar.uba.fi.fiubappREST.domain.Group;
@@ -21,8 +22,10 @@ import ar.uba.fi.fiubappREST.domain.GroupPicture;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.GroupAlreadyExistsException;
 import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
+import ar.uba.fi.fiubappREST.exceptions.StudentNotCreatorOfGroupException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.UnexpectedErrorReadingProfilePictureFileException;
+import ar.uba.fi.fiubappREST.exceptions.UnsupportedMediaTypeForProfilePictureException;
 import ar.uba.fi.fiubappREST.persistance.GroupPictureRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
@@ -171,10 +174,47 @@ public class GroupServiceImpl implements GroupService {
 		return picture;
 	}
 
+	@Override
+	public void updatePicture(Integer groupId, MultipartFile image, String userName) {
+		LOGGER.info(String.format("Saving file %s as group picture for group with id %s.", image.getName(), groupId));
+		this.validateFileContentType(image);
+		Group group = this.groupRepository.findOne(groupId);
+		GroupPicture picture = this.groupPictureRepository.findByGroupId(groupId);
+		if(group==null || picture==null){
+			LOGGER.info(String.format("Group with id %s does not exist.", userName, groupId ));
+			throw new GroupNotFoundException(groupId);
+		}
+		this.validateOwner(group, userName);
+		picture.setGroup(group);
+		picture.setContentType(image.getContentType());
+		try {
+			picture.setImage(image.getBytes());
+		} catch (IOException e) {
+			LOGGER.error(String.format("File %s for picture for group with id %s was not read.", image.getName(), groupId));
+			throw new UnexpectedErrorReadingProfilePictureFileException(image.getName());
+		}
+		LOGGER.info(String.format("File %s was saved as group picture for group with id %s.", image.getName(), groupId));
+		this.groupPictureRepository.save(picture);
+	}
+
+	private void validateOwner(Group group, String userName) {
+		if(!group.getOwner().getUserName().equals(userName)){
+			throw new StudentNotCreatorOfGroupException(userName, group.getName());
+		}
+	}
+
+	private void validateFileContentType(MultipartFile image) {
+		if(!image.getContentType().equals(MediaType.IMAGE_JPEG_VALUE) 
+				&& !image.getContentType().equals(MediaType.IMAGE_PNG_VALUE)){
+			LOGGER.error(String.format("Media Type %s of file %s is not allowed for profile picture.", image.getContentType(), image.getName()));
+			throw new UnsupportedMediaTypeForProfilePictureException(image.getContentType());
+		}		
+	}
+
 	public Resource getDefaultGroupPicture() {
 		return defaultGroupPicture;
 	}
-
+	
 	public void setDefaultGroupPicture(Resource defaultProfilePicture) {
 		this.defaultGroupPicture = defaultProfilePicture;
 	}
