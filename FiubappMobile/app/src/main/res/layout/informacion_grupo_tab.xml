@@ -65,22 +65,35 @@
             android:layout_below="@+id/name"
             android:layout_marginTop="10dp">
 
-            <TextView android:id="@+id/tvFechaCreacion"
-                android:layout_width="fill_parent"
+            <TextView android:id="@+id/tvStrFechaCreacion"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="false"
-                android:text="Fecha de creación"
+                android:text="@string/fecha_creacion"
                 android:layout_alignParentLeft="false"
                 android:layout_alignParentTop="false" />
 
-            <TextView android:id="@+id/tvCreadoPor"
+            <TextView android:id="@+id/tvFechaCreacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15px"
+                android:layout_toRightOf="@+id/tvStrFechaCreacion"/>
+
+            <TextView android:id="@+id/tvStrCreadoPor"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="false"
                 android:layout_below="@+id/tvFechaCreacion"
-                android:text="Creado por"
+                android:text="@string/creado_por"
                 android:layout_alignParentLeft="false"
                 android:layout_alignParentTop="false" />
+
+            <TextView android:id="@+id/tvCreadoPor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15px"
+                android:layout_below="@+id/tvFechaCreacion"
+                android:layout_toRightOf="@+id/tvStrFechaCreacion"/>
         </RelativeLayout>
 
         <EditText android:id="@+id/etDummy"
