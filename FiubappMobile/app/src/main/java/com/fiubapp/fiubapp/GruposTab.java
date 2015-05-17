@@ -191,6 +191,20 @@ public class GruposTab extends Fragment {
 
                                 grupo.setId(id);
                                 grupo.setNombre(nombre);
+                                grupo.setCantMiembros(grupoJSON.getInt("amountOfMembers"));
+                                grupo.setAmIaMember(grupoJSON.getBoolean("amIAMember"));
+
+                                JSONObject jsonOwner = grupoJSON.getJSONObject("owner");
+                                Alumno owner = new Alumno();
+
+                                owner.setNombre(jsonOwner.getString("name"));
+                                owner.setApellido(jsonOwner.getString("lastName"));
+                                owner.setIntercambio(jsonOwner.getBoolean("isExchangeStudent"));
+                                owner.setIsMyMate(jsonOwner.getBoolean("isMyMate"));
+                                owner.setUsername(jsonOwner.getString("userName"));
+                                owner.setImgURL(jsonOwner.getString("profilePicture"));
+
+                                grupo.setOwner(owner);
 
                                 gruposAlumno.add(grupo);
 
