@@ -14,6 +14,11 @@ import com.fiubapp.fiubapp.TabPageIndicator;
 
 public class GruposTabs extends FragmentActivity {
 
+    public void setText(String msg) {
+        TextView tvNombreGrupo = (TextView)findViewById(R.id.group_name);
+        tvNombreGrupo.setText(msg);
+    }
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
