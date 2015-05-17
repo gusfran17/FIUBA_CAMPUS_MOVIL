@@ -18,7 +18,7 @@
             android:layout_height="30sp"
             android:layout_marginLeft="10dip"/>
 
-        <TextView android:id="@+id/profile_name"
+        <TextView android:id="@+id/group_name"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:textColor="#372c24"

@@ -9,9 +9,10 @@ import com.fiubapp.fiubapp.R;
 
 public class GruposTabsAdapter extends FragmentPagerAdapter {
 
+    private int idGrupo = -1;
     private String[] CONTENT = null;
 
-    public GruposTabsAdapter(FragmentManager fm, Context context) {
+    public GruposTabsAdapter(FragmentManager fm, Context context, int idGrupo) {
 
         super(fm);
 
@@ -19,17 +20,19 @@ public class GruposTabsAdapter extends FragmentPagerAdapter {
                 context.getResources().getString(R.string.informacion),
                 context.getResources().getString(R.string.discusiones),
                 context.getResources().getString(R.string.archivos)};
+
+        this.idGrupo = idGrupo;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new InformacionTab();
+                return InformacionTab.nuevoGrupo(idGrupo);
             case 1:
-                return new DiscusionesTab();
+                return DiscusionesTab.nuevoGrupo(idGrupo);
             case 2:
-                return new ArchivosTab();
+                return ArchivosTab.nuevoGrupo(idGrupo);
         }
 
         return null;

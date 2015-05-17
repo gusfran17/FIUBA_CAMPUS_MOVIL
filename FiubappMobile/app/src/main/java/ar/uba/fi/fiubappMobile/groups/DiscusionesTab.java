@@ -23,4 +23,13 @@ public class DiscusionesTab extends Fragment {
         View regularSearchView = inflater.inflate(R.layout.discusiones_grupo_tab, container, false);
         return regularSearchView;
     }
+
+    public static DiscusionesTab nuevoGrupo(int idGrupo) {
+        DiscusionesTab tab = new DiscusionesTab();
+        Bundle args = new Bundle();
+        args.putInt("idGrupo",idGrupo);
+        tab.setArguments(args);
+        return tab;
+    }
+
 }

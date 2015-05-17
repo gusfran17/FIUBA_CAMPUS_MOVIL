@@ -23,4 +23,12 @@ public class InformacionTab extends Fragment {
         View regularSearchView = inflater.inflate(R.layout.informacion_grupo_tab, container, false);
         return regularSearchView;
     }
+
+    public static InformacionTab nuevoGrupo(int idGrupo) {
+        InformacionTab tab = new InformacionTab();
+        Bundle args = new Bundle();
+        args.putInt("idGrupo",idGrupo);
+        tab.setArguments(args);
+        return tab;
+    }
 }
