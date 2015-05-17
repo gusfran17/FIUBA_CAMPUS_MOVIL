@@ -168,9 +168,10 @@ public class GruposTab extends Fragment {
     public void getGrupos(){
 
         final SharedPreferences settings = ((FragmentActivity)context).getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
-
+        final String username = settings.getString("username", null);
+        String URL = getResources().getString(R.string.urlAPI) + "/students/" + username + "/groups";
         JsonArrayRequest jsonReq = new JsonArrayRequest(Request.Method.GET,
-                getResources().getString(R.string.urlAPI) + "/groups",
+                URL,
                 //new JSONObject(params),
                 new Response.Listener<JSONArray>() {
                     @Override
