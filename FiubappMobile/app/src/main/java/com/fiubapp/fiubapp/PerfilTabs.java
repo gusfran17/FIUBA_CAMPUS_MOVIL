@@ -49,7 +49,7 @@ public class PerfilTabs extends FragmentActivity {
         viewPager.setOffscreenPageLimit(4);
 
         // Set the ViewPagerAdapter into ViewPager
-        PerfilTabsAdapter perfilTabsAdapter = new PerfilTabsAdapter(getSupportFragmentManager());
+        PerfilTabsAdapter perfilTabsAdapter = new PerfilTabsAdapter(getSupportFragmentManager(), this);
         viewPager.setAdapter(perfilTabsAdapter);
 
         TabPageIndicator indicator = (TabPageIndicator)findViewById(R.id.indicator_perfil);

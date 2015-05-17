@@ -1,5 +1,6 @@
 package com.fiubapp.fiubapp;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -10,14 +11,22 @@ public class PerfilTabsCompaneroAdapter extends FragmentPagerAdapter{
 
     private String[] TABS = null;
 
-    public PerfilTabsCompaneroAdapter(FragmentManager fm, Alumno companero) {
+    public PerfilTabsCompaneroAdapter(FragmentManager fm, Context context, Alumno companero) {
         super(fm);
         this.companero = companero;
 
         if(this.companero.isMyMate())
-            TABS = new String[] { "Muro", "Datos", "FIUBA", "Empleos", "Educacion", "Apuntes" };
+            TABS = new String[] {
+                    context.getResources().getString(R.string.datos),
+                    context.getResources().getString(R.string.muro),
+                    context.getResources().getString(R.string.fiuba),
+                    context.getResources().getString(R.string.empleos),
+                    context.getResources().getString(R.string.educacion),
+                    context.getResources().getString(R.string.apuntes)};
         else
-            TABS = new String[] { "Datos", "FIUBA" };
+            TABS = new String[] {
+                    context.getResources().getString(R.string.datos),
+                    context.getResources().getString(R.string.fiuba)};
     }
 
     @Override
@@ -25,13 +34,10 @@ public class PerfilTabsCompaneroAdapter extends FragmentPagerAdapter{
         switch (position) {
 
             case 0:
-                if(this.companero.isMyMate())
-                    return new Perfil_apuntes();
-                else
-                    return Perfil_personal.newContact(companero);
+                return Perfil_personal.newContact(companero);
             case 1:
                 if(this.companero.isMyMate())
-                    return Perfil_personal.newContact(companero);
+                    return new Perfil_apuntes();
                 else
                     return Perfil_fiuba.newContact(companero);
             case 2:

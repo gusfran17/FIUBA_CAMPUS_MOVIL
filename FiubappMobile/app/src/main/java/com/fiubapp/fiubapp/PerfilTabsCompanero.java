@@ -57,7 +57,7 @@ public class PerfilTabsCompanero extends FragmentActivity {
 
         // Set the ViewPagerAdapter into ViewPager
         PerfilTabsCompaneroAdapter perfilTabsCompaneroAdapter =
-                new PerfilTabsCompaneroAdapter(getSupportFragmentManager(), companero);
+                new PerfilTabsCompaneroAdapter(getSupportFragmentManager(), this, companero);
         viewPager.setAdapter(perfilTabsCompaneroAdapter);
 
         TabPageIndicator indicator = (TabPageIndicator)findViewById(R.id.indicator_perfil);

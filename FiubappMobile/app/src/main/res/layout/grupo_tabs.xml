@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout android:id="@+id/header_search"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dip"
+        android:paddingBottom="10dip"
+        android:background="#ff2ec7e8">
+
+        <ImageView android:src="@drawable/ic_arrow"
+            android:id="@+id/back_search"
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            android:layout_marginLeft="10dip"/>
+
+        <TextView android:id="@+id/profile_name"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:textColor="#372c24"
+            android:text="Busquedas"
+            android:gravity="center_vertical|left|right"
+            android:paddingLeft="10dp"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/header_search">
+
+        <com.fiubapp.fiubapp.TabPageIndicator
+            android:id="@+id/indicator_grupos"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager_grupos"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+
+    </LinearLayout>
+</RelativeLayout>
