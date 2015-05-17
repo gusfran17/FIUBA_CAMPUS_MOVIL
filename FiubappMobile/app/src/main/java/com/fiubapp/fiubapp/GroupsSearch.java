@@ -83,13 +83,12 @@ public class GroupsSearch extends Activity{
 
                                 JSONObject grupoJSON = response.getJSONObject(i);
 
-                                String id = grupoJSON.getString("id");
-                                String nombre = grupoJSON.getString("name");
-
                                 Grupo grupo = new Grupo();
 
-                                grupo.setId(id);
-                                grupo.setNombre(nombre);
+                                grupo.setId(grupoJSON.getString("id"));
+                                grupo.setNombre(grupoJSON.getString("name"));
+                                grupo.setCantMiembros(grupoJSON.getInt("amountOfMembers"));
+                                grupo.setAmIaMember(grupoJSON.getBoolean("amIAMember"));
 
                                 groupList.add(grupo);
 
