@@ -31,6 +31,7 @@ import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
+import ar.uba.fi.fiubappREST.representations.GroupUpdateRepresentation;
 
 @Service
 public class GroupServiceImpl implements GroupService {
@@ -124,7 +125,7 @@ public class GroupServiceImpl implements GroupService {
 		LOGGER.info(String.format("Registering student with userName %s to group with id %s.", userName, groupId ));
 		Group group = this.groupRepository.findOne(groupId);
 		if(group==null){
-			LOGGER.info(String.format("Group with id %s does not exist.", userName, groupId ));
+			LOGGER.error(String.format("Group with id %s does not exist.", userName, groupId ));
 			throw new GroupNotFoundException(groupId);
 		}
 		Student student = this.findStudent(userName);
@@ -153,7 +154,7 @@ public class GroupServiceImpl implements GroupService {
 		LOGGER.info(String.format("Finding group with id %s for student with userName %s.", groupId, userName));
 		Group group = this.groupRepository.findOne(groupId);
 		if(group==null){
-			LOGGER.info(String.format("Group with id %s does not exist.", userName, groupId ));
+			LOGGER.error(String.format("Group with id %s does not exist.", userName, groupId ));
 			throw new GroupNotFoundException(groupId);
 		}
 		Student student = this.findStudent(userName);
@@ -167,7 +168,7 @@ public class GroupServiceImpl implements GroupService {
 		LOGGER.info(String.format("Finding picture for group with id %s.", groupId));
 		GroupPicture picture = this.groupPictureRepository.findByGroupId(groupId);
 		if(picture==null){
-			LOGGER.info(String.format("Group with id %s does not exist.", groupId ));
+			LOGGER.error(String.format("Group with id %s does not exist.", groupId ));
 			throw new GroupNotFoundException(groupId); 
 		}		
 		LOGGER.info(String.format("Picture for for group with id %s was found.", groupId));
@@ -181,7 +182,7 @@ public class GroupServiceImpl implements GroupService {
 		Group group = this.groupRepository.findOne(groupId);
 		GroupPicture picture = this.groupPictureRepository.findByGroupId(groupId);
 		if(group==null || picture==null){
-			LOGGER.info(String.format("Group with id %s does not exist.", userName, groupId ));
+			LOGGER.error(String.format("Group with id %s does not exist.", userName, groupId ));
 			throw new GroupNotFoundException(groupId);
 		}
 		this.validateOwner(group, userName);
@@ -211,6 +212,24 @@ public class GroupServiceImpl implements GroupService {
 		}		
 	}
 
+	@Override
+	public GroupRepresentation updateGroup(Integer groupId,	GroupUpdateRepresentation groupRepresentation, String userName) {
+		LOGGER.info(String.format("Updating group with id %s.", groupId ));
+		Group group = this.groupRepository.findOne(groupId);
+		if(group==null){
+			LOGGER.error(String.format("Group with id %s does not exist.", userName, groupId ));
+			throw new GroupNotFoundException(groupId);
+		}
+		this.validateOwner(group, userName);
+		group.setName(groupRepresentation.getName());
+		group.setDescription(groupRepresentation.getDescription());
+		this.groupRepository.save(group);
+		Student student = this.findStudent(userName);
+		GroupRepresentation representation = this.groupConverter.convert(student, group);
+		LOGGER.info(String.format("Group with id %s was updated.", groupId ));
+		return representation;
+	}
+	
 	public Resource getDefaultGroupPicture() {
 		return defaultGroupPicture;
 	}

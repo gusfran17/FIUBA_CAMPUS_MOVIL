@@ -36,6 +36,7 @@ import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
+import ar.uba.fi.fiubappREST.representations.GroupUpdateRepresentation;
 
 public class GroupServiceImplTest {
 	
@@ -301,6 +302,29 @@ public class GroupServiceImplTest {
 		when(this.groupPictureRepository.findByGroupId(A_GROUP_ID)).thenReturn(null);
 		
 		this.service.updatePicture(A_GROUP_ID, image, ANOTHER_USER_NAME);
+	}
+	
+	@Test
+	public void testUpdateGroup(){
+		GroupUpdateRepresentation updatingGroup = mock(GroupUpdateRepresentation.class);
+		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(group);
+		group.setOwner(student);
+		when(this.groupRepository.save(group)).thenReturn(group);
+		when(this.studentRepository.findByUserNameAndFetchMatesAndGroupsEagerly(AN_USER_NAME)).thenReturn(student);
+		GroupRepresentation representation = mock(GroupRepresentation.class);
+		when(this.converter.convert(student, group)).thenReturn(representation);
+		
+		GroupRepresentation updatedGroup = this.service.updateGroup(A_GROUP_ID, updatingGroup, AN_USER_NAME);
+		
+		assertEquals(representation, updatedGroup);
+	}
+	
+	@Test(expected = GroupNotFoundException.class)
+	public void testUpdateGroupNotFound(){
+		GroupUpdateRepresentation updatingGroup = mock(GroupUpdateRepresentation.class);
+		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(null);
+				
+		this.service.updateGroup(A_GROUP_ID, updatingGroup, AN_USER_NAME);
 	}
 	
 }

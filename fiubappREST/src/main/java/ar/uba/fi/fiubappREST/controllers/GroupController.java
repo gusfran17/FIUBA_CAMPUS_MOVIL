@@ -22,6 +22,7 @@ import ar.uba.fi.fiubappREST.domain.GroupPicture;
 import ar.uba.fi.fiubappREST.domain.StudentSession;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
+import ar.uba.fi.fiubappREST.representations.GroupUpdateRepresentation;
 import ar.uba.fi.fiubappREST.services.GroupService;
 import ar.uba.fi.fiubappREST.services.StudentSessionService;
 
@@ -58,6 +59,13 @@ public class GroupController {
 	public @ResponseBody GroupRepresentation get(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId) {
 		StudentSession session = this.studentSessionService.find(token);
 		return groupService.findGroupForStudent(groupId, session.getUserName());
+	}
+	
+	@RequestMapping(value="{groupId}", method = RequestMethod.PUT)
+	@ResponseStatus(value = HttpStatus.OK)
+	public @ResponseBody GroupRepresentation update(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @RequestBody GroupUpdateRepresentation groupRepresentation) {
+		StudentSession session = this.studentSessionService.find(token);
+		return groupService.updateGroup(groupId, groupRepresentation, session.getUserName());
 	}
 	
 	@RequestMapping(value="{groupId}/picture", method = RequestMethod.GET)
