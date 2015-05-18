@@ -78,15 +78,17 @@ public class GrupoAdapter extends BaseAdapter {
         final Grupo grupoSeleccionado = grupoItems.get(position);
         nombre.setText(grupoSeleccionado.getNombre());
 
-        thumbNail.setImageUrl(grupoSeleccionado.getImgURL(),imageLoader);
+        int time = (int)(System.currentTimeMillis());
+        thumbNail.setImageUrl(grupoSeleccionado.getImgURL() + "?timestamp=" + time, imageLoader);
+
         thumbNail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                    @Override
+                    public void onClick(View view) {
                 String url = grupoSeleccionado.getImgURL();
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 activity.startActivity(i);
-            }
+        }
         });
 
         int cantMiembros = grupoSeleccionado.getCantMiembros();

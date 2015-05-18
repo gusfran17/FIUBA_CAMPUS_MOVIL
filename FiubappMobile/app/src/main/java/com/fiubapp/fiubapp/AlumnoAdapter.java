@@ -79,7 +79,9 @@ public class AlumnoAdapter extends BaseAdapter {
 
         final Alumno a = alumnoItems.get(position);
 
-        thumbNail.setImageUrl(a.getImgURL(),imageLoader);
+        int time = (int)(System.currentTimeMillis());
+        thumbNail.setImageUrl(a.getImgURL() + "?timestamp=" + time,imageLoader);
+
         thumbNail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
