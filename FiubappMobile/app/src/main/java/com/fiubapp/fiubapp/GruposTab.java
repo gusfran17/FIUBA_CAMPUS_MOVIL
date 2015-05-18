@@ -74,6 +74,12 @@ public class GruposTab extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getGrupos();
+    }
+
     public void setCrear(){
         LayoutInflater li = LayoutInflater.from(((FragmentActivity)context));
 
@@ -170,7 +176,7 @@ public class GruposTab extends Fragment {
     }
 
     public void getGrupos(){
-
+        gruposAlumno.clear();
         final SharedPreferences settings = ((FragmentActivity)context).getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
         final String username = settings.getString("username", null);
         String URL = getResources().getString(R.string.urlAPI) + "/students/" + username + "/groups";
