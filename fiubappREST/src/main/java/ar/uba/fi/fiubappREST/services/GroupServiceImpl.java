@@ -2,10 +2,14 @@ package ar.uba.fi.fiubappREST.services;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.commons.collections.comparators.NullComparator;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,11 +146,24 @@ public class GroupServiceImpl implements GroupService {
 		LOGGER.info(String.format("Finding all groups for student with userName %s.", userName));
 		Student student = this.findStudent(userName);
 		List<GroupRepresentation> groupRepresentations = new ArrayList<GroupRepresentation>();
-		for (Group group : student.getGroups()) {
+		for (Group group : this.orderGroups(student.getGroups())) {
 			groupRepresentations.add(this.groupConverter.convert(student, group));
 		}
 		LOGGER.info(String.format("All groups for student with userName %s were found.", userName));
 		return groupRepresentations;
+	}
+	
+	private List<Group> orderGroups(Set<Group> groups) {
+		List<Group> sortedGroups = new ArrayList<Group>();
+		sortedGroups.addAll(groups);		
+		Collections.sort(sortedGroups, new Comparator<Group>() {			
+			public int compare(Group aGroup, Group anotherGroup) {
+				NullComparator comparator = new NullComparator(true);
+				return comparator.compare(aGroup.getCreationDate(), anotherGroup.getCreationDate());
+			}
+		});
+		Collections.reverse(sortedGroups);
+		return sortedGroups;
 	}
 
 	@Override

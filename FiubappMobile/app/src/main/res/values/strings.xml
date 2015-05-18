@@ -11,7 +11,7 @@
     <string name="soyIntercambio">Soy de intercambio</string>
     <string name="soyNuevo">Soy nuevo</string>
     <string name="pasaporte">Pasaporte</string>
-    <string name="urlAPI">http://192.168.56.1:8080/fiubappREST/api</string>
+    <string name="urlAPI">http://172.17.204.20:8080/fiubappREST/api</string>
     <string name="prefs_name">MyPrefsFile</string>
     <string name="educacionSecundaria">Educación secundaria</string>
     <string name="escuela">Escuela</string>
@@ -57,8 +57,8 @@
     <string name="empleos">EMPLEOS</string>
     <string name="educacion">EDUCACIÓN</string>
     <string name="apuntes">APUNTES</string>
-    <string name="informacion">INFORMACIÓN</string>
-    <string name="discusiones">DISCUSIONES</string>
+    <string name="informacion">INFO</string>
+    <string name="discusiones">DISCUSIÓN</string>
     <string name="archivos">ARCHIVOS</string>
     <string name="muro">MURO</string>
     <string name="nombre_vacio">Nombre vacío</string>
