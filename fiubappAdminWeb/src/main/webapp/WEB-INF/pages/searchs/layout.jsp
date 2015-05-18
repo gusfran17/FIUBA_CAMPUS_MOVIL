@@ -1,5 +1,4 @@
  <form name="form" class="form-horizontal">
-	<!-- Todos los tipos de contenidos -->
 	<div class="control-group">
         <label class="control-label">Estado</label>
 
@@ -53,16 +52,23 @@
 <div class="alert alert-info" style="width:400px;" ng-show="results.length == 0">
     No se encontró ningún resultado
 </div>
-
-<div class="bs-example" ng-show="results.length > 0" ng-repeat="result in results">
-	<div class="media">
-	    <div class="media-body">
-	        <p>{{result.userName}}</p>
-	        <p>{{result.name}}</p>
-	        <p>{{result.lastName}}</p>
-	        <p>{{result.fileNumber}}</p>
-	        <p>{{result.passportNumber}}</p>
-	        <p>{{result.isExchangeStudent}}</p>
-	    </div>
-	</div>
+<div class="table-responsive">
+	<table ng-show="results.length > 0" class="table table-striped" data-sort-name="name" data-sort-order="desc">
+	    <thead>
+	        <tr>
+	            <th data-field="fileNumber" data-align="right" data-sortable="true">Padrón</th>
+	            <th data-field="passportNumber" data-align="right" data-sortable="true">Pasaporte</th>
+	            <th data-field="name" data-align="right" data-sortable="true">Nombre</th>
+	            <th data-field="lastName" data-align="right" data-sortable="true">Apellido</th>
+	        </tr>
+	    </thead>
+	    <tbody>
+			<tr ng-repeat="result in results">
+        		<td>{{result.fileNumber}}</td>
+        		<td>{{result.passportNumber}}</td>
+        		<td>{{result.name}}</td>
+        		<td>{{result.lastName}}</td>
+      		</tr>
+		</tbody>
+	</table>
 </div>
