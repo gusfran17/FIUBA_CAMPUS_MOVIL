@@ -29,12 +29,18 @@ public class AdminSessionController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public @ResponseBody AdminSession createSession(@RequestBody Credentials credentials) {
-		return adminSessionService.create(credentials);
+		return this.adminSessionService.create(credentials);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody AdminSession findSession(@RequestHeader(value="Authorization") String token) {
-		return adminSessionService.find(token);
+		return this.adminSessionService.find(token);
+	}
+	
+	@RequestMapping(method = RequestMethod.DELETE)
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public @ResponseBody void deleSession(@RequestHeader(value="Authorization") String token) {
+		this.adminSessionService.delete(token);
 	}
 }

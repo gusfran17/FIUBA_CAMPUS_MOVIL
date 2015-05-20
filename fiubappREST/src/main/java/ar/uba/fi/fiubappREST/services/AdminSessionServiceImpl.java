@@ -58,7 +58,7 @@ public class AdminSessionServiceImpl implements AdminSessionService{
 			LOGGER.info(String.format("Password for admin with userName %s isn't valid.", userName));
 			throw new InvalidCredentialsException();
 		}
-		LOGGER.info(String.format("Password for student with userName %s is valid.", userName));
+		LOGGER.info(String.format("Password for admin with userName %s is valid.", userName));
 	}
 
 	private Admin getAdmin(Credentials credentials) {
@@ -74,18 +74,26 @@ public class AdminSessionServiceImpl implements AdminSessionService{
 
 	@Override
 	public AdminSession find(String token) {
-		LOGGER.info(String.format("Finding session for token %s.", token));
+		LOGGER.info(String.format("Finding admin session for token %s.", token));
 		AdminSession session = this.adminSessionRepository.findByToken(token);
 		if(session == null){
-			LOGGER.info(String.format("Session for token %s was not found.", token));
+			LOGGER.info(String.format("Admin session for token %s was not found.", token));
 			throw new StudentSessionNotFoundException(token);
 		}
-		LOGGER.info(String.format("Session for token %s was found.", token));
+		LOGGER.info(String.format("Admin session for token %s was found.", token));
 		return session;
 	}
 
 	@Override
 	public void validate(String token) {
 		this.find(token);		
+	}
+
+	@Override
+	public void delete(String token) {
+		LOGGER.info(String.format("Deleting admin session for token %s.", token));
+		AdminSession session = this.find(token);
+		this.adminSessionRepository.delete(session);
+		LOGGER.info(String.format("Admin session for token %s was deleted.", token));
 	}
 }

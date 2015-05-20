@@ -11,4 +11,6 @@ public interface AdminSessionService {
 	
 	public void validate(String token);
 
+	public void delete(String token);
+
 }
