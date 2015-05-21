@@ -20,9 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
 import ar.uba.fi.fiubappREST.domain.StudentSession;
+import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
+import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupUpdateRepresentation;
+import ar.uba.fi.fiubappREST.services.DiscussionService;
 import ar.uba.fi.fiubappREST.services.GroupService;
 import ar.uba.fi.fiubappREST.services.StudentSessionService;
 
@@ -39,13 +42,16 @@ public class GroupControllerTest {
 	private GroupService service;
 	@Mock
 	private StudentSessionService studentSessionService;
+	@Mock
+	private DiscussionService discussionService;
 	
 	
 	@Before
 	public void setUp(){
 		this.service = mock(GroupService.class);
 		this.studentSessionService = mock(StudentSessionService.class);
-		this.controller = new GroupController(service, studentSessionService);
+		this.discussionService = mock(DiscussionService.class);
+		this.controller = new GroupController(service, studentSessionService, discussionService);
 	}
 
 	@Test
@@ -132,6 +138,21 @@ public class GroupControllerTest {
 		
 		assertEquals(representation, updatedGroup);
 	}
+	
+	@Test
+	public void testCreateGroupDiscussion(){
+		doNothing().when(this.studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		DiscussionCreationRepresentation discussionRepresentation = new DiscussionCreationRepresentation();
+		discussionRepresentation.setCreatorUserName(AN_USER_NAME);
+		
+		DiscussionRepresentation representation = mock(DiscussionRepresentation.class);
+		when(this.discussionService.create(discussionRepresentation,A_GROUP_ID)).thenReturn(representation);
+		
+		DiscussionRepresentation createdDiscussion = this.controller.createGroupDiscussion(A_TOKEN, A_GROUP_ID,discussionRepresentation);
+		
+		assertEquals(representation, createdDiscussion);
+	}
+	
 }
 
 

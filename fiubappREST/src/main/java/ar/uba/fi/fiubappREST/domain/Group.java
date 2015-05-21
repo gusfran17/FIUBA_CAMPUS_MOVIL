@@ -3,6 +3,7 @@ package ar.uba.fi.fiubappREST.domain;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -50,7 +52,19 @@ public class Group {
 	      joinColumns={@JoinColumn(name="groupId", referencedColumnName="id")},
 	      inverseJoinColumns={@JoinColumn(name="userName", referencedColumnName="userName")})
 	private Set<Student> members;
+	
+	@OneToMany(cascade={CascadeType.ALL}, orphanRemoval = true)
+	private Set<Discussion> discussions;
 
+	public Set<Discussion> getDiscussions() {
+		return discussions;
+	}
+
+	public void setDiscussions(Set<Discussion> discussions) {
+		this.discussions = discussions;
+	}
+
+	@JsonIgnore
 	public Integer getId() {
 		return id;
 	}
