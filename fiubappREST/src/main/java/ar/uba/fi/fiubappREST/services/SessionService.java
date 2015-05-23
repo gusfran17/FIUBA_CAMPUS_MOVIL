@@ -5,6 +5,9 @@ import ar.uba.fi.fiubappREST.domain.Session;
 
 public interface SessionService {
 	
+	public Session findSession(String token);
+	
+	
 	public Session createStudentStudent(Credentials credentials);
 	
 	public Session findStudentSession(String token);

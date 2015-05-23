@@ -24,6 +24,10 @@ public class StudentProfileRepresentation {
 	
 	private String profilePicture;
 	
+	private String email;
+	
+	private String state;
+	
 	public String getUserName() {
 		return userName;
 	}
@@ -102,6 +106,22 @@ public class StudentProfileRepresentation {
 
 	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
 	}
 	
 }

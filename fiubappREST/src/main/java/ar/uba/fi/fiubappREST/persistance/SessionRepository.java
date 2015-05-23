@@ -9,6 +9,8 @@ import ar.uba.fi.fiubappREST.domain.SessionRole;
 @Repository
 public interface SessionRepository extends CrudRepository<Session, String> {
 	
+	public Session findByToken(String token);
+
 	public Session findByTokenAndRole(String token, SessionRole role);
 
 }

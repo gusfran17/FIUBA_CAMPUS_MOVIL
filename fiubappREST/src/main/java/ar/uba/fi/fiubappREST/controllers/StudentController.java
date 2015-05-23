@@ -14,13 +14,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.Session;
+import ar.uba.fi.fiubappREST.domain.Student;
+import ar.uba.fi.fiubappREST.domain.StudentState;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentUpdateRepresentation;
-import ar.uba.fi.fiubappREST.services.StudentService;
 import ar.uba.fi.fiubappREST.services.SessionService;
+import ar.uba.fi.fiubappREST.services.StudentService;
 
 @Controller
 @RequestMapping("students")
@@ -44,8 +45,12 @@ public class StudentController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	public @ResponseBody List<StudentProfileRepresentation> findStudents(@RequestHeader(value="Authorization") String token, @RequestParam(value="name", required=false) String name, @RequestParam(value="lastName", required=false) String lastName, @RequestParam(value="email", required=false) String email, @RequestParam(value="careerCode", required=false) String careerCode, @RequestParam(value="fileNumber", required=false) String fileNumber, @RequestParam(value="passportNumber", required=false) String passportNumber) {	
-		Session session = this.sessionService.findStudentSession(token);
+	public @ResponseBody List<StudentProfileRepresentation> findStudents(@RequestHeader(value="Authorization") String token, @RequestParam(value="name", required=false) String name, @RequestParam(value="lastName", required=false) String lastName, @RequestParam(value="email", required=false) String email, @RequestParam(value="careerCode", required=false) String careerCode, @RequestParam(value="fileNumber", required=false) String fileNumber, @RequestParam(value="passportNumber", required=false) String passportNumber, @RequestParam(value="state", required=false) String state) {
+		Session session = this.sessionService.findSession(token);
+		if(session.isAdminSession()){
+			StudentState studentState = (state==null) ? null : StudentState.create(state);
+			return studentService.findByProperties(name, lastName, fileNumber, passportNumber, studentState);
+		}
 		return studentService.findByProperties(session.getUserName(), name, lastName, email, careerCode, fileNumber, passportNumber);
 	}
 	

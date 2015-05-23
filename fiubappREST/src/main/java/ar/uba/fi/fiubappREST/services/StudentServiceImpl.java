@@ -240,11 +240,16 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public List<Student> findByProperties(String name, String lastName, String fileNumber, String passportNumber, StudentState state) {
+	public List<StudentProfileRepresentation> findByProperties(String name, String lastName, String fileNumber, String passportNumber, StudentState state) {
 		LOGGER.info(String.format("Finding students by criteria."));
-		List<Student> students = this.studentRepository.findByProperties(name, lastName, null, null, fileNumber, passportNumber, state.getId());
+		Integer studentState = (state==null) ? null : state.getId();
+		List<Student> students = this.studentRepository.findByProperties(name, lastName,null, null, fileNumber, passportNumber, studentState);
+		List<StudentProfileRepresentation> profiles = new ArrayList<StudentProfileRepresentation>();
+		for (Student student : students) {
+			profiles.add(this.studentProfileConverter.convert(student));
+		}
 		LOGGER.info(String.format("All students meeting the criteria were found."));
-		return students;
+		return profiles;
 	}
 
 	public Double getDefaultDistanceInKm() {

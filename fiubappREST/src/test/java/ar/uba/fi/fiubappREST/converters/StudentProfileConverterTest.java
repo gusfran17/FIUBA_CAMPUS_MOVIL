@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import ar.uba.fi.fiubappREST.domain.Career;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentCareer;
+import ar.uba.fi.fiubappREST.domain.StudentState;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 
 public class StudentProfileConverterTest {
@@ -29,6 +30,7 @@ public class StudentProfileConverterTest {
 	private static final String A_CAREER_NAME = "aCareerName";
 	private static final String ANOTHER_CAREER_NAME = "anotherCareerName";
 	private static final String A_COMMENTS = "aComments";
+	private static final String AN_EMAIL = "anEmail";
 	
 	@Mock
 	private Student mate;
@@ -50,6 +52,8 @@ public class StudentProfileConverterTest {
 		when(this.mate.getFileNumber()).thenReturn(A_FILE_NUMBER);
 		when(this.mate.getPassportNumber()).thenReturn(A_PASSPORT_NUMBER);
 		when(this.mate.getComments()).thenReturn(A_COMMENTS);
+		when(this.mate.getEmail()).thenReturn(AN_EMAIL);
+		when(this.mate.getState()).thenReturn(StudentState.APPROVED);
 		when(this.mate.getProfilePictureUrl()).thenReturn(A_PICTURE_PROFILE_URL);
 		
 		this.aCareer = mock(Career.class);

@@ -38,6 +38,18 @@ public class SessionServiceImpl implements SessionService{
 		this.adminRepository = adminRepository;
 		this.passwordEncoder = passwordEncoder;	
 	}
+	
+	@Override
+	public Session findSession(String token) {
+		LOGGER.info(String.format("Finding session for token %s.", token));
+		Session session = this.sessionRepository.findByToken(token);
+		if(session == null){
+			LOGGER.info(String.format("Session for token %s was not found.", token));
+			throw new SessionNotFoundException(token);
+		}
+		LOGGER.info(String.format("Session for token %s was found.", token));
+		return session;
+	}
 
 	@Override
 	public Session createStudentStudent(Credentials credentials) {

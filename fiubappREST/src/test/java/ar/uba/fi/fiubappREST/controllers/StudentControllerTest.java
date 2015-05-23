@@ -13,13 +13,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.Session;
+import ar.uba.fi.fiubappREST.domain.Student;
+import ar.uba.fi.fiubappREST.domain.StudentState;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentUpdateRepresentation;
-import ar.uba.fi.fiubappREST.services.StudentService;
 import ar.uba.fi.fiubappREST.services.SessionService;
+import ar.uba.fi.fiubappREST.services.StudentService;
 
 public class StudentControllerTest {
 	
@@ -58,13 +59,40 @@ public class StudentControllerTest {
 	}
 	
 	@Test
-	public void testGetStudents(){
-		Session studentSession = mock(Session.class);
-		when(studentSession.getUserName()).thenReturn(AN_USER_NAME);
-		when(sessionService.findStudentSession(A_TOKEN)).thenReturn(studentSession);
+	public void testGetStudentsForStudent(){
+		Session session = mock(Session.class);
+		when(session.getUserName()).thenReturn(AN_USER_NAME);
+		when(session.isAdminSession()).thenReturn(false);
+		when(sessionService.findSession(A_TOKEN)).thenReturn(session);
 		when(service.findByProperties(AN_USER_NAME, null, null, null, null, null, null)).thenReturn(new ArrayList<StudentProfileRepresentation>());
 		
-		List<StudentProfileRepresentation> students = this.controller.findStudents(A_TOKEN, null, null, null, null, null, null);
+		List<StudentProfileRepresentation> students = this.controller.findStudents(A_TOKEN, null, null, null, null, null, null, null);
+		
+		assertNotNull(students);
+	}
+	
+	@Test
+	public void testGetStudentsForAdmin(){
+		Session session = mock(Session.class);
+		when(session.getUserName()).thenReturn(AN_USER_NAME);
+		when(session.isAdminSession()).thenReturn(true);
+		when(sessionService.findSession(A_TOKEN)).thenReturn(session);
+		when(service.findByProperties(null, null, null, null, null)).thenReturn(new ArrayList<StudentProfileRepresentation>());
+		
+		List<StudentProfileRepresentation> students = this.controller.findStudents(A_TOKEN, null, null, null, null, null, null, null);
+		
+		assertNotNull(students);
+	}
+	
+	@Test
+	public void testGetStudentsForAdminWithNotNullState(){
+		Session session = mock(Session.class);
+		when(session.getUserName()).thenReturn(AN_USER_NAME);
+		when(session.isAdminSession()).thenReturn(true);
+		when(sessionService.findSession(A_TOKEN)).thenReturn(session);
+		when(service.findByProperties(null, null, null, null, StudentState.APPROVED)).thenReturn(new ArrayList<StudentProfileRepresentation>());
+		
+		List<StudentProfileRepresentation> students = this.controller.findStudents(A_TOKEN, null, null, null, null, null, null, StudentState.APPROVED.getName());
 		
 		assertNotNull(students);
 	}

@@ -18,6 +18,6 @@ public interface StudentService {
 
 	public List<StudentProfileRepresentation> findByProperties(String myUserName, String name, String lastName, String email, String careerCode, String fileNumber, String passport);
 	
-	public List<Student> findByProperties(String name, String lastName, String fileNumber, String passport, StudentState state);
+	public List<StudentProfileRepresentation> findByProperties(String name, String lastName, String fileNumber, String passport, StudentState state);
 
 }
