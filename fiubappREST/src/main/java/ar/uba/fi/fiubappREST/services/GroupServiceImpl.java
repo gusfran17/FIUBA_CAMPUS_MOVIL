@@ -256,7 +256,7 @@ public class GroupServiceImpl implements GroupService {
 		LOGGER.info(String.format("Confirming thar " + userName + " is a member of group " + groupId + "."));
 		GroupRepresentation groupRepresentation = this.findGroupForStudent(groupId, userName);
 		if (!groupRepresentation.getAmIAMember()){
-			throw new StudentIsNotMemberOfGroupException(groupId, userName);
+			throw new StudentIsNotMemberOfGroupException(userName, groupId);
 		}
 	}
 }
