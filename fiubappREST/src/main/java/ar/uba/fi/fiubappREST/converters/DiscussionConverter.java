@@ -1,7 +1,9 @@
 package ar.uba.fi.fiubappREST.converters;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
@@ -18,10 +20,12 @@ public class DiscussionConverter {
 		DiscussionRepresentation discussionRepresentation = new DiscussionRepresentation();
 		discussionRepresentation.setCreatorUserName(discussion.getCreator().getUserName());
 		discussionRepresentation.setName(discussion.getDiscussionName());	
-		List<Message> messages = discussion.getMessages();
+		Set<Message> messages = discussion.getMessages();
 		List<MessageCreationRepresentation> messagesRepresentation = new ArrayList<MessageCreationRepresentation>();
-		for (int i= 0; i<messages.size();i++){
-			Message message = messages.get(i);
+
+		Iterator<Message> iterator = messages.iterator();
+		while (iterator.hasNext()){
+			Message message = iterator.next();
 			
 			MessageCreationRepresentation messageRepresentation = new MessageCreationRepresentation();
 			messageRepresentation.setCreationDate(message.getCreationDate());

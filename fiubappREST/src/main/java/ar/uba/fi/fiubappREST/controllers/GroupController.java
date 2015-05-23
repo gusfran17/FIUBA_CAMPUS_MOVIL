@@ -90,6 +90,13 @@ public class GroupController<discussionService> {
 		this.groupService.updatePicture(groupId, image, session.getUserName());
 	}
 
+	@RequestMapping(value="{groupId}/discussions", method = RequestMethod.GET)
+	public @ResponseBody Set<Discussion> getDiscussionsForGroup(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId) {
+		StudentSession studentSession = this.studentSessionService.find(token);
+		Set<Discussion> discussions = this.groupService.findGroupDiscussionsForMember(groupId, studentSession.getUserName());	
+		return discussions;
+	}
+	
 	@RequestMapping(value="{groupId}/discussions", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public @ResponseBody DiscussionRepresentation createGroupDiscussion(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @RequestBody DiscussionCreationRepresentation discussionRepresentation) {
@@ -97,12 +104,6 @@ public class GroupController<discussionService> {
 		return this.discussionService.create(discussionRepresentation, groupId);
 	}
 
-	@RequestMapping(value="{groupId}/discussions", method = RequestMethod.GET)
-	public Set<Discussion> getDiscussionsForGroup(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId) {
-		this.studentSessionService.validate(token);
-		Set<Discussion> discussions = this.groupService.findDiscussions(groupId);
-		return discussions;
-	}
 
 
 }

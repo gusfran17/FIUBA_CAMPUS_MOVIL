@@ -1,7 +1,7 @@
 package ar.uba.fi.fiubappREST.domain;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -32,8 +32,8 @@ public class Discussion {
 	@JoinColumn(name="creatorUserName")
 	private Student creator;
 	
-	@OneToMany(cascade={CascadeType.ALL}, orphanRemoval = true)
-	private List<Message> messages;
+	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval = true)
+	private Set<Message> messages;
 	
 	
 	@JsonIgnore
@@ -69,11 +69,11 @@ public class Discussion {
 		this.creator = creator;
 	}
 
-	public List<Message> getMessages() {
+	public Set<Message> getMessages() {
 		return messages;
 	}
 
-	public void setMessages(List<Message> messages) {
+	public void setMessages(Set<Message> messages) {
 		this.messages = messages;
 	}
 

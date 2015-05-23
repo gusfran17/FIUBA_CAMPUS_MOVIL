@@ -1,8 +1,8 @@
 package ar.uba.fi.fiubappREST.services;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +53,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 	private Discussion createDiscussion(DiscussionCreationRepresentation discussionRepresentation, Student creator, Group group) {
 		Discussion discussion = new Discussion();
 		Message message = new Message();
-		List<Message> messages = new ArrayList<Message>();
+		Set<Message> messages = new HashSet<Message>();
 		
 		message.setCreationDate(new Date());
 		message.setCreator(creator);

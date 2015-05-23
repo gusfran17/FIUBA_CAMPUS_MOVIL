@@ -24,6 +24,7 @@ import ar.uba.fi.fiubappREST.domain.GroupPicture;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.GroupAlreadyExistsException;
 import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
+import ar.uba.fi.fiubappREST.exceptions.StudentIsNotMemberOfGroupException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotCreatorOfGroupException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.UnexpectedErrorReadingProfilePictureFileException;
@@ -241,12 +242,21 @@ public class GroupServiceImpl implements GroupService {
 	}
 	
 	@Override
-	public Set<Discussion> findDiscussions(Integer groupId) {
+	public Set<Discussion> findGroupDiscussionsForMember(Integer groupId, String userName) {
+		verifyGroupMember(groupId, userName);
 		LOGGER.info(String.format("Finding sicussions for groupId " + groupId + "."));
 		Group group = this.groupRepository.findOne(groupId);
 		Set<Discussion> discussions = group.getDiscussions();
 		
 		LOGGER.info(String.format("All discussions for groupId "+ groupId + " were found."));
 		return discussions;
+	}
+
+	private void verifyGroupMember(Integer groupId, String userName) {
+		LOGGER.info(String.format("Confirming thar " + userName + " is a member of group " + groupId + "."));
+		GroupRepresentation groupRepresentation = this.findGroupForStudent(groupId, userName);
+		if (!groupRepresentation.getAmIAMember()){
+			throw new StudentIsNotMemberOfGroupException(groupId, userName);
+		}
 	}
 }
