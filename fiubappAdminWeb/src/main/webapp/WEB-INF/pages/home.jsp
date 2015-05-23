@@ -12,14 +12,15 @@
     <script src="resources/js/app.js"></script>
     <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.6.0.js"></script>
 	<script src="resources/js/services.js"></script>
+	<script src="resources/js/controllers/LoginController.js"></script>
+	<script src="resources/js/controllers/LogoutController.js"></script>
+	<script src="resources/js/controllers/StudentController.js"></script>
+
 	<script src="resources/js/controllers/ContentController.js"></script>
-	<script src="resources/js/controllers/SearchController.js"></script>
 	<script src="resources/js/controllers/UserController.js"></script>
 	<script src="resources/js/controllers/WorkspaceController.js"></script>
 	<script src="resources/js/controllers/ContentModalController.js"></script>
 	<script src="resources/js/controllers/PublicationModalController.js"></script>
-	<script src="resources/js/controllers/LoginController.js"></script>
-	<script src="resources/js/controllers/LogoutController.js"></script>
 	
 	<style type="text/css">
     	.bs-example{
@@ -34,9 +35,11 @@
     	<li><a href="#/login">Fiubapp Administrador Web</a></li>
     </ul>
     <ul ng-show="loggedUser.logged" class="menu" style="font-size : 23px;">
-    	<li><a href="#/searchs">Alumnos</a></li>
+    	<li><a href="#/student">Alumnos</a></li>
+    	
         <li><a href="#/users/{{loggedUser.userName}}">Grupos</a></li>
         <li><a href="#/users">Reportes</a></li>
+        
         <li><a href="#/logout">Salir</a></li>
     </ul>
          

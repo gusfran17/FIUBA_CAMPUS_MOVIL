@@ -7,8 +7,8 @@ import javax.persistence.Id;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-@Entity(name = "student_session")
-public class StudentSession {
+@Entity(name = "session")
+public class Session {
 	
 	@Id
 	private String userName;
@@ -16,6 +16,8 @@ public class StudentSession {
 	private String token;
 	
 	private Date creationDate;
+	
+	private SessionRole role;
 
 	@JsonIgnore
 	public String getUserName() {
@@ -41,6 +43,19 @@ public class StudentSession {
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	@JsonIgnore
+	public SessionRole getRole() {
+		return role;
+	}
+
+	public void setRole(SessionRole role) {
+		this.role = role;
+	}
+	
+	public boolean isAdminSession(){
+		return this.role == SessionRole.ADMIN;
 	}
 	
 }

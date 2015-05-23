@@ -13,33 +13,33 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import ar.uba.fi.fiubappREST.domain.LocationConfiguration;
 import ar.uba.fi.fiubappREST.services.ConfigurationService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 @Controller
 @RequestMapping("students/{userName}/configurations")
 public class ConfigurationController {	
 	
 	private ConfigurationService configurationService;
-	private StudentSessionService studentSessionService;
+	private SessionService sessionService;
 	
 	@Autowired
-	public ConfigurationController(ConfigurationService configurationService, StudentSessionService studentSessionService) {
+	public ConfigurationController(ConfigurationService configurationService, SessionService sessionService) {
 		super();
 		this.configurationService = configurationService;
-		this.studentSessionService = studentSessionService;
+		this.sessionService = sessionService;
 	}
 		
 	@RequestMapping(value="location", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody LocationConfiguration getLocationConfiguration(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
-		this.studentSessionService.validateMine(token, userName);
+		this.sessionService.validateThisStudent(token, userName);
 		return this.configurationService.getLocationConfiguration(userName);
 	}
 	
 	@RequestMapping(value="location", method = RequestMethod.PUT)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody LocationConfiguration updateLocationNotification(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestBody LocationConfiguration locationConfiguration) {
-		this.studentSessionService.validateMine(token, userName);
+		this.sessionService.validateThisStudent(token, userName);
 		return this.configurationService.updateLocationConfiguration(userName, locationConfiguration);
 	}
 	

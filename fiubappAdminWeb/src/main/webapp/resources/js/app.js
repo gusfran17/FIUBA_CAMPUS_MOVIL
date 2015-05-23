@@ -4,10 +4,23 @@ var FiubappWebAdminApp = {};
 
 var App = angular.module('FiubappWebAdminApp', ['FiubappWebAdminApp.services','ui.bootstrap', 'ngRoute']).
 config(['$routeProvider', '$locationProvider', function($routeProvider,$locationProvider) {
-	$routeProvider.when('/searchs', {
-        templateUrl: 'webapp/searchs/layout',
-        controller: SearchController
+	
+	$routeProvider.when('/login', {
+        templateUrl: 'webapp/login/layout',
+        controller: LoginController
     });
+    
+    $routeProvider.when('/logout', {
+        templateUrl: 'webapp/login/layout',
+        controller: LogoutController
+    });
+	
+	$routeProvider.when('/student', {
+        templateUrl: 'webapp/student/layout',
+        controller: StudentController
+    });
+	
+	
 
     $routeProvider.when('/users', {
         templateUrl: 'webapp/users/layout',
@@ -29,29 +42,23 @@ config(['$routeProvider', '$locationProvider', function($routeProvider,$location
         controller: WorkspaceController
     });
     
-    $routeProvider.when('/login', {
-        templateUrl: 'webapp/login/layout',
-        controller: LoginController
-    });
     
-    $routeProvider.when('/logout', {
-        templateUrl: 'webapp/logout/layout',
-        controller: LogoutController
-    });
+    
+    
 
-    $routeProvider.otherwise({redirectTo: '/login'});
+    $routeProvider.otherwise({redirectTo: '/student'});
     
  }])
 .factory('authHttpResponseInterceptor',['$q','$location',function($q, $location){
     return {
         response: function(response){
-            if (response.status === 401) {
-                console.log("Response 401");
+            if (response.status === 403) {
+                console.log("Response 403");
             }
             return response || $q.when(response);
         },
         responseError: function(rejection) {
-            if (rejection.status === 401) {
+            if (rejection.status === 403) {
             	console.log("rej; "+ rejection);
             	console.log("rej; "+ rejection.message);
             	console.log("message; "+ rejection.message);

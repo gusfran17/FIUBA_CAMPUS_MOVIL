@@ -1,6 +1,6 @@
 'use strict';
 
-var SearchController = function(StudentService, MessageService, SearchStorageService, $scope) {
+var StudentController = function(StudentService, MessageService, SearchStorageService, $scope) {
 
 	$scope.previousSearchs = SearchStorageService.getAll();
 	$scope.searchParams = {};

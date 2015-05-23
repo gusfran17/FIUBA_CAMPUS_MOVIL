@@ -4,6 +4,103 @@
 
 var AppServices = angular.module('FiubappWebAdminApp.services', []);
 
+AppServices.service('SecurityService', function($http, $q) {
+    
+	this.getLoggedUser = function() {
+		
+		var deferred = $q.defer();
+		
+		var req = {
+    			method: 'GET',
+    			url: 'http://localhost:8080/fiubappREST/api/sessions/administrators',
+    			headers: {
+    				'Authorization': localStorage.getItem("token")
+    			}
+    	}
+
+    	$http(req).success(function(data){
+    		localStorage.setItem("token", data.token);
+            deferred.resolve(data);
+        }).error(function(data){
+        	deferred.reject(data.message);
+        });
+		
+		var logged = localStorage.getItem("token")!=null
+		var loggedUser = {"logged": logged};
+    	    	   	
+    	return loggedUser;
+    };
+    
+    this.login = function(userName, password) {
+    	    	
+    	var credentials = {"userName": userName, "password": password};
+    	
+    	var deferred = $q.defer();
+    	    	
+    	$http.post('http://localhost:8080/fiubappREST/api/sessions/administrators', credentials).success(function(data) {
+            localStorage.setItem("token", data.token);
+            deferred.resolve(data);
+	    }).error(function(data, status, headers, config){
+	    	deferred.reject("Nombre de usuario inexistente o contrasena incorrecta.");
+	    });
+    	
+    	return deferred.promise;
+    };
+    
+	this.logout = function() {
+		
+		var deferred = $q.defer();
+		
+		var req = {
+    			method: 'DELETE',
+    			url: 'http://localhost:8080/fiubappREST/api/sessions/administrators',
+    			headers: {
+    				'Authorization': localStorage.getItem("token")
+    			}
+    	}
+
+    	$http(req).success(function(data){
+    		localStorage.removeItem("token");
+        }).error(function(data){
+        	deferred.reject(data.message);
+        });
+    	
+		var logged = localStorage.getItem("token")!=null
+		var loggedUser = {"logged": false};
+    	    	   	
+    	return loggedUser;
+    };
+});
+
+AppServices.service('StudentService', function($http, $q) {
+    
+	this.searchStudents = function(searchPath) {
+    	
+    	var deferred = $q.defer();
+    	
+    	var req = {
+    			method: 'GET',
+    			url: 'http://localhost:8080/fiubappREST/api/students' + searchPath,
+    			headers: {
+    				//'Authorization': localStorage.getItem("token")
+    				'Authorization': "10c05ec7-02e1-4536-bdb2-d520ad3038bf"
+    			}
+    	}
+
+    	$http(req).success(function(data){
+            deferred.resolve(data);
+        }).error(function(data){
+        	deferred.reject(data.message);
+        });
+    	
+    	return deferred.promise;
+    };
+});
+
+
+
+
+
 AppServices.service('UserService', function($http, $q) {
     
 	this.getUserByName = function(userName) {
@@ -32,41 +129,7 @@ AppServices.service('UserService', function($http, $q) {
     	return deferred.promise;
     };
 });
-
-AppServices.service('SecurityService', function($http, $q) {
-    
-	this.getLoggedUser = function() {
-    	
-		var logged = localStorage.getItem("token")!=null
-    	var loggedUser = {"logged": logged};
-    	    	   	
-    	return loggedUser;
-    };
-    
-    this.login = function(userName, password) {
-    	    	
-    	var credentials = {"userName": userName, "password": password, "isExchangeStudent": false};
-    	
-    	var deferred = $q.defer();
-    	
-    	$http.post('http://localhost:8080/fiubappREST/api/sessions/students', credentials).success(function(data) {
-            deferred.resolve(data);
-            localStorage.setItem("token", data.token);
-    	}).success(function(data, status, headers, config) {
-			deferred.resolve(data);
-	    }).error(function(data, status, headers, config){
-	    	deferred.reject("Nombre de usuario inexistente o contrasena incorrecta.");
-	    });
-    	    	
-    	return deferred.promise;
-    };
-    
-	this.logout = function() {
-    	
-		localStorage.removeItem("token")
-    };
-});
-
+		
 AppServices.service('FolderService', function($http, $q) {
     
 	this.getFolder = function(id) {
@@ -145,31 +208,7 @@ AppServices.service('ContentService', function($http, $q) {
     };
 });
 
-AppServices.service('StudentService', function($http, $q) {
-    
-	this.searchStudents = function(searchPath) {
-    	
-    	var deferred = $q.defer();
-    	
-    	var req = {
-    			method: 'GET',
-    			url: 'http://localhost:8080/fiubappREST/api/students' + searchPath,
-    			headers: {
-    				'Authorization': localStorage.getItem("token")
-    			}
-    	}
 
-    	$http(req).success(function(data){
-    	
-    	//$http.get('http://localhost:8080/fiubappREST/api/students' + searchPath, headers: { 'Authorization': localStorage.getItem("token")}).success(function(data){
-            deferred.resolve(data);
-        }).error(function(data){
-        	deferred.reject(data.message);
-        });
-    	
-    	return deferred.promise;
-    };
-});
 
 AppServices.service('PublicationService', function($http, $q) {
     

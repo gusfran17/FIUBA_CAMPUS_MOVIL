@@ -10,54 +10,54 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import ar.uba.fi.fiubappREST.domain.AdminSession;
 import ar.uba.fi.fiubappREST.domain.Credentials;
-import ar.uba.fi.fiubappREST.services.AdminSessionService;
+import ar.uba.fi.fiubappREST.domain.Session;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 public class AdminSessionControllerTest {
 	
 	private static final String A_TOKEN = "A_TOKEN";
 	
 	@Mock
-	private AdminSessionService service;
+	private SessionService service;
 	@Mock
 	private Credentials credentials;
 	@Mock
-	private AdminSession session;
+	private Session session;
 		
 	private AdminSessionController controller;
 	
 	@Before
 	public void setUp(){
-		this.service = mock(AdminSessionService.class);
+		this.service = mock(SessionService.class);
 		
 		this.controller = new AdminSessionController(service);
 		
 		this.credentials = mock(Credentials.class);
-		this.session = mock(AdminSession.class);
+		this.session = mock(Session.class);
 	}
 
 	@Test
 	public void testCreateSession() {
-		when(this.service.create(credentials)).thenReturn(session);
+		when(this.service.createAdminSession(credentials)).thenReturn(session);
 		
-		AdminSession createdSession = this.controller.createSession(credentials);
+		Session createdSession = this.controller.createSession(credentials);
 		
 		assertNotNull(createdSession);
 	}
 	
 	@Test
 	public void testFindSession() {
-		when(this.service.find(A_TOKEN)).thenReturn(session);
+		when(this.service.findAdminSession(A_TOKEN)).thenReturn(session);
 		
-		AdminSession foundSession = this.controller.findSession(A_TOKEN);
+		Session foundSession = this.controller.findSession(A_TOKEN);
 		
 		assertNotNull(foundSession);
 	}
 	
 	@Test
 	public void testDeleteSession() {
-		doNothing().when(this.service).delete(A_TOKEN);
+		doNothing().when(this.service).deleteAdminSession(A_TOKEN);
 		
 		this.controller.deleSession(A_TOKEN);
 		

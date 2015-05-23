@@ -10,37 +10,37 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import ar.uba.fi.fiubappREST.domain.AdminSession;
 import ar.uba.fi.fiubappREST.domain.Credentials;
-import ar.uba.fi.fiubappREST.services.AdminSessionService;
+import ar.uba.fi.fiubappREST.domain.Session;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 @Controller
 @RequestMapping("sessions/administrators")
 public class AdminSessionController {
 	
-	private AdminSessionService adminSessionService;
+	private SessionService sessionService;
 	
 	@Autowired
-	public AdminSessionController(AdminSessionService adminSessionService) {
+	public AdminSessionController(SessionService sessionService) {
 		super();
-		this.adminSessionService = adminSessionService;
+		this.sessionService = sessionService;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public @ResponseBody AdminSession createSession(@RequestBody Credentials credentials) {
-		return this.adminSessionService.create(credentials);
+	public @ResponseBody Session createSession(@RequestBody Credentials credentials) {
+		return this.sessionService.createAdminSession(credentials);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	public @ResponseBody AdminSession findSession(@RequestHeader(value="Authorization") String token) {
-		return this.adminSessionService.find(token);
+	public @ResponseBody Session findSession(@RequestHeader(value="Authorization") String token) {
+		return this.sessionService.findAdminSession(token);
 	}
 	
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public @ResponseBody void deleSession(@RequestHeader(value="Authorization") String token) {
-		this.adminSessionService.delete(token);
+		this.sessionService.deleteAdminSession(token);
 	}
 }

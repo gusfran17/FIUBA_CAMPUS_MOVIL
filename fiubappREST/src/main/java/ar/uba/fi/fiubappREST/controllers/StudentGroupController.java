@@ -14,33 +14,33 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
 import ar.uba.fi.fiubappREST.services.GroupService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 @Controller
 @RequestMapping("students/{userName}/groups")
 public class StudentGroupController {	
 	
 	private GroupService groupService;
-	private StudentSessionService studentSessionService;
+	private SessionService sessionService;
 	
 	@Autowired
-	public StudentGroupController(GroupService groupService, StudentSessionService studentSessionService) {
+	public StudentGroupController(GroupService groupService, SessionService sessionService) {
 		super();
 		this.groupService = groupService;
-		this.studentSessionService = studentSessionService;
+		this.sessionService = sessionService;
 	}
 		
 	@RequestMapping(value="{groupId}", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public @ResponseBody GroupRepresentation signOnGroup(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @PathVariable Integer groupId) {
-		this.studentSessionService.validateMine(token, userName);
+		this.sessionService.validateThisStudent(token, userName);
 		return this.groupService.registerStudent(userName, groupId);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody List<GroupRepresentation> getGroups(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
-		this.studentSessionService.validateMine(token, userName);
+		this.sessionService.validateThisStudent(token, userName);
 		return this.groupService.getStudentGroups(userName);
 	}
 }

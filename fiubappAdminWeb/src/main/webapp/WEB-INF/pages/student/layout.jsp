@@ -56,18 +56,23 @@
 	<table ng-show="results.length > 0" class="table table-striped" data-sort-name="name" data-sort-order="desc">
 	    <thead>
 	        <tr>
-	            <th data-field="fileNumber" data-align="right" data-sortable="true">Padrón</th>
-	            <th data-field="passportNumber" data-align="right" data-sortable="true">Pasaporte</th>
+	            <th data-field="fileNumber" data-align="right" data-sortable="true">Padrón/Pasaporte</th>
 	            <th data-field="name" data-align="right" data-sortable="true">Nombre</th>
 	            <th data-field="lastName" data-align="right" data-sortable="true">Apellido</th>
+	            <th data-field="lastName" data-align="right" data-sortable="true">Email</th>
+	            <th data-field="passportNumber" data-align="right" data-sortable="true">Acción</th>
 	        </tr>
 	    </thead>
 	    <tbody>
 			<tr ng-repeat="result in results">
-        		<td>{{result.fileNumber}}</td>
-        		<td>{{result.passportNumber}}</td>
+        		<td>{{result.fileNumber}}{{result.passportNumber}}</td>        		
         		<td>{{result.name}}</td>
         		<td>{{result.lastName}}</td>
+        		<td>{{result.email}}</td>
+        		<td>
+<!-- 	    	  		<button type="button" ng-show="publication.state=='PUBLISHED' || publication.state=='PENDING'" class="btn btn-primary" ng-click="updatePublication()">Despublicar</button> -->
+    	  			<button type="button" class="btn btn-primary" ng-click="updatePublication()">Habilitar</button>
+        		</td>
       		</tr>
 		</tbody>
 	</table>

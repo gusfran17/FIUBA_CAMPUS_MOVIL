@@ -15,25 +15,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import ar.uba.fi.fiubappREST.domain.Student;
-import ar.uba.fi.fiubappREST.domain.StudentSession;
+import ar.uba.fi.fiubappREST.domain.Session;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentUpdateRepresentation;
 import ar.uba.fi.fiubappREST.services.StudentService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 @Controller
 @RequestMapping("students")
 public class StudentController {	
 	
 	private StudentService studentService;
-	private StudentSessionService studentSessionService;
+	private SessionService sessionService;
 	
 	@Autowired
-	public StudentController(StudentService studentService, StudentSessionService studentSessionService) {
+	public StudentController(StudentService studentService, SessionService sessionService) {
 		super();
 		this.studentService = studentService;
-		this.studentSessionService = studentSessionService;
+		this.sessionService = sessionService;
 	}
 		
 	@RequestMapping(method = RequestMethod.POST)
@@ -44,22 +44,22 @@ public class StudentController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	public @ResponseBody List<StudentProfileRepresentation> findStudents(@RequestHeader(value="Authorization") String token, @RequestParam(value="name", required=false) String name, @RequestParam(value="lastName", required=false) String lastName, @RequestParam(value="email", required=false) String email, @RequestParam(value="careerCode", required=false) String careerCode, @RequestParam(value="fileNumber", required=false) String fileNumber, @RequestParam(value="passportNumber", required=false) String passportNumber) {
-		StudentSession session = this.studentSessionService.find(token);
+	public @ResponseBody List<StudentProfileRepresentation> findStudents(@RequestHeader(value="Authorization") String token, @RequestParam(value="name", required=false) String name, @RequestParam(value="lastName", required=false) String lastName, @RequestParam(value="email", required=false) String email, @RequestParam(value="careerCode", required=false) String careerCode, @RequestParam(value="fileNumber", required=false) String fileNumber, @RequestParam(value="passportNumber", required=false) String passportNumber) {	
+		Session session = this.sessionService.findStudentSession(token);
 		return studentService.findByProperties(session.getUserName(), name, lastName, email, careerCode, fileNumber, passportNumber);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="{userName}")
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody Student getStudent(@RequestHeader(value="Authorization") String token, @PathVariable String userName){
-		this.studentSessionService.validateMineOrMate(token, userName);
+		this.sessionService.validateThisStudentOrMate(token, userName);
 		return this.studentService.findOne(userName);
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT, value="{userName}")
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody Student updateStudent(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestBody StudentUpdateRepresentation studentRepresentation){
-		this.studentSessionService.validateMine(token, userName);
+		this.sessionService.validateThisStudent(token, userName);
 		return this.studentService.update(userName, studentRepresentation);
 	}
 }

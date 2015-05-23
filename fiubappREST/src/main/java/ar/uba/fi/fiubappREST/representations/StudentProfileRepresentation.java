@@ -23,7 +23,7 @@ public class StudentProfileRepresentation {
 	private String comments;
 	
 	private String profilePicture;
-
+	
 	public String getUserName() {
 		return userName;
 	}

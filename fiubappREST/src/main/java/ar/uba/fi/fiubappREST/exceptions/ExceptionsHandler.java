@@ -83,9 +83,9 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
-	@ExceptionHandler(StudentSessionNotFoundException.class)
+	@ExceptionHandler(SessionNotFoundException.class)
 	@ResponseStatus(value = HttpStatus.FORBIDDEN) 
-	public @ResponseBody ErrorResponse handle(StudentSessionNotFoundException exception){
+	public @ResponseBody ErrorResponse handle(SessionNotFoundException exception){
 		return buildResponse(exception);
 	}
 	

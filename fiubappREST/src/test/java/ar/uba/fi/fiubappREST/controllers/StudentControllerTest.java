@@ -14,12 +14,12 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import ar.uba.fi.fiubappREST.domain.Student;
-import ar.uba.fi.fiubappREST.domain.StudentSession;
+import ar.uba.fi.fiubappREST.domain.Session;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentUpdateRepresentation;
 import ar.uba.fi.fiubappREST.services.StudentService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 public class StudentControllerTest {
 	
@@ -29,7 +29,7 @@ public class StudentControllerTest {
 	@Mock
 	private StudentService service;
 	@Mock
-	private StudentSessionService sessionService;
+	private SessionService sessionService;
 	@Mock
 	private StudentCreationRepresentation representation;
 	@Mock
@@ -40,7 +40,7 @@ public class StudentControllerTest {
 	@Before
 	public void setUp(){
 		this.service = mock(StudentService.class);
-		this.sessionService = mock(StudentSessionService.class);
+		this.sessionService = mock(SessionService.class);
 		
 		this.controller = new StudentController(service, sessionService);
 		
@@ -59,9 +59,9 @@ public class StudentControllerTest {
 	
 	@Test
 	public void testGetStudents(){
-		StudentSession studentSession = mock(StudentSession.class);
+		Session studentSession = mock(Session.class);
 		when(studentSession.getUserName()).thenReturn(AN_USER_NAME);
-		when(sessionService.find(A_TOKEN)).thenReturn(studentSession);
+		when(sessionService.findStudentSession(A_TOKEN)).thenReturn(studentSession);
 		when(service.findByProperties(AN_USER_NAME, null, null, null, null, null, null)).thenReturn(new ArrayList<StudentProfileRepresentation>());
 		
 		List<StudentProfileRepresentation> students = this.controller.findStudents(A_TOKEN, null, null, null, null, null, null);
@@ -71,7 +71,7 @@ public class StudentControllerTest {
 	
 	@Test
 	public void testGetStudent(){
-		doNothing().when(sessionService).validate(A_TOKEN);
+		doNothing().when(sessionService).validateStudentSession(A_TOKEN);
 		when(service.findOne(AN_USER_NAME)).thenReturn(student);
 		
 		Student foundStudent = this.controller.getStudent(A_TOKEN, AN_USER_NAME);
@@ -81,7 +81,7 @@ public class StudentControllerTest {
 	
 	@Test
 	public void updateStudent(){
-		doNothing().when(sessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(sessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 		StudentUpdateRepresentation representation = mock(StudentUpdateRepresentation.class);
 		when(service.update(AN_USER_NAME, representation)).thenReturn(student);
 		
