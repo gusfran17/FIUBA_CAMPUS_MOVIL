@@ -53,7 +53,7 @@ public class Group {
 	      inverseJoinColumns={@JoinColumn(name="userName", referencedColumnName="userName")})
 	private Set<Student> members;
 	
-	@OneToMany(cascade={CascadeType.ALL}, orphanRemoval = true)
+	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval = true)
 	private Set<Discussion> discussions;
 
 	public Set<Discussion> getDiscussions() {
@@ -137,6 +137,11 @@ public class Group {
             }
 		});
 		return foundMember!=null;
+	}
+
+	public void addDiscussion(Discussion discussion) {
+		this.discussions.add(discussion);
+		
 	}
 	
 }

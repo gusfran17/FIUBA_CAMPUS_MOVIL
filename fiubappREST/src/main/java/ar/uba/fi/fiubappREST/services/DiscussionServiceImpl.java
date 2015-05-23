@@ -46,6 +46,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 		Group group = this.findGroup(groupID);
 		Discussion discussion = this.createDiscussion(discussionRepresentation, creator, group);
 		this.discussionRepository.save(discussion);
+		this.groupRepository.save(group);
 		return this.discussionConverter.convert(discussion);
 	}
 
@@ -63,6 +64,8 @@ public class DiscussionServiceImpl implements DiscussionService{
 		discussion.setDiscussionName(discussionRepresentation.getName());
 		discussion.setCreator(creator);
 		discussion.setMessages(messages);
+		
+		group.addDiscussion(discussion);
 		
 		return discussion;
 		
@@ -85,6 +88,5 @@ public class DiscussionServiceImpl implements DiscussionService{
 		}
 		return student;
 	}
-
 	
 }

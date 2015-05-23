@@ -269,7 +269,7 @@ public class InformacionTab extends Fragment {
                         e.printStackTrace();
                     }
 
-                    //para validar tamaño de imagen
+                    //para validar tamaÃ±o de imagen
                     // First decode with inJustDecodeBounds=true to check dimensions
                     final BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inJustDecodeBounds = true;

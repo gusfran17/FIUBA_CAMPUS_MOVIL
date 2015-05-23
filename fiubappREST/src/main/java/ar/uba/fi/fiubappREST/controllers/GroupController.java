@@ -1,6 +1,7 @@
 package ar.uba.fi.fiubappREST.controllers;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
+import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
 import ar.uba.fi.fiubappREST.domain.StudentSession;
 import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
@@ -94,7 +96,15 @@ public class GroupController<discussionService> {
 		this.studentSessionService.validateMine(token, discussionRepresentation.getCreatorUserName());
 		return this.discussionService.create(discussionRepresentation, groupId);
 	}
-	
+
+	@RequestMapping(value="{groupId}/discussions", method = RequestMethod.GET)
+	public Set<Discussion> getDiscussionsForGroup(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId) {
+		this.studentSessionService.validate(token);
+		Set<Discussion> discussions = this.groupService.findDiscussions(groupId);
+		return discussions;
+	}
+
+
 }
 
 

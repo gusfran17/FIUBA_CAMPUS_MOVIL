@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.converters.GroupConverter;
+import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.Group;
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
 import ar.uba.fi.fiubappREST.domain.Student;
@@ -236,5 +238,15 @@ public class GroupServiceImpl implements GroupService {
 	
 	public void setDefaultGroupPicture(Resource defaultProfilePicture) {
 		this.defaultGroupPicture = defaultProfilePicture;
+	}
+	
+	@Override
+	public Set<Discussion> findDiscussions(Integer groupId) {
+		LOGGER.info(String.format("Finding sicussions for groupId " + groupId + "."));
+		Group group = this.groupRepository.findOne(groupId);
+		Set<Discussion> discussions = group.getDiscussions();
+		
+		LOGGER.info(String.format("All discussions for groupId "+ groupId + " were found."));
+		return discussions;
 	}
 }
