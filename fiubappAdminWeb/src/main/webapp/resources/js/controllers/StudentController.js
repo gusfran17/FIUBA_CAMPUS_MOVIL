@@ -44,11 +44,13 @@ var StudentController = function(StudentService, MessageService, SearchStorageSe
 			
 	$scope.getParamsPath = function(searchParams){
 		var params = [];
-		//$scope.addParamToArray(params, "state", searchParams.state);
 		$scope.addParamToArray(params, "fileNumber", searchParams.fileNumber);
 		$scope.addParamToArray(params, "passportNumber", searchParams.passportNumber);
 		$scope.addParamToArray(params, "name", searchParams.name);
 		$scope.addParamToArray(params, "lastName", searchParams.lastName);
+		if(searchParams.state!='Todos'){
+			$scope.addParamToArray(params, "state", searchParams.state);
+		}
 		return $scope.buildParamsPath(params);
 	};
 	

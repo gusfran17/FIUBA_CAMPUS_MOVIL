@@ -82,8 +82,7 @@ AppServices.service('StudentService', function($http, $q) {
     			method: 'GET',
     			url: 'http://localhost:8080/fiubappREST/api/students' + searchPath,
     			headers: {
-    				//'Authorization': localStorage.getItem("token")
-    				'Authorization': "10c05ec7-02e1-4536-bdb2-d520ad3038bf"
+    				'Authorization': localStorage.getItem("token")
     			}
     	}
 

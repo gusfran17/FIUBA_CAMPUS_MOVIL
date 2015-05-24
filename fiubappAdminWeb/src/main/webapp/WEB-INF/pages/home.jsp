@@ -8,6 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.8/angular.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.8/angular-route.js"></script>
+        
     <script src="resources/bootstrap/js/bootstrap.js"></script>
     <script src="resources/js/app.js"></script>
     <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.6.0.js"></script>
@@ -30,10 +31,15 @@
 		
 </head>
 <body>
+
 <div id="wrapper">
-	<ul ng-hide="loggedUser.logged" class="menu" style="font-size : 23px;">
-    	<li><a href="#/login">Fiubapp Administrador Web</a></li>
-    </ul>
+	
+	<div align="center">
+		<img src="resources/images/logo.png" align="middle">
+	</div>
+	
+	<br>
+        
     <ul ng-show="loggedUser.logged" class="menu" style="font-size : 23px;">
     	<li><a href="#/student">Alumnos</a></li>
     	

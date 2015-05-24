@@ -52,15 +52,16 @@
 <div class="alert alert-info" style="width:400px;" ng-show="results.length == 0">
     No se encontró ningún resultado
 </div>
-<div class="table-responsive">
-	<table ng-show="results.length > 0" class="table table-striped" data-sort-name="name" data-sort-order="desc">
+
+<div>
+	<table ng-show="results.length > 0" class="table table-striped">
 	    <thead>
 	        <tr>
-	            <th data-field="fileNumber" data-align="right" data-sortable="true">Padrón/Pasaporte</th>
-	            <th data-field="name" data-align="right" data-sortable="true">Nombre</th>
-	            <th data-field="lastName" data-align="right" data-sortable="true">Apellido</th>
-	            <th data-field="lastName" data-align="right" data-sortable="true">Email</th>
-	            <th data-field="passportNumber" data-align="right" data-sortable="true">Acción</th>
+	            <th data-align="center">Padrón/Pasaporte</th>
+	            <th data-align="center">Nombre</th>
+	            <th data-align="center">Apellido</th>
+	            <th data-align="center">Email</th>
+	            <th data-align="center">Acción</th>
 	        </tr>
 	    </thead>
 	    <tbody>
@@ -70,8 +71,8 @@
         		<td>{{result.lastName}}</td>
         		<td>{{result.email}}</td>
         		<td>
-<!-- 	    	  		<button type="button" ng-show="publication.state=='PUBLISHED' || publication.state=='PENDING'" class="btn btn-primary" ng-click="updatePublication()">Despublicar</button> -->
-    	  			<button type="button" class="btn btn-primary" ng-click="updatePublication()">Habilitar</button>
+	    	  		<button type="button" ng-show="result.state=='Pendiente' || result.state=='Suspendido'" class="btn btn-success" ng-click="updatePublication()">Habilitar</button>
+    	  			<button type="button" ng-show="result.state=='Habilitado'" class="btn btn-danger" ng-click="updatePublication()">Suspender</button>
         		</td>
       		</tr>
 		</tbody>

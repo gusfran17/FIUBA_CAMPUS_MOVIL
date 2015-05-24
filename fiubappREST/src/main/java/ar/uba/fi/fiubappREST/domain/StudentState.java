@@ -5,7 +5,7 @@ import org.codehaus.jackson.annotate.JsonValue;
 
 public enum StudentState {
 
-	PENDING(0, "Pendiente"), APPROVED(1, "Aprobado"), SUSPENDED(2, "Suspendido");
+	PENDING(0, "Pendiente"), APPROVED(1, "Habilitado"), SUSPENDED(2, "Suspendido");
 
 	private int id;
 	private String name;
