@@ -16,12 +16,9 @@
 	<script src="resources/js/controllers/LoginController.js"></script>
 	<script src="resources/js/controllers/LogoutController.js"></script>
 	<script src="resources/js/controllers/StudentController.js"></script>
-
-	<script src="resources/js/controllers/ContentController.js"></script>
-	<script src="resources/js/controllers/UserController.js"></script>
-	<script src="resources/js/controllers/WorkspaceController.js"></script>
-	<script src="resources/js/controllers/ContentModalController.js"></script>
-	<script src="resources/js/controllers/PublicationModalController.js"></script>
+	<script src="resources/js/controllers/StateModalController.js"></script>
+	<script src="resources/js/controllers/GroupController.js"></script>
+	<script src="resources/js/controllers/ReportController.js"></script>
 	
 	<style type="text/css">
     	.bs-example{
@@ -41,11 +38,9 @@
 	<br>
         
     <ul ng-show="loggedUser.logged" class="menu" style="font-size : 23px;">
-    	<li><a href="#/student">Alumnos</a></li>
-    	
-        <li><a href="#/users/{{loggedUser.userName}}">Grupos</a></li>
-        <li><a href="#/users">Reportes</a></li>
-        
+    	<li><a href="#/student">Alumnos</a></li>    	
+        <li><a href="#/group">Grupos</a></li>
+        <li><a href="#/report">Reportes</a></li>        
         <li><a href="#/logout">Salir</a></li>
     </ul>
          

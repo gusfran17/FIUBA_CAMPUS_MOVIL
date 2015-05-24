@@ -1,8 +1,7 @@
 'use strict';
 
-var StudentController = function(StudentService, MessageService, SearchStorageService, $scope) {
+var StudentController = function(StudentService, MessageService, $scope, $routeParams, $modal) {
 
-	$scope.previousSearchs = SearchStorageService.getAll();
 	$scope.searchParams = {};
 		
 	$scope.states = ['Todos', 'Pendiente', 'Habilitado', 'Suspendido'];
@@ -70,11 +69,18 @@ var StudentController = function(StudentService, MessageService, SearchStorageSe
 		}
 		return path;
 	};
-	
-	$scope.getPreviousSearch = function(selectedSearch){
-		$scope.searchParams = $scope.previousSearchs[selectedSearch].params;
-		$scope.results = $scope.previousSearchs[selectedSearch].results;
-	}
+		
+	$scope.openStateModal = function ($index) {	    
+		$modal.open({
+				templateUrl: 'webapp/student/state-modal',
+				controller: StateModalController,
+				resolve: {
+			        student: function () {
+			        	return $scope.results[$index];
+			        }
+			    }
+		});
+	};
 	
 	MessageService.resetError();
 };

@@ -18,33 +18,17 @@ config(['$routeProvider', '$locationProvider', function($routeProvider,$location
 	$routeProvider.when('/student', {
         templateUrl: 'webapp/student/layout',
         controller: StudentController
-    });
-	
-	
+    });	
 
-    $routeProvider.when('/users', {
-        templateUrl: 'webapp/users/layout',
-        controller: UserController
+    $routeProvider.when('/group', {
+        templateUrl: 'webapp/group/layout',
+        controller: GroupController
     });
     
-    $routeProvider.when('/users/:userName', {
-        templateUrl: 'webapp/users/layout',
-        controller: UserController
+    $routeProvider.when('/report', {
+        templateUrl: 'webapp/report/layout',
+        controller: ReportController
     });
-    
-    $routeProvider.when('/contents/:contentId', {
-        templateUrl: 'webapp/contents/layout',
-        controller: ContentController
-    });
-    
-    $routeProvider.when('/workspace/:folderId', {
-        templateUrl: 'webapp/workspace/layout',
-        controller: WorkspaceController
-    });
-    
-    
-    
-    
 
     $routeProvider.otherwise({redirectTo: '/student'});
     
