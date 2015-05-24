@@ -277,7 +277,8 @@ public class SessionServiceImplTest {
 	
 	@Test
 	public void testValidateOKForAdmin() {
-		when(sessionRepository.findByTokenAndRole(A_TOKEN, SessionRole.ADMIN)).thenReturn(session);
+		when(sessionRepository.findByToken(A_TOKEN)).thenReturn(session);
+		when(session.isAdminSession()).thenReturn(true);
 	
 		this.service.validateAdminSession(A_TOKEN);
 				

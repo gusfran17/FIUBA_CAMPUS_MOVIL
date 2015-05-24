@@ -19,6 +19,7 @@ import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentState;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
+import ar.uba.fi.fiubappREST.representations.StudentStateRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentUpdateRepresentation;
 import ar.uba.fi.fiubappREST.services.SessionService;
 import ar.uba.fi.fiubappREST.services.StudentService;
@@ -66,6 +67,13 @@ public class StudentController {
 	public @ResponseBody Student updateStudent(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestBody StudentUpdateRepresentation studentRepresentation){
 		this.sessionService.validateThisStudent(token, userName);
 		return this.studentService.update(userName, studentRepresentation);
+	}
+	
+	@RequestMapping(method = RequestMethod.PUT, value="{userName}/state")
+	@ResponseStatus(value = HttpStatus.OK)
+	public @ResponseBody StudentStateRepresentation updateStudentState(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestBody StudentStateRepresentation stateRepresentation){
+		this.sessionService.validateAdminSession(token);
+		return this.studentService.updateStudentState(userName, stateRepresentation); 
 	}
 }
 

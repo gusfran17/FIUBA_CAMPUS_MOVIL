@@ -190,7 +190,10 @@ public class SessionServiceImpl implements SessionService{
 
 	@Override
 	public void validateAdminSession(String token){
-		this.findAdminSession(token);
+		Session session = this.findSession(token);
+		if(!session.isAdminSession()){
+			throw new OperationNotAllowedFotStudentSessionException(token);
+		}
 	}
 
 	@Override

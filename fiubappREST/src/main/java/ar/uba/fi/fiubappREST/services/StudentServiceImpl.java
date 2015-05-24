@@ -36,6 +36,7 @@ import ar.uba.fi.fiubappREST.persistance.ProfilePictureRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
+import ar.uba.fi.fiubappREST.representations.StudentStateRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentUpdateRepresentation;
 
 @Service
@@ -250,6 +251,17 @@ public class StudentServiceImpl implements StudentService {
 		}
 		LOGGER.info(String.format("All students meeting the criteria were found."));
 		return profiles;
+	}
+	
+	@Override
+	public StudentStateRepresentation updateStudentState(String userName, StudentStateRepresentation stateRepresentation) {
+		Student student = this.findOne(userName);
+		LOGGER.info(String.format("Updating state for student with userName %s.", userName));
+		student.setState(stateRepresentation.getState());
+		student = this.studentRepository.save(student);
+		stateRepresentation.setState(student.getState());
+		LOGGER.info(String.format("State for sudent with userName %s was updated.", userName));
+		return stateRepresentation;
 	}
 
 	public Double getDefaultDistanceInKm() {

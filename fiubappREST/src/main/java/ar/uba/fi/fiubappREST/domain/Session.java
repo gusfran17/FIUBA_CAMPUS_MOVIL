@@ -54,6 +54,7 @@ public class Session {
 		this.role = role;
 	}
 	
+	@JsonIgnore
 	public boolean isAdminSession(){
 		return this.role == SessionRole.ADMIN;
 	}

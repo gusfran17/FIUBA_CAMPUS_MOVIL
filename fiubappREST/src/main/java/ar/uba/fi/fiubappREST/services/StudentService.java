@@ -6,6 +6,7 @@ import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentState;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
+import ar.uba.fi.fiubappREST.representations.StudentStateRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentUpdateRepresentation;
 
 public interface StudentService {
@@ -19,5 +20,7 @@ public interface StudentService {
 	public List<StudentProfileRepresentation> findByProperties(String myUserName, String name, String lastName, String email, String careerCode, String fileNumber, String passport);
 	
 	public List<StudentProfileRepresentation> findByProperties(String name, String lastName, String fileNumber, String passport, StudentState state);
+
+	public StudentStateRepresentation updateStudentState(String userName, StudentStateRepresentation stateRepresentation);
 
 }

@@ -18,6 +18,7 @@ import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentState;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
+import ar.uba.fi.fiubappREST.representations.StudentStateRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentUpdateRepresentation;
 import ar.uba.fi.fiubappREST.services.SessionService;
 import ar.uba.fi.fiubappREST.services.StudentService;
@@ -116,6 +117,18 @@ public class StudentControllerTest {
 		Student updatedStudent = this.controller.updateStudent(A_TOKEN, AN_USER_NAME, representation);
 		
 		assertEquals(student, updatedStudent);
+	}
+	
+	@Test
+	public void updateStudentState(){
+		doNothing().when(sessionService).validateAdminSession(A_TOKEN);
+		StudentStateRepresentation representation = mock(StudentStateRepresentation.class);
+		when(representation.getState()).thenReturn(StudentState.APPROVED);
+		when(service.updateStudentState(AN_USER_NAME, representation)).thenReturn(representation);
+		
+		StudentStateRepresentation updatedStudentState = this.controller.updateStudentState(A_TOKEN, AN_USER_NAME, representation);
+		
+		assertEquals(representation, updatedStudentState);
 	}
 
 }
