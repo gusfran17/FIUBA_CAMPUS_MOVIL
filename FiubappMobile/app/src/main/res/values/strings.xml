@@ -65,4 +65,7 @@
     <string name="creado_por">Creado por:</string>
     <string name="fecha_creacion">Fecha de creación:</string>
     <string name="mensaje_validar_tamanio_imagen">Debe seleccionar una imagen con un tamaño menor a 10MB</string>
+    <string name="mensaje_validar_login_error_3004">La solicitud de registración está pendiente de aprobación por parte del administrador</string>
+    <string name="mensaje_validar_login_error_3005">El usuario se encuentra momentáneamente suspendido</string>
+    <string name="mensaje_validar_login_usuario_incorrrecto"> y/o contraseña incorrecta</string>
 </resources>
