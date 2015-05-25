@@ -15,7 +15,7 @@ import org.mockito.Mock;
 
 import ar.uba.fi.fiubappREST.domain.Job;
 import ar.uba.fi.fiubappREST.services.JobService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 public class JobControllerTest {
 	
@@ -28,7 +28,7 @@ public class JobControllerTest {
 	@Mock
 	private JobService service;
 	@Mock
-	private StudentSessionService studentSessionService;
+	private SessionService studentSessionService;
 	@Mock
 	private Job aJob;
 	@Mock
@@ -37,7 +37,7 @@ public class JobControllerTest {
 	@Before
 	public void setUp(){
 		this.service = mock(JobService.class);
-		this.studentSessionService = mock(StudentSessionService.class);
+		this.studentSessionService = mock(SessionService.class);
 		this.controller = new JobController(service, studentSessionService);
 		
 		this.aJob = mock(Job.class);
@@ -47,7 +47,7 @@ public class JobControllerTest {
 	@Test
 	public void testAddJob() {
 		when(service.create(AN_USER_NAME, aJob)).thenReturn(aJob);
-		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 				
 		Job createdJob = this.controller.addJob(A_TOKEN, AN_USER_NAME, aJob);
 		
@@ -56,7 +56,7 @@ public class JobControllerTest {
 	
 	@Test
 	public void testGetJobs() {
-		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 		List<Job> jobs = new ArrayList<Job>();
 		jobs.add(aJob);
 		jobs.add(anotherJob);
@@ -70,7 +70,7 @@ public class JobControllerTest {
 	@Test
 	public void testUpdateJob() {
 		when(service.update(AN_USER_NAME, JOB_ID, aJob)).thenReturn(aJob);
-		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 				
 		Job updatedJob = this.controller.updateJob(A_TOKEN, AN_USER_NAME, JOB_ID, aJob);
 		
@@ -79,7 +79,7 @@ public class JobControllerTest {
 	
 	@Test
 	public void testDeleteJob() {
-		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 		doNothing().when(service).delete(AN_USER_NAME, JOB_ID);
 				
 		this.controller.deleteJob(A_TOKEN, AN_USER_NAME, JOB_ID);

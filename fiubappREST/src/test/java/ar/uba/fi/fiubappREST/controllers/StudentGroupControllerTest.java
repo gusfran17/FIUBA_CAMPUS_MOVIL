@@ -14,7 +14,7 @@ import org.mockito.Mock;
 
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
 import ar.uba.fi.fiubappREST.services.GroupService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 public class StudentGroupControllerTest {
 	
@@ -27,19 +27,19 @@ public class StudentGroupControllerTest {
 	@Mock
 	private GroupService service;
 	@Mock
-	private StudentSessionService studentSessionService;
+	private SessionService studentSessionService;
 	
 	
 	@Before
 	public void setUp(){
 		this.service = mock(GroupService.class);
-		this.studentSessionService = mock(StudentSessionService.class);
+		this.studentSessionService = mock(SessionService.class);
 		this.controller = new StudentGroupController(service, studentSessionService);
 	}
 
 	@Test
 	public void testRegisterStudentInGroup(){
-		doNothing().when(this.studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(this.studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 		GroupRepresentation representation = mock(GroupRepresentation.class);
 		when(this.service.registerStudent(AN_USER_NAME, A_GROUP_ID)).thenReturn(representation);
 		
@@ -50,7 +50,7 @@ public class StudentGroupControllerTest {
 	
 	@Test
 	public void testGetGroups(){
-		doNothing().when(this.studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(this.studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 		GroupRepresentation aRepresentation = mock(GroupRepresentation.class);
 		GroupRepresentation anotherRepresentation = mock(GroupRepresentation.class);
 		List<GroupRepresentation> representations = new ArrayList<GroupRepresentation>();

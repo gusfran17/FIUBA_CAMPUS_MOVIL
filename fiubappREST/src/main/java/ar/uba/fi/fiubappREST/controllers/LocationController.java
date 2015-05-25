@@ -17,26 +17,26 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import ar.uba.fi.fiubappREST.domain.Location;
 import ar.uba.fi.fiubappREST.representations.MateLocationRepresentation;
 import ar.uba.fi.fiubappREST.services.LocationService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 @Controller
 @RequestMapping("students/{userName}")
 public class LocationController {	
 	
 	private LocationService locationService;
-	private StudentSessionService studentSessionService;
+	private SessionService sessionService;
 	
 	@Autowired
-	public LocationController(LocationService locationService, StudentSessionService studentSessionService) {
+	public LocationController(LocationService locationService, SessionService sessionService) {
 		super();
 		this.locationService = locationService;
-		this.studentSessionService = studentSessionService;
+		this.sessionService = sessionService;
 	}
 		
 	@RequestMapping(value="location", method = RequestMethod.PUT)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody Location updateLocation(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestBody Location location) {
-		this.studentSessionService.validateMine(token, userName);
+		this.sessionService.validateThisStudent(token, userName);
 		return this.locationService.updateLocation(userName, location);
 	}
 	
@@ -44,7 +44,7 @@ public class LocationController {
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody List<MateLocationRepresentation> getMatesLocation(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestParam(value="latitudeFrom", required=true) Double latitudeFrom, @RequestParam(value="latitudeTo", required=true) Double latitudeTo, 
 				@RequestParam(value="longitudeFrom", required=true) Double longitudeFrom, @RequestParam(value="longitudeTo", required=true) Double longitudeTo) {
-		this.studentSessionService.validateMine(token, userName);
+		this.sessionService.validateThisStudent(token, userName);
 		return this.locationService.findMatesLocations(userName, latitudeFrom, latitudeTo, longitudeFrom, longitudeTo);
 	}
 }

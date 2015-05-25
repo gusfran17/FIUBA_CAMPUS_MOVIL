@@ -16,40 +16,40 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import ar.uba.fi.fiubappREST.representations.MateRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 import ar.uba.fi.fiubappREST.services.MateService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 @Controller
 @RequestMapping("students/{userName}/mates")
 public class MateController {	
 	
 	private MateService mateService;
-	private StudentSessionService studentSessionService;
+	private SessionService sessionService;
 	
 	@Autowired
-	public MateController(MateService mateService, StudentSessionService studentSessionService) {
+	public MateController(MateService mateService, SessionService studentSessionService) {
 		super();
 		this.mateService = mateService;
-		this.studentSessionService = studentSessionService;
+		this.sessionService = studentSessionService;
 	}
 		
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public @ResponseBody StudentProfileRepresentation becomeMates(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestBody MateRepresentation mate) {
-		this.studentSessionService.validateMine(token, userName);
+		this.sessionService.validateThisStudent(token, userName);
 		return this.mateService.becomeMates(userName, mate.getUserName());
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody List<StudentProfileRepresentation> getMates(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
-		this.studentSessionService.validateMine(token, userName);
+		this.sessionService.validateThisStudent(token, userName);
 		return this.mateService.getMates(userName);
 	}
 	
 	@RequestMapping(value="{mateUserName}", method = RequestMethod.DELETE)
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public @ResponseBody void deleteMate(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @PathVariable String mateUserName) {
-		this.studentSessionService.validateMine(token, userName);
+		this.sessionService.validateThisStudent(token, userName);
 		this.mateService.deleteMate(userName, mateUserName);
 	}
 }

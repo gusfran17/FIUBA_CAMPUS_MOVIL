@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentCareer;
+import ar.uba.fi.fiubappREST.domain.StudentState;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
 
 @Component
@@ -25,6 +26,7 @@ public class StudentConverter {
 		student.setCareers(new ArrayList<StudentCareer>());
 		String userName = !student.getIsExchangeStudent() ? student.getFileNumber() : EXCHANGE_STUDENT_PREFIX + student.getPassportNumber();
 		student.setUserName(userName);
+		student.setState(StudentState.PENDING);
 		return student;
 	}
 }
