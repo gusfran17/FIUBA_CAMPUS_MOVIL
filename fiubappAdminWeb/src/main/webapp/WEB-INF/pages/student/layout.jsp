@@ -71,7 +71,8 @@
         		<td>{{result.lastName}}</td>
         		<td>{{result.email}}</td>
         		<td>
-	    	  		<button type="button" ng-show="result.state=='Pendiente' || result.state=='Suspendido'" class="btn btn-success" ng-click="openStateModal($index)">Habilitar</button>
+	    	  		<button type="button" ng-show="result.state=='Suspendido'" class="btn btn-success" ng-click="openStateModal($index)">Habilitar</button>
+	    	  		<button type="button" ng-show="result.state=='Pendiente'" class="btn btn-info" ng-click="openStateModal($index)">Aprobar</button>
     	  			<button type="button" ng-show="result.state=='Habilitado'" class="btn btn-danger" ng-click="openStateModal($index)">Suspender</button>
         		</td>
       		</tr>

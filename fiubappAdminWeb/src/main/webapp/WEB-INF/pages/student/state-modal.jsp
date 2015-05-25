@@ -2,7 +2,8 @@
 	<div class="modal-content">
     	<div class="modal-header">
       		<button type="button" class="close" ng-click="cancel()">&times;</button>
-      		<h4 class="modal-title" ng-show="student.state=='Pendiente' || student.state=='Suspendido'">Habilitar alumnos</h4>
+      		<h4 class="modal-title" ng-show="student.state=='Suspendido'">Habilitar alumnos</h4>
+      		<h4 class="modal-title" ng-show="student.state=='Pendiente'">Aprobar alumnos</h4>
       		<h4 class="modal-title" ng-show="student.state=='Habilitado'">Suspender alumnos</h4>
     	</div>
     	<div class="modal-body">
@@ -23,8 +24,9 @@
     	
     	<div class="modal-footer">
       		<button type="button" class="btn btn-default" ng-click="cancel()">Cancelar</button>
-      		<button type="button" class="btn btn-primary" ng-show="student.state=='Habilitado'" ng-click="suspendStudent()">Suspender</button>
-      		<button type="button" class="btn btn-primary" ng-hide="student.state=='Habilitado'" ng-click="approveStudent()">Habilitar</button>
+      		<button type="button" class="btn btn-primary" ng-show="student.state=='Habilitado'" ng-click="suspendStudent()" style="width:94px;">Suspender</button>
+      		<button type="button" class="btn btn-primary" ng-show="student.state=='Suspendido'" ng-click="approveStudent()" style="width:94px;">Habilitar</button>
+      		<button type="button" class="btn btn-primary" ng-show="student.state=='Pendiente'" ng-click="approveStudent()" style="width:94px;">Aprobar</button>
     	</div>
   	</div>
 </div>
