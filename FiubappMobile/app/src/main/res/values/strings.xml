@@ -11,7 +11,7 @@
     <string name="soyIntercambio">Soy de intercambio</string>
     <string name="soyNuevo">Soy nuevo</string>
     <string name="pasaporte">Pasaporte</string>
-    <string name="urlAPI">http://172.17.204.20:8080/fiubappREST/api</string>
+    <string name="urlAPI">http://192.168.56.1:8080/fiubappREST/api</string>
     <string name="prefs_name">MyPrefsFile</string>
     <string name="educacionSecundaria">Educación secundaria</string>
     <string name="escuela">Escuela</string>
@@ -65,4 +65,5 @@
     <string name="creado_por">Creado por:</string>
     <string name="fecha_creacion">Fecha de creación:</string>
     <string name="mensaje_validar_tamanio_imagen">Debe seleccionar una imagen con un tamaño menor a 10MB</string>
+    <string name="solicitud_companiero_ya_enviada">Ya fue enviada una solicitud a este compañero</string>
 </resources>

@@ -146,8 +146,7 @@ public class AlumnoAdapter extends BaseAdapter {
                                     String code = jsonObject.getString("code");
 
                                     if (code.equals("6002")){
-                                        String message = "Se le envío tu solicitud de amistad a "+
-                                                companero.getNombre()+" "+companero.getApellido();
+                                        String message = activity.getResources().getString(R.string.solicitud_companiero_ya_enviada);
                                         Popup.showText(activity, message, Toast.LENGTH_LONG).show();
                                     }
 
