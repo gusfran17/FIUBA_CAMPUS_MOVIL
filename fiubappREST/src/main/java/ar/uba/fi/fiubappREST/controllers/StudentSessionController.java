@@ -29,7 +29,7 @@ public class StudentSessionController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public @ResponseBody Session createSession(@RequestBody Credentials credentials) {
-		return sessionService.createStudentStudent(credentials);
+		return sessionService.createStudentSession(credentials);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)

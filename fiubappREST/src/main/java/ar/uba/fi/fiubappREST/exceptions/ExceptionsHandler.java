@@ -95,6 +95,18 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
+	@ExceptionHandler(StudentNotYetApprovedException.class)
+	@ResponseStatus(value = HttpStatus.FORBIDDEN) 
+	public @ResponseBody ErrorResponse handle(StudentNotYetApprovedException exception){
+		return buildResponse(exception);
+	}
+	
+	@ExceptionHandler(StudentSuspendedException.class)
+	@ResponseStatus(value = HttpStatus.FORBIDDEN) 
+	public @ResponseBody ErrorResponse handle(StudentSuspendedException exception){
+		return buildResponse(exception);
+	}
+	
 	@ExceptionHandler(HighSchoolAlreadyExistsForStudentException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
 	public @ResponseBody ErrorResponse handle(HighSchoolAlreadyExistsForStudentException exception){

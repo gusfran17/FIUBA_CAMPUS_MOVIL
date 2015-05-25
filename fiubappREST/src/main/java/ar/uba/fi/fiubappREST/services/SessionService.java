@@ -8,7 +8,7 @@ public interface SessionService {
 	public Session findSession(String token);
 	
 	
-	public Session createStudentStudent(Credentials credentials);
+	public Session createStudentSession(Credentials credentials);
 	
 	public Session findStudentSession(String token);
 	

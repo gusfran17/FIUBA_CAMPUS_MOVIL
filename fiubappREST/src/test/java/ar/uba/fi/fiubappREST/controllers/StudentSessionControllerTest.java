@@ -37,7 +37,7 @@ public class StudentSessionControllerTest {
 
 	@Test
 	public void testCreateSession() {
-		when(this.service.createStudentStudent(credentials)).thenReturn(session);
+		when(this.service.createStudentSession(credentials)).thenReturn(session);
 		
 		Session createdSession = this.controller.createSession(credentials);
 		

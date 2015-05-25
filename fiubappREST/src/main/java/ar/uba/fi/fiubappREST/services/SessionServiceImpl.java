@@ -14,9 +14,12 @@ import ar.uba.fi.fiubappREST.domain.Credentials;
 import ar.uba.fi.fiubappREST.domain.Session;
 import ar.uba.fi.fiubappREST.domain.SessionRole;
 import ar.uba.fi.fiubappREST.domain.Student;
+import ar.uba.fi.fiubappREST.domain.StudentState;
 import ar.uba.fi.fiubappREST.exceptions.InvalidCredentialsException;
 import ar.uba.fi.fiubappREST.exceptions.OperationNotAllowedFotStudentSessionException;
 import ar.uba.fi.fiubappREST.exceptions.SessionNotFoundException;
+import ar.uba.fi.fiubappREST.exceptions.StudentNotYetApprovedException;
+import ar.uba.fi.fiubappREST.exceptions.StudentSuspendedException;
 import ar.uba.fi.fiubappREST.persistance.AdminRepository;
 import ar.uba.fi.fiubappREST.persistance.SessionRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
@@ -52,14 +55,27 @@ public class SessionServiceImpl implements SessionService{
 	}
 
 	@Override
-	public Session createStudentStudent(Credentials credentials) {
+	public Session createStudentSession(Credentials credentials) {
 		LOGGER.info(String.format("Creating session for student with userName %s.", credentials.getUserName()));
 		Student student = this.getStudent(credentials);
+		this.verifyStudentState(student);
 		this.verifyPassword(student.getUserName(), student.getPassword(), credentials.getPassword());
 		Session session = generateStudentSession(student);
 		session = this.sessionRepository.save(session);
 		LOGGER.info(String.format("Session for student with userName %s was created.", student.getUserName()));
 		return session;
+	}
+
+	private void verifyStudentState(Student student) {
+		LOGGER.info(String.format("Verifyig state for userName %s.", student.getUserName()));
+		if(student.getState() == StudentState.PENDING){
+			LOGGER.error(String.format("Student with userName %s is in pending state.", student.getUserName()));
+			throw new StudentNotYetApprovedException();
+		}
+		if(student.getState() == StudentState.SUSPENDED){
+			LOGGER.error(String.format("Student with userName %s is suspended.", student.getUserName()));
+			throw new StudentSuspendedException();
+		}
 	}
 
 	private Session generateStudentSession(Student student) {

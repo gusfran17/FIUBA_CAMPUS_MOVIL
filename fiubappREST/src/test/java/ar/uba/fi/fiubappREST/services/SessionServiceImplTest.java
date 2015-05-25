@@ -20,9 +20,12 @@ import ar.uba.fi.fiubappREST.domain.Credentials;
 import ar.uba.fi.fiubappREST.domain.Session;
 import ar.uba.fi.fiubappREST.domain.SessionRole;
 import ar.uba.fi.fiubappREST.domain.Student;
+import ar.uba.fi.fiubappREST.domain.StudentState;
 import ar.uba.fi.fiubappREST.exceptions.InvalidCredentialsException;
 import ar.uba.fi.fiubappREST.exceptions.OperationNotAllowedFotStudentSessionException;
 import ar.uba.fi.fiubappREST.exceptions.SessionNotFoundException;
+import ar.uba.fi.fiubappREST.exceptions.StudentNotYetApprovedException;
+import ar.uba.fi.fiubappREST.exceptions.StudentSuspendedException;
 import ar.uba.fi.fiubappREST.persistance.AdminRepository;
 import ar.uba.fi.fiubappREST.persistance.SessionRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
@@ -85,7 +88,7 @@ public class SessionServiceImplTest {
 		when(passwordEncoder.isPasswordValid(AN_ENCRYPTED_PASSWORD, A_RAW_PASSWORD, null)).thenReturn(true);
 		when(sessionRepository.save(any(Session.class))).thenReturn(session);
 	
-		Session createdSesion = this.service.createStudentStudent(credentials);
+		Session createdSesion = this.service.createStudentSession(credentials);
 				
 		assertNotNull(createdSesion);
 	}
@@ -100,7 +103,7 @@ public class SessionServiceImplTest {
 		when(passwordEncoder.isPasswordValid(AN_ENCRYPTED_PASSWORD, A_RAW_PASSWORD, null)).thenReturn(true);
 		when(sessionRepository.save(any(Session.class))).thenReturn(session);
 	
-		Session createdSesion = this.service.createStudentStudent(credentials);
+		Session createdSesion = this.service.createStudentSession(credentials);
 				
 		assertNotNull(createdSesion);
 	}
@@ -110,7 +113,7 @@ public class SessionServiceImplTest {
 		when(student.getUserName()).thenReturn(AN_USER_NAME);
 		when(studentRepository.findOne(AN_USER_NAME)).thenReturn(null);
 	
-		this.service.createStudentStudent(credentials);
+		this.service.createStudentSession(credentials);
 	}
 	
 	@Test(expected=InvalidCredentialsException.class)
@@ -120,7 +123,25 @@ public class SessionServiceImplTest {
 		when(studentRepository.findOne(AN_USER_NAME)).thenReturn(student);
 		when(passwordEncoder.isPasswordValid(AN_ENCRYPTED_PASSWORD, A_RAW_PASSWORD, null)).thenReturn(false);
 	
-		this.service.createStudentStudent(credentials);
+		this.service.createStudentSession(credentials);
+	}
+	
+	@Test(expected=StudentNotYetApprovedException.class)
+	public void testCreateForStudentInPendingState() {
+		when(student.getUserName()).thenReturn(AN_USER_NAME);
+		when(student.getState()).thenReturn(StudentState.PENDING);
+		when(studentRepository.findOne(AN_USER_NAME)).thenReturn(student);
+	
+		this.service.createStudentSession(credentials);
+	}
+	
+	@Test(expected=StudentSuspendedException.class)
+	public void testCreateForStudentInSuspendedState() {
+		when(student.getUserName()).thenReturn(AN_USER_NAME);
+		when(student.getState()).thenReturn(StudentState.SUSPENDED);
+		when(studentRepository.findOne(AN_USER_NAME)).thenReturn(student);
+	
+		this.service.createStudentSession(credentials);
 	}
 	
 	@Test
