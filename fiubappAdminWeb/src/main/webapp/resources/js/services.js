@@ -41,7 +41,7 @@ AppServices.service('SecurityService', function($http, $q) {
             localStorage.setItem("token", data.token);
             deferred.resolve(data);
 	    }).error(function(data, status, headers, config){
-	    	deferred.reject("Nombre de usuario inexistente o contrasena incorrecta.");
+	    	deferred.reject('Nombre de usuario inexistente o contrase\u00f1a incorrecta.');
 	    });
     	
     	return deferred.promise;
