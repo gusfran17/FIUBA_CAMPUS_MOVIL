@@ -246,6 +246,10 @@ public class GroupServiceImpl implements GroupService {
 		verifyGroupMember(groupId, userName);
 		LOGGER.info(String.format("Finding sicussions for groupId " + groupId + "."));
 		Group group = this.groupRepository.findOne(groupId);
+		if(group==null){
+			LOGGER.error(String.format("Group with id %s does not exist.", userName, groupId ));
+			throw new GroupNotFoundException(groupId);
+		}
 		Set<Discussion> discussions = group.getDiscussions();
 		
 		LOGGER.info(String.format("All discussions for groupId "+ groupId + " were found."));
