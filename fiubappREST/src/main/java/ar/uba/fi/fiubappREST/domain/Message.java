@@ -12,6 +12,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
+import ar.uba.fi.fiubappREST.utils.CustomDateSerializerDetailed;
+import ar.uba.fi.fiubappREST.utils.CustomDateDeserializerDetailed;
 
 @Entity
 @Table(name = "message")
@@ -43,9 +48,13 @@ public class Message {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+	
+	@JsonSerialize(using = CustomDateSerializerDetailed.class)
 	public Date getCreationDate() {
 		return creationDate;
 	}
+	
+	@JsonDeserialize(using = CustomDateDeserializerDetailed.class)
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}

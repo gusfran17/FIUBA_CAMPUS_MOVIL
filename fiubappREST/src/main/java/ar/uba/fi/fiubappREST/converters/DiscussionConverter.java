@@ -18,8 +18,11 @@ public class DiscussionConverter {
 
 	public DiscussionRepresentation convert(Discussion discussion){
 		DiscussionRepresentation discussionRepresentation = new DiscussionRepresentation();
-		discussionRepresentation.setCreatorUserName(discussion.getCreator().getUserName());
-		discussionRepresentation.setName(discussion.getDiscussionName());	
+		discussionRepresentation.setId(discussion.getId());
+		discussionRepresentation.setCreatorUserName(discussion.getCreator().getName() + " " + discussion.getCreator().getLastName());
+		discussionRepresentation.setDiscussionName(discussion.getDiscussionName());	
+		discussionRepresentation.setCreationDate(discussion.getCreationDate());
+
 		Set<Message> messages = discussion.getMessages();
 		List<MessageCreationRepresentation> messagesRepresentation = new ArrayList<MessageCreationRepresentation>();
 
@@ -29,7 +32,7 @@ public class DiscussionConverter {
 			
 			MessageCreationRepresentation messageRepresentation = new MessageCreationRepresentation();
 			messageRepresentation.setCreationDate(message.getCreationDate());
-			messageRepresentation.setCreatorUserName(message.getCreator().getUserName());
+			messageRepresentation.setCreatorUserName(discussion.getCreator().getName() + " " + discussion.getCreator().getLastName());
 			messageRepresentation.setMessage(message.getMessage());
 			messagesRepresentation.add(messageRepresentation);
 			

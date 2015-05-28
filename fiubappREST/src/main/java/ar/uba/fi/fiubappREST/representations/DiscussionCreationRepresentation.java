@@ -3,7 +3,7 @@ package ar.uba.fi.fiubappREST.representations;
 public class DiscussionCreationRepresentation {
 	
 	private String creatorUserName;
-	private String name;
+	private String discussionName;
 	private String firstMessage;
 
 	public String getCreatorUserName() {
@@ -12,11 +12,11 @@ public class DiscussionCreationRepresentation {
 	public void setCreatorUserName(String userName) {
 		this.creatorUserName = userName;
 	}
-	public String getName() {
-		return name;
+	public String getDiscussionName() {
+		return discussionName;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setDiscussionName(String discussionName) {
+		this.discussionName = discussionName;
 	}
 	public String getFirstMessage() {
 		return firstMessage;

@@ -14,7 +14,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import ar.uba.fi.fiubappREST.utils.CustomDateDeserializerDetailed;
+import ar.uba.fi.fiubappREST.utils.CustomDateSerializerDetailed;
+
 
 @Entity
 @Table(name = "discussion")
@@ -36,7 +41,6 @@ public class Discussion {
 	private Set<Message> messages;
 	
 	
-	@JsonIgnore
 	public Integer getId() {
 		return id;
 	}
@@ -53,10 +57,12 @@ public class Discussion {
 		this.discussionName = name;
 	}
 
+	@JsonSerialize(using = CustomDateSerializerDetailed.class)
 	public Date getCreationDate() {
 		return creationDate;
 	}
 
+	@JsonDeserialize(using = CustomDateDeserializerDetailed.class)
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
