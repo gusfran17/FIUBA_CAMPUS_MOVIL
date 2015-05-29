@@ -22,6 +22,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 
+import ar.uba.fi.fiubappREST.converters.DiscussionConverter;
 import ar.uba.fi.fiubappREST.converters.GroupConverter;
 import ar.uba.fi.fiubappREST.domain.Group;
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
@@ -55,7 +56,10 @@ public class GroupServiceImplTest {
 	@Mock
 	private GroupConverter converter;
 	@Mock
+	private DiscussionConverter discussionConverter;
+	@Mock
 	private GroupRepresentation representation;
+	
 	
 	private Student student;
 	private Group group;
@@ -68,7 +72,8 @@ public class GroupServiceImplTest {
 		this.groupRepository = mock(GroupRepository.class);
 		this.groupPictureRepository = mock(GroupPictureRepository.class);
 		this.converter = mock(GroupConverter.class);
-		this.service= new GroupServiceImpl(groupRepository, studentRepository, groupPictureRepository, converter);
+		this.discussionConverter = mock(DiscussionConverter.class);
+		this.service= new GroupServiceImpl(groupRepository, studentRepository, groupPictureRepository, converter, null);
 				
 		this.student = new Student();
 		this.student.setUserName(AN_USER_NAME);
