@@ -21,14 +21,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
-import ar.uba.fi.fiubappREST.domain.Message;
 import ar.uba.fi.fiubappREST.domain.StudentSession;
 import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupUpdateRepresentation;
-import ar.uba.fi.fiubappREST.representations.MessageCreationRepresentation;
 import ar.uba.fi.fiubappREST.services.DiscussionService;
 import ar.uba.fi.fiubappREST.services.GroupService;
 import ar.uba.fi.fiubappREST.services.StudentSessionService;
@@ -106,19 +104,6 @@ public class GroupController<discussionService> {
 		return this.discussionService.create(discussionRepresentation, groupId);
 	}
 
-	@RequestMapping(value="{groupId}/discussions/{discussionId}/messages", method = RequestMethod.GET)
-	public @ResponseBody Set<Message> getMessagesForGroupDiscussion(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @PathVariable Integer discussionId) {
-		StudentSession studentSession = this.studentSessionService.find(token);
-		Set<Message> messages = this.groupService.findGroupDiscussionMessagesForMember(groupId, discussionId, studentSession.getUserName());	
-		return messages;
-	}
-	
-	@RequestMapping(value="{groupId}/discussions/{discussionId}/messages", method = RequestMethod.POST)
-	@ResponseStatus(value = HttpStatus.CREATED)
-	public @ResponseBody Message createGroupDiscussionMessage(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @PathVariable Integer discussionId, @RequestBody MessageCreationRepresentation messageRepresentation) {
-		this.studentSessionService.validateMine(token, messageRepresentation.getCreatorUserName());
-		return this.discussionService.createMessage(messageRepresentation, groupId, discussionId);
-	}
 
 }
 
