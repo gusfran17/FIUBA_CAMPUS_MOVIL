@@ -118,7 +118,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 	
 	@Override
 	public Set<DiscussionRepresentation> findGroupDiscussionsForMember(Integer groupId, String userName) {
-		verifyGroupMember(groupId, userName);
+		//verifyGroupMember(groupId, userName);
 		LOGGER.info(String.format("Finding sicussions for groupId " + groupId + "."));
 		Group group = this.groupRepository.findOne(groupId);
 		if(group==null){
