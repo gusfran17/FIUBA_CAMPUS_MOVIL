@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 
+
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
 import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;

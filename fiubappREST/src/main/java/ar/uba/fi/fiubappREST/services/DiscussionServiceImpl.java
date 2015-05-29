@@ -129,12 +129,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 	public Set<DiscussionRepresentation> findGroupDiscussionsForMember(Integer groupId, String userName) {
 		//verifyGroupMember(groupId, userName);
 		LOGGER.info(String.format("Finding sicussions for groupId " + groupId + "."));
-		Group group = this.groupRepository.findOne(groupId);
-		if(group==null){
-			LOGGER.error(String.format("Group with id %s does not exist.", groupId ));
-			throw new GroupNotFoundException(groupId);
-		}
-		Set<Discussion> discussions = group.getDiscussions();
+		Set<Discussion> discussions = discussionRepository.findByProperties(groupId);//group.getDiscussions();
 		Set<DiscussionRepresentation> discussionsRepresentation = new HashSet<DiscussionRepresentation>();
 		Iterator<Discussion> iterator = discussions.iterator();
 		Discussion discussion = new Discussion();

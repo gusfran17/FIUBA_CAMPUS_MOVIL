@@ -19,14 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.converters.DiscussionConverter;
-import ar.uba.fi.fiubappREST.converters.DiscussionMessageConverter;
 import ar.uba.fi.fiubappREST.converters.GroupConverter;
 import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.Group;
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
-import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
 import ar.uba.fi.fiubappREST.domain.Student;
-import ar.uba.fi.fiubappREST.exceptions.DiscussionNotFoundInGroupException;
 import ar.uba.fi.fiubappREST.exceptions.GroupAlreadyExistsException;
 import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.StudentIsNotMemberOfGroupException;
@@ -34,10 +31,10 @@ import ar.uba.fi.fiubappREST.exceptions.StudentNotCreatorOfGroupException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.UnexpectedErrorReadingProfilePictureFileException;
 import ar.uba.fi.fiubappREST.exceptions.UnsupportedMediaTypeForProfilePictureException;
+import ar.uba.fi.fiubappREST.persistance.DiscussionRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupPictureRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
-import ar.uba.fi.fiubappREST.representations.DiscussionMessageRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
@@ -51,21 +48,21 @@ public class GroupServiceImpl implements GroupService {
 	private GroupRepository groupRepository;
 	private StudentRepository studentRepository;
 	private GroupPictureRepository groupPictureRepository;
+	private DiscussionRepository discussionRepository;
 	private GroupConverter groupConverter;
 	private DiscussionConverter discussionConverter;
-	private DiscussionMessageConverter discussionMessageConverter;
 	
 	@Value("classpath:defaultGroupPicture.png")
 	private Resource defaultGroupPicture;
 		
 	@Autowired
-	public GroupServiceImpl(GroupRepository groupRepository, StudentRepository studentRepository, GroupPictureRepository groupPictureRepository, GroupConverter groupConverter, DiscussionConverter discussionConverter, DiscussionMessageConverter discussionMessageConverter){
+	public GroupServiceImpl(GroupRepository groupRepository, StudentRepository studentRepository, GroupPictureRepository groupPictureRepository, DiscussionRepository discussionRepository, GroupConverter groupConverter, DiscussionConverter discussionConverter){
 		this.groupRepository = groupRepository;
 		this.studentRepository = studentRepository;
 		this.groupPictureRepository = groupPictureRepository;
 		this.groupConverter = groupConverter;
-		this.discussionConverter = discussionConverter;
-		this.discussionMessageConverter = discussionMessageConverter;		
+		this.discussionConverter = discussionConverter;		
+		this.discussionRepository = discussionRepository;
 	}
 
 	@Override
@@ -256,12 +253,7 @@ public class GroupServiceImpl implements GroupService {
 	public Set<DiscussionRepresentation> findGroupDiscussionsForMember(Integer groupId, String userName) {
 		verifyGroupMember(groupId, userName);
 		LOGGER.info(String.format("Finding sicussions for groupId " + groupId + "."));
-		Group group = this.groupRepository.findOne(groupId);
-		if(group==null){
-			LOGGER.error(String.format("Group with id %s does not exist.", groupId ));
-			throw new GroupNotFoundException(groupId);
-		}
-		Set<Discussion> discussions = group.getDiscussions();
+		Set<Discussion> discussions = discussionRepository.findByProperties(groupId);
 		Set<DiscussionRepresentation> discussionsRepresentation = new HashSet<DiscussionRepresentation>();
 		Iterator<Discussion> iterator = discussions.iterator();
 		Discussion discussion = new Discussion();
@@ -283,6 +275,5 @@ public class GroupServiceImpl implements GroupService {
 		LOGGER.info(String.format(userName + " is a member of group " + groupId + "."));
 	}
 	
-
-
+		
 }

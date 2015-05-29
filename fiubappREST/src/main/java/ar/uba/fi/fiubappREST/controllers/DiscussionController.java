@@ -41,7 +41,7 @@ public class DiscussionController {
 	@RequestMapping(value="{groupId}/discussions", method = RequestMethod.GET)
 	public @ResponseBody Set<DiscussionRepresentation> getDiscussionsForGroup(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId) {
 		StudentSession studentSession = this.studentSessionService.find(token);
-		Set<DiscussionRepresentation> discussions = this.discussionService.findGroupDiscussionsForMember(groupId, studentSession.getUserName());	
+		Set<DiscussionRepresentation> discussions = this.groupService.findGroupDiscussionsForMember(groupId, studentSession.getUserName());	
 		return discussions;
 	}
 	
