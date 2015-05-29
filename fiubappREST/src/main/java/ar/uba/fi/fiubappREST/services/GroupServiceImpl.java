@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import ar.uba.fi.fiubappREST.converters.DiscussionConverter;
 import ar.uba.fi.fiubappREST.converters.GroupConverter;
 import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.Group;
@@ -35,6 +36,7 @@ import ar.uba.fi.fiubappREST.exceptions.UnsupportedMediaTypeForProfilePictureExc
 import ar.uba.fi.fiubappREST.persistance.GroupPictureRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
+import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupUpdateRepresentation;
@@ -48,16 +50,18 @@ public class GroupServiceImpl implements GroupService {
 	private StudentRepository studentRepository;
 	private GroupPictureRepository groupPictureRepository;
 	private GroupConverter groupConverter;
+	private DiscussionConverter discussionConverter;
 	
 	@Value("classpath:defaultGroupPicture.png")
 	private Resource defaultGroupPicture;
 		
 	@Autowired
-	public GroupServiceImpl(GroupRepository groupRepository, StudentRepository studentRepository, GroupPictureRepository groupPictureRepository, GroupConverter groupConverter){
+	public GroupServiceImpl(GroupRepository groupRepository, StudentRepository studentRepository, GroupPictureRepository groupPictureRepository, GroupConverter groupConverter, DiscussionConverter discussionConverter){
 		this.groupRepository = groupRepository;
 		this.studentRepository = studentRepository;
 		this.groupPictureRepository = groupPictureRepository;
 		this.groupConverter = groupConverter;
+		this.discussionConverter = discussionConverter;
 	}
 
 	@Override
@@ -245,7 +249,7 @@ public class GroupServiceImpl implements GroupService {
 	}
 	
 	@Override
-	public Set<Discussion> findGroupDiscussionsForMember(Integer groupId, String userName) {
+	public Set<DiscussionRepresentation> findGroupDiscussionsForMember(Integer groupId, String userName) {
 		verifyGroupMember(groupId, userName);
 		LOGGER.info(String.format("Finding sicussions for groupId " + groupId + "."));
 		Group group = this.groupRepository.findOne(groupId);
@@ -254,9 +258,17 @@ public class GroupServiceImpl implements GroupService {
 			throw new GroupNotFoundException(groupId);
 		}
 		Set<Discussion> discussions = group.getDiscussions();
+		Set<DiscussionRepresentation> discussionsRepresentation = new HashSet<DiscussionRepresentation>();
+		Iterator<Discussion> iterator = discussions.iterator();
+		Discussion discussion = new Discussion();
+		while (iterator.hasNext()){
+			discussion = iterator.next();
+			discussionsRepresentation.add(discussionConverter.convert(discussion));
+		}
+		
 		
 		LOGGER.info(String.format("All discussions for groupId "+ groupId + " were found."));
-		return discussions;
+		return discussionsRepresentation;
 	}
 
 	private void verifyGroupMember(Integer groupId, String userName) {

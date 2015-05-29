@@ -1,6 +1,7 @@
 package ar.uba.fi.fiubappREST.domain;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -40,6 +41,25 @@ public class Discussion {
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval = true)
 	private Set<DiscussionMessage> messages;
 	
+	public Discussion(){
+		super();
+	}
+	
+	public Discussion(String discussionName, Student creator, String discussionMessage){
+		super();
+		DiscussionMessage message = new DiscussionMessage();
+		Set<DiscussionMessage> messages = new HashSet<DiscussionMessage>();
+		
+		message.setCreationDate(new Date());
+		message.setCreator(creator);
+		message.setMessage(discussionMessage);
+		messages.add(message);
+		
+		this.messages = messages;
+		this.creationDate= new Date();
+		this.discussionName = discussionName;
+		this.creator = creator;
+	}
 	
 	public Integer getId() {
 		return id;

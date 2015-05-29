@@ -31,7 +31,6 @@ import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotCreatorOfGroupException;
 import ar.uba.fi.fiubappREST.exceptions.UnexpectedErrorReadingProfilePictureFileException;
 import ar.uba.fi.fiubappREST.exceptions.UnsupportedMediaTypeForProfilePictureException;
-import ar.uba.fi.fiubappREST.persistance.DiscussionRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupPictureRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
@@ -52,8 +51,6 @@ public class GroupServiceImplTest {
 	@Mock
 	private GroupRepository groupRepository;
 	@Mock
-	private DiscussionRepository discussionRepository;
-	@Mock
 	private GroupPictureRepository groupPictureRepository;
 	@Mock
 	private GroupConverter converter;
@@ -71,7 +68,7 @@ public class GroupServiceImplTest {
 		this.groupRepository = mock(GroupRepository.class);
 		this.groupPictureRepository = mock(GroupPictureRepository.class);
 		this.converter = mock(GroupConverter.class);
-		this.service= new GroupServiceImpl(groupRepository, studentRepository, groupPictureRepository, discussionRepository, converter);
+		this.service= new GroupServiceImpl(groupRepository, studentRepository, groupPictureRepository, converter);
 				
 		this.student = new Student();
 		this.student.setUserName(AN_USER_NAME);

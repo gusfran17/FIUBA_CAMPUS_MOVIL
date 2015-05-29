@@ -113,7 +113,7 @@ public class DiscusionesTab extends Fragment {
                                     Popup.showText(getActivity(), "El primer mensaje de la discusión no puede ser vacio.", Toast.LENGTH_LONG).show();
                                     setCreateDiscussion(edtvw_discussion_name.getText().toString(),"");
                                 } else {
-                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
                                     DataAccess dataAccess = new DataAccess(getActivity());
                                     String userName = dataAccess.getUserName();
 
@@ -226,13 +226,12 @@ public class DiscusionesTab extends Fragment {
                             try {
                                 Discussion discussion = new Discussion();
 
-                                JSONObject jsonDiscuccion = response.getJSONObject(i);
-                                JSONObject jsonCreator = jsonDiscuccion.getJSONObject("creator");
+                                JSONObject jsonDiscussion = response.getJSONObject(i);
 
-                                discussion.setCreatorUserName(jsonCreator.getString("name")+ " " + jsonCreator.getString("lastName"));
-                                discussion.setDiscussionName(jsonDiscuccion.getString("discussionName"));
-                                discussion.setCreationDate(jsonDiscuccion.getString("creationDate"));
-                                discussion.setId(jsonDiscuccion.getInt("id"));
+                                discussion.setCreatorUserName(jsonDiscussion.getString("creatorUserName"));
+                                discussion.setDiscussionName(jsonDiscussion.getString("discussionName"));
+                                discussion.setCreationDate(jsonDiscussion.getString("creationDate"));
+                                discussion.setId(jsonDiscussion.getInt("id"));
 
                                 discussionList.add(discussion);
 

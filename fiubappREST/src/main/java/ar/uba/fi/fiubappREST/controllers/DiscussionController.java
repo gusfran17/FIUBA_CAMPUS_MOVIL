@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.StudentSession;
 import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
@@ -38,9 +37,9 @@ public class DiscussionController {
 	}
 	
 	@RequestMapping(value="{groupId}/discussions", method = RequestMethod.GET)
-	public @ResponseBody Set<Discussion> getDiscussionsForGroup(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId) {
+	public @ResponseBody Set<DiscussionRepresentation> getDiscussionsForGroup(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId) {
 		StudentSession studentSession = this.studentSessionService.find(token);
-		Set<Discussion> discussions = this.groupService.findGroupDiscussionsForMember(groupId, studentSession.getUserName());	
+		Set<DiscussionRepresentation> discussions = this.groupService.findGroupDiscussionsForMember(groupId, studentSession.getUserName());	
 		return discussions;
 	}
 	

@@ -1,7 +1,6 @@
 package ar.uba.fi.fiubappREST.services;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -53,24 +52,9 @@ public class DiscussionServiceImpl implements DiscussionService{
 	}
 
 	private Discussion createDiscussion(DiscussionCreationRepresentation discussionRepresentation, Student creator, Group group) {
-		Discussion discussion = new Discussion();
-		DiscussionMessage message = new DiscussionMessage();
-		Set<DiscussionMessage> messages = new HashSet<DiscussionMessage>();
-		
-		message.setCreationDate(new Date());
-		message.setCreator(creator);
-		message.setMessage(discussionRepresentation.getFirstMessage());
-		messages.add(message);
-		
-		discussion.setCreationDate(new Date());
-		discussion.setDiscussionName(discussionRepresentation.getDiscussionName());
-		discussion.setCreator(creator);
-		discussion.setMessages(messages);
-		
+		Discussion discussion = new Discussion(discussionRepresentation.getDiscussionName(), creator, discussionRepresentation.getFirstMessage());
 		this.discussionRepository.save(discussion);
-		
 		group.addDiscussion(discussion);
-		
 		return discussion;
 		
 	}
