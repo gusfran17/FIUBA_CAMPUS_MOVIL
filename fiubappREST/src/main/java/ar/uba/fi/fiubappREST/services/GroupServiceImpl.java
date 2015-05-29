@@ -33,6 +33,7 @@ import ar.uba.fi.fiubappREST.exceptions.StudentNotCreatorOfGroupException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.UnexpectedErrorReadingProfilePictureFileException;
 import ar.uba.fi.fiubappREST.exceptions.UnsupportedMediaTypeForProfilePictureException;
+import ar.uba.fi.fiubappREST.persistance.DiscussionRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupPictureRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
@@ -49,6 +50,7 @@ public class GroupServiceImpl implements GroupService {
 	private GroupRepository groupRepository;
 	private StudentRepository studentRepository;
 	private GroupPictureRepository groupPictureRepository;
+	private DiscussionRepository discussionRepository;
 	private GroupConverter groupConverter;
 	private DiscussionConverter discussionConverter;
 	
@@ -56,12 +58,13 @@ public class GroupServiceImpl implements GroupService {
 	private Resource defaultGroupPicture;
 		
 	@Autowired
-	public GroupServiceImpl(GroupRepository groupRepository, StudentRepository studentRepository, GroupPictureRepository groupPictureRepository, GroupConverter groupConverter, DiscussionConverter discussionConverter){
+	public GroupServiceImpl(GroupRepository groupRepository, StudentRepository studentRepository, GroupPictureRepository groupPictureRepository, DiscussionRepository discussionRepository, GroupConverter groupConverter, DiscussionConverter discussionConverter){
 		this.groupRepository = groupRepository;
 		this.studentRepository = studentRepository;
 		this.groupPictureRepository = groupPictureRepository;
 		this.groupConverter = groupConverter;
 		this.discussionConverter = discussionConverter;
+		this.discussionRepository = discussionRepository;
 	}
 
 	@Override
@@ -283,12 +286,7 @@ public class GroupServiceImpl implements GroupService {
 	public Set<DiscussionMessage> findGroupDiscussionMessagesForMember(Integer groupId, Integer discussionId, String userName) {
 		verifyGroupMember(groupId, userName);
 		LOGGER.info(String.format("Finding discussions for groupId " + groupId + "."));
-		Group group = this.groupRepository.findOne(groupId);
-		if(group==null){
-			LOGGER.error(String.format("Group with id %s does not exist.", userName, groupId ));
-			throw new GroupNotFoundException(groupId);
-		}
-		Set <Discussion> discussions = group.getDiscussions();
+		Set <Discussion> discussions = discussionRepository.findByProperties(groupId);
 		Iterator<Discussion> iterator = discussions.iterator();
 		Discussion discussion = null;
 		boolean found = false;
@@ -306,5 +304,5 @@ public class GroupServiceImpl implements GroupService {
 		LOGGER.info(String.format("Discussion " + discussionId + " was found for groupId "+ groupId + "."));
 		return discussion.getMessages();
 	}
-
+	
 }

@@ -73,7 +73,7 @@ public class GroupServiceImplTest {
 		this.groupPictureRepository = mock(GroupPictureRepository.class);
 		this.converter = mock(GroupConverter.class);
 		this.discussionConverter = mock(DiscussionConverter.class);
-		this.service= new GroupServiceImpl(groupRepository, studentRepository, groupPictureRepository, converter);
+		this.service= new GroupServiceImpl(groupRepository, studentRepository, groupPictureRepository, null, converter, discussionConverter);
 		
 		this.student = new Student();
 		this.student.setUserName(AN_USER_NAME);
