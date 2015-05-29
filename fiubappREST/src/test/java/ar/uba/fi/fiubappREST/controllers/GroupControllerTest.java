@@ -42,16 +42,13 @@ public class GroupControllerTest {
 	private GroupService service;
 	@Mock
 	private StudentSessionService studentSessionService;
-	@Mock
-	private DiscussionService discussionService;
 	
 	
 	@Before
 	public void setUp(){
 		this.service = mock(GroupService.class);
 		this.studentSessionService = mock(StudentSessionService.class);
-		this.discussionService = mock(DiscussionService.class);
-		this.controller = new GroupController(service, studentSessionService, discussionService);
+		this.controller = new GroupController(service, studentSessionService);
 	}
 
 	@Test
@@ -139,19 +136,7 @@ public class GroupControllerTest {
 		assertEquals(representation, updatedGroup);
 	}
 	
-	@Test
-	public void testCreateGroupDiscussion(){
-		doNothing().when(this.studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
-		DiscussionCreationRepresentation discussionRepresentation = new DiscussionCreationRepresentation();
-		discussionRepresentation.setCreatorUserName(AN_USER_NAME);
-		
-		DiscussionRepresentation representation = mock(DiscussionRepresentation.class);
-		when(this.discussionService.create(discussionRepresentation,A_GROUP_ID)).thenReturn(representation);
-		
-		DiscussionRepresentation createdDiscussion = this.controller.createGroupDiscussion(A_TOKEN, A_GROUP_ID,discussionRepresentation);
-		
-		assertEquals(representation, createdDiscussion);
-	}
+
 	
 }
 

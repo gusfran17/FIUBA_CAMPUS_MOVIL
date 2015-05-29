@@ -17,8 +17,8 @@ import javax.persistence.Table;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-import ar.uba.fi.fiubappREST.utils.CustomDateDeserializerDetailed;
-import ar.uba.fi.fiubappREST.utils.CustomDateSerializerDetailed;
+import ar.uba.fi.fiubappREST.utils.CustomDateDeserializer;
+import ar.uba.fi.fiubappREST.utils.CustomDateSerializer;
 
 
 @Entity
@@ -38,7 +38,7 @@ public class Discussion {
 	private Student creator;
 	
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval = true)
-	private Set<Message> messages;
+	private Set<DiscussionMessage> messages;
 	
 	
 	public Integer getId() {
@@ -57,12 +57,12 @@ public class Discussion {
 		this.discussionName = name;
 	}
 
-	@JsonSerialize(using = CustomDateSerializerDetailed.class)
+	@JsonSerialize(using = CustomDateSerializer.class)
 	public Date getCreationDate() {
 		return creationDate;
 	}
 
-	@JsonDeserialize(using = CustomDateDeserializerDetailed.class)
+	@JsonDeserialize(using = CustomDateDeserializer.class)
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
@@ -75,15 +75,15 @@ public class Discussion {
 		this.creator = creator;
 	}
 
-	public Set<Message> getMessages() {
+	public Set<DiscussionMessage> getMessages() {
 		return messages;
 	}
 
-	public void setMessages(Set<Message> messages) {
+	public void setMessages(Set<DiscussionMessage> messages) {
 		this.messages = messages;
 	}
 
-	public void addMessage(Message message) {
+	public void addMessage(DiscussionMessage message) {
 		this.messages.add(message);
 	}
 	

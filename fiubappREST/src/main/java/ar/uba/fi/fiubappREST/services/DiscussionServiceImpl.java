@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import ar.uba.fi.fiubappREST.converters.DiscussionConverter;
 import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.Group;
-import ar.uba.fi.fiubappREST.domain.Message;
+import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.DiscussionNotFoundInGroupException;
 import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
@@ -23,7 +23,7 @@ import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
-import ar.uba.fi.fiubappREST.representations.MessageCreationRepresentation;
+import ar.uba.fi.fiubappREST.representations.DiscussionMessageCreationRepresentation;
 
 @Service
 public class DiscussionServiceImpl implements DiscussionService{
@@ -54,8 +54,8 @@ public class DiscussionServiceImpl implements DiscussionService{
 
 	private Discussion createDiscussion(DiscussionCreationRepresentation discussionRepresentation, Student creator, Group group) {
 		Discussion discussion = new Discussion();
-		Message message = new Message();
-		Set<Message> messages = new HashSet<Message>();
+		DiscussionMessage message = new DiscussionMessage();
+		Set<DiscussionMessage> messages = new HashSet<DiscussionMessage>();
 		
 		message.setCreationDate(new Date());
 		message.setCreator(creator);
@@ -94,12 +94,12 @@ public class DiscussionServiceImpl implements DiscussionService{
 	}
 
 	@Override
-	public Message createMessage(MessageCreationRepresentation messageRepresentation, Integer groupId, Integer discussionId) {
+	public DiscussionMessage createMessage(DiscussionMessageCreationRepresentation messageRepresentation, Integer groupId, Integer discussionId) {
 		Group group = this.findGroup(groupId);
 		Student student = this.findStudent(messageRepresentation.getCreatorUserName());
 		Discussion discussion = findDiscussion(groupId, discussionId, group);
 		
-		Message message = new Message();
+		DiscussionMessage message = new DiscussionMessage();
 		message.setCreationDate(new Date());
 		message.setCreator(student);
 		message.setMessage(messageRepresentation.getMessage());

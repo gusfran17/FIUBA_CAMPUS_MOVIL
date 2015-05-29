@@ -20,7 +20,7 @@ import ar.uba.fi.fiubappREST.utils.CustomDateDeserializerDetailed;
 
 @Entity
 @Table(name = "message")
-public class Message {
+public class DiscussionMessage {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

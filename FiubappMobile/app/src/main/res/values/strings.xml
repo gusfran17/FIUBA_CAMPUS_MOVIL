@@ -65,11 +65,11 @@
     <string name="creado_por">Creado por:</string>
     <string name="fecha_creacion">Fecha de creación:</string>
     <string name="mensaje_validar_tamanio_imagen">Debe seleccionar una imagen con un tamaño menor a 10MB</string>
-    <string name="lbl_created_by">Creado por</string>
-    <string name="lbl_creation_date">Creado</string>
+    <string name="lbl_created_by">Iniciada por:</string>
+    <string name="lbl_creation_date">Creada</string>
     <string name="creatDiscussion">INICIAR DISCUSIÓN</string>
     <string name="title_activity_discussion">Discussion</string>
     <string name="lblAddMessage">COMENTAR</string>
     <string name="txtvw_discussion_name">Nombre</string>
-    <string name="txtvw_first_message">Primer mensaje</string>
+    <string name="txtvw_first_message">Comentario</string>
 </resources>

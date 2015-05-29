@@ -22,7 +22,7 @@ import ar.uba.fi.fiubappREST.converters.GroupConverter;
 import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.Group;
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
-import ar.uba.fi.fiubappREST.domain.Message;
+import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.DiscussionNotFoundInGroupException;
 import ar.uba.fi.fiubappREST.exceptions.GroupAlreadyExistsException;
@@ -32,7 +32,6 @@ import ar.uba.fi.fiubappREST.exceptions.StudentNotCreatorOfGroupException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.UnexpectedErrorReadingProfilePictureFileException;
 import ar.uba.fi.fiubappREST.exceptions.UnsupportedMediaTypeForProfilePictureException;
-import ar.uba.fi.fiubappREST.persistance.DiscussionRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupPictureRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
@@ -47,7 +46,6 @@ public class GroupServiceImpl implements GroupService {
 	
 	private GroupRepository groupRepository;
 	private StudentRepository studentRepository;
-	private DiscussionRepository discussionRepository;
 	private GroupPictureRepository groupPictureRepository;
 	private GroupConverter groupConverter;
 	
@@ -55,10 +53,9 @@ public class GroupServiceImpl implements GroupService {
 	private Resource defaultGroupPicture;
 		
 	@Autowired
-	public GroupServiceImpl(GroupRepository groupRepository, StudentRepository studentRepository, GroupPictureRepository groupPictureRepository, DiscussionRepository discussionRepository, GroupConverter groupConverter){
+	public GroupServiceImpl(GroupRepository groupRepository, StudentRepository studentRepository, GroupPictureRepository groupPictureRepository, GroupConverter groupConverter){
 		this.groupRepository = groupRepository;
 		this.studentRepository = studentRepository;
-		this.discussionRepository = discussionRepository;
 		this.groupPictureRepository = groupPictureRepository;
 		this.groupConverter = groupConverter;
 	}
@@ -271,7 +268,7 @@ public class GroupServiceImpl implements GroupService {
 	}
 	
 	@Override
-	public Set<Message> findGroupDiscussionMessagesForMember(Integer groupId, Integer discussionId, String userName) {
+	public Set<DiscussionMessage> findGroupDiscussionMessagesForMember(Integer groupId, Integer discussionId, String userName) {
 		verifyGroupMember(groupId, userName);
 		LOGGER.info(String.format("Finding discussions for groupId " + groupId + "."));
 		Group group = this.groupRepository.findOne(groupId);

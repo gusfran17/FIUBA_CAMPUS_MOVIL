@@ -14,8 +14,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
+            android:textStyle="bold"
             android:textColor="#FFFFFF"
-            android:text="Carrera X"/>
+            android:text=""/>
 
         <TextView
             android:id="@+id/lbl_creator"
@@ -30,7 +31,8 @@
             android:id="@+id/lbl_creator_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Creador"
+            android:text=""
+            android:textColor="#FFFFFF"
             android:layout_marginLeft="15px"
             android:layout_toRightOf="@+id/lbl_creator"
             android:layout_below="@+id/lbl_discussion_name"/>
@@ -42,6 +44,7 @@
             android:layout_marginLeft="30dp"
             android:textColor="#FFFFFF"
             android:text="@string/lbl_creation_date"
+            android:visibility="gone"
             android:layout_below="@+id/lbl_creator"/>
 
         <TextView
@@ -49,7 +52,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Fecha"
-            android:layout_marginLeft="15px"
+            android:layout_marginLeft="30dp"
+            android:textColor="#DDDDDD"
             android:layout_toRightOf="@+id/lbl_creation_date"
             android:layout_below="@+id/lbl_creator"/>
 

@@ -102,7 +102,7 @@ public class DiscusionesTab extends Fragment {
 
         alertDialogBuilder
                 .setCancelable(false)
-                .setTitle("Iniciar Discusion")
+                .setTitle("Iniciar Discusión")
                 .setPositiveButton("Iniciar",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -110,7 +110,7 @@ public class DiscusionesTab extends Fragment {
                                     Popup.showText(getActivity(), "El nombre de la discusión no puede ser vacio.", Toast.LENGTH_LONG).show();
                                     setCreateDiscussion("",edtvw_first_message.getText().toString());
                                 } else if (edtvw_first_message.getText().toString().equals("")){
-                                    Popup.showText(getActivity(), "El primer mensaje de la discusón no puede ser vacio.", Toast.LENGTH_LONG).show();
+                                    Popup.showText(getActivity(), "El primer mensaje de la discusión no puede ser vacio.", Toast.LENGTH_LONG).show();
                                     setCreateDiscussion(edtvw_discussion_name.getText().toString(),"");
                                 } else {
                                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");

@@ -8,9 +8,9 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 import ar.uba.fi.fiubappREST.domain.Discussion;
-import ar.uba.fi.fiubappREST.domain.Message;
+import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
 import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
-import ar.uba.fi.fiubappREST.representations.MessageCreationRepresentation;
+import ar.uba.fi.fiubappREST.representations.DiscussionMessageCreationRepresentation;
 
 
 @Component
@@ -23,14 +23,14 @@ public class DiscussionConverter {
 		discussionRepresentation.setDiscussionName(discussion.getDiscussionName());	
 		discussionRepresentation.setCreationDate(discussion.getCreationDate());
 
-		Set<Message> messages = discussion.getMessages();
-		List<MessageCreationRepresentation> messagesRepresentation = new ArrayList<MessageCreationRepresentation>();
+		Set<DiscussionMessage> messages = discussion.getMessages();
+		List<DiscussionMessageCreationRepresentation> messagesRepresentation = new ArrayList<DiscussionMessageCreationRepresentation>();
 
-		Iterator<Message> iterator = messages.iterator();
+		Iterator<DiscussionMessage> iterator = messages.iterator();
 		while (iterator.hasNext()){
-			Message message = iterator.next();
+			DiscussionMessage message = iterator.next();
 			
-			MessageCreationRepresentation messageRepresentation = new MessageCreationRepresentation();
+			DiscussionMessageCreationRepresentation messageRepresentation = new DiscussionMessageCreationRepresentation();
 			messageRepresentation.setCreationDate(message.getCreationDate());
 			messageRepresentation.setCreatorUserName(discussion.getCreator().getName() + " " + discussion.getCreator().getLastName());
 			messageRepresentation.setMessage(message.getMessage());

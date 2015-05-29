@@ -9,7 +9,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import ar.uba.fi.fiubappREST.utils.CustomDateDeserializerDetailed;
 import ar.uba.fi.fiubappREST.utils.CustomDateSerializerDetailed;
 
-public class MessageCreationRepresentation {
+public class DiscussionMessageCreationRepresentation {
 
 	private String message;
 	private Date creationDate;

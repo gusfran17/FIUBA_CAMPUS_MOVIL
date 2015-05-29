@@ -14,7 +14,7 @@ public class DiscussionRepresentation {
 	private Date creationDate;
 	private String creatorUserName;
 	private String discussionName;
-	private List<MessageCreationRepresentation> messages;
+	private List<DiscussionMessageCreationRepresentation> messages;
 	
 	@JsonSerialize(using = CustomDateSerializerDetailed.class)
 	public Date getCreationDate() {
@@ -43,10 +43,10 @@ public class DiscussionRepresentation {
 	public void setDiscussionName(String name) {
 		this.discussionName = name;
 	}
-	public List<MessageCreationRepresentation> getMessages() {
+	public List<DiscussionMessageCreationRepresentation> getMessages() {
 		return messages;
 	}
-	public void setMessages(List<MessageCreationRepresentation> message) {
+	public void setMessages(List<DiscussionMessageCreationRepresentation> message) {
 		this.messages = message;
 	}
 	
