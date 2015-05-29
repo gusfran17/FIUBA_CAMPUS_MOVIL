@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import ar.uba.fi.fiubappREST.domain.StudentSession;
 import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
+import ar.uba.fi.fiubappREST.representations.DiscussionMessageCreationRepresentation;
+import ar.uba.fi.fiubappREST.representations.DiscussionMessageRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.services.DiscussionService;
 import ar.uba.fi.fiubappREST.services.GroupService;
@@ -48,6 +50,20 @@ public class DiscussionController {
 	public @ResponseBody DiscussionRepresentation createGroupDiscussion(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @RequestBody DiscussionCreationRepresentation discussionRepresentation) {
 		this.studentSessionService.validateMine(token, discussionRepresentation.getCreatorUserName());
 		return this.discussionService.create(discussionRepresentation, groupId);
+	}
+
+	@RequestMapping(value="{groupId}/discussions/{discussionId}/messages", method = RequestMethod.GET)
+	public @ResponseBody Set<DiscussionMessageRepresentation> getMessagesForGroupDiscussion(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @PathVariable Integer discussionId) {
+		StudentSession studentSession = this.studentSessionService.find(token);
+		Set<DiscussionMessageRepresentation> messages = this.groupService.findGroupDiscussionMessagesForMember(groupId, discussionId, studentSession.getUserName());	
+		return messages;
+	}
+	
+	@RequestMapping(value="{groupId}/discussions/{discussionId}/messages", method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.CREATED)
+	public @ResponseBody DiscussionMessageRepresentation createGroupDiscussionMessage(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @PathVariable Integer discussionId, @RequestBody DiscussionMessageCreationRepresentation messageRepresentation) {
+		this.studentSessionService.validateMine(token, messageRepresentation.getCreatorUserName());
+		return this.discussionService.createMessage(messageRepresentation, groupId, discussionId);
 	}
 
 

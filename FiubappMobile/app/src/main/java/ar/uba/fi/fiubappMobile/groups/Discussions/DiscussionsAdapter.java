@@ -18,14 +18,15 @@ import java.util.List;
  * Created by Gustavo.Franco on 22/05/2015.
  */
 public class DiscussionsAdapter extends BaseAdapter {
-
+    private int groupId;
     private Activity activity;
     private LayoutInflater inflater;
     private List<Discussion> discussionItems;
 
-    public DiscussionsAdapter(Activity activity, List<Discussion> discussionItems) {
+    public DiscussionsAdapter(Activity activity, List<Discussion> discussionItems, int groupId) {
         this.activity = activity;
         this.discussionItems = discussionItems;
+        this.groupId = groupId;
     }
 
 
@@ -55,7 +56,7 @@ public class DiscussionsAdapter extends BaseAdapter {
         TextView lbl_creator_name = (TextView) convertView.findViewById(R.id.lbl_creator_name);
         TextView lbl_creation_date_value = (TextView) convertView.findViewById(R.id.lbl_creation_date_value);
 
-        Discussion discussion = this.discussionItems.get(i);
+        final Discussion discussion = this.discussionItems.get(i);
         lbl_discussion_name.setText(discussion.getDiscussionName());
         lbl_creator_name.setText(discussion.getCreatorUserName());
         lbl_creation_date_value.setText(discussion.getCreationDate());
@@ -64,6 +65,9 @@ public class DiscussionsAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(activity, DiscussionActivity.class);
+                i.putExtra("discussionId",discussion.getId());
+                i.putExtra("groupId", groupId);
+                i.putExtra("discussionName",discussion.getDiscussionName());
                 activity.startActivity(i);
 
             }

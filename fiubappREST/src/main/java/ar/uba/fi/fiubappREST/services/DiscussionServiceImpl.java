@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ar.uba.fi.fiubappREST.converters.DiscussionConverter;
+import ar.uba.fi.fiubappREST.converters.DiscussionMessageConverter;
 import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.Group;
 import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
@@ -21,6 +22,7 @@ import ar.uba.fi.fiubappREST.persistance.DiscussionRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
+import ar.uba.fi.fiubappREST.representations.DiscussionMessageRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionMessageCreationRepresentation;
 
@@ -33,15 +35,17 @@ public class DiscussionServiceImpl implements DiscussionService{
 	private GroupRepository groupRepository;
 	private StudentRepository studentRepository;
 	private DiscussionConverter discussionConverter;
+	private DiscussionMessageConverter discMessageConverter;
 	
 	@Autowired
-	public DiscussionServiceImpl(DiscussionRepository discussionRepository, GroupRepository groupRepository, StudentRepository studentRepository, DiscussionConverter discussionConverter){
+	public DiscussionServiceImpl(DiscussionRepository discussionRepository, GroupRepository groupRepository, StudentRepository studentRepository, DiscussionConverter discussionConverter, DiscussionMessageConverter discMessageConverter){
 		this.discussionRepository = discussionRepository;
 		this.groupRepository = groupRepository;
 		this.studentRepository = studentRepository;
 		this.discussionConverter = discussionConverter;
+		this.discMessageConverter = discMessageConverter;
 	}
-
+	
 	@Override
 	public DiscussionRepresentation create(DiscussionCreationRepresentation discussionRepresentation, Integer groupID) {
 		Student creator = this.findStudent(discussionRepresentation.getCreatorUserName());
@@ -78,7 +82,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 	}
 
 	@Override
-	public DiscussionMessage createMessage(DiscussionMessageCreationRepresentation messageRepresentation, Integer groupId, Integer discussionId) {
+	public DiscussionMessageRepresentation createMessage(DiscussionMessageCreationRepresentation messageRepresentation, Integer groupId, Integer discussionId) {
 		Group group = this.findGroup(groupId);
 		Student student = this.findStudent(messageRepresentation.getCreatorUserName());
 		Discussion discussion = findDiscussion(groupId, discussionId, group);
@@ -91,7 +95,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 		
 		discussionRepository.save(discussion);
 		groupRepository.save(group);
-		return message;
+		return this.discMessageConverter.convert(message);
 	}
 
 	private Discussion findDiscussion(Integer groupId, Integer discussionId, Group group) {

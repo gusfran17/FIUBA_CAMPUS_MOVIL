@@ -73,7 +73,7 @@ public class DiscusionesTab extends Fragment {
 
         fillDiscussionsList();
 
-        discussionsAdapter = new DiscussionsAdapter(getActivity(), discussionList);
+        discussionsAdapter = new DiscussionsAdapter(getActivity(), discussionList,(int) getArguments().get("idGrupo"));
         discussionsListView.setAdapter(discussionsAdapter);
 
         Button btnCreateDiscussion = (Button)regularSearchView.findViewById(R.id.btnCreateDiscussion);
@@ -168,7 +168,8 @@ public class DiscusionesTab extends Fragment {
                             discussion.setId(response.getInt("id"));
                             discussion.setCreationDate(response.getString("creationDate"));
                             discussion.setDiscussionName(response.getString("discussionName"));
-                            discussion.setCreatorUserName(response.getString("creatorUserName"));
+                            JSONObject jsonCreator = response.getJSONObject("creator");
+                            discussion.setCreatorUserName(jsonCreator.get("name") + " " + jsonCreator.get("lastName"));
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -227,8 +228,8 @@ public class DiscusionesTab extends Fragment {
                                 Discussion discussion = new Discussion();
 
                                 JSONObject jsonDiscussion = response.getJSONObject(i);
-
-                                discussion.setCreatorUserName(jsonDiscussion.getString("creatorUserName"));
+                                JSONObject jsonCreator = jsonDiscussion.getJSONObject("creator");
+                                discussion.setCreatorUserName(jsonCreator.get("name") + " " + jsonCreator.get("lastName"));
                                 discussion.setDiscussionName(jsonDiscussion.getString("discussionName"));
                                 discussion.setCreationDate(jsonDiscussion.getString("creationDate"));
                                 discussion.setId(jsonDiscussion.getInt("id"));

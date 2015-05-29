@@ -12,8 +12,8 @@ import ar.uba.fi.fiubappREST.utils.CustomDateSerializer;
 public class DiscussionRepresentation {
 	private Integer id;
 	private Date creationDate;
-	private String creatorUserName;
 	private String discussionName;
+	private StudentProfileRepresentation creator;
 	private List<DiscussionMessageCreationRepresentation> messages;
 	
 	@JsonSerialize(using = CustomDateSerializer.class)
@@ -31,17 +31,17 @@ public class DiscussionRepresentation {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getCreatorUserName() {
-		return creatorUserName;
-	}
-	public void setCreatorUserName(String userName) {
-		this.creatorUserName = userName;
-	}
 	public String getDiscussionName() {
 		return discussionName;
 	}
 	public void setDiscussionName(String name) {
 		this.discussionName = name;
+	}
+	public StudentProfileRepresentation getCreator() {
+		return creator;
+	}
+	public void setCreator(StudentProfileRepresentation creator) {
+		this.creator = creator;
 	}
 	public List<DiscussionMessageCreationRepresentation> getMessages() {
 		return messages;

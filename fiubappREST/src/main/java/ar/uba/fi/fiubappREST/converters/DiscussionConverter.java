@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ar.uba.fi.fiubappREST.domain.Discussion;
@@ -15,11 +16,18 @@ import ar.uba.fi.fiubappREST.representations.DiscussionMessageCreationRepresenta
 
 @Component
 public class DiscussionConverter {
+	
+	private StudentProfileConverter studentConverter;
+	
+	@Autowired
+	public DiscussionConverter(StudentProfileConverter studentConverter){
+		this.studentConverter = studentConverter;
+	}
 
 	public DiscussionRepresentation convert(Discussion discussion){
 		DiscussionRepresentation discussionRepresentation = new DiscussionRepresentation();
 		discussionRepresentation.setId(discussion.getId());
-		discussionRepresentation.setCreatorUserName(discussion.getCreator().getName() + " " + discussion.getCreator().getLastName());
+		discussionRepresentation.setCreator(this.studentConverter.convert(discussion.getCreator()));
 		discussionRepresentation.setDiscussionName(discussion.getDiscussionName());	
 		discussionRepresentation.setCreationDate(discussion.getCreationDate());
 
