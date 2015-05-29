@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +33,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import ar.uba.fi.fiubappMobile.utils.DataAccess;
 import ar.uba.fi.fiubappMobile.utils.Localizador;
 
 public class Config extends Fragment {

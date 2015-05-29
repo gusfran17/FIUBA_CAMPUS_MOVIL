@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.fiubapp.fiubapp.R;
 
 public class DiscusionesTab extends Fragment {

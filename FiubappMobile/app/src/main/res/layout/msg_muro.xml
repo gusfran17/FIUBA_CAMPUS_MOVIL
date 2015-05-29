@@ -23,19 +23,10 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/username"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/nombre"
-        android:layout_marginTop="1dip"
-        android:layout_toRightOf="@+id/thumbnail"
-        android:textSize="@dimen/rating" />
-
-    <TextView
         android:id="@+id/fecha"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/username"
+        android:layout_below="@id/nombre"
         android:layout_toRightOf="@+id/thumbnail"
         android:textColor="@color/genre"
         android:textSize="@dimen/genre" />
@@ -48,15 +39,23 @@
         android:id="@+id/message"
         android:layout_below="@+id/thumbnail" />
 
+    <ImageView
+        android:layout_width="20sp"
+        android:layout_height="20sp"
+        android:id="@+id/privado"
+        android:layout_below="@+id/message"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/ic_lock"/>
+
     <Button
-        android:id="@+id/childButton"
+        android:id="@+id/msgButton"
         android:layout_width="100dp"
         android:layout_height="20dp"
-        android:text="Agregar"
+        android:text="Eliminar"
         android:focusable="false"
         android:layout_below="@+id/message"
         android:layout_centerVertical="true"
-        android:layout_alignRight="@+id/username"
+        android:layout_alignRight="@+id/fecha"
         android:background="#ff2ec7e8"/>
 
 

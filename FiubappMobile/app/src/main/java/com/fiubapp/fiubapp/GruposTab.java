@@ -39,7 +39,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ar.uba.fi.fiubappMobile.groups.GruposTabs;
-import ar.uba.fi.fiubappMobile.notifications.ApplicationNotification;
 
 public class GruposTab extends Fragment {
 

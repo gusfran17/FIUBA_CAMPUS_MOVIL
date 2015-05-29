@@ -37,7 +37,7 @@ public class PerfilTabsCompaneroAdapter extends FragmentPagerAdapter{
                 return Perfil_personal.newContact(companero);
             case 1:
                 if(this.companero.isMyMate())
-                    return new Perfil_apuntes();
+                    return MuroTab.newContact(companero);
                 else
                     return Perfil_fiuba.newContact(companero);
             case 2:

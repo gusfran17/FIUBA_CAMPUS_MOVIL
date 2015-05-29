@@ -1,20 +1,13 @@
 package com.fiubapp.fiubapp;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.graphics.Typeface;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.maps.model.LatLng;
-
-import ar.uba.fi.fiubappMobile.utils.Localizador;
 
 public class PerfilTabs extends FragmentActivity {
 

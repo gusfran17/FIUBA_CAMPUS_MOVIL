@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_below="@+id/header_profile"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="0dp">
 
         <com.fiubapp.fiubapp.TabPageIndicator
             android:id="@+id/indicator_perfil"
