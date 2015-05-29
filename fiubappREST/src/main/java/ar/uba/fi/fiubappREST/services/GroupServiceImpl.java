@@ -283,40 +283,6 @@ public class GroupServiceImpl implements GroupService {
 		LOGGER.info(String.format(userName + " is a member of group " + groupId + "."));
 	}
 	
-	@Override
-	public Set<DiscussionMessageRepresentation> findGroupDiscussionMessagesForMember(Integer groupId, Integer discussionId, String userName) {
-		verifyGroupMember(groupId, userName);
-		LOGGER.info(String.format("Finding discussions for groupId " + groupId + "."));
-		Group group = this.groupRepository.findOne(groupId);
-		if(group==null){
-			LOGGER.error(String.format("Group with id %s does not exist.", userName, groupId ));
-			throw new GroupNotFoundException(groupId);
-		}
-		Set <Discussion> discussions = group.getDiscussions();
-		Iterator<Discussion> iterator = discussions.iterator();
-		Discussion discussion = null;
-		boolean found = false;
-		while(iterator.hasNext()){
-			discussion = iterator.next();
-			if (discussion.getId()==discussionId) {
-				found = true;
-				break;
-			}
-		}
-		if (found==false){
-			LOGGER.error(String.format("Discussion with id %s does not exist in discussion %s.", groupId, discussionId ));
-			throw new DiscussionNotFoundInGroupException(discussionId, groupId);	
-		}
-		LOGGER.info(String.format("Discussion " + discussionId + " was found for groupId "+ groupId + "."));
-		Set<DiscussionMessage> discussionMessages = discussion.getMessages();
-		Set<DiscussionMessageRepresentation> messagesRepresentation = new HashSet<DiscussionMessageRepresentation>();
-		Iterator<DiscussionMessage> mIterator = discussionMessages.iterator();
-		while(mIterator.hasNext()){
-			DiscussionMessage message = mIterator.next();
-			DiscussionMessageRepresentation messageRepresentation = this.discussionMessageConverter.convert(message);
-			messagesRepresentation.add(messageRepresentation);
-		}
-		return messagesRepresentation;
-	}
+
 
 }

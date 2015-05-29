@@ -26,22 +26,22 @@ import ar.uba.fi.fiubappREST.services.StudentSessionService;
 @RequestMapping("groups")
 public class DiscussionController {
 	
-	private GroupService groupService;
 	private StudentSessionService studentSessionService;
 	private DiscussionService discussionService;
+	private GroupService groupService;
 	
 	@Autowired
-	public DiscussionController(GroupService groupService, StudentSessionService studentSessionService, DiscussionService discussionService) {
+	public DiscussionController(StudentSessionService studentSessionService, DiscussionService discussionService, GroupService groupService) {
 		super();
-		this.groupService = groupService;
 		this.studentSessionService = studentSessionService;
 		this.discussionService = discussionService;
+		this.groupService = groupService;
 	}
 	
 	@RequestMapping(value="{groupId}/discussions", method = RequestMethod.GET)
 	public @ResponseBody Set<DiscussionRepresentation> getDiscussionsForGroup(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId) {
 		StudentSession studentSession = this.studentSessionService.find(token);
-		Set<DiscussionRepresentation> discussions = this.groupService.findGroupDiscussionsForMember(groupId, studentSession.getUserName());	
+		Set<DiscussionRepresentation> discussions = this.discussionService.findGroupDiscussionsForMember(groupId, studentSession.getUserName());	
 		return discussions;
 	}
 	
@@ -55,7 +55,7 @@ public class DiscussionController {
 	@RequestMapping(value="{groupId}/discussions/{discussionId}/messages", method = RequestMethod.GET)
 	public @ResponseBody Set<DiscussionMessageRepresentation> getMessagesForGroupDiscussion(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @PathVariable Integer discussionId) {
 		StudentSession studentSession = this.studentSessionService.find(token);
-		Set<DiscussionMessageRepresentation> messages = this.groupService.findGroupDiscussionMessagesForMember(groupId, discussionId, studentSession.getUserName());	
+		Set<DiscussionMessageRepresentation> messages = this.discussionService.findGroupDiscussionMessagesForMember(groupId, discussionId, studentSession.getUserName());	
 		return messages;
 	}
 	

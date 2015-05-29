@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
-import ar.uba.fi.fiubappREST.representations.DiscussionMessageRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
@@ -34,8 +33,5 @@ public interface GroupService {
 	public void updatePicture(Integer groupId, MultipartFile image, String userName);
 
 	public Set<DiscussionRepresentation> findGroupDiscussionsForMember(Integer groupId, String string);
-
-	public Set<DiscussionMessageRepresentation> findGroupDiscussionMessagesForMember(Integer groupId, Integer discussionId, String userName);
-
 
 }
