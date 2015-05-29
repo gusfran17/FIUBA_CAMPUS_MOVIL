@@ -217,6 +217,12 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
+	@ExceptionHandler(DiscussionNotFoundInGroupException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(DiscussionNotFoundInGroupException exception){
+		return buildResponse(exception);
+	}
+	
 	@ExceptionHandler(RuntimeException.class)
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR) 
 	public @ResponseBody ErrorResponse handle(RuntimeException exception){

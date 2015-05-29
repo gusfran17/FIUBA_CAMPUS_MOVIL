@@ -2,6 +2,7 @@ package ar.uba.fi.fiubappREST.representations;
 
 import java.util.Date;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -26,10 +27,12 @@ public class MessageCreationRepresentation {
 		return creationDate;
 	}
 	
+	@JsonIgnore
 	@JsonDeserialize(using = CustomDateDeserializerDetailed.class)
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
+	
 	public String getCreatorUserName() {
 		return creatorUserName;
 	}

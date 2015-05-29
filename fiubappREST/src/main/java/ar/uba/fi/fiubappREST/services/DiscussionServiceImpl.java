@@ -2,6 +2,7 @@ package ar.uba.fi.fiubappREST.services;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.Group;
 import ar.uba.fi.fiubappREST.domain.Message;
 import ar.uba.fi.fiubappREST.domain.Student;
+import ar.uba.fi.fiubappREST.exceptions.DiscussionNotFoundInGroupException;
 import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.persistance.DiscussionRepository;
@@ -21,6 +23,7 @@ import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
+import ar.uba.fi.fiubappREST.representations.MessageCreationRepresentation;
 
 @Service
 public class DiscussionServiceImpl implements DiscussionService{
@@ -88,6 +91,39 @@ public class DiscussionServiceImpl implements DiscussionService{
 			throw new StudentNotFoundException(userName); 
 		}
 		return student;
+	}
+
+	@Override
+	public Message createMessage(MessageCreationRepresentation messageRepresentation, Integer groupId, Integer discussionId) {
+		Group group = this.findGroup(groupId);
+		Student student = this.findStudent(messageRepresentation.getCreatorUserName());
+		Discussion discussion = findDiscussion(groupId, discussionId, group);
+		
+		Message message = new Message();
+		message.setCreationDate(new Date());
+		message.setCreator(student);
+		message.setMessage(messageRepresentation.getMessage());
+		discussion.addMessage(message);
+		
+		discussionRepository.save(discussion);
+		groupRepository.save(group);
+		return message;
+	}
+
+	private Discussion findDiscussion(Integer groupId, Integer discussionId, Group group) {
+		Set <Discussion> discussions = group.getDiscussions();
+		Iterator<Discussion> iterator = discussions.iterator();
+		Discussion discussion = null;
+		boolean found = false;
+		while(iterator.hasNext()){
+			discussion = iterator.next();
+			if (discussion.getId()==discussionId) found = true;
+		}
+		if (found==false){
+			LOGGER.error(String.format("Discussion with id %s does not exist in discussion %s.", groupId, discussionId ));
+			throw new DiscussionNotFoundInGroupException(discussionId, groupId);	
+		}
+		return discussion;
 	}
 	
 }
