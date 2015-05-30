@@ -54,15 +54,15 @@ public class DiscussionController {
 
 	@RequestMapping(value="{groupId}/discussions/{discussionId}/messages", method = RequestMethod.GET)
 	public @ResponseBody Set<DiscussionMessageRepresentation> getMessagesForGroupDiscussion(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @PathVariable Integer discussionId) {
-		StudentSession studentSession = this.studentSessionService.find(token);
-		Set<DiscussionMessageRepresentation> messages = this.discussionService.findGroupDiscussionMessagesForMember(groupId, discussionId, studentSession.getUserName());	
+		Session session = this.sessionService.findStudentSession(token);
+		Set<DiscussionMessageRepresentation> messages = this.discussionService.findGroupDiscussionMessagesForMember(groupId, discussionId, session.getUserName());	
 		return messages;
 	}
 	
 	@RequestMapping(value="{groupId}/discussions/{discussionId}/messages", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public @ResponseBody DiscussionMessageRepresentation createGroupDiscussionMessage(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @PathVariable Integer discussionId, @RequestBody DiscussionMessageCreationRepresentation messageRepresentation) {
-		this.studentSessionService.validateMine(token, messageRepresentation.getCreatorUserName());
+		this.sessionService.validateThisStudent(token, messageRepresentation.getCreatorUserName());
 		return this.discussionService.createMessage(messageRepresentation, groupId, discussionId);
 	}
 
