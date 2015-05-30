@@ -20,10 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.fiubapp.fiubapp.Popup;
 import com.fiubapp.fiubapp.R;
 import com.fiubapp.fiubapp.VolleyController;
@@ -33,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -106,20 +110,22 @@ public class DiscussionActivity extends Activity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 if (edtvw_message.getText().toString().equals("")) {
-                                    Popup.showText(activity, "El comentario no puede ser vacio.", Toast.LENGTH_LONG).show();
+                                    Popup.showText(activity, "El mensaje no puede ser vacio.", Toast.LENGTH_LONG).show();
                                     setCreateMessage();
-                                } else {
-                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                                } else if (edtvw_message.getText().length() > 140) {
+                                    Popup.showText(activity, "El mensaje no puede superar los 140 caracteres.", Toast.LENGTH_LONG).show();
+                                }else {
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 
-                                    Message message = new Message();
-                                    message.setText(edtvw_message.getText().toString());
-                                    message.setCreationDate(simpleDateFormat.format(new Date()));
-                                    message.setCreatorUserName(creator);
-                                    createMessage(message);
-                                }
+                                Message message = new Message();
+                                message.setText(edtvw_message.getText().toString());
+                                message.setCreationDate(simpleDateFormat.format(new Date()));
+                                message.setCreatorUserName(creator);
+                                createMessage(message);
                             }
-                        })
+                        }
+    })
                 .setNegativeButton("Cancelar",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -133,6 +139,76 @@ public class DiscussionActivity extends Activity {
     }
 
     private void createMessage(Message message) {
+
+        final Activity activity = this;
+
+        String requestURL = urlAPI + "/groups/" + this.groupId + "/discussions/" + this.id + "/messages";
+        JSONObject jsonNewDiscussion = new JSONObject();
+
+        try {
+            jsonNewDiscussion.put("message", message.getText());
+            jsonNewDiscussion.put("creatorUserName", message.getCreatorUserName());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                requestURL,
+                jsonNewDiscussion,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Message message = new Message();
+                        DataAccess dataAccess = new DataAccess(activity);
+                        String userName = dataAccess.getUserName();
+                        try {
+                            message.setCreationDate(response.getString("creationDate"));
+                            message.setText(response.getString("message"));
+                            JSONObject jsonCreator = response.getJSONObject("creator");
+                            message.setCreatorUserName(jsonCreator.get("name") + " " + jsonCreator.get("lastName"));
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        messagesList.add(message);
+                        messagesAdapter.notifyDataSetChanged();
+                        Popup.showText(activity, "Comentario guardado correctamente.", Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //parseo la respuesta del server para obtener JSON
+                        String body = null;
+                        try {
+                            body = new String(error.networkResponse.data, HttpHeaderParser.parseCharset(error.networkResponse.headers));
+
+                            JSONObject JSONBody = new JSONObject(body);
+                            String errorCode = JSONBody.getString("code");
+                            String errorMessage = JSONBody.getString("message");
+                            Popup.showText(activity, errorMessage, Toast.LENGTH_LONG).show();
+                            setCreateMessage();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }){
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                SharedPreferences settings = activity.getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
+                String token = settings.getString("token", null);
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", token);
+                return headers;
+            }
+        };
+
+        VolleyController.getInstance().addToRequestQueue(jsObjRequest);
+
     }
 
     private void fillMesaagesList() {

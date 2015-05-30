@@ -27,19 +27,24 @@
             android:textSize="18sp" />
 
     </LinearLayout>
-
-    <ListView
+    <LinearLayout
+        android:id="@+id/lstVw_messages_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/lstVw_messages"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/header_profile"/>
+        android:layout_below="@+id/header_profile">
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lstVw_messages"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"/>
+
+    </LinearLayout>
 
     <TableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/lstVw_messages"
         android:layout_alignParentBottom="true"
         android:stretchColumns="0,1">
         <TableRow>

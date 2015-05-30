@@ -39,6 +39,7 @@ public class DiscussionController {
 	}
 	
 	@RequestMapping(value="{groupId}/discussions", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody Set<DiscussionRepresentation> getDiscussionsForGroup(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId) {
 		StudentSession studentSession = this.studentSessionService.find(token);
 		Set<DiscussionRepresentation> discussions = this.groupService.findGroupDiscussionsForMember(groupId, studentSession.getUserName());	
@@ -53,6 +54,7 @@ public class DiscussionController {
 	}
 
 	@RequestMapping(value="{groupId}/discussions/{discussionId}/messages", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody Set<DiscussionMessageRepresentation> getMessagesForGroupDiscussion(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @PathVariable Integer discussionId) {
 		StudentSession studentSession = this.studentSessionService.find(token);
 		Set<DiscussionMessageRepresentation> messages = this.discussionService.findGroupDiscussionMessagesForMember(groupId, discussionId, studentSession.getUserName());	

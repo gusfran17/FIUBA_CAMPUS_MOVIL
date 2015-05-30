@@ -21,6 +21,7 @@ import ar.uba.fi.fiubappREST.exceptions.DiscussionNotFoundInGroupException;
 import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.StudentIsNotMemberOfGroupException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
+import ar.uba.fi.fiubappREST.persistance.DiscussionMessageRepository;
 import ar.uba.fi.fiubappREST.persistance.DiscussionRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
@@ -35,22 +36,24 @@ public class DiscussionServiceImpl implements DiscussionService{
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DiscussionServiceImpl.class);
 	
-	private DiscussionRepository discussionRepository;
 	private GroupRepository groupRepository;
 	private StudentRepository studentRepository;
+	private DiscussionRepository discussionRepository;
+	private DiscussionMessageRepository discussionMessageRepository;
 	private DiscussionConverter discussionConverter;
 	private DiscussionMessageConverter discussionMessageConverter;
 	
 	private GroupConverter groupConverter;
 	
 	@Autowired
-	public DiscussionServiceImpl(DiscussionRepository discussionRepository, GroupRepository groupRepository, StudentRepository studentRepository, DiscussionConverter discussionConverter, DiscussionMessageConverter discussionMessageConverter, GroupConverter groupConverter){
+	public DiscussionServiceImpl(DiscussionRepository discussionRepository, GroupRepository groupRepository, StudentRepository studentRepository, DiscussionMessageRepository discussionMessageRepository, DiscussionConverter discussionConverter, DiscussionMessageConverter discussionMessageConverter, GroupConverter groupConverter){
 		this.discussionRepository = discussionRepository;
 		this.groupRepository = groupRepository;
 		this.studentRepository = studentRepository;
 		this.discussionConverter = discussionConverter;
 		this.discussionMessageConverter = discussionMessageConverter;
 		this.groupConverter = groupConverter;
+		this.discussionMessageRepository = discussionMessageRepository;
 
 	}
 	
@@ -190,7 +193,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 			throw new DiscussionNotFoundInGroupException(discussionId, groupId);	
 		}
 		LOGGER.info(String.format("Discussion " + discussionId + " was found for groupId "+ groupId + "."));
-		Set<DiscussionMessage> discussionMessages = discussion.getMessages();
+		Set<DiscussionMessage> discussionMessages = discussionMessageRepository.findMessagesByProperties(discussionId);//discussion.getMessages();
 		Set<DiscussionMessageRepresentation> messagesRepresentation = new HashSet<DiscussionMessageRepresentation>();
 		Iterator<DiscussionMessage> mIterator = discussionMessages.iterator();
 		while(mIterator.hasNext()){
