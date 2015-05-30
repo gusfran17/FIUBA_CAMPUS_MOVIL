@@ -13,29 +13,35 @@ public class DiscussionRepresentation {
 	private Integer id;
 	private Date creationDate;
 	private String discussionName;
+	private Integer messagesAmount;
 	private StudentProfileRepresentation creator;
 	private List<DiscussionMessageCreationRepresentation> messages;
 	
-	@JsonSerialize(using = CustomDateSerializer.class)
-	public Date getCreationDate() {
-		return creationDate;
-	}
-	
-	@JsonDeserialize(using = CustomDateDeserializer.class)	
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
-	}
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	@JsonSerialize(using = CustomDateSerializer.class)
+	public Date getCreationDate() {
+		return creationDate;
+	}
+	@JsonDeserialize(using = CustomDateDeserializer.class)	
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
 	public String getDiscussionName() {
 		return discussionName;
 	}
 	public void setDiscussionName(String name) {
 		this.discussionName = name;
+	}
+	public Integer getMessagesAmount() {
+		return messagesAmount;
+	}
+	public void setMessagesAmount(Integer messagesAmount) {
+		this.messagesAmount = messagesAmount;
 	}
 	public StudentProfileRepresentation getCreator() {
 		return creator;

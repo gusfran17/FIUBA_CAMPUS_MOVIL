@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.fiubapp.fiubapp.R;
 import com.fiubapp.fiubapp.dominio.Discussion;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 /**
@@ -55,11 +57,13 @@ public class DiscussionsAdapter extends BaseAdapter {
         TextView lbl_discussion_name = (TextView) convertView.findViewById(R.id.lbl_discussion_name);
         TextView lbl_creator_name = (TextView) convertView.findViewById(R.id.lbl_creator_name);
         TextView lbl_creation_date_value = (TextView) convertView.findViewById(R.id.lbl_creation_date_value);
+        TextView lbl_messages_amount = (TextView) convertView.findViewById(R.id.lbl_messages_amount);
 
         final Discussion discussion = this.discussionItems.get(i);
         lbl_discussion_name.setText(discussion.getDiscussionName());
         lbl_creator_name.setText(discussion.getCreatorUserName());
         lbl_creation_date_value.setText(discussion.getCreationDate());
+        lbl_messages_amount.setText(discussion.getMessagesAmount() + " comentarios");
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override

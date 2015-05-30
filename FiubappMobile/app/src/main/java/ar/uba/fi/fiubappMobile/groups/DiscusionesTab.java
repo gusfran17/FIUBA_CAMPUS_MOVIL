@@ -168,6 +168,7 @@ public class DiscusionesTab extends Fragment {
                             discussion.setId(response.getInt("id"));
                             discussion.setCreationDate(response.getString("creationDate"));
                             discussion.setDiscussionName(response.getString("discussionName"));
+                            discussion.setMessagesAmount(response.getInt("messagesAmount"));
                             JSONObject jsonCreator = response.getJSONObject("creator");
                             discussion.setCreatorUserName(jsonCreator.get("name") + " " + jsonCreator.get("lastName"));
 
@@ -233,6 +234,7 @@ public class DiscusionesTab extends Fragment {
                                 discussion.setDiscussionName(jsonDiscussion.getString("discussionName"));
                                 discussion.setCreationDate(jsonDiscussion.getString("creationDate"));
                                 discussion.setId(jsonDiscussion.getInt("id"));
+                                discussion.setMessagesAmount(jsonDiscussion.getInt("messagesAmount"));
 
                                 discussionList.add(discussion);
 

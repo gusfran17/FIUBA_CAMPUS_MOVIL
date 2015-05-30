@@ -46,6 +46,7 @@ public class DiscussionConverter {
 			
 		}
 		discussionRepresentation.setMessages(messagesRepresentation);
+		discussionRepresentation.setMessagesAmount(messagesRepresentation.size());
 		return discussionRepresentation;
 	}
 
