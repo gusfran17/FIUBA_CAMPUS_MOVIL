@@ -63,6 +63,8 @@ public class Student {
 	private String nationality;
 	
 	private String comments;
+	
+	private StudentState state;
 
 	@Enumerated
 	private Gender gender;
@@ -200,6 +202,14 @@ public class Student {
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+
+	public StudentState getState() {
+		return state;
+	}
+
+	public void setState(StudentState state) {
+		this.state = state;
 	}
 
 	public Gender getGender() {

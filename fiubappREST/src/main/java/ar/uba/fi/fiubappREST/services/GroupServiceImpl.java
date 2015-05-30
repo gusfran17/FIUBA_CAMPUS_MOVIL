@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -20,19 +21,26 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import ar.uba.fi.fiubappREST.converters.DiscussionConverter;
 import ar.uba.fi.fiubappREST.converters.GroupConverter;
+import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.Group;
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
+import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
 import ar.uba.fi.fiubappREST.domain.Student;
+import ar.uba.fi.fiubappREST.exceptions.DiscussionNotFoundInGroupException;
 import ar.uba.fi.fiubappREST.exceptions.GroupAlreadyExistsException;
 import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
+import ar.uba.fi.fiubappREST.exceptions.StudentIsNotMemberOfGroupException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotCreatorOfGroupException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.UnexpectedErrorReadingProfilePictureFileException;
 import ar.uba.fi.fiubappREST.exceptions.UnsupportedMediaTypeForProfilePictureException;
+import ar.uba.fi.fiubappREST.persistance.DiscussionRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupPictureRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
+import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupUpdateRepresentation;
@@ -45,17 +53,21 @@ public class GroupServiceImpl implements GroupService {
 	private GroupRepository groupRepository;
 	private StudentRepository studentRepository;
 	private GroupPictureRepository groupPictureRepository;
+	private DiscussionRepository discussionRepository;
 	private GroupConverter groupConverter;
+	private DiscussionConverter discussionConverter;
 	
 	@Value("classpath:defaultGroupPicture.png")
 	private Resource defaultGroupPicture;
 		
 	@Autowired
-	public GroupServiceImpl(GroupRepository groupRepository, StudentRepository studentRepository, GroupPictureRepository groupPictureRepository, GroupConverter groupConverter){
+	public GroupServiceImpl(GroupRepository groupRepository, StudentRepository studentRepository, GroupPictureRepository groupPictureRepository, DiscussionRepository discussionRepository, GroupConverter groupConverter, DiscussionConverter discussionConverter){
 		this.groupRepository = groupRepository;
 		this.studentRepository = studentRepository;
 		this.groupPictureRepository = groupPictureRepository;
 		this.groupConverter = groupConverter;
+		this.discussionConverter = discussionConverter;
+		this.discussionRepository = discussionRepository;
 	}
 
 	@Override
@@ -254,4 +266,59 @@ public class GroupServiceImpl implements GroupService {
 	public void setDefaultGroupPicture(Resource defaultProfilePicture) {
 		this.defaultGroupPicture = defaultProfilePicture;
 	}
+	
+	@Override
+	public Set<DiscussionRepresentation> findGroupDiscussionsForMember(Integer groupId, String userName) {
+		verifyGroupMember(groupId, userName);
+		LOGGER.info(String.format("Finding sicussions for groupId " + groupId + "."));
+		Group group = this.groupRepository.findOne(groupId);
+		if(group==null){
+			LOGGER.error(String.format("Group with id %s does not exist.", groupId ));
+			throw new GroupNotFoundException(groupId);
+		}
+		Set<Discussion> discussions = group.getDiscussions();
+		Set<DiscussionRepresentation> discussionsRepresentation = new HashSet<DiscussionRepresentation>();
+		Iterator<Discussion> iterator = discussions.iterator();
+		Discussion discussion = new Discussion();
+		while (iterator.hasNext()){
+			discussion = iterator.next();
+			discussionsRepresentation.add(discussionConverter.convert(discussion));
+		}
+		
+		
+		LOGGER.info(String.format("All discussions for groupId "+ groupId + " were found."));
+		return discussionsRepresentation;
+	}
+
+	private void verifyGroupMember(Integer groupId, String userName) {
+		GroupRepresentation groupRepresentation = this.findGroupForStudent(groupId, userName);
+		if (!groupRepresentation.getAmIAMember()){
+			throw new StudentIsNotMemberOfGroupException(userName, groupId);
+		}
+		LOGGER.info(String.format(userName + " is a member of group " + groupId + "."));
+	}
+	
+	@Override
+	public Set<DiscussionMessage> findGroupDiscussionMessagesForMember(Integer groupId, Integer discussionId, String userName) {
+		verifyGroupMember(groupId, userName);
+		LOGGER.info(String.format("Finding discussions for groupId " + groupId + "."));
+		Set <Discussion> discussions = discussionRepository.findByProperties(groupId);
+		Iterator<Discussion> iterator = discussions.iterator();
+		Discussion discussion = null;
+		boolean found = false;
+		while(iterator.hasNext()){
+			discussion = iterator.next();
+			if (discussion.getId()==discussionId) {
+				found = true;
+				break;
+			}
+		}
+		if (found==false){
+			LOGGER.error(String.format("Discussion with id %s does not exist in discussion %s.", groupId, discussionId ));
+			throw new DiscussionNotFoundInGroupException(discussionId, groupId);	
+		}
+		LOGGER.info(String.format("Discussion " + discussionId + " was found for groupId "+ groupId + "."));
+		return discussion.getMessages();
+	}
+	
 }

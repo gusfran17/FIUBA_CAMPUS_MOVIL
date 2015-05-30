@@ -17,27 +17,27 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.domain.ProfilePicture;
 import ar.uba.fi.fiubappREST.services.ProfilePictureService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 @Controller
 @RequestMapping("students/{userName}/picture")
 public class ProfilePictureController {	
 	
 	private ProfilePictureService profilePictureService;
-	private StudentSessionService studentSessionService;
+	private SessionService sessionService;
 	
 	@Autowired
-	public ProfilePictureController(ProfilePictureService profilePictureService, StudentSessionService studentSessionService) {
+	public ProfilePictureController(ProfilePictureService profilePictureService, SessionService sessionService) {
 		super();
 		this.profilePictureService = profilePictureService;
-		this.studentSessionService = studentSessionService;
+		this.sessionService = sessionService;
 	}
 		
 			
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public @ResponseBody void updateProfilePicture(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestParam("image") MultipartFile image) {
-		this.studentSessionService.validateMine(token, userName);
+		this.sessionService.validateThisStudent(token, userName);
 		this.profilePictureService.update(userName, image);
 	}
 	

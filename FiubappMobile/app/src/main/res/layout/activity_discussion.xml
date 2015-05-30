@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ar.uba.fi.fiubappMobile.groups.Discussions.DiscussionActivity">
+
+    <LinearLayout android:id="@+id/header_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dip"
+        android:paddingBottom="10dip"
+        android:background="#ff2ec7e8">
+
+        <ImageView android:src="@drawable/ic_arrow"
+            android:id="@+id/btn_mssg_back"
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            android:layout_marginLeft="10dip"/>
+
+        <TextView android:id="@+id/lbl_discussion_header"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:textColor="#372c24"
+            android:text="Discusion X"
+            android:gravity="center_vertical|left|right"
+            android:paddingLeft="10dp"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lstVw_messages"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/header_profile"/>
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/lstVw_messages"
+        android:layout_alignParentBottom="true"
+        android:stretchColumns="0,1">
+        <TableRow>
+
+            <Button android:id="@+id/lblAddMessage"
+                android:layout_width="fill_parent"
+                android:layout_height="40dip"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:background="#ff2ec7e8"
+                android:text="@string/lblAddMessage"/>
+        </TableRow>
+    </TableLayout>
+
+
+</RelativeLayout>

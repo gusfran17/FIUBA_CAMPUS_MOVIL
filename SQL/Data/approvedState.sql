@@ -1,0 +1,1 @@
+UPDATE `mobile-campus`.student SET `state` = 1;

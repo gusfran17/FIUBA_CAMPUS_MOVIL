@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import ar.uba.fi.fiubappREST.domain.CareerProgress;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 import ar.uba.fi.fiubappREST.services.SubjectService;
 
 @Controller
@@ -19,18 +19,18 @@ import ar.uba.fi.fiubappREST.services.SubjectService;
 public class SubjectController {
 	
 	private SubjectService subjectService;
-	private StudentSessionService studentSessionService;
+	private SessionService sessionService;
 	
 	@Autowired
-	public SubjectController(SubjectService subjectService, StudentSessionService studentSessionService){
+	public SubjectController(SubjectService subjectService, SessionService sessionService){
 		this.subjectService = subjectService;
-		this.studentSessionService = studentSessionService;
+		this.sessionService = sessionService;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody CareerProgress getSubjects(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @PathVariable Integer careerCode) {
-		this.studentSessionService.validateMineOrMate(token, userName);
+		this.sessionService.validateThisStudentOrMate(token, userName);
 		return this.subjectService.getCareerProgress(careerCode, userName);
 	}
 

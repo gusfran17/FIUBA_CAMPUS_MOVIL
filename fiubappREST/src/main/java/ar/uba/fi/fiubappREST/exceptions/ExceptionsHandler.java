@@ -83,15 +83,27 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
-	@ExceptionHandler(StudentSessionNotFoundException.class)
+	@ExceptionHandler(SessionNotFoundException.class)
 	@ResponseStatus(value = HttpStatus.FORBIDDEN) 
-	public @ResponseBody ErrorResponse handle(StudentSessionNotFoundException exception){
+	public @ResponseBody ErrorResponse handle(SessionNotFoundException exception){
 		return buildResponse(exception);
 	}
 	
 	@ExceptionHandler(OperationNotAllowedFotStudentSessionException.class)
 	@ResponseStatus(value = HttpStatus.FORBIDDEN) 
 	public @ResponseBody ErrorResponse handle(OperationNotAllowedFotStudentSessionException exception){
+		return buildResponse(exception);
+	}
+	
+	@ExceptionHandler(StudentNotYetApprovedException.class)
+	@ResponseStatus(value = HttpStatus.FORBIDDEN) 
+	public @ResponseBody ErrorResponse handle(StudentNotYetApprovedException exception){
+		return buildResponse(exception);
+	}
+	
+	@ExceptionHandler(StudentSuspendedException.class)
+	@ResponseStatus(value = HttpStatus.FORBIDDEN) 
+	public @ResponseBody ErrorResponse handle(StudentSuspendedException exception){
 		return buildResponse(exception);
 	}
 	
@@ -211,6 +223,18 @@ public class ExceptionsHandler {
 		return new ErrorResponse(exception.getCode(), exception.getMessage());
 	}
 		
+	@ExceptionHandler(StudentIsNotMemberOfGroupException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(StudentIsNotMemberOfGroupException exception){
+		return buildResponse(exception);
+	}
+	
+	@ExceptionHandler(DiscussionNotFoundInGroupException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(DiscussionNotFoundInGroupException exception){
+		return buildResponse(exception);
+	}
+	
 	@ExceptionHandler(RuntimeException.class)
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR) 
 	public @ResponseBody ErrorResponse handle(RuntimeException exception){

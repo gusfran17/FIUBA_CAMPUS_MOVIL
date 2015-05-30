@@ -13,47 +13,47 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import ar.uba.fi.fiubappREST.domain.HighSchool;
 import ar.uba.fi.fiubappREST.services.HighSchoolService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 @Controller
 @RequestMapping("students/{userName}/highSchool")
 public class HighSchoolController {	
 	
 	private HighSchoolService highSchoolService;
-	private StudentSessionService studentSessionService;
+	private SessionService sessionService;
 	
 	@Autowired
-	public HighSchoolController(HighSchoolService highSchoolService, StudentSessionService studentSessionService) {
+	public HighSchoolController(HighSchoolService highSchoolService, SessionService sessionService) {
 		super();
 		this.highSchoolService = highSchoolService;
-		this.studentSessionService = studentSessionService;
+		this.sessionService = sessionService;
 	}
 		
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public @ResponseBody HighSchool addHigSchoolInformation(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestBody HighSchool highSchool) {
-		this.studentSessionService.validateMine(token, userName);
+		this.sessionService.validateThisStudent(token, userName);
 		return this.highSchoolService.create(userName, highSchool);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody HighSchool getHigSchoolInformation(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
-		this.studentSessionService.validateMineOrMate(token, userName);
+		this.sessionService.validateThisStudentOrMate(token, userName);
 		return this.highSchoolService.findByUserName(userName);
 	}
 	
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public @ResponseBody void deleteHigSchoolInformation(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
-		this.studentSessionService.validateMine(token, userName);
+		this.sessionService.validateThisStudent(token, userName);
 		this.highSchoolService.delete(userName);
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody HighSchool updateHigSchoolInformation(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestBody HighSchool highSchool) {
-		this.studentSessionService.validateMine(token, userName);
+		this.sessionService.validateThisStudent(token, userName);
 		return this.highSchoolService.update(userName, highSchool);
 	}
 }

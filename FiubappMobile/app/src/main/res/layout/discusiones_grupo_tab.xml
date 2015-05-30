@@ -2,11 +2,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Discusiones"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+        android:id="@+id/lstVw_discussions"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true" />
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/lstVw_discussions"
+        android:layout_alignParentBottom="true"
+        android:stretchColumns="0,1">
+        <TableRow>
+
+            <Button android:id="@+id/btnCreateDiscussion"
+                android:layout_width="fill_parent"
+                android:layout_height="40dip"
+                android:background="#ff2ec7e8"
+                android:text="@string/creatDiscussion"/>
+        </TableRow>
+    </TableLayout>
+
 
 </RelativeLayout>

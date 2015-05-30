@@ -11,7 +11,7 @@ import org.mockito.Mock;
 
 import ar.uba.fi.fiubappREST.domain.LocationConfiguration;
 import ar.uba.fi.fiubappREST.services.ConfigurationService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 public class ConfigurationControllerTest {
 	
@@ -23,14 +23,14 @@ public class ConfigurationControllerTest {
 	@Mock
 	private ConfigurationService service;
 	@Mock
-	private StudentSessionService studentSessionService;
+	private SessionService studentSessionService;
 	@Mock
 	private LocationConfiguration locationConfiguration;
 	
 	@Before
 	public void setUp(){
 		this.service = mock(ConfigurationService.class);
-		this.studentSessionService = mock(StudentSessionService.class);
+		this.studentSessionService = mock(SessionService.class);
 		this.controller = new ConfigurationController(service, studentSessionService);
 		
 		this.locationConfiguration = mock(LocationConfiguration.class);
@@ -38,7 +38,7 @@ public class ConfigurationControllerTest {
 
 	@Test
 	public void testGetLocationConfiguration() {
-		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 		when(service.getLocationConfiguration(AN_USER_NAME)).thenReturn(locationConfiguration);
 				
 		LocationConfiguration savedLocationConfiguration = this.controller.getLocationConfiguration(A_TOKEN, AN_USER_NAME);
@@ -48,7 +48,7 @@ public class ConfigurationControllerTest {
 		
 	@Test
 	public void testUpdateLocationConfiguration() {
-		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 		when(service.updateLocationConfiguration(AN_USER_NAME, locationConfiguration)).thenReturn(locationConfiguration);
 				
 		LocationConfiguration updatedLocationConfiguration = this.controller.updateLocationNotification(A_TOKEN, AN_USER_NAME, locationConfiguration);

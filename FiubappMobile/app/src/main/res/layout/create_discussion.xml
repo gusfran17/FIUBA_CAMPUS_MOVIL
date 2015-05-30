@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/d_job_header"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <TextView
+            android:id="@+id/txtvw_discussion_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txtvw_discussion_name"
+            android:textColor="#ffffff"
+            android:layout_alignBaseline="@+id/edtvw_discussion_name"
+            android:layout_alignBottom="@+id/edtvw_discussion_name" />
+
+        <EditText
+            android:id="@+id/edtvw_discussion_name"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15px"
+            android:layout_toRightOf="@+id/txtvw_discussion_name" />
+
+        <TextView
+            android:id="@+id/txtvw_first_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txtvw_first_message"
+            android:textColor="#ffffff"
+            android:layout_alignBaseline="@+id/edtvw_first_message"
+            android:layout_alignBottom="@+id/edtvw_first_message"/>
+
+        <EditText
+            android:id="@+id/edtvw_first_message"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15px"
+            android:layout_marginTop="5px"
+            android:layout_toRightOf="@+id/txtvw_first_message"
+            android:layout_below="@+id/edtvw_discussion_name"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
