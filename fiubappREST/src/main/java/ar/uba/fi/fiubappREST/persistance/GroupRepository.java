@@ -20,5 +20,6 @@ public interface GroupRepository extends CrudRepository<Group, Integer> {
 			+ ")"
 			, nativeQuery = true)
 	public List<Group> findByProperties(String name);
+
 	
 }

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/career_header"
+        android:background="#ff2ec7e8">
+        <TextView
+            android:id="@+id/lbl_discussion_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:text=""/>
+
+        <TextView
+            android:id="@+id/lbl_creator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:textColor="#FFFFFF"
+            android:text="@string/lbl_created_by"
+            android:layout_below="@+id/lbl_discussion_name"/>
+
+        <TextView
+            android:id="@+id/lbl_creator_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="15px"
+            android:layout_toRightOf="@+id/lbl_creator"
+            android:layout_below="@+id/lbl_discussion_name"/>
+
+        <TextView
+            android:id="@+id/lbl_creation_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:textColor="#FFFFFF"
+            android:text="@string/lbl_creation_date"
+            android:visibility="gone"
+            android:layout_below="@+id/lbl_creator"/>
+
+        <TextView
+            android:id="@+id/lbl_creation_date_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fecha"
+            android:layout_marginLeft="30dp"
+            android:textColor="#DDDDDD"
+            android:layout_toRightOf="@+id/lbl_creation_date"
+            android:layout_below="@+id/lbl_creator"/>
+
+
+    </RelativeLayout>
+
+</LinearLayout>

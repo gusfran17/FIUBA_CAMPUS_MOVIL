@@ -28,10 +28,11 @@ import ar.uba.fi.fiubappREST.services.SessionService;
 
 @Controller
 @RequestMapping("groups")
-public class GroupController {	
+public class GroupController<discussionService> {	
 	
 	private GroupService groupService;
 	private SessionService sessionService;
+	
 	
 	@Autowired
 	public GroupController(GroupService groupService, SessionService sessionService) {
@@ -82,6 +83,8 @@ public class GroupController {
 		Session session = this.sessionService.findStudentSession(token);
 		this.groupService.updatePicture(groupId, image, session.getUserName());
 	}
+
+
 }
 
 

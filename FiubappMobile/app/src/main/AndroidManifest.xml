@@ -57,6 +57,10 @@
         <activity android:name="ar.uba.fi.fiubappMobile.groups.GruposTabs"
             android:theme="@style/StyledIndicators"
             android:windowSoftInputMode="stateHidden"/>
+        <activity android:name="ar.uba.fi.fiubappMobile.groups.Discussions.DiscussionActivity"
+            android:label="@string/title_activity_discussion"
+            android:windowSoftInputMode="stateHidden"/>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

@@ -69,4 +69,11 @@
 	<string name="mensaje_validar_login_error_3004">La solicitud de registración está pendiente de aprobación por parte del administrador</string>
     <string name="mensaje_validar_login_error_3005">El usuario se encuentra momentáneamente suspendido</string>
     <string name="mensaje_validar_login_usuario_incorrrecto"> y/o contraseña incorrecta</string>
+	<string name="lbl_created_by">Iniciada por:</string>
+    <string name="lbl_creation_date">Creada</string>
+    <string name="creatDiscussion">INICIAR DISCUSIÓN</string>
+    <string name="title_activity_discussion">Discussion</string>
+    <string name="lblAddMessage">COMENTAR</string>
+    <string name="txtvw_discussion_name">Nombre</string>
+    <string name="txtvw_first_message">Comentario</string>
 </resources>

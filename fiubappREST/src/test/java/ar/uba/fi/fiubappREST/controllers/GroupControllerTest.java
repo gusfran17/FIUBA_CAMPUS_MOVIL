@@ -20,9 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
 import ar.uba.fi.fiubappREST.domain.Session;
+import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
+import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupUpdateRepresentation;
+import ar.uba.fi.fiubappREST.services.DiscussionService;
 import ar.uba.fi.fiubappREST.services.GroupService;
 import ar.uba.fi.fiubappREST.services.SessionService;
 
