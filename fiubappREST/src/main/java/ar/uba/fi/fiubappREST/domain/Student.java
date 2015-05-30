@@ -97,6 +97,9 @@ public class Student {
 	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, orphanRemoval = true)
 	private Set<Job> jobs;
 	
+	@OneToMany(mappedBy="student", cascade={CascadeType.ALL}, orphanRemoval = true)
+	private Set<WallMessage> wallMessages;
+	
 	public String getUserName() {
 		return userName;
 	}
@@ -297,6 +300,15 @@ public class Student {
 
 	public void setLocation(Location location) {
 		this.location = location;
+	}
+
+	@JsonIgnore
+	public Set<WallMessage> getWallMessages() {
+		return wallMessages;
+	}
+
+	public void setWallMessages(Set<WallMessage> wallMessages) {
+		this.wallMessages = wallMessages;
 	}
 
 	public void addCareer(final StudentCareer career) {

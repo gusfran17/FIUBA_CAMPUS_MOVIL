@@ -235,6 +235,12 @@ public class ExceptionsHandler {
 		return buildResponse(exception);
 	}
 	
+	@ExceptionHandler(WallMessageNotFoundForStudentException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(WallMessageNotFoundForStudentException exception){
+		return buildResponse(exception);
+	}
+	
 	@ExceptionHandler(RuntimeException.class)
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR) 
 	public @ResponseBody ErrorResponse handle(RuntimeException exception){
