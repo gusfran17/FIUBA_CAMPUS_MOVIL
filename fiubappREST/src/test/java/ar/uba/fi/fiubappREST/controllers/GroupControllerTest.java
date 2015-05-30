@@ -20,12 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
 import ar.uba.fi.fiubappREST.domain.Session;
-import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
-import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupUpdateRepresentation;
-import ar.uba.fi.fiubappREST.services.DiscussionService;
 import ar.uba.fi.fiubappREST.services.GroupService;
 import ar.uba.fi.fiubappREST.services.SessionService;
 
@@ -36,6 +33,7 @@ public class GroupControllerTest {
 	private static final String A_TOKEN = "aToken";
 	private static final Integer A_GROUP_ID = 14;
 
+	@SuppressWarnings("rawtypes")
 	private GroupController controller;
 	
 	@Mock
@@ -44,6 +42,7 @@ public class GroupControllerTest {
 	private SessionService studentSessionService;
 	
 	
+	@SuppressWarnings("rawtypes")
 	@Before
 	public void setUp(){
 		this.service = mock(GroupService.class);
@@ -76,6 +75,7 @@ public class GroupControllerTest {
 		representations.add(anotherRepresentation);
 		when(this.service.findByProperties(AN_USER_NAME, A_NAME)).thenReturn(representations);
 		
+		@SuppressWarnings("unchecked")
 		List<GroupRepresentation> foundGroups = this.controller.findGroups(A_TOKEN, A_NAME);
 		
 		assertEquals(2, foundGroups.size());
@@ -102,6 +102,7 @@ public class GroupControllerTest {
 		doReturn(MediaType.IMAGE_PNG_VALUE).when(picture).getContentType();
 		doReturn(picture).when(service).getPicture(A_GROUP_ID);
 				
+		@SuppressWarnings("unchecked")
 		ResponseEntity<byte[]> response = this.controller.getGroupPicture(A_GROUP_ID);
 		
 		assertEquals(bytes, response.getBody());

@@ -73,7 +73,7 @@ public class WallMessageServiceImpl implements WallMessageService {
 			@Override
 			public boolean evaluate(Object o) {
 				WallMessage message = (WallMessage)o;
-				return !message.getIsPrivate() || message.getStudent().equals(ownerUserName) || message.getCreator().getUserName().equals(petitionerUserName);
+				return !message.getIsPrivate() || petitionerUserName.equals(ownerUserName) || message.getCreator().getUserName().equals(petitionerUserName);
 			}
 		});				
 		LOGGER.info(String.format("Wall messages of student with userName %s for student with userNames %s were found.", ownerUserName, petitionerUserName));

@@ -16,18 +16,18 @@ import org.junit.Test;
 import ar.uba.fi.fiubappREST.exceptions.DateFormatException;
 
 
-public class CustomDateDeserializerTest {
+public class CustomDateDeserializerDetailedTest {
 
-	private CustomDateDeserializerDetailed deserializer;
+	private CustomDateDeserializer deserializer;
 	private JsonParser mockJsonParser;
 	
-	private static final String CORRECT_FOMAT_AND_VALUE = "13/10/2001 12:10:09";
-	private static final String INVALID_FORMAT = "13/10/2001 12:09";
-	private static final String INVALID_VALUE = "13/10/2001 - 25:10:09";
+	private static final String CORRECT_FOMAT_AND_VALUE = "13/10/2001";
+	private static final String INVALID_FORMAT = "2000-11-10";
+	private static final String INVALID_VALUE = "10/13/2001";
 	
 	@Before
 	public void setUp(){
-		deserializer = new CustomDateDeserializerDetailed();
+		deserializer = new CustomDateDeserializer();
 		mockJsonParser = mock(JsonParser.class);
 	}
 

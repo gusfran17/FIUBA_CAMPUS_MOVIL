@@ -10,7 +10,7 @@ import org.codehaus.jackson.JsonGenerator;
 import org.junit.Before;
 import org.junit.Test;
 
-public class CustomDateSerielizer {
+public class CustomDateSerializerTest {
 	
 	private CustomDateSerializer serializer;
 	private JsonGenerator mockJsonGenerator;
