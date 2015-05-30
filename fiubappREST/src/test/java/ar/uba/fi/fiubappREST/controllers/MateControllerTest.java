@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import ar.uba.fi.fiubappREST.representations.MateRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 import ar.uba.fi.fiubappREST.services.MateService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 public class MateControllerTest {
 	
@@ -29,19 +29,19 @@ public class MateControllerTest {
 	@Mock
 	private MateService service;
 	@Mock
-	private StudentSessionService studentSessionService;
+	private SessionService studentSessionService;
 	
 	
 	@Before
 	public void setUp(){
 		this.service = mock(MateService.class);
-		this.studentSessionService = mock(StudentSessionService.class);
+		this.studentSessionService = mock(SessionService.class);
 		this.controller = new MateController(service, studentSessionService);
 	}
 
 	@Test
 	public void testBecomeMates(){
-		doNothing().when(this.studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(this.studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 		MateRepresentation mate = new MateRepresentation();
 		mate.setUserName(A_MATE_USER_NAME);
 		StudentProfileRepresentation representation = mock(StudentProfileRepresentation.class);
@@ -54,7 +54,7 @@ public class MateControllerTest {
 	
 	@Test
 	public void testGetMates(){
-		doNothing().when(this.studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(this.studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 		StudentProfileRepresentation representation = mock(StudentProfileRepresentation.class);
 		StudentProfileRepresentation anotherRepresentation = mock(StudentProfileRepresentation.class);
 		List<StudentProfileRepresentation> profiles = new ArrayList<StudentProfileRepresentation>();
@@ -69,7 +69,7 @@ public class MateControllerTest {
 	
 	@Test
 	public void testDeleteMate(){
-		doNothing().when(this.studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(this.studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 		doNothing().when(this.service).deleteMate(AN_USER_NAME, A_MATE_USER_NAME);
 		
 		this.controller.deleteMate(A_TOKEN, AN_USER_NAME, A_MATE_USER_NAME);

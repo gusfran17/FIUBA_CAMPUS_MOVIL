@@ -134,7 +134,7 @@ public class StudentServiceTest {
 		students.add(student);
 		students.add(anotherStudent);
 		when(studentRepository.findByUserNameAndFetchMatesEagerly(AN_USER_NAME)).thenReturn(student);
-		when(studentRepository.findByProperties(A_VALUE, A_VALUE, A_VALUE, A_VALUE, A_VALUE, A_VALUE)).thenReturn(students);
+		when(studentRepository.findByProperties(A_VALUE, A_VALUE, A_VALUE, A_VALUE, A_VALUE, A_VALUE, null)).thenReturn(students);
 		StudentProfileRepresentation profile = mock(StudentProfileRepresentation.class);
 		StudentProfileRepresentation anotherProfile = mock(StudentProfileRepresentation.class);
 		when(studentProfileConverter.convert(student, student)).thenReturn(profile);

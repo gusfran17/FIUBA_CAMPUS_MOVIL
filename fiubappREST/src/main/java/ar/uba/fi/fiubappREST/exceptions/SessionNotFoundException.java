@@ -1,11 +1,11 @@
 package ar.uba.fi.fiubappREST.exceptions;
 
 @SuppressWarnings("serial")
-public class StudentSessionNotFoundException extends BusinessException {
+public class SessionNotFoundException extends BusinessException {
 	
 	private static final String CODE = "3002";
 
-	public StudentSessionNotFoundException(Object... params){
+	public SessionNotFoundException(Object... params){
 		super(params);
 	}
 	

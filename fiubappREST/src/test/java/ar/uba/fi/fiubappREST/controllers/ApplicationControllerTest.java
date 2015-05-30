@@ -11,7 +11,7 @@ import org.mockito.Mock;
 
 import ar.uba.fi.fiubappREST.domain.Application;
 import ar.uba.fi.fiubappREST.services.NotificationService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 public class ApplicationControllerTest {
 	
@@ -24,14 +24,14 @@ public class ApplicationControllerTest {
 	@Mock
 	private NotificationService service;
 	@Mock
-	private StudentSessionService studentSessionService;
+	private SessionService studentSessionService;
 	
 	private Application application;
 	
 	@Before
 	public void setUp(){
 		this.service = mock(NotificationService.class);
-		this.studentSessionService = mock(StudentSessionService.class);
+		this.studentSessionService = mock(SessionService.class);
 		this.controller = new ApplicationController(service, studentSessionService);
 		
 		this.application = new Application();
@@ -40,7 +40,7 @@ public class ApplicationControllerTest {
 
 	@Test
 	public void testCreateApplication() {
-		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 		when(service.createApplicationNotification(AN_USER_NAME, application)).thenReturn(application);
 				
 		Application createdApplication = this.controller.createApplication(A_TOKEN, AN_USER_NAME, application);

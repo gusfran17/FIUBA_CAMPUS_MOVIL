@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.security.providers.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import ar.uba.fi.fiubappREST.converters.StudentConverter;
 import ar.uba.fi.fiubappREST.converters.StudentProfileConverter;
 import ar.uba.fi.fiubappREST.domain.Career;
@@ -24,6 +26,7 @@ import ar.uba.fi.fiubappREST.domain.LocationConfiguration;
 import ar.uba.fi.fiubappREST.domain.ProfilePicture;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentCareer;
+import ar.uba.fi.fiubappREST.domain.StudentState;
 import ar.uba.fi.fiubappREST.exceptions.CareerNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyExistsException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
@@ -33,6 +36,7 @@ import ar.uba.fi.fiubappREST.persistance.ProfilePictureRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
+import ar.uba.fi.fiubappREST.representations.StudentStateRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentUpdateRepresentation;
 
 @Service
@@ -166,7 +170,7 @@ public class StudentServiceImpl implements StudentService {
 			String email, String careerCode, String fileNumber, String passportNumber) {
 		LOGGER.info(String.format("Finding students by criteria."));
 		Student me = this.findOneWithMates(myUserName);
-		List<Student> students = this.studentRepository.findByProperties(name, lastName, email, careerCode, fileNumber, passportNumber);
+		List<Student> students = this.studentRepository.findByProperties(name, lastName, email, careerCode, fileNumber, passportNumber, null);
 		this.removeMe(students, me);
 		List<StudentProfileRepresentation> profiles = new ArrayList<StudentProfileRepresentation>();
 		for (Student student : students) {
@@ -236,6 +240,29 @@ public class StudentServiceImpl implements StudentService {
 		student.setGender(gender);
 	}
 
+	@Override
+	public List<StudentProfileRepresentation> findByProperties(String name, String lastName, String fileNumber, String passportNumber, StudentState state) {
+		LOGGER.info(String.format("Finding students by criteria."));
+		Integer studentState = (state==null) ? null : state.getId();
+		List<Student> students = this.studentRepository.findByProperties(name, lastName,null, null, fileNumber, passportNumber, studentState);
+		List<StudentProfileRepresentation> profiles = new ArrayList<StudentProfileRepresentation>();
+		for (Student student : students) {
+			profiles.add(this.studentProfileConverter.convert(student));
+		}
+		LOGGER.info(String.format("All students meeting the criteria were found."));
+		return profiles;
+	}
+	
+	@Override
+	public StudentStateRepresentation updateStudentState(String userName, StudentStateRepresentation stateRepresentation) {
+		Student student = this.findOne(userName);
+		LOGGER.info(String.format("Updating state for student with userName %s.", userName));
+		student.setState(stateRepresentation.getState());
+		student = this.studentRepository.save(student);
+		stateRepresentation.setState(student.getState());
+		LOGGER.info(String.format("State for sudent with userName %s was updated.", userName));
+		return stateRepresentation;
+	}
 
 	public Double getDefaultDistanceInKm() {
 		return defaultDistanceInKm;
@@ -252,4 +279,5 @@ public class StudentServiceImpl implements StudentService {
 	public void setDefaultProfilePicture(Resource defaultProfilePicture) {
 		this.defaultProfilePicture = defaultProfilePicture;
 	}
+
 }

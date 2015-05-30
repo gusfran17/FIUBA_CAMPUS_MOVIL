@@ -19,53 +19,53 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
-import ar.uba.fi.fiubappREST.domain.StudentSession;
+import ar.uba.fi.fiubappREST.domain.Session;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupUpdateRepresentation;
 import ar.uba.fi.fiubappREST.services.GroupService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 @Controller
 @RequestMapping("groups")
 public class GroupController<discussionService> {	
 	
 	private GroupService groupService;
-	private StudentSessionService studentSessionService;
+	private SessionService sessionService;
 	
 	
 	@Autowired
-	public GroupController(GroupService groupService, StudentSessionService studentSessionService) {
+	public GroupController(GroupService groupService, SessionService sessionService) {
 		super();
 		this.groupService = groupService;
-		this.studentSessionService = studentSessionService;
+		this.sessionService = sessionService;
 	}
 		
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public @ResponseBody GroupRepresentation createGroup(@RequestHeader(value="Authorization") String token, @RequestBody GroupCreationRepresentation groupRepresentation) {
-		this.studentSessionService.validateMine(token, groupRepresentation.getOwnerUserName());
+		this.sessionService.validateThisStudent(token, groupRepresentation.getOwnerUserName());
 		return groupService.create(groupRepresentation);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody List<GroupRepresentation> findGroups(@RequestHeader(value="Authorization") String token, @RequestParam(value="name", required=false) String name) {
-		StudentSession session = this.studentSessionService.find(token);
+		Session session = this.sessionService.findStudentSession(token);
 		return this.groupService.findByProperties(session.getUserName(), name);
 	}
 	
 	@RequestMapping(value="{groupId}", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody GroupRepresentation get(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId) {
-		StudentSession session = this.studentSessionService.find(token);
+		Session session = this.sessionService.findStudentSession(token);
 		return groupService.findGroupForStudent(groupId, session.getUserName());
 	}
 	
 	@RequestMapping(value="{groupId}", method = RequestMethod.PUT)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody GroupRepresentation update(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @RequestBody GroupUpdateRepresentation groupRepresentation) {
-		StudentSession session = this.studentSessionService.find(token);
+		Session session = this.sessionService.findStudentSession(token);
 		return groupService.updateGroup(groupId, groupRepresentation, session.getUserName());
 	}
 	
@@ -80,7 +80,7 @@ public class GroupController<discussionService> {
 	@RequestMapping(value="{groupId}/picture", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public @ResponseBody void updateGroupPicture(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @RequestParam("image") MultipartFile image) {
-		StudentSession session = this.studentSessionService.find(token);
+		Session session = this.sessionService.findStudentSession(token);
 		this.groupService.updatePicture(groupId, image, session.getUserName());
 	}
 

@@ -16,7 +16,7 @@ import ar.uba.fi.fiubappREST.domain.Location;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.representations.MateLocationRepresentation;
 import ar.uba.fi.fiubappREST.services.LocationService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 public class LocationControllerTest {
 	
@@ -30,7 +30,7 @@ public class LocationControllerTest {
 	@Mock
 	private LocationService service;
 	@Mock
-	private StudentSessionService studentSessionService;
+	private SessionService studentSessionService;
 	@Mock
 	private Student student;
 	
@@ -40,7 +40,7 @@ public class LocationControllerTest {
 	@Before
 	public void setUp(){
 		this.service = mock(LocationService.class);
-		this.studentSessionService = mock(StudentSessionService.class);
+		this.studentSessionService = mock(SessionService.class);
 		this.controller = new LocationController(service, studentSessionService);
 		this.student = mock(Student.class);
 		
@@ -52,7 +52,7 @@ public class LocationControllerTest {
 
 	@Test
 	public void testUpdateLocation() {
-		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 		when(service.updateLocation(AN_USER_NAME, location)).thenReturn(location);
 				
 		Location savedLocation = this.controller.updateLocation(A_TOKEN, AN_USER_NAME, location);
@@ -62,7 +62,7 @@ public class LocationControllerTest {
 	
 	@Test
 	public void getMatesLocation(){
-		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 		List<MateLocationRepresentation> locations = new ArrayList<MateLocationRepresentation>();
 		locations.add(mock(MateLocationRepresentation.class));
 		locations.add(mock(MateLocationRepresentation.class));

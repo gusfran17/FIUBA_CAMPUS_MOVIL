@@ -13,26 +13,26 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import ar.uba.fi.fiubappREST.domain.Application;
 import ar.uba.fi.fiubappREST.services.NotificationService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 @Controller
 @RequestMapping("students/{userName}/applications")
 public class ApplicationController {	
 	
 	private NotificationService notificationService;
-	private StudentSessionService studentSessionService;
+	private SessionService sessionService;
 	
 	@Autowired
-	public ApplicationController(NotificationService notificationService, StudentSessionService studentSessionService) {
+	public ApplicationController(NotificationService notificationService, SessionService sessionService) {
 		super();
 		this.notificationService = notificationService;
-		this.studentSessionService = studentSessionService;
+		this.sessionService = sessionService;
 	}
 		
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public @ResponseBody Application createApplication(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestBody Application application) {
-		this.studentSessionService.validateMine(token, application.getApplicantUserName());
+		this.sessionService.validateThisStudent(token, application.getApplicantUserName());
 		return this.notificationService.createApplicationNotification(userName, application);
 	}
 }

@@ -17,7 +17,7 @@ import org.mockito.Mock;
 import ar.uba.fi.fiubappREST.domain.ApplicationNotification;
 import ar.uba.fi.fiubappREST.domain.Notification;
 import ar.uba.fi.fiubappREST.services.NotificationService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 public class NotificationControllerTest {
 	
@@ -30,7 +30,7 @@ public class NotificationControllerTest {
 	@Mock
 	private NotificationService service;
 	@Mock
-	private StudentSessionService studentSessionService;
+	private SessionService studentSessionService;
 	@Mock
 	private Notification aNotification;
 	@Mock
@@ -39,7 +39,7 @@ public class NotificationControllerTest {
 	@Before
 	public void setUp(){
 		this.service = mock(NotificationService.class);
-		this.studentSessionService = mock(StudentSessionService.class);
+		this.studentSessionService = mock(SessionService.class);
 		this.controller = new NotificationController(service, studentSessionService);
 		
 		this.aNotification = mock (Notification.class);
@@ -48,7 +48,7 @@ public class NotificationControllerTest {
 
 	@Test
 	public void testGetNotifications() {
-		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 		List<Notification> notifications = new ArrayList<Notification>();
 		notifications.add(aNotification);
 		notifications.add(anotherNotification);
@@ -61,7 +61,7 @@ public class NotificationControllerTest {
 	
 	@Test
 	public void testMarkNotificationAsViewed() {
-		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 		Notification viewedNotification = new ApplicationNotification();
 		viewedNotification.setId(NOTIFICATION_ID);
 		viewedNotification.setIsViewed(true);
@@ -75,7 +75,7 @@ public class NotificationControllerTest {
 	
 	@Test
 	public void testDeleteNotification() {
-		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 		doNothing().when(service).delete(AN_USER_NAME, NOTIFICATION_ID);
 				
 		this.controller.deleteNotification(A_TOKEN, AN_USER_NAME, NOTIFICATION_ID);
