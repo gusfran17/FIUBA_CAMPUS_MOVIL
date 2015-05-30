@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.domain.ProfilePicture;
 import ar.uba.fi.fiubappREST.services.ProfilePictureService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 public class ProfilePictureControllerTest {
 	
@@ -28,18 +28,18 @@ public class ProfilePictureControllerTest {
 	@Mock
 	private ProfilePictureService service;
 	@Mock
-	private StudentSessionService studentSessionService;
+	private SessionService studentSessionService;
 		
 	@Before
 	public void setUp(){
 		this.service = mock(ProfilePictureService.class);
-		this.studentSessionService = mock(StudentSessionService.class);
+		this.studentSessionService = mock(SessionService.class);
 		this.controller = new ProfilePictureController(service, studentSessionService);
 	}
 
 	@Test
 	public void testUpdateProfilePicture() {
-		doNothing().when(studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 		MultipartFile image = mock(MultipartFile.class);
 		doNothing().when(service).update(AN_USER_NAME, image);
 				

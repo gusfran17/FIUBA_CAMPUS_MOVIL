@@ -14,40 +14,40 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import ar.uba.fi.fiubappREST.domain.StudentCareer;
 import ar.uba.fi.fiubappREST.services.StudentCareerService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 @Controller
 @RequestMapping("students/{userName}/careers")
 public class StudentCareerController {	
 	
 	private StudentCareerService studentCareerService;
-	private StudentSessionService studentSessionService;
+	private SessionService sessionService;
 	
 	@Autowired
-	public StudentCareerController(StudentCareerService studentCareerService, StudentSessionService studentSessionService) {
+	public StudentCareerController(StudentCareerService studentCareerService, SessionService sessionService) {
 		super();
 		this.studentCareerService = studentCareerService;
-		this.studentSessionService = studentSessionService;
+		this.sessionService = sessionService;
 	}
 		
 	@RequestMapping(method = RequestMethod.POST, value="{code}")
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public @ResponseBody StudentCareer addCareer(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @PathVariable Integer code) {
-		this.studentSessionService.validateMine(token, userName);
+		this.sessionService.validateThisStudent(token, userName);
 		return this.studentCareerService.create(userName, code);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody List<StudentCareer> getCareers(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
-		this.studentSessionService.validate(token);
+		this.sessionService.validateStudentSession(token);
 		return this.studentCareerService.findAll(userName);
 	}
 	
 	@RequestMapping(method = RequestMethod.DELETE, value="{code}")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public @ResponseBody void deleteCareer(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @PathVariable Integer code) {
-		this.studentSessionService.validateMine(token, userName);
+		this.sessionService.validateThisStudent(token, userName);
 		this.studentCareerService.delete(userName, code);
 	}
 }

@@ -9,46 +9,46 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import ar.uba.fi.fiubappREST.domain.Credentials;
-import ar.uba.fi.fiubappREST.domain.StudentSession;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.domain.Session;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 public class StudentSessionControllerTest {
 	
 	private static final String A_TOKEN = "A_TOKEN";
 	
 	@Mock
-	private StudentSessionService service;
+	private SessionService service;
 	@Mock
 	private Credentials credentials;
 	@Mock
-	private StudentSession session;
+	private Session session;
 		
 	private StudentSessionController controller;
 	
 	@Before
 	public void setUp(){
-		this.service = mock(StudentSessionService.class);
+		this.service = mock(SessionService.class);
 		
 		this.controller = new StudentSessionController(service);
 		
 		this.credentials = mock(Credentials.class);
-		this.session = mock(StudentSession.class);
+		this.session = mock(Session.class);
 	}
 
 	@Test
 	public void testCreateSession() {
-		when(this.service.create(credentials)).thenReturn(session);
+		when(this.service.createStudentSession(credentials)).thenReturn(session);
 		
-		StudentSession createdSession = this.controller.createSession(credentials);
+		Session createdSession = this.controller.createSession(credentials);
 		
 		assertNotNull(createdSession);
 	}
 	
 	@Test
 	public void testFindSession() {
-		when(this.service.find(A_TOKEN)).thenReturn(session);
+		when(this.service.findStudentSession(A_TOKEN)).thenReturn(session);
 		
-		StudentSession foundSession = this.controller.findSession(A_TOKEN);
+		Session foundSession = this.controller.findSession(A_TOKEN);
 		
 		assertNotNull(foundSession);
 	}

@@ -24,8 +24,9 @@ public interface StudentRepository extends CrudRepository<Student, String> {
 			+ "AND ( (?4 is null) or (?4='') or (s.userName in (SELECT userName FROM student_career sc WHERE sc.code = ?4)) )"
 			+ "AND ( (?5 is null) or (?5='') or (LOWER(s.fileNumber) LIKE %?5%) )"
 			+ "AND ( (?6 is null) or (?6='') or (LOWER(s.passportNumber) LIKE %?6%) )"
+			+ "AND ( (?7 is null)  or (s.state = ?7) )"
 			, nativeQuery = true)
-	public List<Student> findByProperties(String name, String lastName, String email, String careerCode, String fileNumber, String passportNumber);
+	public List<Student> findByProperties(String name, String lastName, String email, String careerCode, String fileNumber, String passportNumber, Integer state);
 	
 	@Query("SELECT s FROM Student s LEFT JOIN FETCH s.groups LEFT JOIN FETCH s.mates WHERE s.userName = ?1")
     public Student findByUserNameAndFetchMatesAndGroupsEagerly(String userName);

@@ -34,6 +34,8 @@ public class StudentProfileConverter {
 		profile.setComments(student.getComments());
 		profile.setIsMyMate(false);
 		profile.setProfilePicture(student.getProfilePictureUrl());
+		profile.setEmail(student.getEmail());
+		profile.setState(student.getState().getName());
 		return profile;
 	}
 }

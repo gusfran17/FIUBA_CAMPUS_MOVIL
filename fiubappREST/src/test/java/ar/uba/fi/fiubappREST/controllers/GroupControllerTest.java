@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
-import ar.uba.fi.fiubappREST.domain.StudentSession;
+import ar.uba.fi.fiubappREST.domain.Session;
 import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
@@ -27,7 +27,7 @@ import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupUpdateRepresentation;
 import ar.uba.fi.fiubappREST.services.DiscussionService;
 import ar.uba.fi.fiubappREST.services.GroupService;
-import ar.uba.fi.fiubappREST.services.StudentSessionService;
+import ar.uba.fi.fiubappREST.services.SessionService;
 
 public class GroupControllerTest {
 	
@@ -41,19 +41,19 @@ public class GroupControllerTest {
 	@Mock
 	private GroupService service;
 	@Mock
-	private StudentSessionService studentSessionService;
+	private SessionService studentSessionService;
 	
 	
 	@Before
 	public void setUp(){
 		this.service = mock(GroupService.class);
-		this.studentSessionService = mock(StudentSessionService.class);
+		this.studentSessionService = mock(SessionService.class);
 		this.controller = new GroupController(service, studentSessionService);
 	}
 
 	@Test
 	public void testCreateGroup(){
-		doNothing().when(this.studentSessionService).validateMine(A_TOKEN, AN_USER_NAME);
+		doNothing().when(this.studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
 		GroupCreationRepresentation groupRepresentation = new GroupCreationRepresentation();
 		groupRepresentation.setOwnerUserName(AN_USER_NAME);
 		GroupRepresentation representation = mock(GroupRepresentation.class);
@@ -66,9 +66,9 @@ public class GroupControllerTest {
 	
 	@Test
 	public void testFindGroups(){
-		StudentSession session = mock(StudentSession.class);
+		Session session = mock(Session.class);
 		when(session.getUserName()).thenReturn(AN_USER_NAME);
-		when(this.studentSessionService.find(A_TOKEN)).thenReturn(session);
+		when(this.studentSessionService.findStudentSession(A_TOKEN)).thenReturn(session);
 		GroupRepresentation aRepresentation = mock(GroupRepresentation.class);
 		GroupRepresentation anotherRepresentation = mock(GroupRepresentation.class);
 		List<GroupRepresentation> representations = new ArrayList<GroupRepresentation>();
@@ -83,9 +83,9 @@ public class GroupControllerTest {
 	
 	@Test
 	public void testGet(){
-		StudentSession session = mock(StudentSession.class);
+		Session session = mock(Session.class);
 		when(session.getUserName()).thenReturn(AN_USER_NAME);
-		when(this.studentSessionService.find(A_TOKEN)).thenReturn(session);
+		when(this.studentSessionService.findStudentSession(A_TOKEN)).thenReturn(session);
 		GroupRepresentation aRepresentation = mock(GroupRepresentation.class);
 		when(this.service.findGroupForStudent(A_GROUP_ID, AN_USER_NAME)).thenReturn(aRepresentation);
 		
@@ -111,9 +111,9 @@ public class GroupControllerTest {
 	
 	@Test
 	public void testUpdatePicture() {
-		StudentSession session = mock(StudentSession.class);
+		Session session = mock(Session.class);
 		when(session.getUserName()).thenReturn(AN_USER_NAME);
-		when(studentSessionService.find(A_TOKEN)).thenReturn(session);
+		when(studentSessionService.findStudentSession(A_TOKEN)).thenReturn(session);
 		MultipartFile image = mock(MultipartFile.class);
 		doNothing().when(service).updatePicture(A_GROUP_ID, image, AN_USER_NAME);
 				
@@ -124,9 +124,9 @@ public class GroupControllerTest {
 	
 	@Test
 	public void testUpdate(){
-		StudentSession session = mock(StudentSession.class);
+		Session session = mock(Session.class);
 		when(session.getUserName()).thenReturn(AN_USER_NAME);
-		when(studentSessionService.find(A_TOKEN)).thenReturn(session);
+		when(studentSessionService.findStudentSession(A_TOKEN)).thenReturn(session);
 		GroupUpdateRepresentation updatingGroup = mock(GroupUpdateRepresentation.class);
 		GroupRepresentation representation = mock(GroupRepresentation.class);
 		when(this.service.updateGroup(A_GROUP_ID, updatingGroup, AN_USER_NAME)).thenReturn(representation);
@@ -135,9 +135,6 @@ public class GroupControllerTest {
 		
 		assertEquals(representation, updatedGroup);
 	}
-	
-
-	
 }
 
 
