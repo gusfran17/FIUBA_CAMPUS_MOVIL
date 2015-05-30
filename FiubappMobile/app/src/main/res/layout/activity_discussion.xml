@@ -44,7 +44,7 @@
         android:stretchColumns="0,1">
         <TableRow>
 
-            <Button android:id="@+id/lblAddMessage"
+            <Button android:id="@+id/btnAddMessage"
                 android:layout_width="fill_parent"
                 android:layout_height="40dip"
                 android:layout_marginLeft="2dp"

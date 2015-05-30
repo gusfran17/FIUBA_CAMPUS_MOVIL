@@ -1,24 +1,30 @@
 package ar.uba.fi.fiubappMobile.groups.Discussions;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.fiubapp.fiubapp.Popup;
 import com.fiubapp.fiubapp.R;
 import com.fiubapp.fiubapp.VolleyController;
 import com.fiubapp.fiubapp.dominio.Message;
@@ -27,10 +33,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ar.uba.fi.fiubappMobile.utils.DataAccess;
 
 public class DiscussionActivity extends Activity {
 
@@ -59,7 +69,6 @@ public class DiscussionActivity extends Activity {
         lbl_discussion_header.setText(myIntent.getStringExtra("discussionName"));
 
         fillMesaagesList();
-
         messagesAdapter = new MessagesAdapter(this, messagesList);
         messagesListView.setAdapter(messagesAdapter);
 
@@ -70,6 +79,60 @@ public class DiscussionActivity extends Activity {
                 finish();
             }
         });
+
+        Button btnComment = (Button) findViewById(R.id.btnAddMessage);
+        btnComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setCreateMessage();
+            }
+        });
+    }
+
+    private void setCreateMessage() {
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+        View createDiscussionMessageView = layoutInflater.inflate(R.layout.create_discussion_message, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setView(createDiscussionMessageView);
+        DataAccess dataAccess = new DataAccess(this);
+        final String creator = dataAccess.getUserName();
+        final EditText edtvw_message = (EditText)createDiscussionMessageView.findViewById(R.id.edtvw_message);
+        final Activity activity = this;
+        
+        alertDialogBuilder
+                .setCancelable(false)
+                .setTitle("Escribir Comentario")
+                .setPositiveButton("Comentar",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                if (edtvw_message.getText().toString().equals("")) {
+                                    Popup.showText(activity, "El comentario no puede ser vacio.", Toast.LENGTH_LONG).show();
+                                    setCreateMessage();
+                                } else {
+                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+
+                                    Message message = new Message();
+                                    message.setText(edtvw_message.getText().toString());
+                                    message.setCreationDate(simpleDateFormat.format(new Date()));
+                                    message.setCreatorUserName(creator);
+                                    createMessage(message);
+                                }
+                            }
+                        })
+                .setNegativeButton("Cancelar",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+    }
+
+    private void createMessage(Message message) {
     }
 
     private void fillMesaagesList() {
@@ -88,7 +151,7 @@ public class DiscussionActivity extends Activity {
                                 JSONObject jsonMessage = response.getJSONObject(i);
                                 JSONObject jsonCreator = jsonMessage.getJSONObject("creator");
                                 message.setCreatorUserName(jsonCreator.get("name") + " " + jsonCreator.get("lastName"));
-                                message.setText(jsonMessage.getString("discussionName"));
+                                message.setText(jsonMessage.getString("message"));
                                 message.setCreationDate(jsonMessage.getString("creationDate"));
 
                                 messagesList.add(message);
