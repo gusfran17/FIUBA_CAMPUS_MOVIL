@@ -1,28 +1,23 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ListView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
         android:divider="@color/list_divider"
         android:dividerHeight="1dp"
         android:listSelector="@drawable/list_row_selector"
-        android:id="@+id/muroList"/>
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/buttons_layout"
-        android:layout_alignParentBottom="true">
+        android:id="@+id/muroList"
+        android:layout_weight="1"/>
 
         <Button
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
             android:text="@string/escribir_muro"
             android:id="@+id/escribirButton"
-            android:background="#ff2ec7e8"/>
+            android:background="#ff2ec7e8" />
 
-    </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>

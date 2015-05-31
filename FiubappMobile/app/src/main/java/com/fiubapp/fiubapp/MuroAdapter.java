@@ -37,10 +37,12 @@ public class MuroAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private List<MensajeMuro> muroItems;
     ImageLoader imageLoader = VolleyController.getInstance().getImageLoader();
+    private boolean muroPropio = true;
 
-    public MuroAdapter(Activity activity, List<MensajeMuro> muroItems) {
+    public MuroAdapter(Activity activity, List<MensajeMuro> muroItems, boolean muroPropio) {
         this.activity = activity;
         this.muroItems = muroItems;
+        this.muroPropio = muroPropio;
     }
 
     @Override
@@ -59,7 +61,7 @@ public class MuroAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View grupoFilaView, ViewGroup parent) {
+    public View getView(final int position, View grupoFilaView, ViewGroup parent) {
 
         if (inflater == null)
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -81,15 +83,20 @@ public class MuroAdapter extends BaseAdapter {
 
         final MensajeMuro msj = muroItems.get(position);
 
-        thumbNail.setImageUrl(msj.getRemitente().getImgURL(),imageLoader);
+        thumbNail.setImageUrl(msj.getCreator().getImgURL(),imageLoader);
 
-        nombre.setText(msj.getRemitente().getNombreApellido());
+        nombre.setText(msj.getCreator().getNombreApellido());
         fecha.setText(msj.getFecha());
         mensaje.setText(msj.getMensaje());
         mensaje.setBackgroundColor(Color.TRANSPARENT);
 
         if (!msj.isMsjPrivado())
             candado.setVisibility(View.INVISIBLE);
+        else candado.setVisibility(View.VISIBLE);
+
+        if (!this.muroPropio)
+            botonEliminar.setVisibility(View.INVISIBLE);
+        else botonEliminar.setVisibility(View.VISIBLE);
 
         botonEliminar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +105,7 @@ public class MuroAdapter extends BaseAdapter {
                         .setTitle("¿Eliminar mensaje?")
                         .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                eliminarMensaje(msj);
+                                eliminarMensaje(position);
                             }
                         })
                         .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -114,24 +121,34 @@ public class MuroAdapter extends BaseAdapter {
         return grupoFilaView;
     }
 
-    private void eliminarMensaje(final MensajeMuro msj){
-        String url = getURLAPI()+"/students/"+getUsername()+"/messages/"+msj.getId();
+    private void eliminarMensaje(final int position){
+
+        MensajeMuro msj = this.muroItems.get(position);
+        String url = getURLAPI()+"/students/"+getUsername()+"/wall/messages/"+msj.getId();
 
         JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.DELETE,
                 url,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        muroItems.remove(position);
                         Popup.showText(activity, "El mensaje fue eliminado de tu muro", Toast.LENGTH_LONG).show();
-
                         notifyDataSetChanged();
                     }
                 },
                 new Response.ErrorListener(){
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Popup.showText(activity, "Ha ocurrido un error. " +
-                                "Probá nuevamente en unos minutos", Toast.LENGTH_LONG).show();
+
+                        //el response es null cuando borra el mensaje,
+                        //entonces se borra del listado
+                        if (error.networkResponse == null){
+                            muroItems.remove(position);
+                            Popup.showText(activity, "El mensaje fue eliminado de tu muro", Toast.LENGTH_LONG).show();
+                            notifyDataSetChanged();
+                        }
+
+
                     }
                 }
         ){
@@ -145,56 +162,6 @@ public class MuroAdapter extends BaseAdapter {
         };
         VolleyController.getInstance().addToRequestQueue(jsonReq);
     }
-
-    /*private void ingresarGrupo(final MensajeMuro grupo){
-        String url = getURLAPI()+"/students/"+getUsername()+"/groups/"+grupo.getId();
-
-        JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.POST,
-                url,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Popup.showText(activity, "Te inscribiste al grupo "+grupo.getNombre(), Toast.LENGTH_LONG).show();
-                        muroItems.remove(grupo);
-                        grupo.setCantMiembros(grupo.getCantMiembros()+1);
-                        grupo.setAmIaMember(true);
-                        muroItems.add(grupo);
-
-                        notifyDataSetChanged();
-                    }
-                },
-                new Response.ErrorListener(){
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Popup.showText(activity, "Ha ocurrido un error. " +
-                                "Probá nuevamente en unos minutos", Toast.LENGTH_LONG).show();
-                    }
-                }
-        ){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<String, String>();
-                headers.put("Authorization", getToken());
-                return headers;
-            }
-
-        };
-        VolleyController.getInstance().addToRequestQueue(jsonReq);
-    }
-
-    class imageViewClickListener implements View.OnClickListener {
-        int position;
-
-        public imageViewClickListener(int pos) {
-            this.position = pos;
-        }
-
-        public void onClick(View v) {
-            {
-
-            }
-        }
-    }*/
 
     private String getToken(){
         DataAccess dataAccess = new DataAccess(activity);

@@ -6,7 +6,7 @@ public class MensajeMuro {
 
     private String nombre;
     private String id;
-    private Alumno remitente;
+    private Alumno creator;
     private String fecha;
     private String imgURL;
     private String mensaje;
@@ -28,12 +28,12 @@ public class MensajeMuro {
         this.id = id;
     }
 
-    public Alumno getRemitente() {
-        return remitente;
+    public Alumno getCreator() {
+        return creator;
     }
 
-    public void setRemitente(Alumno remitente) {
-        this.remitente = remitente;
+    public void setCreator(Alumno creator) {
+        this.creator = creator;
     }
 
     public String getFecha() {
