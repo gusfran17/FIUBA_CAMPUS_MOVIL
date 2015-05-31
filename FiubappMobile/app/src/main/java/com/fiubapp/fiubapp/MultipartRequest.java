@@ -16,6 +16,9 @@ import java.util.Map;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.json.JSONObject;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -36,21 +39,28 @@ public class MultipartRequest<T> extends Request<T> {
     private final Uri uri;
     protected Map<String, String> headers;
     private Context context;
+    private String mimeType;
+    private String userName;
 
     public MultipartRequest(String url,
                                  ErrorListener errorListener,
                                  Listener<T> listener,
                                  Uri uri,
                                  Context context,
-                                 Map<String, String> headers)
+                                 Map<String, String> headers,
+                                 String mimeType,
+                                 String userName)
     {
         super(Method.POST, url, errorListener);
 
         mListener = listener;
         this.uri = uri;
+
         this.context = context;
         this.headers = headers;
-        mImageFile = new File(getRealPathFromURI(context,uri));
+        this.mimeType = mimeType;
+        mImageFile = new File(uri.getPath());
+        this.userName = userName;
 
         buildMultipartEntity();
     }
@@ -69,7 +79,10 @@ public class MultipartRequest<T> extends Request<T> {
 
     private void buildMultipartEntity()
     {
-        mBuilder.addBinaryBody(FILE_PART_NAME, mImageFile, ContentType.create("image/png"), getRealPathFromURI(this.context,this.uri));
+        mBuilder.addBinaryBody("file", mImageFile, ContentType.create(this.mimeType), uri.getPath());
+        mBuilder.addTextBody("text", "{\"message\":\"hola\", \"creatorUserName\": \"88000\"}", ContentType.create("text/plain"));
+        mBuilder.addTextBody("userName", this.userName, ContentType.create("text/plain"));
+
         mBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         mBuilder.setLaxMode().setBoundary("xx").setCharset(Charset.forName("UTF-8"));
     }
@@ -110,18 +123,5 @@ public class MultipartRequest<T> extends Request<T> {
         mListener.onResponse(response);
     }
 
-    public String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
+
 }

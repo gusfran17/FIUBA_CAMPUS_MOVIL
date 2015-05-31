@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -457,9 +458,9 @@ public class Perfil_personal extends Fragment {
         profile_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+            Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            photoPickerIntent.setType("image/*,video/*,audio/*");
+            startActivityForResult(photoPickerIntent, SELECT_PHOTO);
             }
         });
 
@@ -604,91 +605,53 @@ public class Perfil_personal extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
 
+        final String mime = getMimeType(imageReturnedIntent.getData().getPath());
+        String FilePath = imageReturnedIntent.getData().getPath();
+
         final ImageView profile_img = (ImageView)this.view.findViewById(R.id.image_profile);
 
         switch(requestCode) {
             case SELECT_PHOTO:
                 if(resultCode == Activity.RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
-                    InputStream imageStream = null;
-                    Bitmap image = null;
-                    try {
-                        imageStream = this.context.getContentResolver().openInputStream(selectedImage);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
 
-                    //para validar tamaño de imagen
-                    // First decode with inJustDecodeBounds=true to check dimensions
-                    final BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inJustDecodeBounds = true;
-
-                    BitmapFactory.decodeStream(imageStream,null,options);
-
-                    try {
-                        imageStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    // Calculate inSampleSize
-                    options.inSampleSize = calculateInSampleSize(options, 90, 90);
-
-                    // Decode bitmap with inSampleSize set
-                    options.inJustDecodeBounds = false;
-
-                    File file = new File(getRealPathFromURI(context, selectedImage));
-                    double imageSize = (file.length() / 1024) / 1024;
-
-                    try {
-                        imageStream = this.context.getContentResolver().openInputStream(selectedImage);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    //si la imagen pesa menos de 10MB
-                    if (imageSize <= 10) {
-                        image = BitmapFactory.decodeStream(imageStream,null, options);
-                        profile_img.setImageBitmap(image);
-
-                        HashMap<String, String> headers = new HashMap<String, String>();
-                        headers.put("Accept", "application/json");
-                        headers.put("Authorization", getToken());
-
-                        MultipartRequest mPR = new MultipartRequest(urlAPI+"/students/"+usernamePrefs+"/picture", new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                try {
-                                    // TODO Auto-generated method stub
-                                    Log.d("Error", error.toString());
-                                    String responseBody = null;
-                                    JSONObject jsonObject = null;
-                                    try {
-                                        responseBody = new String(error.networkResponse.data, "utf-8");
-                                    } catch (UnsupportedEncodingException e) {
-                                    }
-                                    try {
-                                        jsonObject = new JSONObject(responseBody);
-                                    } catch (JSONException e) {
-                                    }
-                                }
-                                catch(Exception e){}
-                            }
-                        } , new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String arg0) {
+                    MultipartRequest mPR = new MultipartRequest(urlAPI+"/prueba", new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            try {
                                 // TODO Auto-generated method stub
-                                //Log.d("Success", arg0.toString());
+                                Log.d("Error", error.toString());
+                                String responseBody = null;
+                                JSONObject jsonObject = null;
+                                try {
+                                    responseBody = new String(error.networkResponse.data, "utf-8");
+                                } catch (UnsupportedEncodingException e) {
+                                }
+                                Popup.showText(context, responseBody, Toast.LENGTH_LONG).show();
                             }
-                        }, selectedImage, this.context, headers);
+                            catch(Exception e){}
+                        }
+                    } , new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String arg0) {
+                            // TODO Auto-generated method stub
+                            Popup.showText(context, "BIEN!!", Toast.LENGTH_LONG).show();
+                        }
+                    }, selectedImage, this.context, null, mime, getUsername());
 
-                        VolleyController.getInstance().addToRequestQueue(mPR);
-
-                    } else {
-                        Popup.showText(context, "Debe seleccionar una imagen con un tamaño menor a 10MB", Toast.LENGTH_LONG).show();
-                    }
+                    VolleyController.getInstance().addToRequestQueue(mPR);
 
                 }
         }
+    }
+
+    public static String getMimeType(String url) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        return type;
     }
 
     public static Perfil_personal newContact(Alumno companero) {

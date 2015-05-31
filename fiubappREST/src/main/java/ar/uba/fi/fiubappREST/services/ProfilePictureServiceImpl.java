@@ -37,8 +37,7 @@ public class ProfilePictureServiceImpl implements ProfilePictureService {
 
 	@Override
 	public void update(String userName, MultipartFile image) {
-		LOGGER.info(String.format("Saving file %s as profile picture for student with userName %s.", image.getName(), userName));
-		this.validateFileContentType(image);
+		LOGGER.info(String.format("Saving file %s as profile picture for student with userName %s.", image.getName(), userName));		
 		Student student = this.studentRepository.findOne(userName);
 		ProfilePicture picture = this.profilePictureRepository.findByUserName(userName);
 		picture.setStudent(student);
