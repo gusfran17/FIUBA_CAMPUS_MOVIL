@@ -2,6 +2,7 @@ package ar.uba.fi.fiubappREST.controllers;
 
 import java.io.IOException;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,8 +34,9 @@ public class PruebaController {
 		this.profilePictureService = profilePictureService;		
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, consumes = {"multipart/*"})
+	@RequestMapping(method = RequestMethod.POST)
 	public @ResponseBody void test(@RequestPart("file") MultipartFile file, @RequestParam(value="text") String text, @RequestParam(value="userName") String userName) throws IOException {	    
+		DiscussionMessage message = new ObjectMapper().readValue(text, DiscussionMessage.class);
 		this.profilePictureService.update(userName, file);
 	}
 }
