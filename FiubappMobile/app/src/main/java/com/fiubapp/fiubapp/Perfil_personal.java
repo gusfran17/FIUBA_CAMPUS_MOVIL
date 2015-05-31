@@ -459,7 +459,7 @@ public class Perfil_personal extends Fragment {
             @Override
             public void onClick(View v) {
             Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
-            photoPickerIntent.setType("image/*,video/*,audio/*");
+            photoPickerIntent.setType("file/*");
             startActivityForResult(photoPickerIntent, SELECT_PHOTO);
             }
         });
