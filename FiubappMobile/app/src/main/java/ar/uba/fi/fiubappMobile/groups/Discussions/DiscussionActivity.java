@@ -71,6 +71,7 @@ public class DiscussionActivity extends Activity {
         lbl_discussion_header = (TextView) findViewById(R.id.lbl_discussion_header);
         lbl_discussion_header.setText(myIntent.getStringExtra("discussionName"));
 
+
         fillMesaagesList();
 
         messagesAdapter = new MessagesAdapter(this, messagesList);
@@ -89,6 +90,15 @@ public class DiscussionActivity extends Activity {
             @Override
             public void onClick(View view) {
                 setCreateMessage();
+            }
+        });
+
+        ImageView img_upload = (ImageView) findViewById(R.id.img_upload);
+        img_upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                startActivity(i);
             }
         });
     }

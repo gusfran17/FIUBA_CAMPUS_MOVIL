@@ -18,6 +18,25 @@
             android:layout_marginLeft="15px"
             android:layout_marginTop="5px"/>
 
+        <ImageView
+            android:id="@+id/img_upload"
+            android:src="@drawable/ic_upload"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/edtvw_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edtvw_message"
+            android:layout_toRightOf="@+id/img_upload"
+            android:textColor="#FFFFFF"
+            android:layout_alignBottom="@+id/img_upload"
+            android:text="@string/lbl_upload"
+            android:gravity="bottom"/>
+
     </RelativeLayout>
 
 </LinearLayout>
