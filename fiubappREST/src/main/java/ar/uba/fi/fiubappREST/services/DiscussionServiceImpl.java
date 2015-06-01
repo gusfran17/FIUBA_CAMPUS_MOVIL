@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ar.uba.fi.fiubappREST.converters.DiscussionConverter;
+import ar.uba.fi.fiubappREST.converters.DiscussionMessageConverter;
 import ar.uba.fi.fiubappREST.converters.GroupConverter;
 import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
@@ -20,11 +21,13 @@ import ar.uba.fi.fiubappREST.exceptions.DiscussionNotFoundInGroupException;
 import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.StudentIsNotMemberOfGroupException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
+import ar.uba.fi.fiubappREST.persistance.DiscussionMessageRepository;
 import ar.uba.fi.fiubappREST.persistance.DiscussionRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionMessageCreationRepresentation;
+import ar.uba.fi.fiubappREST.representations.DiscussionMessageRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
 
@@ -37,15 +40,20 @@ public class DiscussionServiceImpl implements DiscussionService{
 	private GroupRepository groupRepository;
 	private StudentRepository studentRepository;
 	private DiscussionConverter discussionConverter;
+	private DiscussionMessageConverter discussionMessageConverter;
+	private DiscussionMessageRepository discussionMessageRepository;
+	
 	private GroupConverter groupConverter;
 	
 	@Autowired
-	public DiscussionServiceImpl(DiscussionRepository discussionRepository, GroupRepository groupRepository, StudentRepository studentRepository, DiscussionConverter discussionConverter, GroupConverter groupConverter){
+	public DiscussionServiceImpl(DiscussionRepository discussionRepository, GroupRepository groupRepository, StudentRepository studentRepository, DiscussionMessageRepository discussionMessageRepository, DiscussionConverter discussionConverter, DiscussionMessageConverter discussionMessageConverter, GroupConverter groupConverter){
 		this.discussionRepository = discussionRepository;
 		this.groupRepository = groupRepository;
 		this.studentRepository = studentRepository;
 		this.discussionConverter = discussionConverter;
+		this.discussionMessageConverter = discussionMessageConverter;
 		this.groupConverter = groupConverter;
+		this.discussionMessageRepository = discussionMessageRepository;
 	}
 
 	@Override
@@ -84,7 +92,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 	}
 
 	@Override
-	public DiscussionMessage createMessage(DiscussionMessageCreationRepresentation messageRepresentation, Integer groupId, Integer discussionId) {
+	public DiscussionMessageRepresentation createMessage(DiscussionMessageCreationRepresentation messageRepresentation, Integer groupId, Integer discussionId) {
 		Group group = this.findGroup(groupId);
 		Student student = this.findStudent(messageRepresentation.getCreatorUserName());
 		Discussion discussion = findDiscussion(groupId, discussionId, group);
@@ -95,9 +103,9 @@ public class DiscussionServiceImpl implements DiscussionService{
 		message.setMessage(messageRepresentation.getMessage());
 		discussion.addMessage(message);
 		
-		discussionRepository.save(discussion);
+		//discussionRepository.save(discussion);
 		groupRepository.save(group);
-		return message;
+		return this.discussionMessageConverter.convert(message);
 	}
 
 	private Discussion findDiscussion(Integer groupId, Integer discussionId, Group group) {
@@ -107,7 +115,10 @@ public class DiscussionServiceImpl implements DiscussionService{
 		boolean found = false;
 		while(iterator.hasNext()){
 			discussion = iterator.next();
-			if (discussion.getId()==discussionId) found = true;
+			if (discussion.getId()==discussionId){
+				found = true;
+				break;
+			}
 		}
 		if (found==false){
 			LOGGER.error(String.format("Discussion with id %s does not exist in discussion %s.", groupId, discussionId ));
@@ -156,4 +167,41 @@ public class DiscussionServiceImpl implements DiscussionService{
 		return representation;
 	}
 
+	@Override
+	public Set<DiscussionMessage> findGroupDiscussionMessagesForMember(Integer groupId, Integer discussionId, String userName) {
+		//verifyGroupMember(groupId, userName);
+		LOGGER.info(String.format("Finding discussions for groupId " + groupId + "."));
+		Group group = this.groupRepository.findOne(groupId);
+		if(group==null){
+			LOGGER.error(String.format("Group with id %s does not exist.", userName, groupId ));
+			throw new GroupNotFoundException(groupId);
+		}
+		Set <Discussion> discussions = group.getDiscussions();
+		Iterator<Discussion> iterator = discussions.iterator();
+		Discussion discussion = null;
+		boolean found = false;
+		while(iterator.hasNext()){
+			discussion = iterator.next();
+			if (discussion.getId()==discussionId) {
+				found = true;
+				break;
+			}
+		}
+		if (found==false){
+			LOGGER.error(String.format("Discussion with id %s does not exist in discussion %s.", groupId, discussionId ));
+			throw new DiscussionNotFoundInGroupException(discussionId, groupId);	
+		}
+		LOGGER.info(String.format("Discussion " + discussionId + " was found for groupId "+ groupId + "."));
+		Set<DiscussionMessage> discussionMessages = discussionMessageRepository.findMessagesByProperties(discussionId);
+/*		Set<DiscussionMessageRepresentation> messagesRepresentation = new HashSet<DiscussionMessageRepresentation>();
+		Iterator<DiscussionMessage> mIterator = discussionMessages.iterator();
+		while(mIterator.hasNext()){
+			DiscussionMessage message = mIterator.next();
+			DiscussionMessageRepresentation messageRepresentation = this.discussionMessageConverter.convert(message);
+			messagesRepresentation.add(messageRepresentation);
+		}
+		return messagesRepresentation;*/
+		return discussionMessages;
+	}
+	
 }

@@ -21,38 +21,37 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:textColor="#372c24"
-            android:text="Discusion X"
+            android:text=""
             android:gravity="center_vertical|left|right"
             android:paddingLeft="10dp"
             android:textSize="18sp" />
 
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/lstVw_messages_layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/header_profile">
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/lstVw_messages"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/header_profile"/>
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lstVw_messages"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_weight="1"/>
 
-    <TableLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/lstVw_messages"
-        android:layout_alignParentBottom="true"
-        android:stretchColumns="0,1">
-        <TableRow>
+        <Button android:id="@+id/btnAddMessage"
+            android:layout_width="fill_parent"
+            android:layout_height="40dip"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:background="#ff2ec7e8"
+            android:text="@string/lblAddMessage"/>
 
-            <Button android:id="@+id/lblAddMessage"
-                android:layout_width="fill_parent"
-                android:layout_height="40dip"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:background="#ff2ec7e8"
-                android:text="@string/lblAddMessage"/>
-        </TableRow>
-    </TableLayout>
+    </LinearLayout>
+
 
 
 </RelativeLayout>

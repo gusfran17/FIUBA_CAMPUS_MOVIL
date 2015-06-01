@@ -74,7 +74,6 @@ public class GroupServiceImplTest {
 		this.converter = mock(GroupConverter.class);
 		this.discussionConverter = mock(DiscussionConverter.class);
 		this.service= new GroupServiceImpl(groupRepository, studentRepository, groupPictureRepository, null, converter, discussionConverter);
-		
 		this.student = new Student();
 		this.student.setUserName(AN_USER_NAME);
 		Set<Group> groups = new HashSet<Group>();

@@ -12,36 +12,42 @@ import ar.uba.fi.fiubappREST.utils.CustomDateSerializer;
 public class DiscussionRepresentation {
 	private Integer id;
 	private Date creationDate;
-	private String creatorUserName;
 	private String discussionName;
+	private Integer messagesAmount;
+	private StudentProfileRepresentation creator;
 	private List<DiscussionMessageCreationRepresentation> messages;
 	
-	@JsonSerialize(using = CustomDateSerializer.class)
-	public Date getCreationDate() {
-		return creationDate;
-	}
-	
-	@JsonDeserialize(using = CustomDateDeserializer.class)	
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
-	}
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getCreatorUserName() {
-		return creatorUserName;
+	@JsonSerialize(using = CustomDateSerializer.class)
+	public Date getCreationDate() {
+		return creationDate;
 	}
-	public void setCreatorUserName(String userName) {
-		this.creatorUserName = userName;
+	@JsonDeserialize(using = CustomDateDeserializer.class)	
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 	public String getDiscussionName() {
 		return discussionName;
 	}
 	public void setDiscussionName(String name) {
 		this.discussionName = name;
+	}
+	public Integer getMessagesAmount() {
+		return messagesAmount;
+	}
+	public void setMessagesAmount(Integer messagesAmount) {
+		this.messagesAmount = messagesAmount;
+	}
+	public StudentProfileRepresentation getCreator() {
+		return creator;
+	}
+	public void setCreator(StudentProfileRepresentation creator) {
+		this.creator = creator;
 	}
 	public List<DiscussionMessageCreationRepresentation> getMessages() {
 		return messages;

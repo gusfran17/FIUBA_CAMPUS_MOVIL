@@ -5,6 +5,7 @@ package com.fiubapp.fiubapp.dominio;
  */
 public class Discussion {
     private int id;
+    private int messagesAmount;
     private String discussionName;
     private String creatorUserName;
     private String creationDate;
@@ -39,6 +40,14 @@ public class Discussion {
 
     public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public int getMessagesAmount() {
+        return messagesAmount;
+    }
+
+    public void setMessagesAmount(int messagesAmount) {
+        this.messagesAmount = messagesAmount;
     }
 
 }
