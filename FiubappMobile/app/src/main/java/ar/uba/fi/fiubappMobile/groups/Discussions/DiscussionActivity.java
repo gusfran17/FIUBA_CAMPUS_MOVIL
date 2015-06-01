@@ -93,14 +93,7 @@ public class DiscussionActivity extends Activity {
             }
         });
 
-        ImageView img_upload = (ImageView) findViewById(R.id.img_upload);
-        img_upload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                startActivity(i);
-            }
-        });
+
     }
 
     private void setCreateMessage() {
@@ -111,7 +104,28 @@ public class DiscussionActivity extends Activity {
         DataAccess dataAccess = new DataAccess(this);
         final String creator = dataAccess.getUserName();
         final EditText edtvw_message = (EditText)createDiscussionMessageView.findViewById(R.id.edtvw_message);
+        final ImageView img_upload = (ImageView) createDiscussionMessageView.findViewById(R.id.img_upload_file);
         final Activity activity = this;
+
+        img_upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                int FILE_SELECT_CODE = 0;
+                try {
+                    startActivityForResult(
+                            Intent.createChooser(intent, "Seleccione archivo para subir."),
+                            FILE_SELECT_CODE);
+                } catch (android.content.ActivityNotFoundException ex) {
+                    // Potentially direct the user to the Market with a Dialog
+                    Toast.makeText(activity, "No se pudo cargar la selección de archivos.",
+                            Toast.LENGTH_SHORT).show();
+                }
+                startActivity(intent);
+            }
+        });
         
         alertDialogBuilder
                 .setCancelable(false)
