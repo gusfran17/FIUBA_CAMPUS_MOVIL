@@ -4,6 +4,7 @@ package ar.uba.fi.fiubappREST.services;
 
 import java.util.Set;
 
+import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
 import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionMessageRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
@@ -22,6 +23,6 @@ public interface DiscussionService {
 
 	GroupRepresentation findGroupForStudent(Integer groupId, String userName);
 
-	Set<DiscussionMessageRepresentation> findGroupDiscussionMessagesForMember(Integer groupId, Integer discussionId, String userName);
+	Set<DiscussionMessage> findGroupDiscussionMessagesForMember(Integer groupId, Integer discussionId, String userName);
 
 }

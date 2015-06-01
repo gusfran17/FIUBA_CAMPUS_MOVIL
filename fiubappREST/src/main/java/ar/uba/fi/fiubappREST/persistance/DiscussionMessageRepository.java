@@ -11,7 +11,7 @@ import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
 @Repository
 public interface DiscussionMessageRepository extends CrudRepository<DiscussionMessage, Integer> {
 
-	@Query(value = "SELECT * FROM message WHERE id in  (SELECT messages_id FROM discussion_message WHERE discussion_id = ?1) ORDER BY creationDate DESC", nativeQuery = true)
+	@Query(value = "SELECT * FROM message WHERE id in  (SELECT messages_id FROM discussion_message WHERE discussion_id = ?1) ORDER BY creationDate", nativeQuery = true)
 	public Set<DiscussionMessage> findMessagesByProperties(Integer discussionId);
 
 }

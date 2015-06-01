@@ -169,7 +169,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 	}
 
 	@Override
-	public Set<DiscussionMessageRepresentation> findGroupDiscussionMessagesForMember(Integer groupId, Integer discussionId, String userName) {
+	public Set<DiscussionMessage> findGroupDiscussionMessagesForMember(Integer groupId, Integer discussionId, String userName) {
 		//verifyGroupMember(groupId, userName);
 		LOGGER.info(String.format("Finding discussions for groupId " + groupId + "."));
 		Group group = this.groupRepository.findOne(groupId);
@@ -193,15 +193,16 @@ public class DiscussionServiceImpl implements DiscussionService{
 			throw new DiscussionNotFoundInGroupException(discussionId, groupId);	
 		}
 		LOGGER.info(String.format("Discussion " + discussionId + " was found for groupId "+ groupId + "."));
-		Set<DiscussionMessage> discussionMessages = discussionMessageRepository.findMessagesByProperties(discussionId);//discussion.getMessages();
-		Set<DiscussionMessageRepresentation> messagesRepresentation = new HashSet<DiscussionMessageRepresentation>();
+		Set<DiscussionMessage> discussionMessages = discussionMessageRepository.findMessagesByProperties(discussionId);
+/*		Set<DiscussionMessageRepresentation> messagesRepresentation = new HashSet<DiscussionMessageRepresentation>();
 		Iterator<DiscussionMessage> mIterator = discussionMessages.iterator();
 		while(mIterator.hasNext()){
 			DiscussionMessage message = mIterator.next();
 			DiscussionMessageRepresentation messageRepresentation = this.discussionMessageConverter.convert(message);
 			messagesRepresentation.add(messageRepresentation);
 		}
-		return messagesRepresentation;
+		return messagesRepresentation;*/
+		return discussionMessages;
 	}
 	
 }
