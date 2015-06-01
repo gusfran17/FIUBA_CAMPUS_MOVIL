@@ -104,7 +104,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 		message.setMessage(messageRepresentation.getMessage());
 		discussion.addMessage(message);
 		
-		discussionRepository.save(discussion);
+		//discussionRepository.save(discussion);
 		groupRepository.save(group);
 		return this.discussionMessageConverter.convert(message);
 	}
