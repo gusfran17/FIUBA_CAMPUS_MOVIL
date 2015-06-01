@@ -15,7 +15,6 @@
             android:layout_height="wrap_content"
             android:text="Creador"
             android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
             android:textColor="#000000"
             android:textStyle="bold"
             android:layout_toRightOf="@+id/lbl_creator"
@@ -28,7 +27,6 @@
             android:text="dd/mm/aa hh:mm:ss hs"
             android:textColor="#999999"
             android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
             android:textSize="10dp"
             android:layout_toRightOf="@+id/lbl_creation_date"
             android:layout_below="@+id/lbl_mssg_creator_name"/>
