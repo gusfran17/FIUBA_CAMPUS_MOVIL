@@ -1,5 +1,5 @@
  <form name="form" class="form-horizontal">
-	<div class="control-group">
+	<div class="control-group" style="float: left;margin-bottom: 0px;">
         <label class="control-label">Estado</label>
 
         <div class="controls">
@@ -7,7 +7,7 @@
         </div>
     </div>
 
-    <div class="control-group">
+    <div class="control-group" style="margin-bottom: 0px;">
         <label class="control-label">Padrón</label>
 
         <div class="controls">
@@ -15,7 +15,7 @@
         </div>
     </div>
     
-    <div class="control-group">
+    <div class="control-group" style="float: left;margin-bottom: 0px;">
         <label class="control-label">Pasaporte</label>
 
         <div class="controls">
@@ -23,7 +23,7 @@
         </div>
     </div>
     
-   	<div class="control-group">
+   	<div class="control-group" style="margin-bottom: 0px;">
         <label class="control-label">Nombre</label>
 
         <div class="controls">
@@ -31,7 +31,7 @@
         </div>
     </div>
     
-    <div class="control-group">
+    <div class="control-group" style="margin-bottom: 0px;">
         <label class="control-label">Apellido</label>
 
         <div class="controls">
@@ -39,8 +39,7 @@
         </div>
     </div>
     
-    <div class="control-group">
-        <hr />
+    <div class="control-group" style="margin-left: 200px; margin-top:10px;">
         <div class="controls">
          	<a class="btn btn-primary" ng-click="search(searchParams)"><i class="icon-search icon-white"></i> Buscar</a>
          	<a class="btn" ng-click="resetForm()"><i class="icon-remove"></i> Limpiar</a>
@@ -49,7 +48,7 @@
 </form>
 
 <h3 ng-show="results.length > 0">Resultados de la búsqueda</h3>
-<div class="alert alert-info" style="width:400px;" ng-show="results.length == 0">
+<div class="alert alert-info" ng-show="results.length == 0">
     No se encontró ningún resultado
 </div>
 

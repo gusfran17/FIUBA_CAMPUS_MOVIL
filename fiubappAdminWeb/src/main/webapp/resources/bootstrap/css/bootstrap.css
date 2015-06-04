@@ -1915,12 +1915,12 @@ input.search-query {
 }
 
 legend + .control-group {
-  margin-top: 20px;
+  margin-top: 0px;
   -webkit-margin-top-collapse: separate;
 }
 
 .form-horizontal .control-group {
-  margin-bottom: 20px;
+  margin-bottom: 0px;
   *zoom: 1;
 }
 
