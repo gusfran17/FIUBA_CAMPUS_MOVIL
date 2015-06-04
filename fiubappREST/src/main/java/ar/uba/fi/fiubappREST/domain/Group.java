@@ -24,6 +24,7 @@ import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyMemberOfGroupException;
+import ar.uba.fi.fiubappREST.exceptions.StudentIsNotMemberOfGroupException;
 import ar.uba.fi.fiubappREST.utils.CustomDateDeserializer;
 import ar.uba.fi.fiubappREST.utils.CustomDateSerializer;
 import ar.uba.fi.fiubappREST.utils.SpringContext;
@@ -128,6 +129,14 @@ public class Group {
 		}
 		this.members.add(member);
 		member.getGroups().add(this);
+	}
+	
+	public void removeMember(Student member) {
+		if(!this.isAlreadyMember(member)){
+			throw new StudentIsNotMemberOfGroupException(member.getUserName(), this.name);
+		}
+		this.members.remove(member);
+		member.getGroups().remove(this);
 	}
 	
 	private boolean isAlreadyMember(final Student member) {

@@ -35,4 +35,6 @@ public interface GroupService {
 
 	public Set<DiscussionRepresentation> findGroupDiscussionsForMember(Integer groupId, String string);
 
+	public void unregisterStudent(String userName, Integer groupId);
+
 }

@@ -1,6 +1,7 @@
 package ar.uba.fi.fiubappREST.controllers;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -61,6 +62,16 @@ public class StudentGroupControllerTest {
 		List<GroupRepresentation> groups = this.controller.getGroups(A_TOKEN, AN_USER_NAME);
 		
 		assertEquals(representations, groups);
+	}
+	
+	@Test
+	public void testDeleteGroups(){
+		doNothing().when(this.studentSessionService).validateThisStudent(A_TOKEN, AN_USER_NAME);
+		doNothing().when(this.service).unregisterStudent(AN_USER_NAME, A_GROUP_ID);
+		
+		this.controller.signOffGroup(A_TOKEN, AN_USER_NAME, A_GROUP_ID);
+		
+		assertTrue(true);
 	}
 	
 }

@@ -290,6 +290,21 @@ public class GroupServiceImpl implements GroupService {
 		}
 		LOGGER.info(String.format(userName + " is a member of group " + groupId + "."));
 	}
+
+	@Override
+	public void unregisterStudent(String userName, Integer groupId) {
+		LOGGER.info(String.format("Unregistering student with userName %s from group with id %s.", userName, groupId ));
+		Group group = this.groupRepository.findOne(groupId);
+		if(group==null){
+			LOGGER.error(String.format("Group with id %s does not exist.", userName, groupId ));
+			throw new GroupNotFoundException(groupId);
+		}
+		Student student = this.findStudent(userName);
+		group.removeMember(student);
+		this.groupRepository.save(group);
+		this.studentRepository.save(student);
+		LOGGER.info(String.format("Student with userName %s was unregistered from group with id %s.", userName, groupId ));	
+	}
 	
 		
 }
