@@ -6,36 +6,36 @@
             <select ng-model="searchParams.state" ng-options="c for c in states"></select><br>
         </div>
     </div>
+        
+   	<div class="control-group" style="margin-bottom: 0px;">
+        <label class="control-label" style="margin-right: 20px;">Nombre</label>
 
-    <div class="control-group" style="margin-bottom: 0px;">
+        <div class="controls">
+            <input type="text" ng-model="searchParams.name" placeholder="Nombre">
+        </div>
+    </div>
+	
+	<div class="control-group" style="float: left;margin-bottom: 0px;">
         <label class="control-label">Padrón</label>
 
         <div class="controls">
             <input type="text" ng-model="searchParams.fileNumber" placeholder="Padrón">
         </div>
     </div>
-    
-    <div class="control-group" style="float: left;margin-bottom: 0px;">
+	
+    <div class="control-group" style="margin-bottom: 0px;">
+        <label class="control-label" style="margin-right: 20px;">Apellido</label>
+
+        <div class="controls">
+            <input type="text" ng-model="searchParams.lastName" placeholder="Apellido">
+        </div>
+    </div>
+	
+	<div class="control-group" style="margin-bottom: 0px;">
         <label class="control-label">Pasaporte</label>
 
         <div class="controls">
             <input type="text" ng-model="searchParams.passportNumber" placeholder="Pasaporte">
-        </div>
-    </div>
-    
-   	<div class="control-group" style="margin-bottom: 0px;">
-        <label class="control-label">Nombre</label>
-
-        <div class="controls">
-            <input type="text" ng-model="searchParams.name" placeholder="Nombre">
-        </div>
-    </div>
-    
-    <div class="control-group" style="margin-bottom: 0px;">
-        <label class="control-label">Apellido</label>
-
-        <div class="controls">
-            <input type="text" ng-model="searchParams.lastName" placeholder="Apellido">
         </div>
     </div>
     
