@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.converters.DiscussionConverter;
 import ar.uba.fi.fiubappREST.converters.GroupConverter;
+import ar.uba.fi.fiubappREST.converters.StudentProfileConverter;
 import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.Group;
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
@@ -42,6 +43,7 @@ import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupUpdateRepresentation;
+import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 
 @Service
 public class GroupServiceImpl implements GroupService {
@@ -54,18 +56,20 @@ public class GroupServiceImpl implements GroupService {
 	private DiscussionRepository discussionRepository;
 	private GroupConverter groupConverter;
 	private DiscussionConverter discussionConverter;
+	private StudentProfileConverter studentProfileCoverter;
 	
 	@Value("classpath:defaultGroupPicture.png")
 	private Resource defaultGroupPicture;
 		
 	@Autowired
-	public GroupServiceImpl(GroupRepository groupRepository, StudentRepository studentRepository, GroupPictureRepository groupPictureRepository, DiscussionRepository discussionRepository, GroupConverter groupConverter, DiscussionConverter discussionConverter){
+	public GroupServiceImpl(GroupRepository groupRepository, StudentRepository studentRepository, GroupPictureRepository groupPictureRepository, DiscussionRepository discussionRepository, GroupConverter groupConverter, DiscussionConverter discussionConverter, StudentProfileConverter studentProfileCoverter){
 		this.groupRepository = groupRepository;
 		this.studentRepository = studentRepository;
 		this.groupPictureRepository = groupPictureRepository;
 		this.groupConverter = groupConverter;
 		this.discussionConverter = discussionConverter;		
 		this.discussionRepository = discussionRepository;
+		this.studentProfileCoverter = studentProfileCoverter;
 	}
 
 	@Override
@@ -289,6 +293,24 @@ public class GroupServiceImpl implements GroupService {
 			throw new StudentIsNotMemberOfGroupException(userName, groupId);
 		}
 		LOGGER.info(String.format(userName + " is a member of group " + groupId + "."));
+	}
+
+	@Override
+	public List<StudentProfileRepresentation> getMembers(Integer groupId, String userName) {
+		LOGGER.info(String.format("Finding members of group with id %s for student with userName %s.", groupId, userName));
+		Group group = this.groupRepository.findOne(groupId);
+		if(group==null){
+			LOGGER.error(String.format("Group with id %s does not exist.", userName, groupId ));
+			throw new GroupNotFoundException(groupId);
+		}
+		Student student = this.findStudent(userName);
+		this.verifyGroupMember(groupId, userName);
+		List<StudentProfileRepresentation> members = new ArrayList<StudentProfileRepresentation>();
+		for (Student member : group.getMembers()) {
+			members.add(this.studentProfileCoverter.convert(student, member));
+		}		
+		LOGGER.info(String.format("Members of group with id %s was found for student with userName %s.", groupId, userName));
+		return members;
 	}
 	
 		

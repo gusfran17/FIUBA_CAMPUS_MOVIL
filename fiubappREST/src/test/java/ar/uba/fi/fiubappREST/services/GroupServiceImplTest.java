@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.converters.DiscussionConverter;
 import ar.uba.fi.fiubappREST.converters.GroupConverter;
+import ar.uba.fi.fiubappREST.converters.StudentProfileConverter;
 import ar.uba.fi.fiubappREST.domain.Group;
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
 import ar.uba.fi.fiubappREST.domain.Student;
@@ -38,6 +39,7 @@ import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupUpdateRepresentation;
+import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 
 public class GroupServiceImplTest {
 	
@@ -59,6 +61,8 @@ public class GroupServiceImplTest {
 	private DiscussionConverter discussionConverter;
 	@Mock
 	private GroupRepresentation representation;
+	@Mock
+	private StudentProfileConverter studentProfileConverter; 
 	
 	
 	private Student student;
@@ -73,7 +77,8 @@ public class GroupServiceImplTest {
 		this.groupPictureRepository = mock(GroupPictureRepository.class);
 		this.converter = mock(GroupConverter.class);
 		this.discussionConverter = mock(DiscussionConverter.class);
-		this.service= new GroupServiceImpl(groupRepository, studentRepository, groupPictureRepository, null, converter, discussionConverter);
+		this.studentProfileConverter = mock(StudentProfileConverter.class);
+		this.service= new GroupServiceImpl(groupRepository, studentRepository, groupPictureRepository, null, converter, discussionConverter, studentProfileConverter);
 		this.student = new Student();
 		this.student.setUserName(AN_USER_NAME);
 		Set<Group> groups = new HashSet<Group>();
@@ -329,6 +334,37 @@ public class GroupServiceImplTest {
 		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(null);
 				
 		this.service.updateGroup(A_GROUP_ID, updatingGroup, AN_USER_NAME);
+	}
+	
+	@Test
+	public void testGetMembers(){
+		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(group);
+		when(this.studentRepository.findByUserNameAndFetchMatesAndGroupsEagerly(AN_USER_NAME)).thenReturn(student);
+		when(this.converter.convert(student, group)).thenReturn(representation);
+		when(representation.getAmIAMember()).thenReturn(true);
+		Student aMember = mock(Student.class);
+		Student anotherMember = mock(Student.class);
+		group.getMembers().add(student);
+		student.getGroups().add(group);
+		group.getMembers().add(aMember);
+		group.getMembers().add(anotherMember);
+		StudentProfileRepresentation studentProfile = mock(StudentProfileRepresentation.class);
+		StudentProfileRepresentation aMemberProfile = mock(StudentProfileRepresentation.class);
+		StudentProfileRepresentation anotherMemberProfile = mock(StudentProfileRepresentation.class);
+		when(this.studentProfileConverter.convert(student, student)).thenReturn(studentProfile);
+		when(this.studentProfileConverter.convert(student, aMember)).thenReturn(aMemberProfile);
+		when(this.studentProfileConverter.convert(student, anotherMember)).thenReturn(anotherMemberProfile);
+		
+		List<StudentProfileRepresentation> profiles = this.service.getMembers(A_GROUP_ID, AN_USER_NAME);
+		
+		assertEquals(3, profiles.size());
+	}
+	
+	@Test(expected= GroupNotFoundException.class)
+	public void testGetMembersGroupNotFound(){
+		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(null);
+		
+		this.service.getMembers(A_GROUP_ID, AN_USER_NAME);
 	}
 	
 }

@@ -23,6 +23,7 @@ import ar.uba.fi.fiubappREST.domain.Session;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupUpdateRepresentation;
+import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 import ar.uba.fi.fiubappREST.services.GroupService;
 import ar.uba.fi.fiubappREST.services.SessionService;
 
@@ -135,6 +136,23 @@ public class GroupControllerTest {
 		GroupRepresentation updatedGroup = this.controller.update(A_TOKEN, A_GROUP_ID, updatingGroup);
 		
 		assertEquals(representation, updatedGroup);
+	}
+	
+	@Test
+	public void testGetMembers(){
+		Session session = mock(Session.class);
+		when(session.getUserName()).thenReturn(AN_USER_NAME);
+		when(studentSessionService.findStudentSession(A_TOKEN)).thenReturn(session);
+		List<StudentProfileRepresentation> profiles = new ArrayList<StudentProfileRepresentation>();
+		StudentProfileRepresentation aMember = mock(StudentProfileRepresentation.class);
+		StudentProfileRepresentation anotherMember = mock(StudentProfileRepresentation.class);
+		profiles.add(aMember);
+		profiles.add(anotherMember);
+		when(this.service.getMembers(A_GROUP_ID, AN_USER_NAME)).thenReturn(profiles);
+		
+		List<StudentProfileRepresentation> foundMembers = this.controller.getMembers(A_TOKEN, A_GROUP_ID);
+		
+		assertEquals(2, foundMembers.size());
 	}
 }
 
