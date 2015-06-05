@@ -37,13 +37,13 @@ import java.util.Map;
 
 import ar.uba.fi.fiubappMobile.utils.DataAccess;
 
-public class GrupoAdapter extends BaseAdapter {
+public class GrupoSearchAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
     private List<Grupo> grupoItems;
     ImageLoader imageLoader = VolleyController.getInstance().getImageLoader();
 
-    public GrupoAdapter(Activity activity, List<Grupo> grupoItems) {
+    public GrupoSearchAdapter(Activity activity, List<Grupo> grupoItems) {
         this.activity = activity;
         this.grupoItems = grupoItems;
     }
@@ -88,13 +88,13 @@ public class GrupoAdapter extends BaseAdapter {
         thumbNail.setImageUrl(grupoSeleccionado.getImgURL() + "?timestamp=" + time, imageLoader);
 
         thumbNail.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
                 String url = grupoSeleccionado.getImgURL();
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 activity.startActivity(i);
-        }
+            }
         });
 
         int cantMiembros = grupoSeleccionado.getCantMiembros();
@@ -108,7 +108,7 @@ public class GrupoAdapter extends BaseAdapter {
 
         if (grupoSeleccionado.getAmIaMember()){
             button.setText("Abandonar");
-			alertaAbandonarGrupo(grupoSeleccionado,grupoFilaView);
+            alertaAbandonarGrupo(grupoSeleccionado,grupoFilaView);
         }else{
             button.setText("Ingresar");
             alertaIngresarGrupo(grupoSeleccionado,grupoFilaView);
@@ -179,8 +179,8 @@ public class GrupoAdapter extends BaseAdapter {
         };
         VolleyController.getInstance().addToRequestQueue(jsonReq);
     }
-	
-	public void alertaAbandonarGrupo(final Grupo grupo, View view){
+
+    public void alertaAbandonarGrupo(final Grupo grupo, View view){
 
         final Button buttonAbandonar = (Button)view.findViewById(R.id.childButton);
 
@@ -206,8 +206,8 @@ public class GrupoAdapter extends BaseAdapter {
         });
 
     }
-	
-	private void abandonarGrupo(final Grupo grupo){
+
+    private void abandonarGrupo(final Grupo grupo){
         String url = getURLAPI()+"/students/"+getUsername()+"/groups/"+grupo.getId();
 
         JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.DELETE,
@@ -216,22 +216,32 @@ public class GrupoAdapter extends BaseAdapter {
                     @Override
                     public void onResponse(JSONObject response) {
                         Popup.showText(activity, "Abandonaste el grupo "+grupo.getNombre(), Toast.LENGTH_LONG).show();
-                        getGrupos();
+                        grupoItems.remove(grupo);
+                        grupo.setCantMiembros(grupo.getCantMiembros()-1);
+                        grupo.setAmIaMember(false);
+                        grupoItems.add(grupo);
+
+                        notifyDataSetChanged();
                     }
                 },
                 new Response.ErrorListener(){
                     @Override
                     public void onErrorResponse(VolleyError error) {
-					
-						if (error.networkResponse == null){
+
+                        if (error.networkResponse == null){
 
                             Popup.showText(activity, "Abandonaste el grupo "+grupo.getNombre(), Toast.LENGTH_LONG).show();
-                            getGrupos();
-							
+                            grupoItems.remove(grupo);
+                            grupo.setCantMiembros(grupo.getCantMiembros()-1);
+                            grupo.setAmIaMember(false);
+                            grupoItems.add(grupo);
+
+                            notifyDataSetChanged();
+
                         }else{
-							Popup.showText(activity, "Ha ocurrido un error. " +
-									"Probá nuevamente en unos minutos", Toast.LENGTH_LONG).show();
-						}
+                            Popup.showText(activity, "Ha ocurrido un error. " +
+                                    "Probá nuevamente en unos minutos", Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
         ){
@@ -243,73 +253,6 @@ public class GrupoAdapter extends BaseAdapter {
             }
 
         };
-        VolleyController.getInstance().addToRequestQueue(jsonReq);
-    }
-
-    public void getGrupos(){
-        grupoItems.clear();
-
-        String URL = getURLAPI() + "/students/" + getUsername() + "/groups";
-        JsonArrayRequest jsonReq = new JsonArrayRequest(Request.Method.GET,
-                URL,
-                //new JSONObject(params),
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-
-                        for (int i = 0; i < response.length(); i++) {
-                            try {
-
-                                JSONObject grupoJSON = response.getJSONObject(i);
-
-                                String id = grupoJSON.getString("id");
-                                String nombre = grupoJSON.getString("name");
-
-                                Grupo grupo = new Grupo();
-
-                                grupo.setId(id);
-                                grupo.setNombre(nombre);
-                                grupo.setCantMiembros(grupoJSON.getInt("amountOfMembers"));
-                                grupo.setAmIaMember(grupoJSON.getBoolean("amIAMember"));
-                                grupo.setImgURL(grupoJSON.getString("groupPicture"));
-
-                                JSONObject jsonOwner = grupoJSON.getJSONObject("owner");
-                                Alumno owner = new Alumno();
-
-                                owner.setNombre(jsonOwner.getString("name"));
-                                owner.setApellido(jsonOwner.getString("lastName"));
-                                owner.setIntercambio(jsonOwner.getBoolean("isExchangeStudent"));
-                                owner.setIsMyMate(jsonOwner.getBoolean("isMyMate"));
-                                owner.setUsername(jsonOwner.getString("userName"));
-                                owner.setImgURL(jsonOwner.getString("profilePicture"));
-
-                                grupo.setOwner(owner);
-
-                                grupoItems.add(grupo);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        notifyDataSetChanged();
-                    }
-                },new Response.ErrorListener(){
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(GrupoAdapter.class.getSimpleName(), "Error: " + error.getMessage());
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<String, String>();
-
-                headers.put("Authorization", getToken());
-
-                return headers;
-
-            }
-        };
-
         VolleyController.getInstance().addToRequestQueue(jsonReq);
     }
 
