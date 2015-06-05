@@ -16,9 +16,6 @@ import java.util.Map;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.json.JSONObject;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -30,8 +27,6 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 public class MultipartRequest<T> extends Request<T> {
-
-    private static final String FILE_PART_NAME = "image";
 
     private MultipartEntityBuilder mBuilder = MultipartEntityBuilder.create();
     private final Response.Listener<T> mListener;
@@ -59,7 +54,7 @@ public class MultipartRequest<T> extends Request<T> {
         this.context = context;
         this.headers = headers;
         this.mimeType = mimeType;
-        mImageFile = new File(uri.getPath());
+        mImageFile = getFile(uri);
         this.userName = userName;
 
         buildMultipartEntity();
@@ -79,7 +74,16 @@ public class MultipartRequest<T> extends Request<T> {
 
     private void buildMultipartEntity()
     {
-        mBuilder.addBinaryBody("file", mImageFile, ContentType.create(this.mimeType), uri.getPath());
+        String nombre = "";
+
+        if(uri.toString().contains("content://")) {
+            nombre = getRealPathFromURI(this.context, this.uri);
+        }
+        else {
+            nombre = uri.getPath();
+        }
+
+        mBuilder.addBinaryBody("file", mImageFile, ContentType.create(this.mimeType), nombre);
         mBuilder.addTextBody("text", "{\"message\":\"hola\", \"creatorUserName\": \"88000\"}", ContentType.create("text/plain"));
         mBuilder.addTextBody("userName", this.userName, ContentType.create("text/plain"));
 
@@ -124,4 +128,31 @@ public class MultipartRequest<T> extends Request<T> {
     }
 
 
+    private File getFile(Uri uri){
+        File file = null;
+
+        if(uri.toString().contains("content://")) {
+            file = new File(getRealPathFromURI(context,uri));
+        }
+        else{
+            file = new File(uri.getPath());
+        }
+
+        return file;
+    }
+
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
 }

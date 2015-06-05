@@ -47,6 +47,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import android.net.Uri;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -605,7 +606,7 @@ public class Perfil_personal extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
 
-        final String mime = getMimeType(imageReturnedIntent.getData().getPath());
+        final String mime = getMimeType(imageReturnedIntent.getData());
         String FilePath = imageReturnedIntent.getData().getPath();
 
         final ImageView profile_img = (ImageView)this.view.findViewById(R.id.image_profile);
@@ -645,12 +646,20 @@ public class Perfil_personal extends Fragment {
         }
     }
 
-    public static String getMimeType(String url) {
+
+    public String getMimeType(Uri uri) {
         String type = null;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
-        if (extension != null) {
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+
+        if(!uri.toString().contains("content://")) {
+            String extension = MimeTypeMap.getFileExtensionFromUrl(uri.getPath());
+            if (extension != null) {
+                type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+            }
         }
+        else{
+            type = this.context.getContentResolver().getType(uri);
+        }
+
         return type;
     }
 

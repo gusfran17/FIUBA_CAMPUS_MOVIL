@@ -35,7 +35,7 @@ public class PruebaController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public @ResponseBody void test(@RequestPart("file") MultipartFile file, @RequestParam(value="text") String text, @RequestParam(value="userName") String userName) throws IOException {	    
+	public @ResponseBody void test(@RequestParam("file") MultipartFile file, @RequestParam(value="text") String text, @RequestParam(value="userName") String userName) throws IOException {	    
 		DiscussionMessage message = new ObjectMapper().readValue(text, DiscussionMessage.class);
 		this.profilePictureService.update(userName, file);
 	}
