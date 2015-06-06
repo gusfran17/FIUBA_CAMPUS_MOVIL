@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
 import ar.uba.fi.fiubappREST.domain.Session;
@@ -56,9 +58,9 @@ public class DiscussionController {
 
 	@RequestMapping(value="{groupId}/discussions/{discussionId}/messages", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public @ResponseBody DiscussionMessageRepresentation createGroupDiscussionMessage(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @PathVariable Integer discussionId, @RequestBody DiscussionMessageCreationRepresentation messageRepresentation) {
-		this.sessionService.validateThisStudent(token, messageRepresentation.getCreatorUserName());
-		return this.discussionService.createMessage(messageRepresentation, groupId, discussionId);
+	public @ResponseBody DiscussionMessageRepresentation createGroupDiscussionMessage(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @PathVariable Integer discussionId, @RequestParam("file") MultipartFile file, @RequestParam("text") String text, @RequestParam("userName") String userName) {
+		this.sessionService.validateThisStudent(token, userName);
+		return this.discussionService.createMessage(groupId, discussionId, text, userName, file);
 	}
 	
 	@RequestMapping(value="{groupId}/discussions/{discussionId}/messages", method = RequestMethod.GET)

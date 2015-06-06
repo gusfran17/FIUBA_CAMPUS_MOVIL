@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.converters.DiscussionConverter;
 import ar.uba.fi.fiubappREST.converters.DiscussionMessageConverter;
@@ -19,14 +20,12 @@ import ar.uba.fi.fiubappREST.domain.Group;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.DiscussionNotFoundInGroupException;
 import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
-import ar.uba.fi.fiubappREST.exceptions.StudentIsNotMemberOfGroupException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.persistance.DiscussionMessageRepository;
 import ar.uba.fi.fiubappREST.persistance.DiscussionRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
-import ar.uba.fi.fiubappREST.representations.DiscussionMessageCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionMessageRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
@@ -92,15 +91,15 @@ public class DiscussionServiceImpl implements DiscussionService{
 	}
 
 	@Override
-	public DiscussionMessageRepresentation createMessage(DiscussionMessageCreationRepresentation messageRepresentation, Integer groupId, Integer discussionId) {
+	public DiscussionMessageRepresentation createMessage(Integer groupId, Integer discussionId, String text, String userName, MultipartFile file) {
 		Group group = this.findGroup(groupId);
-		Student student = this.findStudent(messageRepresentation.getCreatorUserName());
+		Student student = this.findStudent(userName);
 		Discussion discussion = findDiscussion(groupId, discussionId, group);
 		
 		DiscussionMessage message = new DiscussionMessage();
 		message.setCreationDate(new Date());
 		message.setCreator(student);
-		message.setMessage(messageRepresentation.getMessage());
+		message.setMessage(text);
 		discussion.addMessage(message);
 		
 		//discussionRepository.save(discussion);
@@ -145,13 +144,13 @@ public class DiscussionServiceImpl implements DiscussionService{
 		return discussionsRepresentation;
 	}
 	
-	private void verifyGroupMember(Integer groupId, String userName) {
+/*	private void verifyGroupMember(Integer groupId, String userName) {
 		GroupRepresentation groupRepresentation = this.findGroupForStudent(groupId, userName);
 		if (!groupRepresentation.getAmIAMember()){
 			throw new StudentIsNotMemberOfGroupException(userName, groupId);
 		}
 		LOGGER.info(String.format(userName + " is a member of group " + groupId + "."));
-	}
+	}*/
 	
 	@Override
 	public GroupRepresentation findGroupForStudent(Integer groupId, String userName) {

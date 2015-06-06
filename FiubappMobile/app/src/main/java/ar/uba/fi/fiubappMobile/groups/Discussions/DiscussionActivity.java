@@ -107,9 +107,11 @@ public class DiscussionActivity extends Activity {
         final ImageView img_upload = (ImageView) createDiscussionMessageView.findViewById(R.id.img_upload_file);
         final Activity activity = this;
 
+
         img_upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("*/*");
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -300,4 +302,12 @@ public class DiscussionActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        TextView edtvw_message = (TextView) findViewById(R.id.edtvw_message);
+        edtvw_message.setText(imageReturnedIntent.getData().getPath());
+    }
+
 }
