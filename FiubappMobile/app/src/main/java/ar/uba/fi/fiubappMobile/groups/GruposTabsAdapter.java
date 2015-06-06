@@ -20,7 +20,8 @@ public class GruposTabsAdapter extends FragmentPagerAdapter {
             CONTENT = new String[] {
                     context.getResources().getString(R.string.informacion),
                     context.getResources().getString(R.string.discusiones),
-                    context.getResources().getString(R.string.archivos)};
+                    context.getResources().getString(R.string.archivos),
+                    context.getResources().getString(R.string.miembros)};
         else
             CONTENT = new String[] {
                     context.getResources().getString(R.string.informacion)};
@@ -37,6 +38,8 @@ public class GruposTabsAdapter extends FragmentPagerAdapter {
                 return DiscusionesTab.nuevoGrupo(idGrupo);
             case 2:
                 return ArchivosTab.nuevoGrupo(idGrupo);
+            case 3:
+                return MiembrosTab.nuevoGrupo(idGrupo);
         }
 
         return null;
