@@ -5,11 +5,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,6 +27,8 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.fiubapp.fiubapp.MessageMultipartRequest;
+import com.fiubapp.fiubapp.MultipartRequest;
 import com.fiubapp.fiubapp.Popup;
 import com.fiubapp.fiubapp.R;
 import com.fiubapp.fiubapp.VolleyController;
@@ -49,11 +53,20 @@ public class DiscussionActivity extends Activity {
     private int id;
     private int groupId;
     private String urlAPI;
+
     private MessagesAdapter messagesAdapter;
     private List<Message> messagesList = new ArrayList<Message>();
     private ListView messagesListView;
+
     private static final String TAG = DiscussionActivity.class.getSimpleName();
-    private TextView lbl_discussion_header;
+    private final int FILE_SELECT_CODE = 100;
+
+    private View createDiscussionMessageView;
+    private Uri selectedfile;
+    private String creator;
+    private String mime = null;
+    private boolean messageHasFile = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +81,7 @@ public class DiscussionActivity extends Activity {
         setContentView(R.layout.activity_discussion);
 
         messagesListView = (ListView) findViewById(R.id.lstVw_messages);
-        lbl_discussion_header = (TextView) findViewById(R.id.lbl_discussion_header);
+        TextView lbl_discussion_header = (TextView) findViewById(R.id.lbl_discussion_header);
         lbl_discussion_header.setText(myIntent.getStringExtra("discussionName"));
 
 
@@ -93,19 +106,26 @@ public class DiscussionActivity extends Activity {
             }
         });
 
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+        createDiscussionMessageView = layoutInflater.inflate(R.layout.create_discussion_message, null);
+
+        DataAccess dataAccess = new DataAccess(this);
+        creator = dataAccess.getUserName();
 
     }
 
     private void setCreateMessage() {
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View createDiscussionMessageView = layoutInflater.inflate(R.layout.create_discussion_message, null);
+        messageHasFile = false;
+        TextView txtvw_upload = (TextView) createDiscussionMessageView.findViewById(R.id.txtvw_upload);
+        if (!messageHasFile){
+            txtvw_upload.setText("Subir archivo");
+        }
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setView(createDiscussionMessageView);
-        DataAccess dataAccess = new DataAccess(this);
-        final String creator = dataAccess.getUserName();
         final EditText edtvw_message = (EditText)createDiscussionMessageView.findViewById(R.id.edtvw_message);
         final ImageView img_upload = (ImageView) createDiscussionMessageView.findViewById(R.id.img_upload_file);
         final Activity activity = this;
+
 
 
         img_upload.setOnClickListener(new View.OnClickListener() {
@@ -113,19 +133,8 @@ public class DiscussionActivity extends Activity {
             public void onClick(View view) {
 
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("*/*");
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                int FILE_SELECT_CODE = 0;
-                try {
-                    startActivityForResult(
-                            Intent.createChooser(intent, "Seleccione archivo para subir."),
-                            FILE_SELECT_CODE);
-                } catch (android.content.ActivityNotFoundException ex) {
-                    // Potentially direct the user to the Market with a Dialog
-                    Toast.makeText(activity, "No se pudo cargar la selección de archivos.",
-                            Toast.LENGTH_SHORT).show();
-                }
-                startActivity(intent);
+                intent.setType("file/*");
+                startActivityForResult(intent, FILE_SELECT_CODE);
             }
         });
         
@@ -165,7 +174,44 @@ public class DiscussionActivity extends Activity {
     }
 
     private void createMessage(Message message) {
+        final Activity activity = this;
+        String URL = urlAPI + "/groups/" + groupId + "/discussions/" + id + "/messages";
+        final EditText edtvw_message = (EditText)createDiscussionMessageView.findViewById(R.id.edtvw_message);
 
+        MessageMultipartRequest mPR = new MessageMultipartRequest(URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String arg0) {
+                        Popup.showText(activity, arg0, Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        try {
+                            Log.d("Error", error.toString());
+                            String responseBody = null;
+                            JSONObject jsonObject = null;
+                            try {
+                                responseBody = new String(error.networkResponse.data, "utf-8");
+                            } catch (UnsupportedEncodingException e) {
+                            }
+                            Popup.showText(activity, responseBody, Toast.LENGTH_LONG).show();
+                        }
+                        catch(Exception e){}
+                    }
+                } ,
+                selectedfile,
+                activity,
+                null,
+                mime,
+                creator,
+                edtvw_message.getText().toString());
+
+        VolleyController.getInstance().addToRequestQueue(mPR);
+
+
+/*
         final Activity activity = this;
 
         String requestURL = urlAPI + "/groups/" + this.groupId + "/discussions/" + this.id + "/messages";
@@ -234,6 +280,7 @@ public class DiscussionActivity extends Activity {
         };
 
         VolleyController.getInstance().addToRequestQueue(jsObjRequest);
+*/
 
     }
 
@@ -304,10 +351,40 @@ public class DiscussionActivity extends Activity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        TextView edtvw_message = (TextView) findViewById(R.id.edtvw_message);
-        edtvw_message.setText(imageReturnedIntent.getData().getPath());
+    public void onActivityResult(int requestCode, int resultCode, Intent ReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode,ReturnedIntent);
+
+        if (requestCode == FILE_SELECT_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+
+                String filePath = ReturnedIntent.getData().getPath();
+                TextView txtvw_upload = (TextView) createDiscussionMessageView.findViewById(R.id.txtvw_upload);
+                txtvw_upload.setText(filePath.substring(filePath.lastIndexOf("/") + 1));
+
+                selectedfile = ReturnedIntent.getData();
+
+                mime = getMimeType(ReturnedIntent.getData());
+
+                messageHasFile = true;
+            }
+        }
+
+    }
+
+    public String getMimeType(Uri uri) {
+        String type = null;
+
+        if(!uri.toString().contains("content://")) {
+            String extension = MimeTypeMap.getFileExtensionFromUrl(uri.getPath());
+            if (extension != null) {
+                type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+            }
+        }
+        else{
+            type = this.getContentResolver().getType(uri);
+        }
+
+        return type;
     }
 
 }

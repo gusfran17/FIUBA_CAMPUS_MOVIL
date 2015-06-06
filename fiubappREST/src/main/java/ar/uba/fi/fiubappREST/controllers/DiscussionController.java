@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
 import ar.uba.fi.fiubappREST.domain.Session;
 import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
-import ar.uba.fi.fiubappREST.representations.DiscussionMessageCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionMessageRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.services.DiscussionService;
