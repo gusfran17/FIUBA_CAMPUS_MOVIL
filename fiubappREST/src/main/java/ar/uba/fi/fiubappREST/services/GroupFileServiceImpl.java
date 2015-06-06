@@ -101,7 +101,7 @@ public class GroupFileServiceImpl implements GroupFileService {
 		LOGGER.info(String.format("Finding all files for group with id %s.", groupId));
 		Group group = this.findGroup(groupId);
 		this.verifyGroupMember(group, userName);
-		List<GroupFile> files = this.groupFileRepository.findAll();
+		List<GroupFile> files = this.groupFileRepository.findByGroupId(groupId);
 		LOGGER.info(String.format("All files for group with id %s were found.", groupId));
 		return files;
 	}
