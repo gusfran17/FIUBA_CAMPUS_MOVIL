@@ -14,6 +14,7 @@ import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupUpdateRepresentation;
+import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 
 public interface GroupService {
 
@@ -36,5 +37,7 @@ public interface GroupService {
 	public Set<DiscussionRepresentation> findGroupDiscussionsForMember(Integer groupId, String string);
 
 	public void unregisterStudent(String userName, Integer groupId);
+
+	public List<StudentProfileRepresentation> getMembers(Integer groupId, String userName);
 
 }

@@ -77,4 +77,5 @@
     <string name="txtvw_discussion_name">Nombre</string>
     <string name="txtvw_first_message">Comentario</string>
     <string name="escribir_muro">ESCRIBIR</string>
+    <string name="miembros">MIEMBROS</string>
 </resources>

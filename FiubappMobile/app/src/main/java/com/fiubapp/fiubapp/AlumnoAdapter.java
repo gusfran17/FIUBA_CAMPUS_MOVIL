@@ -110,6 +110,10 @@ public class AlumnoAdapter extends BaseAdapter {
             agregarCompanero((Alumno)alumnoItems.get(position),convertView,position);
         }
 
+        if (a.getUsername().equals(getUsername()))
+            buttonAdd.setVisibility(View.INVISIBLE);
+        else buttonAdd.setVisibility(View.VISIBLE);
+
         return convertView;
     }
 
