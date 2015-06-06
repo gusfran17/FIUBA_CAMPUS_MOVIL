@@ -17,6 +17,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.fiubapp.fiubapp.Alumno;
 import com.fiubapp.fiubapp.AlumnoAdapter;
+import com.fiubapp.fiubapp.PerfilTabs;
 import com.fiubapp.fiubapp.PerfilTabsCompanero;
 import com.fiubapp.fiubapp.R;
 import com.fiubapp.fiubapp.VolleyController;
@@ -34,7 +35,7 @@ import ar.uba.fi.fiubappMobile.utils.DataAccess;
 
 public class MiembrosTab extends Fragment {
 
-    private AlumnoAdapter alumnoAdapter;
+    private MiembroAdapter alumnoAdapter;
     private List<Alumno> alumnoList = new ArrayList<Alumno>();
     private ListView alumnoListView;
     private View view = null;
@@ -52,7 +53,7 @@ public class MiembrosTab extends Fragment {
         view = inflater.inflate(R.layout.listado, container, false);
 
         alumnoListView = (ListView)view.findViewById(R.id.list);
-        alumnoAdapter = new AlumnoAdapter(getActivity(), alumnoList);
+        alumnoAdapter = new MiembroAdapter(getActivity(), alumnoList);
         alumnoListView.setAdapter(alumnoAdapter);
 
         alumnoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -74,6 +75,9 @@ public class MiembrosTab extends Fragment {
                     i.putExtra("userName", userName);
                     i.putExtra("comments", comments);
                     i.putExtra("isMyMate", isMyMate);
+                    startActivity(i);
+                }else{
+                    Intent i = new Intent(getActivity(), PerfilTabs.class);
                     startActivity(i);
                 }
             }
