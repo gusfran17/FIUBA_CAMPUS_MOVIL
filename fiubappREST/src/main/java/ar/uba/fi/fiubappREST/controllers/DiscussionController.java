@@ -57,9 +57,9 @@ public class DiscussionController {
 
 	@RequestMapping(value="{groupId}/discussions/{discussionId}/messages", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public @ResponseBody DiscussionMessageRepresentation createGroupDiscussionMessage(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @PathVariable Integer discussionId, @RequestParam("file") MultipartFile file, @RequestParam("text") String text, @RequestParam("userName") String userName) {
-		this.sessionService.validateThisStudent(token, userName);
-		return this.discussionService.createMessage(groupId, discussionId, text, userName, file);
+	public @ResponseBody DiscussionMessageRepresentation createGroupDiscussionMessage(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @PathVariable Integer discussionId, @RequestParam("file") MultipartFile file, @RequestParam("message") String message) {
+		Session session = this.sessionService.findStudentSession(token);
+		return this.discussionService.createMessage(groupId, discussionId, message, session.getUserName(), file);
 	}
 	
 	@RequestMapping(value="{groupId}/discussions/{discussionId}/messages", method = RequestMethod.GET)

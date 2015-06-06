@@ -91,20 +91,20 @@ public class DiscussionServiceImpl implements DiscussionService{
 	}
 
 	@Override
-	public DiscussionMessageRepresentation createMessage(Integer groupId, Integer discussionId, String text, String userName, MultipartFile file) {
+	public DiscussionMessageRepresentation createMessage(Integer groupId, Integer discussionId, String message, String userName, MultipartFile file) {
 		Group group = this.findGroup(groupId);
 		Student student = this.findStudent(userName);
 		Discussion discussion = findDiscussion(groupId, discussionId, group);
 		
-		DiscussionMessage message = new DiscussionMessage();
-		message.setCreationDate(new Date());
-		message.setCreator(student);
-		message.setMessage(text);
-		discussion.addMessage(message);
+		DiscussionMessage discussionMessage = new DiscussionMessage();
+		discussionMessage.setCreationDate(new Date());
+		discussionMessage.setCreator(student);
+		discussionMessage.setMessage(message);
+		discussion.addMessage(discussionMessage);
 		
 		//discussionRepository.save(discussion);
 		groupRepository.save(group);
-		return this.discussionMessageConverter.convert(message);
+		return this.discussionMessageConverter.convert(discussionMessage);
 	}
 
 	private Discussion findDiscussion(Integer groupId, Integer discussionId, Group group) {
