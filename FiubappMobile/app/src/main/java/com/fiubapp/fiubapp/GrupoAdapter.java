@@ -188,9 +188,9 @@ public class GrupoAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 new AlertDialog.Builder(activity)
-                        .setTitle("Desea abandonar el grupo?")
+                        .setTitle("¿Abandonar grupo?")
                         .setMessage(grupo.getNombre())
-                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Abandonar", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 abandonarGrupo(grupo);
                             }
