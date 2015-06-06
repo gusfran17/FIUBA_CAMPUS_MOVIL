@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import ar.uba.fi.fiubappREST.domain.Session;
 import ar.uba.fi.fiubappREST.representations.MateRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 import ar.uba.fi.fiubappREST.services.MateService;
@@ -51,6 +52,13 @@ public class MateController {
 	public @ResponseBody void deleteMate(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @PathVariable String mateUserName) {
 		this.sessionService.validateThisStudent(token, userName);
 		this.mateService.deleteMate(userName, mateUserName);
+	}
+	
+	@RequestMapping(value="commons", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	public @ResponseBody List<StudentProfileRepresentation> getCommonsMates(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
+		Session session = this.sessionService.findStudentSession(token);
+		return this.mateService.getCommonstMates(userName, session.getUserName());
 	}
 }
 

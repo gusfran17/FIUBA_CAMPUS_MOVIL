@@ -3,6 +3,7 @@ package ar.uba.fi.fiubappREST.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,7 @@ public class MateServiceImpl implements MateService {
 		Student student = this.studentRepository.findByUserNameAndFetchMatesEagerly(userName);
 		if(student == null){
 			LOGGER.error(String.format("Student with userName %s was not found.", userName));
-			throw new StudentNotFoundException();
+			throw new StudentNotFoundException(userName);
 		}
 		LOGGER.info(String.format("Student with userName %s was found.", userName));
 		return student;
@@ -77,5 +78,19 @@ public class MateServiceImpl implements MateService {
 		student.deleteMate(mate);
 		this.studentRepository.save(student);
 		this.studentRepository.save(mate);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<StudentProfileRepresentation> getCommonstMates(String anUserName, String anotherUserName) {
+		Student aStudent = this.findStudent(anUserName);
+		Student anotherStudent = this.findStudent(anotherUserName);
+		List<Student> commonMates = (List<Student>) CollectionUtils.intersection(aStudent.getMates(), anotherStudent.getMates());		
+
+		List<StudentProfileRepresentation> mates = new ArrayList<StudentProfileRepresentation>();
+		for (Student mate : commonMates) {
+			mates.add(this.studentProfileConverter.convert(anotherStudent, mate));
+		}
+		return mates;
 	}	
 }
