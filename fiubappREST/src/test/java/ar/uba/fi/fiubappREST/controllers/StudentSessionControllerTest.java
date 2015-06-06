@@ -1,6 +1,8 @@
 package ar.uba.fi.fiubappREST.controllers;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -51,6 +53,15 @@ public class StudentSessionControllerTest {
 		Session foundSession = this.controller.findSession(A_TOKEN);
 		
 		assertNotNull(foundSession);
+	}
+	
+	@Test
+	public void testDeleteSession() {
+		doNothing().when(this.service).deleteAdminSession(A_TOKEN);
+		
+		this.controller.deleSession(A_TOKEN);
+		
+		assertTrue(true);
 	}
 
 }

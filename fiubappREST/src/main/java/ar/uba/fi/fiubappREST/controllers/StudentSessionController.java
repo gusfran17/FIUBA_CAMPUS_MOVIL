@@ -37,4 +37,10 @@ public class StudentSessionController {
 	public @ResponseBody Session findSession(@RequestHeader(value="Authorization") String token) {
 		return sessionService.findStudentSession(token);
 	}
+	
+	@RequestMapping(method = RequestMethod.DELETE)
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public @ResponseBody void deleSession(@RequestHeader(value="Authorization") String token) {
+		this.sessionService.deleteStudentSession(token);
+	}
 }
