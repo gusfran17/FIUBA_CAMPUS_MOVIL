@@ -35,7 +35,7 @@ public class GroupsSearch extends Activity{
 
     private List<Grupo> groupList = new ArrayList<Grupo>();
     private ListView groups;
-    private GrupoAdapter grupoAdapter;
+    private GrupoSearchAdapter grupoAdapter;
     private static final String TAG = GroupsSearch.class.getSimpleName();
     private String urlAPI;
 
@@ -78,7 +78,7 @@ public class GroupsSearch extends Activity{
             }
         });
 
-        grupoAdapter = new GrupoAdapter(this, groupList);
+        grupoAdapter = new GrupoSearchAdapter(this, groupList);
         groups.setAdapter(grupoAdapter);
     }
 

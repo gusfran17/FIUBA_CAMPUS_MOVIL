@@ -331,4 +331,24 @@ public class GroupServiceImplTest {
 		this.service.updateGroup(A_GROUP_ID, updatingGroup, AN_USER_NAME);
 	}
 	
+	@Test
+	public void unregisterStudent(){
+		when(this.studentRepository.findByUserNameAndFetchMatesAndGroupsEagerly(AN_USER_NAME)).thenReturn(student);
+		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(group);
+		when(this.studentRepository.save(student)).thenReturn(student);
+		when(this.groupRepository.save(group)).thenReturn(group);
+		this.group.addMember(student);
+		
+		this.service.unregisterStudent(AN_USER_NAME, A_GROUP_ID);
+		
+		assertTrue(true);
+	}
+	
+	@Test(expected = GroupNotFoundException.class)
+	public void unregisterStudentGroupNotFound(){
+		when(this.groupRepository.findOne(A_GROUP_ID)).thenReturn(null);
+		
+		this.service.unregisterStudent(AN_USER_NAME, A_GROUP_ID);
+	}
+	
 }

@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyMemberOfGroupException;
+import ar.uba.fi.fiubappREST.exceptions.StudentIsNotMemberOfGroupException;
 
 public class GroupTest {
 	
@@ -46,6 +47,23 @@ public class GroupTest {
 	public void testAddStudentAlreadyMember() {
 			
 		this.group.addMember(owner);
+	}
+	
+	@Test
+	public void testRemoveMemberOK() {		
+		this.group.removeMember(owner);
+				
+		assertEquals(0, this.group.getMembers().size());
+	}
+	
+	@Test(expected=StudentIsNotMemberOfGroupException.class)
+	public void testRemoveStudentNotMember() {
+		Student notAMember = new Student();
+		notAMember.setUserName(AN_USER_NAME);
+		notAMember.setGroups(new HashSet<Group>());
+		
+			
+		this.group.removeMember(notAMember);
 	}
 }
 

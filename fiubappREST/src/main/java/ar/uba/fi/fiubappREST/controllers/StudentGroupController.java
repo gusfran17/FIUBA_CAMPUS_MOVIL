@@ -36,12 +36,19 @@ public class StudentGroupController {
 		this.sessionService.validateThisStudent(token, userName);
 		return this.groupService.registerStudent(userName, groupId);
 	}
-	
+		
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody List<GroupRepresentation> getGroups(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
 		this.sessionService.validateThisStudent(token, userName);
 		return this.groupService.getStudentGroups(userName);
+	}
+	
+	@RequestMapping(value="{groupId}", method = RequestMethod.DELETE)
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public @ResponseBody void signOffGroup(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @PathVariable Integer groupId) {
+		this.sessionService.validateThisStudent(token, userName);
+		this.groupService.unregisterStudent(userName, groupId);
 	}
 }
 
