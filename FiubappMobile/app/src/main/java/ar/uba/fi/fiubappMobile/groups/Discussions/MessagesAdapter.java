@@ -2,6 +2,8 @@ package ar.uba.fi.fiubappMobile.groups.Discussions;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +60,7 @@ public class MessagesAdapter extends BaseAdapter {
         TextView txtvw_uploaded = (TextView) convertView.findViewById(R.id.txtvw_uploaded);
 
 
-        Message message = this.messageItems.get(i);
+        final Message message = this.messageItems.get(i);
         lbl_mssg_comment.setText(message.getText());
         lbl_mssg_creator_name.setText(message.getCreatorUserName());
         lbl_mssg_creation_date.setText(message.getCreationDate());
@@ -69,6 +71,19 @@ public class MessagesAdapter extends BaseAdapter {
         } else {
             img_uploaded_file.setVisibility(View.VISIBLE);
             txtvw_uploaded.setVisibility(View.VISIBLE);
+
+            img_uploaded_file.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(message.getAttachedFile()));
+                    activity.startActivityForResult(intent, 200);
+
+                    /*Intent pickIntent = new Intent(Intent.ACTION_PICK);
+                    int requestCode = 1;
+                    pickIntent.setData(Uri.parse(message.getAttachedFile()));
+                    activity.startActivityForResult(pickIntent, requestCode);*/
+                }
+            });
         }
 
         return convertView;    }
