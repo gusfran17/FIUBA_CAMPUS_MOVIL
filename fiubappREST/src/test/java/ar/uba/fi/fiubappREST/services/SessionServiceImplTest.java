@@ -312,6 +312,14 @@ public class SessionServiceImplTest {
 	
 		this.service.validateAdminSession(A_TOKEN);
 	}
+	
+	@Test(expected=OperationNotAllowedFotStudentSessionException.class)
+	public void testValidateInvalidSessionForAdmin() {
+		when(session.isAdminSession()).thenReturn(false);
+		when(sessionRepository.findByToken(A_TOKEN)).thenReturn(session);
+	
+		this.service.validateAdminSession(A_TOKEN);
+	}
 		
 	@Test
 	public void testDeleteForAdmin() {
@@ -319,6 +327,16 @@ public class SessionServiceImplTest {
 		doNothing().when(sessionRepository).delete(session);
 	
 		this.service.deleteAdminSession(A_TOKEN);
+				
+		assertTrue(true);
+	}
+	
+	@Test
+	public void testDeleteForStudent() {
+		when(sessionRepository.findByTokenAndRole(A_TOKEN, SessionRole.STUDENT)).thenReturn(session);
+		doNothing().when(sessionRepository).delete(session);
+	
+		this.service.deleteStudentSession(A_TOKEN);
 				
 		assertTrue(true);
 	}

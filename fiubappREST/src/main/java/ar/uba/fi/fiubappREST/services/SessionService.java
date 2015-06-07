@@ -18,6 +18,7 @@ public interface SessionService {
 	
 	public void validateThisStudentOrMate(String token, String userName);
 
+	public void deleteStudentSession(String token);
 	
 	public Session createAdminSession(Credentials credentials);
 	
@@ -26,5 +27,7 @@ public interface SessionService {
 	public void validateAdminSession(String token);
 
 	public void deleteAdminSession(String token);
+
+
 
 }

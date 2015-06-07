@@ -158,7 +158,13 @@ public class SessionServiceImpl implements SessionService{
 		return mate.isMateWith(me);
 	}
 	
-	
+	@Override
+	public void deleteStudentSession(String token) {
+		LOGGER.info(String.format("Deleting session for token %s.", token));
+		Session session = this.findStudentSession(token);
+		this.sessionRepository.delete(session);
+		LOGGER.info(String.format("Student session for token %s was deleted.", token));
+	}
 	
 
 	@Override
