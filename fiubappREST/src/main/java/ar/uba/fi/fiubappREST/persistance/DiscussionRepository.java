@@ -15,4 +15,7 @@ public interface DiscussionRepository extends CrudRepository<Discussion, Integer
 	@Query(value = "SELECT * FROM discussion WHERE id in  (SELECT discussions_id FROM study_group_discussion WHERE study_group_id = ?1) ORDER BY creationDate DESC", nativeQuery = true)
 	public Set<Discussion> findByProperties(Integer groupId);
 	
+	@Query(value = "SELECT * FROM discussion WHERE id in  (SELECT discussions_id FROM study_group_discussion WHERE study_group_id = ?1) ORDER BY creationDate DESC", nativeQuery = true)
+	public Set<Discussion> findForReport();
+	
 }

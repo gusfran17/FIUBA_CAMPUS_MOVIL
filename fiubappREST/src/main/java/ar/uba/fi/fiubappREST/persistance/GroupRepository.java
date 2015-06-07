@@ -20,6 +20,9 @@ public interface GroupRepository extends CrudRepository<Group, Integer> {
 			+ ")"
 			, nativeQuery = true)
 	public List<Group> findByProperties(String name);
+	
+	@Query("SELECT g FROM Group g LEFT JOIN FETCH g.discussions AS d WHERE d.id = ?1")
+    public Group findGroupForDiscussion(Integer discussionId);
 
 	
 }
