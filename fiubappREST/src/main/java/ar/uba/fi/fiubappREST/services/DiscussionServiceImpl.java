@@ -1,5 +1,6 @@
 package ar.uba.fi.fiubappREST.services;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -16,11 +17,15 @@ import ar.uba.fi.fiubappREST.converters.DiscussionMessageConverter;
 import ar.uba.fi.fiubappREST.converters.GroupConverter;
 import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
+import ar.uba.fi.fiubappREST.domain.DiscussionMessageFile;
 import ar.uba.fi.fiubappREST.domain.Group;
 import ar.uba.fi.fiubappREST.domain.Student;
+import ar.uba.fi.fiubappREST.exceptions.DiscussionMessageFileNotFound;
 import ar.uba.fi.fiubappREST.exceptions.DiscussionNotFoundInGroupException;
 import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
+import ar.uba.fi.fiubappREST.exceptions.UnexpectedErrorReadingProfilePictureFileException;
+import ar.uba.fi.fiubappREST.persistance.DiscussionMessageFileRepository;
 import ar.uba.fi.fiubappREST.persistance.DiscussionMessageRepository;
 import ar.uba.fi.fiubappREST.persistance.DiscussionRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
@@ -41,11 +46,12 @@ public class DiscussionServiceImpl implements DiscussionService{
 	private DiscussionConverter discussionConverter;
 	private DiscussionMessageConverter discussionMessageConverter;
 	private DiscussionMessageRepository discussionMessageRepository;
+	private DiscussionMessageFileRepository discussionMessageFileRepository;
 	
 	private GroupConverter groupConverter;
 	
 	@Autowired
-	public DiscussionServiceImpl(DiscussionRepository discussionRepository, GroupRepository groupRepository, StudentRepository studentRepository, DiscussionMessageRepository discussionMessageRepository, DiscussionConverter discussionConverter, DiscussionMessageConverter discussionMessageConverter, GroupConverter groupConverter){
+	public DiscussionServiceImpl(DiscussionRepository discussionRepository, GroupRepository groupRepository, StudentRepository studentRepository, DiscussionMessageRepository discussionMessageRepository, DiscussionConverter discussionConverter, DiscussionMessageConverter discussionMessageConverter, GroupConverter groupConverter, DiscussionMessageFileRepository discussionMessageFileRepository){
 		this.discussionRepository = discussionRepository;
 		this.groupRepository = groupRepository;
 		this.studentRepository = studentRepository;
@@ -53,6 +59,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 		this.discussionMessageConverter = discussionMessageConverter;
 		this.groupConverter = groupConverter;
 		this.discussionMessageRepository = discussionMessageRepository;
+		this.discussionMessageFileRepository = discussionMessageFileRepository;
 	}
 
 	@Override
@@ -100,11 +107,28 @@ public class DiscussionServiceImpl implements DiscussionService{
 		discussionMessage.setCreationDate(new Date());
 		discussionMessage.setCreator(student);
 		discussionMessage.setMessage(message);
+		discussionMessage.setHasAttachedFile(file!=null);
 		discussion.addMessage(discussionMessage);
-		
-		//discussionRepository.save(discussion);
-		groupRepository.save(group);
-		return this.discussionMessageConverter.convert(discussionMessage);
+		if(discussionMessage.isHasAttachedFile()){
+			DiscussionMessageFile messageFile = this.createFile(discussionMessage, file);
+			discussionMessage.setDiscussionMessageFile(messageFile);
+		}
+		discussionMessageRepository.save(discussionMessage);
+		discussionRepository.save(discussion);		
+				
+		return this.discussionMessageConverter.convert(discussionMessage, groupId, discussionId);
+	}
+	
+	private DiscussionMessageFile createFile(DiscussionMessage message, MultipartFile file) {
+		DiscussionMessageFile messageFile = new DiscussionMessageFile();
+		messageFile.setMessage(message);
+		messageFile.setContentType(file.getContentType());
+		try {
+			messageFile.setFile(file.getBytes());
+		} catch (IOException e) {
+			throw new UnexpectedErrorReadingProfilePictureFileException(file.getName());
+		}
+		return messageFile;
 	}
 
 	private Discussion findDiscussion(Integer groupId, Integer discussionId, Group group) {
@@ -201,6 +225,17 @@ public class DiscussionServiceImpl implements DiscussionService{
 		}
 		return messagesRepresentation;*/
 		return discussionMessages;
+	}
+
+	@Override
+	public DiscussionMessageFile findDiscussionMessageFile(Integer groupId, Integer discussionId, Integer messageId) {
+		Group group = this.findGroup(groupId);
+		this.findDiscussion(groupId, discussionId, group);
+		DiscussionMessageFile file = this.discussionMessageFileRepository.findByMessageId(messageId);
+		if(file==null){
+			throw new DiscussionMessageFileNotFound(messageId, discussionId, groupId); 
+		}
+		return file;
 	}
 	
 }

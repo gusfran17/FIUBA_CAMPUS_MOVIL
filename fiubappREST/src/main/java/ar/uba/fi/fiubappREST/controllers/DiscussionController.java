@@ -3,7 +3,10 @@ package ar.uba.fi.fiubappREST.controllers;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
+import ar.uba.fi.fiubappREST.domain.DiscussionMessageFile;
 import ar.uba.fi.fiubappREST.domain.Session;
 import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionMessageRepresentation;
@@ -57,7 +61,7 @@ public class DiscussionController {
 
 	@RequestMapping(value="{groupId}/discussions/{discussionId}/messages", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public @ResponseBody DiscussionMessageRepresentation createGroupDiscussionMessage(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @PathVariable Integer discussionId, @RequestParam("file") MultipartFile file, @RequestParam("message") String message) {
+	public @ResponseBody DiscussionMessageRepresentation createGroupDiscussionMessage(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @PathVariable Integer discussionId, @RequestParam(required=false) MultipartFile file, @RequestParam("message") String message) {
 		Session session = this.sessionService.findStudentSession(token);
 		return this.discussionService.createMessage(groupId, discussionId, message, session.getUserName(), file);
 	}
@@ -68,6 +72,14 @@ public class DiscussionController {
 		Session session = this.sessionService.findStudentSession(token);
 		Set<DiscussionMessage> messages = this.discussionService.findGroupDiscussionMessagesForMember(groupId, discussionId, session.getUserName());	
 		return messages;
+	}
+	
+	@RequestMapping(value="{groupId}/discussions/{discussionId}/messages/{messageId}/file", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> getProfilePicture(@PathVariable Integer groupId, @PathVariable Integer discussionId, @PathVariable Integer messageId) {
+		DiscussionMessageFile file = this.discussionService.findDiscussionMessageFile(groupId, discussionId, messageId);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.valueOf(file.getContentType()));
+		return new ResponseEntity<byte[]>(file.getFile(), headers, HttpStatus.OK);
 	}
 
 }

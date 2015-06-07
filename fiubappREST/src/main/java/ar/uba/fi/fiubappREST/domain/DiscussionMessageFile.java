@@ -1,10 +1,10 @@
 package ar.uba.fi.fiubappREST.domain;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -12,7 +12,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "discussion_message_file")
 public class DiscussionMessageFile {
-
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,10 +22,10 @@ public class DiscussionMessageFile {
 	@Lob
     private byte[] file;
 
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne
+	@JoinColumn(name="messageId")
 	private DiscussionMessage message;
-	
-	
+			
 	public Integer getId() {
 		return id;
 	}
