@@ -33,6 +33,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import ar.uba.fi.fiubappMobile.utils.DataAccess;
 import ar.uba.fi.fiubappMobile.utils.Localizador;
 
 public class Config extends Fragment {
@@ -75,12 +76,76 @@ public class Config extends Fragment {
                         break;
 
                     case 3:
+                        logout();
                         break;
                 }
             }
         });
 
         return view;
+    }
+
+    private void logout(){
+
+            new AlertDialog.Builder(this.getActivity())
+                    .setTitle("¿Salir de Fiubapp?")
+                    .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            borrarToken();
+                        }
+                    })
+                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+
+    }
+
+    private void borrarToken(){
+
+        String url = getURLAPI()+"/sessions/students/";
+
+        JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.DELETE,
+                url,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Intent i = new Intent(getActivity(), Login.class);
+                        startActivity(i);
+
+                    }
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        //el response es null cuando se borra el token,
+                        //entonces se redirige al login
+                        if (error.networkResponse == null){
+
+                            Intent i = new Intent(getActivity(), Login.class);
+                            startActivity(i);
+
+                        }else {
+                            Popup.showText(getActivity(), "Ha ocurrido un error. " +
+                                    "Probá nuevamente en unos minutos", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+        ){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", getToken());
+                return headers;
+            }
+
+        };
+        VolleyController.getInstance().addToRequestQueue(jsonReq);
     }
 
     private void configurarLocalizacion() {
@@ -240,11 +305,6 @@ public class Config extends Fragment {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 0, localizador.getInstance());
     }
 
-    private String getUsername(){
-        final SharedPreferences settings = this.getActivity().getSharedPreferences(this.getActivity().getResources().getString(R.string.prefs_name), 0);
-        return settings.getString("username", null);
-    }
-
     private void actualizarLocalizacionAlumno(LatLng miUbicacion){
 
         if(!isAdded())
@@ -285,5 +345,21 @@ public class Config extends Fragment {
 
         queue.add(jsObjRequest);
     }
+
+    private String getToken(){
+        DataAccess dataAccess = new DataAccess(this.getActivity());
+        return dataAccess.getToken();
+    }
+
+    private String getUsername(){
+        DataAccess dataAccess = new DataAccess(this.getActivity());
+        return dataAccess.getUserName();
+    }
+
+    private String getURLAPI(){
+        DataAccess dataAccess = new DataAccess(this.getActivity());
+        return dataAccess.getURLAPI();
+    }
+
 }
 
