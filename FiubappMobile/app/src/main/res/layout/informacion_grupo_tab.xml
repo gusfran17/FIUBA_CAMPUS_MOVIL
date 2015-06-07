@@ -42,7 +42,7 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="#372c24"
-                android:text="122 miembros"
+                android:text=""
                 android:gravity="center_vertical|left|right"
                 android:layout_toRightOf="@+id/image_group"
                 android:layout_below="@id/name_group"

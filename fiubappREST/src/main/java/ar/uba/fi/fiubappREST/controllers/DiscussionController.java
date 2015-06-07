@@ -1,5 +1,6 @@
 package ar.uba.fi.fiubappREST.controllers;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
 import ar.uba.fi.fiubappREST.domain.DiscussionMessageFile;
 import ar.uba.fi.fiubappREST.domain.Session;
 import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
@@ -68,9 +68,9 @@ public class DiscussionController {
 	
 	@RequestMapping(value="{groupId}/discussions/{discussionId}/messages", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	public @ResponseBody Set<DiscussionMessage> getMessagesForGroupDiscussion(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @PathVariable Integer discussionId) {
+	public @ResponseBody List<DiscussionMessageRepresentation> getMessagesForGroupDiscussion(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @PathVariable Integer discussionId) {
 		Session session = this.sessionService.findStudentSession(token);
-		Set<DiscussionMessage> messages = this.discussionService.findGroupDiscussionMessagesForMember(groupId, discussionId, session.getUserName());	
+		List<DiscussionMessageRepresentation> messages = this.discussionService.findGroupDiscussionMessagesForMember(groupId, discussionId, session.getUserName());	
 		return messages;
 	}
 	

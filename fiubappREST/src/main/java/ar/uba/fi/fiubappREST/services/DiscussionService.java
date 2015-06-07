@@ -2,11 +2,11 @@ package ar.uba.fi.fiubappREST.services;
 
 
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
 import ar.uba.fi.fiubappREST.domain.DiscussionMessageFile;
 import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionMessageRepresentation;
@@ -25,7 +25,7 @@ public interface DiscussionService {
 
 	GroupRepresentation findGroupForStudent(Integer groupId, String userName);
 
-	Set<DiscussionMessage> findGroupDiscussionMessagesForMember(Integer groupId, Integer discussionId, String userName);
+	List<DiscussionMessageRepresentation> findGroupDiscussionMessagesForMember(Integer groupId, Integer discussionId, String userName);
 
 	DiscussionMessageFile findDiscussionMessageFile(Integer groupId, Integer discussionId, Integer messageId);
 

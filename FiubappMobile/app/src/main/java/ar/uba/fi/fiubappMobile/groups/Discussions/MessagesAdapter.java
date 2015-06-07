@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fiubapp.fiubapp.R;
@@ -53,11 +54,22 @@ public class MessagesAdapter extends BaseAdapter {
         TextView lbl_mssg_comment = (TextView) convertView.findViewById(R.id.lbl_mssg_comment);
         TextView lbl_mssg_creator_name = (TextView) convertView.findViewById(R.id.lbl_mssg_creator_name);
         TextView lbl_mssg_creation_date = (TextView) convertView.findViewById(R.id.lbl_mssg_creation_date);
+        ImageView img_uploaded_file = (ImageView) convertView.findViewById(R.id.img_uploaded_file);
+        TextView txtvw_uploaded = (TextView) convertView.findViewById(R.id.txtvw_uploaded);
+
 
         Message message = this.messageItems.get(i);
         lbl_mssg_comment.setText(message.getText());
         lbl_mssg_creator_name.setText(message.getCreatorUserName());
         lbl_mssg_creation_date.setText(message.getCreationDate());
+
+        if (!message.isHasAttachedFile()){
+            img_uploaded_file.setVisibility(View.GONE);
+            txtvw_uploaded.setVisibility(View.GONE);
+        } else {
+            img_uploaded_file.setVisibility(View.VISIBLE);
+            txtvw_uploaded.setVisibility(View.VISIBLE);
+        }
 
         return convertView;    }
 }

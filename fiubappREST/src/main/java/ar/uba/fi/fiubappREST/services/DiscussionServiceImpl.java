@@ -1,11 +1,16 @@
 package ar.uba.fi.fiubappREST.services;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.comparators.NullComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -191,7 +196,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 	}
 
 	@Override
-	public Set<DiscussionMessage> findGroupDiscussionMessagesForMember(Integer groupId, Integer discussionId, String userName) {
+	public List<DiscussionMessageRepresentation> findGroupDiscussionMessagesForMember(Integer groupId, Integer discussionId, String userName) {
 		//verifyGroupMember(groupId, userName);
 		LOGGER.info(String.format("Finding discussions for groupId " + groupId + "."));
 		Group group = this.groupRepository.findOne(groupId);
@@ -216,15 +221,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 		}
 		LOGGER.info(String.format("Discussion " + discussionId + " was found for groupId "+ groupId + "."));
 		Set<DiscussionMessage> discussionMessages = discussionMessageRepository.findMessagesByProperties(discussionId);
-/*		Set<DiscussionMessageRepresentation> messagesRepresentation = new HashSet<DiscussionMessageRepresentation>();
-		Iterator<DiscussionMessage> mIterator = discussionMessages.iterator();
-		while(mIterator.hasNext()){
-			DiscussionMessage message = mIterator.next();
-			DiscussionMessageRepresentation messageRepresentation = this.discussionMessageConverter.convert(message);
-			messagesRepresentation.add(messageRepresentation);
-		}
-		return messagesRepresentation;*/
-		return discussionMessages;
+		return this.orderDiscussionMessages(discussionMessages, discussionId, groupId);
 	}
 
 	@Override
@@ -236,6 +233,22 @@ public class DiscussionServiceImpl implements DiscussionService{
 			throw new DiscussionMessageFileNotFound(messageId, discussionId, groupId); 
 		}
 		return file;
+	}
+	
+	private List<DiscussionMessageRepresentation> orderDiscussionMessages(Set<DiscussionMessage> discussionMessages, Integer discussionId, Integer groupId) {
+		List<DiscussionMessageRepresentation> sortedDiscussion = new ArrayList<DiscussionMessageRepresentation>();
+		Iterator<DiscussionMessage> iterator = discussionMessages.iterator();
+		while (iterator.hasNext()){
+			sortedDiscussion.add(this.discussionMessageConverter.convert(iterator.next(), groupId, discussionId));
+		}
+		Collections.sort(sortedDiscussion, new Comparator<DiscussionMessageRepresentation>() {			
+			public int compare(DiscussionMessageRepresentation msg1, DiscussionMessageRepresentation msg2) {
+				NullComparator comparator = new NullComparator(true);
+				return comparator.compare(msg2.getCreationDate(), msg1.getCreationDate());
+			}
+		});
+		Collections.reverse(sortedDiscussion);
+		return sortedDiscussion;
 	}
 	
 }

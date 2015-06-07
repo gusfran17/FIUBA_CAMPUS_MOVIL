@@ -7,6 +7,7 @@ import android.provider.MediaStore;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyLog;
@@ -15,49 +16,53 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MessageMultipartRequest<T> extends Request<T> {
+public class MessageMultipartRequest<T> extends Request<org.json.JSONObject> {
 
 
     private MultipartEntityBuilder mBuilder = MultipartEntityBuilder.create();
-    private final Response.Listener<T> mListener;
+    private final Response.Listener<org.json.JSONObject> mListener;
     private final File mImageFile;
     private final Uri uri;
     protected Map<String, String> headers;
     private Context context;
     private String mimeType;
-    private String userName;
-    private final String text;
+    private final String message;
 
     public MessageMultipartRequest(String url,
-                            Response.Listener<T> listener,
+                            Response.Listener<org.json.JSONObject> listener,
                             Response.ErrorListener errorListener,
                             Uri uri,
                             Context context,
                             Map<String, String> headers,
                             String mimeType,
-                            String userName,
-                            String text)
+                            String message)
     {
         super(Method.POST, url, errorListener);
 
         mListener = listener;
-        this.uri = uri;
-
         this.context = context;
         this.headers = headers;
+        this.message = message;
+
+        this.uri = uri;
         this.mimeType = mimeType;
-        mImageFile = getFile(uri);
-        this.userName = userName;
-        this.text = text;
+        if (uri != null){
+            mImageFile = getFile(uri);
+        } else {
+            mImageFile = null;
+        }
+
 
         buildMultipartEntity();
     }
@@ -76,18 +81,22 @@ public class MessageMultipartRequest<T> extends Request<T> {
 
     private void buildMultipartEntity()
     {
-        String nombre = "";
-
-        if(uri.toString().contains("content://")) {
-            nombre = getRealPathFromURI(this.context, this.uri);
+        String fileName = "";
+        if (uri != null){
+            if(uri.toString().contains("content://")) {
+                fileName = getRealPathFromURI(this.context, this.uri);
+            }
+            else {
+                fileName = uri.getPath();
+            }
         }
-        else {
-            nombre = uri.getPath();
+
+
+        if (mImageFile!=null){
+            mBuilder.addBinaryBody("file", mImageFile, ContentType.create(this.mimeType), fileName);
         }
 
-        mBuilder.addBinaryBody("file", mImageFile, ContentType.create(this.mimeType), nombre);
-        mBuilder.addTextBody("text", this.text, ContentType.create("text/plain"));
-        mBuilder.addTextBody("userName", this.userName, ContentType.create("text/plain"));
+        mBuilder.addTextBody("message", this.message, ContentType.create("text/plain"));
 
         mBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         mBuilder.setLaxMode().setBoundary("xx").setCharset(Charset.forName("UTF-8"));
@@ -117,22 +126,30 @@ public class MessageMultipartRequest<T> extends Request<T> {
     }
 
     @Override
-    protected Response<T> parseNetworkResponse(NetworkResponse response)
+    protected Response<org.json.JSONObject> parseNetworkResponse(NetworkResponse response)
     {
-        T result = null;
-        return Response.success(result, HttpHeaderParser.parseCacheHeaders(response));
+        try {
+            String jsonString = new String(response.data,HttpHeaderParser.parseCharset(response.headers));
+            return Response.success(new org.json.JSONObject(jsonString), HttpHeaderParser.parseCacheHeaders(response));
+        } catch (UnsupportedEncodingException e) {
+            return Response.error(new ParseError(e));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
-    protected void deliverResponse(T response)
+    protected void deliverResponse(org.json.JSONObject response)
     {
+
         mListener.onResponse(response);
+
     }
 
 
     private File getFile(Uri uri){
         File file = null;
-
         if(uri.toString().contains("content://")) {
             file = new File(getRealPathFromURI(context,uri));
         }
