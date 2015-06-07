@@ -82,6 +82,7 @@ public class DiscussionMessage {
 		this.hasAttachedFile = hasAttachedFile;
 	}
 	
+	@JsonIgnore
 	public DiscussionMessageFile getDiscussionMessageFile() {
 		return discussionMessageFile;
 	}
