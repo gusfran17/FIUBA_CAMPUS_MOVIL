@@ -25,6 +25,7 @@ import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 public class MateServiceImplTest {
 	
 	private static final String AN_USER_NAME = "anUserName";
+	private static final String ANOTHER_USER_NAME = "anotherUserName";
 	private static final String A_MATE_USER_NAME = "aMateUserName";
 	
 	@Mock
@@ -112,5 +113,53 @@ public class MateServiceImplTest {
 		this.service.deleteMate(AN_USER_NAME, A_MATE_USER_NAME);
 		
 		assertTrue(true);
+	}
+	
+	@Test
+	public void testGetCommonsMates(){		
+		Student firstStudent = mock(Student.class);
+		when(this.studentRepository.findByUserNameAndFetchMatesEagerly(AN_USER_NAME)).thenReturn(firstStudent);
+		Student secondStudent = mock(Student.class);
+		when(this.studentRepository.findByUserNameAndFetchMatesEagerly(ANOTHER_USER_NAME)).thenReturn(secondStudent);
+		
+		Student aCommonMate = mock(Student.class);
+		Student anotherCommonMate = mock(Student.class);
+		Student yetAnotherCommonMate = mock(Student.class);
+		
+		Student aFirstStudentMate = mock(Student.class);
+		Student anotherFirstStudentMate = mock(Student.class);
+		
+		Student aSecondStudentMate = mock(Student.class);
+		
+		List<Student> firstStudentMates = new ArrayList<Student>();
+		firstStudentMates.add(secondStudent);
+		firstStudentMates.add(aFirstStudentMate);
+		firstStudentMates.add(anotherFirstStudentMate);
+		firstStudentMates.add(aCommonMate);
+		firstStudentMates.add(anotherCommonMate);
+		firstStudentMates.add(yetAnotherCommonMate);
+		when(firstStudent.getMates()).thenReturn(firstStudentMates);
+		
+		List<Student> secondStudentMates = new ArrayList<Student>();
+		secondStudentMates.add(firstStudent);
+		secondStudentMates.add(aSecondStudentMate);
+		secondStudentMates.add(aCommonMate);
+		secondStudentMates.add(anotherCommonMate);
+		secondStudentMates.add(yetAnotherCommonMate);
+		when(secondStudent.getMates()).thenReturn(secondStudentMates);
+		
+		StudentProfileRepresentation aCommonMateRepresentation = mock(StudentProfileRepresentation.class);
+		when(this.converter.convert(secondStudent, aCommonMate)).thenReturn(aCommonMateRepresentation);
+		StudentProfileRepresentation anotherCommonMateRepresentation = mock(StudentProfileRepresentation.class);
+		when(this.converter.convert(secondStudent, anotherCommonMate)).thenReturn(anotherCommonMateRepresentation);
+		StudentProfileRepresentation yetAnotherCommonMateRepresentation = mock(StudentProfileRepresentation.class);
+		when(this.converter.convert(secondStudent, yetAnotherCommonMate)).thenReturn(yetAnotherCommonMateRepresentation);
+		
+		List<StudentProfileRepresentation> commonsMates = this.service.getCommonstMates(AN_USER_NAME, ANOTHER_USER_NAME);
+		
+		assertEquals(3, commonsMates.size());
+		assertTrue(commonsMates.contains(aCommonMateRepresentation));
+		assertTrue(commonsMates.contains(anotherCommonMateRepresentation));
+		assertTrue(commonsMates.contains(yetAnotherCommonMateRepresentation));
 	}
 }

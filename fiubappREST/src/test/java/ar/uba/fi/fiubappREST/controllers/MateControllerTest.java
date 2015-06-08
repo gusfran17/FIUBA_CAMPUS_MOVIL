@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import ar.uba.fi.fiubappREST.domain.Session;
 import ar.uba.fi.fiubappREST.representations.MateRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 import ar.uba.fi.fiubappREST.services.MateService;
@@ -21,8 +22,10 @@ import ar.uba.fi.fiubappREST.services.SessionService;
 public class MateControllerTest {
 	
 	private static final String AN_USER_NAME = "anUserName";
+	private static final String ANOTHER_USER_NAME = "anotherUserName";
 	private static final String A_MATE_USER_NAME = "aMateUserName";
 	private static final String A_TOKEN = "aToken";
+	private static final String ANOTHER_TOKEN = "anotherToken";
 
 	private MateController controller;
 	
@@ -75,6 +78,23 @@ public class MateControllerTest {
 		this.controller.deleteMate(A_TOKEN, AN_USER_NAME, A_MATE_USER_NAME);
 		
 		assertTrue(true);
+	}
+	
+	@Test
+	public void testGetCommonsMates(){
+		Session session = mock(Session.class);
+		when(session.getUserName()).thenReturn(ANOTHER_USER_NAME);
+		when(this.studentSessionService.findStudentSession(ANOTHER_TOKEN)).thenReturn(session);				
+		StudentProfileRepresentation representation = mock(StudentProfileRepresentation.class);
+		StudentProfileRepresentation anotherRepresentation = mock(StudentProfileRepresentation.class);
+		List<StudentProfileRepresentation> profiles = new ArrayList<StudentProfileRepresentation>();
+		profiles.add(representation);
+		profiles.add(anotherRepresentation);
+		when(this.service.getCommonstMates(AN_USER_NAME, ANOTHER_USER_NAME)).thenReturn(profiles);
+		
+		List<StudentProfileRepresentation> commonMates = this.controller.getCommonsMates(ANOTHER_TOKEN, AN_USER_NAME);
+		
+		assertEquals(profiles, commonMates);
 	}
 }
 

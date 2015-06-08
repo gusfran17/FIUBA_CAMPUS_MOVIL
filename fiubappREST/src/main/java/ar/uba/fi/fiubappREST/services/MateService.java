@@ -12,4 +12,6 @@ public interface MateService {
 
 	public void deleteMate(String userName, String mateUserName);
 
+	public List<StudentProfileRepresentation> getCommonstMates(String anUserName, String anotherUserName);
+
 }
