@@ -1,32 +1,41 @@
 package ar.uba.fi.fiubappREST.services;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.comparators.NullComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.converters.DiscussionConverter;
 import ar.uba.fi.fiubappREST.converters.DiscussionMessageConverter;
 import ar.uba.fi.fiubappREST.converters.GroupConverter;
 import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
+import ar.uba.fi.fiubappREST.domain.DiscussionMessageFile;
 import ar.uba.fi.fiubappREST.domain.Group;
 import ar.uba.fi.fiubappREST.domain.Student;
+import ar.uba.fi.fiubappREST.exceptions.DiscussionMessageFileNotFound;
 import ar.uba.fi.fiubappREST.exceptions.DiscussionNotFoundInGroupException;
 import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
-import ar.uba.fi.fiubappREST.exceptions.StudentIsNotMemberOfGroupException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
+import ar.uba.fi.fiubappREST.exceptions.UnexpectedErrorReadingProfilePictureFileException;
+import ar.uba.fi.fiubappREST.persistance.DiscussionMessageFileRepository;
 import ar.uba.fi.fiubappREST.persistance.DiscussionMessageRepository;
 import ar.uba.fi.fiubappREST.persistance.DiscussionRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
-import ar.uba.fi.fiubappREST.representations.DiscussionMessageCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionMessageRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
@@ -42,11 +51,12 @@ public class DiscussionServiceImpl implements DiscussionService{
 	private DiscussionConverter discussionConverter;
 	private DiscussionMessageConverter discussionMessageConverter;
 	private DiscussionMessageRepository discussionMessageRepository;
+	private DiscussionMessageFileRepository discussionMessageFileRepository;
 	
 	private GroupConverter groupConverter;
 	
 	@Autowired
-	public DiscussionServiceImpl(DiscussionRepository discussionRepository, GroupRepository groupRepository, StudentRepository studentRepository, DiscussionMessageRepository discussionMessageRepository, DiscussionConverter discussionConverter, DiscussionMessageConverter discussionMessageConverter, GroupConverter groupConverter){
+	public DiscussionServiceImpl(DiscussionRepository discussionRepository, GroupRepository groupRepository, StudentRepository studentRepository, DiscussionMessageRepository discussionMessageRepository, DiscussionConverter discussionConverter, DiscussionMessageConverter discussionMessageConverter, GroupConverter groupConverter, DiscussionMessageFileRepository discussionMessageFileRepository){
 		this.discussionRepository = discussionRepository;
 		this.groupRepository = groupRepository;
 		this.studentRepository = studentRepository;
@@ -54,6 +64,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 		this.discussionMessageConverter = discussionMessageConverter;
 		this.groupConverter = groupConverter;
 		this.discussionMessageRepository = discussionMessageRepository;
+		this.discussionMessageFileRepository = discussionMessageFileRepository;
 	}
 
 	@Override
@@ -92,20 +103,38 @@ public class DiscussionServiceImpl implements DiscussionService{
 	}
 
 	@Override
-	public DiscussionMessageRepresentation createMessage(DiscussionMessageCreationRepresentation messageRepresentation, Integer groupId, Integer discussionId) {
+	public DiscussionMessageRepresentation createMessage(Integer groupId, Integer discussionId, String message, String userName, String fileName, MultipartFile file) {
 		Group group = this.findGroup(groupId);
-		Student student = this.findStudent(messageRepresentation.getCreatorUserName());
+		Student student = this.findStudent(userName);
 		Discussion discussion = findDiscussion(groupId, discussionId, group);
 		
-		DiscussionMessage message = new DiscussionMessage();
-		message.setCreationDate(new Date());
-		message.setCreator(student);
-		message.setMessage(messageRepresentation.getMessage());
-		discussion.addMessage(message);
-		
-		//discussionRepository.save(discussion);
-		groupRepository.save(group);
-		return this.discussionMessageConverter.convert(message);
+		DiscussionMessage discussionMessage = new DiscussionMessage();
+		discussionMessage.setCreationDate(new Date());
+		discussionMessage.setCreator(student);
+		discussionMessage.setMessage(message);
+		discussionMessage.setHasAttachedFile(file!=null);
+		discussion.addMessage(discussionMessage);
+		if(discussionMessage.isHasAttachedFile()){
+			DiscussionMessageFile messageFile = this.createFile(discussionMessage, file);
+			discussionMessage.setDiscussionMessageFile(messageFile);
+			discussionMessage.setFileName(fileName);
+		}
+		discussionMessageRepository.save(discussionMessage);
+		discussionRepository.save(discussion);		
+				
+		return this.discussionMessageConverter.convert(discussionMessage, groupId, discussionId);
+	}
+	
+	private DiscussionMessageFile createFile(DiscussionMessage message, MultipartFile file) {
+		DiscussionMessageFile messageFile = new DiscussionMessageFile();
+		messageFile.setMessage(message);
+		messageFile.setContentType(file.getContentType());
+		try {
+			messageFile.setFile(file.getBytes());
+		} catch (IOException e) {
+			throw new UnexpectedErrorReadingProfilePictureFileException(file.getName());
+		}
+		return messageFile;
 	}
 
 	private Discussion findDiscussion(Integer groupId, Integer discussionId, Group group) {
@@ -145,13 +174,13 @@ public class DiscussionServiceImpl implements DiscussionService{
 		return discussionsRepresentation;
 	}
 	
-	private void verifyGroupMember(Integer groupId, String userName) {
+/*	private void verifyGroupMember(Integer groupId, String userName) {
 		GroupRepresentation groupRepresentation = this.findGroupForStudent(groupId, userName);
 		if (!groupRepresentation.getAmIAMember()){
 			throw new StudentIsNotMemberOfGroupException(userName, groupId);
 		}
 		LOGGER.info(String.format(userName + " is a member of group " + groupId + "."));
-	}
+	}*/
 	
 	@Override
 	public GroupRepresentation findGroupForStudent(Integer groupId, String userName) {
@@ -168,7 +197,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 	}
 
 	@Override
-	public Set<DiscussionMessage> findGroupDiscussionMessagesForMember(Integer groupId, Integer discussionId, String userName) {
+	public List<DiscussionMessageRepresentation> findGroupDiscussionMessagesForMember(Integer groupId, Integer discussionId, String userName) {
 		//verifyGroupMember(groupId, userName);
 		LOGGER.info(String.format("Finding discussions for groupId " + groupId + "."));
 		Group group = this.groupRepository.findOne(groupId);
@@ -193,15 +222,34 @@ public class DiscussionServiceImpl implements DiscussionService{
 		}
 		LOGGER.info(String.format("Discussion " + discussionId + " was found for groupId "+ groupId + "."));
 		Set<DiscussionMessage> discussionMessages = discussionMessageRepository.findMessagesByProperties(discussionId);
-/*		Set<DiscussionMessageRepresentation> messagesRepresentation = new HashSet<DiscussionMessageRepresentation>();
-		Iterator<DiscussionMessage> mIterator = discussionMessages.iterator();
-		while(mIterator.hasNext()){
-			DiscussionMessage message = mIterator.next();
-			DiscussionMessageRepresentation messageRepresentation = this.discussionMessageConverter.convert(message);
-			messagesRepresentation.add(messageRepresentation);
+		return this.orderDiscussionMessages(discussionMessages, discussionId, groupId);
+	}
+
+	@Override
+	public DiscussionMessageFile findDiscussionMessageFile(Integer groupId, Integer discussionId, Integer messageId) {
+		Group group = this.findGroup(groupId);
+		this.findDiscussion(groupId, discussionId, group);
+		DiscussionMessageFile file = this.discussionMessageFileRepository.findByMessageId(messageId);
+		if(file==null){
+			throw new DiscussionMessageFileNotFound(messageId, discussionId, groupId); 
 		}
-		return messagesRepresentation;*/
-		return discussionMessages;
+		return file;
+	}
+	
+	private List<DiscussionMessageRepresentation> orderDiscussionMessages(Set<DiscussionMessage> discussionMessages, Integer discussionId, Integer groupId) {
+		List<DiscussionMessageRepresentation> sortedDiscussion = new ArrayList<DiscussionMessageRepresentation>();
+		Iterator<DiscussionMessage> iterator = discussionMessages.iterator();
+		while (iterator.hasNext()){
+			sortedDiscussion.add(this.discussionMessageConverter.convert(iterator.next(), groupId, discussionId));
+		}
+		Collections.sort(sortedDiscussion, new Comparator<DiscussionMessageRepresentation>() {			
+			public int compare(DiscussionMessageRepresentation msg1, DiscussionMessageRepresentation msg2) {
+				NullComparator comparator = new NullComparator(true);
+				return comparator.compare(msg2.getCreationDate(), msg1.getCreationDate());
+			}
+		});
+		Collections.reverse(sortedDiscussion);
+		return sortedDiscussion;
 	}
 	
 }

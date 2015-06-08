@@ -5,11 +5,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,13 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.fiubapp.fiubapp.MessageMultipartRequest;
 import com.fiubapp.fiubapp.Popup;
 import com.fiubapp.fiubapp.R;
 import com.fiubapp.fiubapp.VolleyController;
@@ -49,11 +49,21 @@ public class DiscussionActivity extends Activity {
     private int id;
     private int groupId;
     private String urlAPI;
+
     private MessagesAdapter messagesAdapter;
     private List<Message> messagesList = new ArrayList<Message>();
     private ListView messagesListView;
+
     private static final String TAG = DiscussionActivity.class.getSimpleName();
-    private TextView lbl_discussion_header;
+    private final int FILE_SELECT_CODE = 100;
+    private final int FILE_DOWNLOAD = 200;
+
+    private String creator;
+    private View createDiscussionMessageView;
+    private Uri selectedfile = null;
+    private String mime = null;
+    private boolean messageHasFile = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +78,9 @@ public class DiscussionActivity extends Activity {
         setContentView(R.layout.activity_discussion);
 
         messagesListView = (ListView) findViewById(R.id.lstVw_messages);
-        lbl_discussion_header = (TextView) findViewById(R.id.lbl_discussion_header);
+        TextView lbl_discussion_header = (TextView) findViewById(R.id.lbl_discussion_header);
         lbl_discussion_header.setText(myIntent.getStringExtra("discussionName"));
+
 
         fillMesaagesList();
 
@@ -91,17 +102,39 @@ public class DiscussionActivity extends Activity {
                 setCreateMessage();
             }
         });
+
+        DataAccess dataAccess = new DataAccess(this);
+        creator = dataAccess.getUserName();
+
     }
 
     private void setCreateMessage() {
+
         LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View createDiscussionMessageView = layoutInflater.inflate(R.layout.create_discussion_message, null);
+        createDiscussionMessageView = layoutInflater.inflate(R.layout.create_discussion_message, null);
+
+        messageHasFile = false;
+        TextView txtvw_upload = (TextView) createDiscussionMessageView.findViewById(R.id.txtvw_upload);
+        if (!messageHasFile){
+            txtvw_upload.setText("Subir archivo");
+        }
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setView(createDiscussionMessageView);
-        DataAccess dataAccess = new DataAccess(this);
-        final String creator = dataAccess.getUserName();
         final EditText edtvw_message = (EditText)createDiscussionMessageView.findViewById(R.id.edtvw_message);
+        final ImageView img_upload = (ImageView) createDiscussionMessageView.findViewById(R.id.img_upload_file);
         final Activity activity = this;
+
+
+
+        img_upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("file/*");
+                startActivityForResult(intent, FILE_SELECT_CODE);
+            }
+        });
         
         alertDialogBuilder
                 .setCancelable(false)
@@ -114,18 +147,18 @@ public class DiscussionActivity extends Activity {
                                     setCreateMessage();
                                 } else if (edtvw_message.getText().length() > 140) {
                                     Popup.showText(activity, "El mensaje no puede superar los 140 caracteres.", Toast.LENGTH_LONG).show();
-                                }else {
-                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                                } else {
+                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 
-                                Message message = new Message();
-                                message.setText(edtvw_message.getText().toString());
-                                message.setCreationDate(simpleDateFormat.format(new Date()));
-                                message.setCreatorUserName(creator);
-                                createMessage(message);
+                                    Message message = new Message();
+                                    message.setText(edtvw_message.getText().toString());
+                                    message.setCreationDate(simpleDateFormat.format(new Date()));
+                                    message.setCreatorUserName(creator);
+                                    createMessage(message);
+                                }
                             }
-                        }
-    })
+                        })
                 .setNegativeButton("Cancelar",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -139,75 +172,67 @@ public class DiscussionActivity extends Activity {
     }
 
     private void createMessage(Message message) {
-
         final Activity activity = this;
-
-        String requestURL = urlAPI + "/groups/" + this.groupId + "/discussions/" + this.id + "/messages";
-        JSONObject jsonNewDiscussion = new JSONObject();
-
-        try {
-            jsonNewDiscussion.put("message", message.getText());
-            jsonNewDiscussion.put("creatorUserName", message.getCreatorUserName());
-        } catch (JSONException e) {
-            e.printStackTrace();
+        String URL = urlAPI + "/groups/" + groupId + "/discussions/" + id + "/messages";
+        final EditText edtvw_message = (EditText)createDiscussionMessageView.findViewById(R.id.edtvw_message);
+        final TextView txtvw_upload = (TextView)createDiscussionMessageView.findViewById(R.id.txtvw_upload);
+        if (!messageHasFile){
+            selectedfile = null;
+            mime = null;
         }
+        HashMap<String, String> headers = new HashMap<String, String>();
+        SharedPreferences settings = activity.getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
+        String token = settings.getString("token", null);
+        headers.put("Accept", "application/json");
+        headers.put("Authorization", token);
 
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest(
-                Request.Method.POST,
-                requestURL,
-                jsonNewDiscussion,
+        MessageMultipartRequest mPR = new MessageMultipartRequest(URL,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Message message = new Message();
-                        DataAccess dataAccess = new DataAccess(activity);
-                        String userName = dataAccess.getUserName();
                         try {
                             message.setCreationDate(response.getString("creationDate"));
                             message.setText(response.getString("message"));
                             JSONObject jsonCreator = response.getJSONObject("creator");
                             message.setCreatorUserName(jsonCreator.get("name") + " " + jsonCreator.get("lastName"));
+                            message.setHasAttachedFile(response.getBoolean("hasAttachedFile"));
+                            if (message.isHasAttachedFile()){
+                                message.setAttachedFile(response.getString("attachedFile"));
+                                message.setFileName(response.getString("fileName"));
+                            }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         messagesList.add(message);
                         messagesAdapter.notifyDataSetChanged();
-                        Popup.showText(activity, "Comentario guardado correctamente.", Toast.LENGTH_LONG).show();
-                    }
+                        Popup.showText(activity, "Comentario guardado correctamente.", Toast.LENGTH_LONG).show();                    }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //parseo la respuesta del server para obtener JSON
-                        String body = null;
                         try {
-                            body = new String(error.networkResponse.data, HttpHeaderParser.parseCharset(error.networkResponse.headers));
-
-                            JSONObject JSONBody = new JSONObject(body);
-                            String errorCode = JSONBody.getString("code");
-                            String errorMessage = JSONBody.getString("message");
-                            Popup.showText(activity, errorMessage, Toast.LENGTH_LONG).show();
-                            setCreateMessage();
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+                            Log.d("Error", error.toString());
+                            String responseBody = null;
+                            JSONObject jsonObject = null;
+                            try {
+                                responseBody = new String(error.networkResponse.data, "utf-8");
+                            } catch (UnsupportedEncodingException e) {
+                            }
+                            Popup.showText(activity, responseBody, Toast.LENGTH_LONG).show();
                         }
+                        catch(Exception e){}
                     }
-                }){
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                SharedPreferences settings = activity.getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
-                String token = settings.getString("token", null);
-                headers.put("Content-Type", "application/json");
-                headers.put("Authorization", token);
-                return headers;
-            }
-        };
+                } ,
+                selectedfile,
+                activity,
+                headers,
+                mime,
+                edtvw_message.getText().toString(),
+                txtvw_upload.getText().toString());
 
-        VolleyController.getInstance().addToRequestQueue(jsObjRequest);
+        VolleyController.getInstance().addToRequestQueue(mPR);
 
     }
 
@@ -229,6 +254,11 @@ public class DiscussionActivity extends Activity {
                                 message.setCreatorUserName(jsonCreator.get("name") + " " + jsonCreator.get("lastName"));
                                 message.setText(jsonMessage.getString("message"));
                                 message.setCreationDate(jsonMessage.getString("creationDate"));
+                                message.setHasAttachedFile(jsonMessage.getBoolean("hasAttachedFile"));
+                                if (message.isHasAttachedFile()){
+                                    message.setAttachedFile(jsonMessage.getString("attachedFile"));
+                                    message.setFileName(jsonMessage.getString("fileName"));
+                                }
 
                                 messagesList.add(message);
 
@@ -276,4 +306,44 @@ public class DiscussionActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent ReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode,ReturnedIntent);
+
+        if (requestCode == FILE_SELECT_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+
+                String filePath = ReturnedIntent.getData().getPath();
+                TextView txtvw_upload = (TextView) createDiscussionMessageView.findViewById(R.id.txtvw_upload);
+                txtvw_upload.setText(filePath.substring(filePath.lastIndexOf("/") + 1));
+
+                selectedfile = ReturnedIntent.getData();
+
+                mime = getMimeType(ReturnedIntent.getData());
+
+                messageHasFile = true;
+            }
+        }
+        if (requestCode == FILE_DOWNLOAD){
+
+        }
+    }
+
+    public String getMimeType(Uri uri) {
+        String type = null;
+
+        if(!uri.toString().contains("content://")) {
+            String extension = MimeTypeMap.getFileExtensionFromUrl(uri.getPath());
+            if (extension != null) {
+                type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+            }
+        }
+        else{
+            type = this.getContentResolver().getType(uri);
+        }
+
+        return type;
+    }
+
 }

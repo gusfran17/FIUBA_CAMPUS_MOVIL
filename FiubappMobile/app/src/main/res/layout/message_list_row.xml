@@ -15,7 +15,6 @@
             android:layout_height="wrap_content"
             android:text="Creador"
             android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
             android:textColor="#000000"
             android:textStyle="bold"
             android:layout_toRightOf="@+id/lbl_creator"
@@ -28,7 +27,6 @@
             android:text="dd/mm/aa hh:mm:ss hs"
             android:textColor="#999999"
             android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
             android:textSize="10dp"
             android:layout_toRightOf="@+id/lbl_creation_date"
             android:layout_below="@+id/lbl_mssg_creator_name"/>
@@ -42,6 +40,28 @@
             android:textColor="#000000"
             android:text="Comentario X"
             android:layout_below="@+id/lbl_mssg_creation_date"/>
+
+        <ImageView
+            android:id="@+id/img_uploaded_file"
+            android:src="@drawable/ic_uploaded"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/lbl_mssg_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginLeft="30dp"/>
+
+        <TextView
+            android:id="@+id/txtvw_uploaded"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edtvw_message"
+            android:layout_toRightOf="@+id/img_uploaded_file"
+            android:textColor="#000000"
+            android:layout_alignBottom="@+id/img_uploaded_file"
+            android:text="@string/lbl_uploaded"
+            android:gravity="bottom"/>
+
 
 
     </RelativeLayout>

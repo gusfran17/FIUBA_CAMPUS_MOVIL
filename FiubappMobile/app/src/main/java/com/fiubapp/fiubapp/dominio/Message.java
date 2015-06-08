@@ -5,9 +5,14 @@ package com.fiubapp.fiubapp.dominio;
  */
 public class Message {
 
+
     private String text;
     private String creatorUserName;
     private String creationDate;
+    private boolean hasAttachedFile;
+    private String attachedFile;
+    private String fileName;
+
 
     public String getText() {
         return text;
@@ -31,6 +36,30 @@ public class Message {
 
     public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public boolean isHasAttachedFile() {
+        return hasAttachedFile;
+    }
+
+    public void setHasAttachedFile(boolean hasAttachedFile) {
+        this.hasAttachedFile = hasAttachedFile;
+    }
+
+    public String getAttachedFile() {
+        return attachedFile;
+    }
+
+    public void setAttachedFile(String attachedFile) {
+        this.attachedFile = attachedFile;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
 }
