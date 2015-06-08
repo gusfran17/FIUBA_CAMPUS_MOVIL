@@ -13,6 +13,8 @@ public class DiscussionMessageRepresentation {
 	private Date creationDate;
 	private Boolean hasAttachedFile;
 	private String attachedFile;
+	private String fileName;
+
 	private StudentProfileRepresentation creator; 
 
 	public String getMessage() {
@@ -52,4 +54,12 @@ public class DiscussionMessageRepresentation {
 	public void setAttachedFile(String attachedFile) {
 		this.attachedFile = attachedFile;
 	}
+	
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
 }

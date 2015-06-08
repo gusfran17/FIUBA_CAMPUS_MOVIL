@@ -41,6 +41,8 @@ public class DiscussionMessage {
 	
 	private boolean hasAttachedFile;
 
+	private String fileName;
+	
 	@JsonIgnore
 	public Integer getId() {
 		return id;
@@ -90,4 +92,12 @@ public class DiscussionMessage {
 	public void setDiscussionMessageFile(DiscussionMessageFile discussionMessageFile) {
 		this.discussionMessageFile = discussionMessageFile;
 	}
+
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
 }

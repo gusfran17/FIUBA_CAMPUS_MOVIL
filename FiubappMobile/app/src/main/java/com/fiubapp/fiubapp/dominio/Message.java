@@ -11,6 +11,7 @@ public class Message {
     private String creationDate;
     private boolean hasAttachedFile;
     private String attachedFile;
+    private String fileName;
 
 
     public String getText() {
@@ -53,5 +54,12 @@ public class Message {
         this.attachedFile = attachedFile;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
 }

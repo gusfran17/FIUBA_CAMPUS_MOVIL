@@ -103,7 +103,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 	}
 
 	@Override
-	public DiscussionMessageRepresentation createMessage(Integer groupId, Integer discussionId, String message, String userName, MultipartFile file) {
+	public DiscussionMessageRepresentation createMessage(Integer groupId, Integer discussionId, String message, String userName, String fileName, MultipartFile file) {
 		Group group = this.findGroup(groupId);
 		Student student = this.findStudent(userName);
 		Discussion discussion = findDiscussion(groupId, discussionId, group);
@@ -117,6 +117,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 		if(discussionMessage.isHasAttachedFile()){
 			DiscussionMessageFile messageFile = this.createFile(discussionMessage, file);
 			discussionMessage.setDiscussionMessageFile(messageFile);
+			discussionMessage.setFileName(fileName);
 		}
 		discussionMessageRepository.save(discussionMessage);
 		discussionRepository.save(discussion);		

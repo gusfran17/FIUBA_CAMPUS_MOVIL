@@ -19,7 +19,7 @@ public interface DiscussionService {
 
 	DiscussionRepresentation create(DiscussionCreationRepresentation discussionRepresentation, Integer groupID);
 
-	DiscussionMessageRepresentation createMessage(Integer groupId, Integer discussionId, String message, String userName, MultipartFile file);
+	DiscussionMessageRepresentation createMessage(Integer groupId, Integer discussionId, String message, String userName, String fileName, MultipartFile file);
 
 	Set<DiscussionRepresentation> findGroupDiscussionsForMember(Integer groupId, String userName);
 

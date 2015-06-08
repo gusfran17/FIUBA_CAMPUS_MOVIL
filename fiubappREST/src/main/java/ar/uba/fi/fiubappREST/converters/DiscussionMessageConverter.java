@@ -22,6 +22,7 @@ public class DiscussionMessageConverter {
 		discussionMessageRepresentation.setCreationDate(message.getCreationDate());	
 		discussionMessageRepresentation.setMessage(message.getMessage());
 		discussionMessageRepresentation.setHasAttachedFile(message.isHasAttachedFile());
+		discussionMessageRepresentation.setFileName(message.getFileName());
 		if(message.isHasAttachedFile()){	
 			discussionMessageRepresentation.setAttachedFile(this.getAttachedFileUrl(groupId, discussionId, message.getId()));
 		}

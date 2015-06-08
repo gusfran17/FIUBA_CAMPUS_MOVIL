@@ -56,10 +56,11 @@ public class DiscussionActivity extends Activity {
 
     private static final String TAG = DiscussionActivity.class.getSimpleName();
     private final int FILE_SELECT_CODE = 100;
+    private final int FILE_DOWNLOAD = 200;
 
+    private String creator;
     private View createDiscussionMessageView;
     private Uri selectedfile = null;
-    private String creator;
     private String mime = null;
     private boolean messageHasFile = false;
 
@@ -174,7 +175,11 @@ public class DiscussionActivity extends Activity {
         final Activity activity = this;
         String URL = urlAPI + "/groups/" + groupId + "/discussions/" + id + "/messages";
         final EditText edtvw_message = (EditText)createDiscussionMessageView.findViewById(R.id.edtvw_message);
-
+        final TextView txtvw_upload = (TextView)createDiscussionMessageView.findViewById(R.id.txtvw_upload);
+        if (!messageHasFile){
+            selectedfile = null;
+            mime = null;
+        }
         HashMap<String, String> headers = new HashMap<String, String>();
         SharedPreferences settings = activity.getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
         String token = settings.getString("token", null);
@@ -194,6 +199,7 @@ public class DiscussionActivity extends Activity {
                             message.setHasAttachedFile(response.getBoolean("hasAttachedFile"));
                             if (message.isHasAttachedFile()){
                                 message.setAttachedFile(response.getString("attachedFile"));
+                                message.setFileName(response.getString("fileName"));
                             }
 
                         } catch (JSONException e) {
@@ -223,7 +229,8 @@ public class DiscussionActivity extends Activity {
                 activity,
                 headers,
                 mime,
-                edtvw_message.getText().toString());
+                edtvw_message.getText().toString(),
+                txtvw_upload.getText().toString());
 
         VolleyController.getInstance().addToRequestQueue(mPR);
 
@@ -250,6 +257,7 @@ public class DiscussionActivity extends Activity {
                                 message.setHasAttachedFile(jsonMessage.getBoolean("hasAttachedFile"));
                                 if (message.isHasAttachedFile()){
                                     message.setAttachedFile(jsonMessage.getString("attachedFile"));
+                                    message.setFileName(jsonMessage.getString("fileName"));
                                 }
 
                                 messagesList.add(message);
@@ -317,7 +325,9 @@ public class DiscussionActivity extends Activity {
                 messageHasFile = true;
             }
         }
+        if (requestCode == FILE_DOWNLOAD){
 
+        }
     }
 
     public String getMimeType(Uri uri) {

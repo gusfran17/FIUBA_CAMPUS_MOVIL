@@ -38,6 +38,7 @@ public class MessageMultipartRequest<T> extends Request<org.json.JSONObject> {
     private Context context;
     private String mimeType;
     private final String message;
+    private final String fileName;
 
     public MessageMultipartRequest(String url,
                             Response.Listener<org.json.JSONObject> listener,
@@ -46,7 +47,8 @@ public class MessageMultipartRequest<T> extends Request<org.json.JSONObject> {
                             Context context,
                             Map<String, String> headers,
                             String mimeType,
-                            String message)
+                            String message,
+                            String fileName)
     {
         super(Method.POST, url, errorListener);
 
@@ -54,6 +56,7 @@ public class MessageMultipartRequest<T> extends Request<org.json.JSONObject> {
         this.context = context;
         this.headers = headers;
         this.message = message;
+        this.fileName = fileName;
 
         this.uri = uri;
         this.mimeType = mimeType;
@@ -97,6 +100,7 @@ public class MessageMultipartRequest<T> extends Request<org.json.JSONObject> {
         }
 
         mBuilder.addTextBody("message", this.message, ContentType.create("text/plain"));
+        mBuilder.addTextBody("fileName", this.fileName, ContentType.create("text/plain"));
 
         mBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         mBuilder.setLaxMode().setBoundary("xx").setCharset(Charset.forName("UTF-8"));
