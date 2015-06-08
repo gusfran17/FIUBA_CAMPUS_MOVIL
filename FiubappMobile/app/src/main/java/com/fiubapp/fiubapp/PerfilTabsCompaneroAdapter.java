@@ -22,11 +22,12 @@ public class PerfilTabsCompaneroAdapter extends FragmentPagerAdapter{
                     context.getResources().getString(R.string.fiuba),
                     context.getResources().getString(R.string.empleos),
                     context.getResources().getString(R.string.educacion),
-                    context.getResources().getString(R.string.apuntes)};
+                    context.getResources().getString(R.string.companeros_en_comun)};
         else
             TABS = new String[] {
                     context.getResources().getString(R.string.datos),
-                    context.getResources().getString(R.string.fiuba)};
+                    context.getResources().getString(R.string.fiuba),
+                    context.getResources().getString(R.string.companeros_en_comun)};
     }
 
     @Override
@@ -44,7 +45,7 @@ public class PerfilTabsCompaneroAdapter extends FragmentPagerAdapter{
                 if(this.companero.isMyMate())
                     return Perfil_fiuba.newContact(companero);
                 else
-                    return Perfil_empleo.newContact(companero);
+                    return Perfil_companeros_comun.newContact(companero);
             case 3:
                 if(this.companero.isMyMate())
                     return Perfil_empleo.newContact(companero);
@@ -56,7 +57,7 @@ public class PerfilTabsCompaneroAdapter extends FragmentPagerAdapter{
                 else
                     return new Perfil_apuntes();
             case 5:
-                return new Perfil_apuntes();
+                return Perfil_companeros_comun.newContact(companero);
         }
 
         return null;
