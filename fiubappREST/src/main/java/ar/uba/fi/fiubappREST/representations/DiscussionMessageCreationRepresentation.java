@@ -11,9 +11,17 @@ import ar.uba.fi.fiubappREST.utils.CustomDateSerializerDetailed;
 
 public class DiscussionMessageCreationRepresentation {
 
+	private Integer id;
 	private String message;
 	private Date creationDate;
 	private String creatorUserName;
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
 	
 	public String getMessage() {
 		return message;

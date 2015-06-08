@@ -42,6 +42,7 @@ public class DiscussionConverter {
 			messageRepresentation.setCreationDate(message.getCreationDate());
 			messageRepresentation.setCreatorUserName(discussion.getCreator().getName() + " " + discussion.getCreator().getLastName());
 			messageRepresentation.setMessage(message.getMessage());
+			messageRepresentation.setId(message.getId());
 			messagesRepresentation.add(messageRepresentation);
 			
 		}

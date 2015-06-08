@@ -12,7 +12,30 @@ public class Message {
     private boolean hasAttachedFile;
     private String attachedFile;
     private String fileName;
+    private String id;
+    private String idGrupo;
+    private String idDiscusion;
 
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getIdGrupo() {
+        return idGrupo;
+    }
+    public void setIdGrupo(String idGrupo) {
+        this.idGrupo = idGrupo;
+    }
+
+    public String getIdDiscusion() {
+        return idDiscusion;
+    }
+    public void setIdDiscusion(String idDiscusion) {
+        this.idDiscusion = idDiscusion;
+    }
 
     public String getText() {
         return text;

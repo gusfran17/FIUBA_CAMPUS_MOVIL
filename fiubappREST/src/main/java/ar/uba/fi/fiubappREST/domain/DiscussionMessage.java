@@ -30,6 +30,8 @@ public class DiscussionMessage {
 	
 	private String message;
 	
+	private Integer IdMessage;
+	
 	private Date creationDate;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
@@ -42,8 +44,7 @@ public class DiscussionMessage {
 	private boolean hasAttachedFile;
 
 	private String fileName;
-	
-	@JsonIgnore
+		
 	public Integer getId() {
 		return id;
 	}

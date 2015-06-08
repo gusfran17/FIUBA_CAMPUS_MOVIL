@@ -109,6 +109,14 @@ public class MessagesAdapter extends BaseAdapter {
                 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
                 @Override
                 public void onClick(View view) {
+
+                    String urlAPI = activity.getResources().getString(R.string.urlAPI);
+                    String url = urlAPI + "/groups/" + message.getIdGrupo() + "/discussions/" + message.getIdDiscusion() + "/messages/" + message.getId() + "/file";
+
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    activity.startActivity(i);
+
                     //Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(message.getAttachedFile()));
                     //activity.startActivityForResult(intent, 200);
 
@@ -118,7 +126,7 @@ public class MessagesAdapter extends BaseAdapter {
                     //pickIntent.setData(Uri.parse(message.getAttachedFile()));
                     //activity.startActivityForResult(pickIntent, requestCode);
 
-
+                    /*
                     DownloadManager.Request r = new DownloadManager.Request(Uri.parse(message.getAttachedFile()));
 
                     // This put the download in the same Download dir the browser uses
@@ -135,7 +143,7 @@ public class MessagesAdapter extends BaseAdapter {
                     // Start download
                     DownloadManager dm = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
                     dm.enqueue(r);
-
+                    */
                 }
             });
         }

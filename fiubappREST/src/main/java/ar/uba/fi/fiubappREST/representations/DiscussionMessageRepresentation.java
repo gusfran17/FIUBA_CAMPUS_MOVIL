@@ -10,6 +10,8 @@ import ar.uba.fi.fiubappREST.utils.CustomDateSerializerDetailed;
 
 public class DiscussionMessageRepresentation {
 	private String message;
+	private Integer id;
+	
 	private Date creationDate;
 	private Boolean hasAttachedFile;
 	private String attachedFile;
@@ -17,6 +19,14 @@ public class DiscussionMessageRepresentation {
 
 	private StudentProfileRepresentation creator; 
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
 	public String getMessage() {
 		return message;
 	}

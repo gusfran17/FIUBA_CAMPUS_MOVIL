@@ -202,6 +202,10 @@ public class DiscussionActivity extends Activity {
                                 message.setFileName(response.getString("fileName"));
                             }
 
+                            message.setId(response.getString("id"));
+                            message.setIdDiscusion(String.valueOf(id));
+                            message.setIdGrupo(String.valueOf(groupId));
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -259,6 +263,10 @@ public class DiscussionActivity extends Activity {
                                     message.setAttachedFile(jsonMessage.getString("attachedFile"));
                                     message.setFileName(jsonMessage.getString("fileName"));
                                 }
+
+                                message.setId(jsonMessage.getString("id"));
+                                message.setIdDiscusion(String.valueOf(id));
+                                message.setIdGrupo(String.valueOf(groupId));
 
                                 messagesList.add(message);
 
