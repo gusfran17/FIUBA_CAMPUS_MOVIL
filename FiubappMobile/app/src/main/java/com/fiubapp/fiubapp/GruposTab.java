@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -39,10 +40,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ar.uba.fi.fiubappMobile.groups.GruposTabs;
+import ar.uba.fi.fiubappMobile.utils.DataAccess;
 
 public class GruposTab extends Fragment {
 
     private ArrayList<Grupo> gruposAlumno = new ArrayList<Grupo>();
+    private GrupoAdapter grupoAdapter;
     private Context context;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -251,7 +254,8 @@ public class GruposTab extends Fragment {
 
     public void crearSeccionGrupos() {
         ListView listGrupos = (ListView)((FragmentActivity)context).findViewById(R.id.listGrupos);
-        GrupoAdapter grupoAdapter = new GrupoAdapter((FragmentActivity)context, gruposAlumno);
+        grupoAdapter = new GrupoAdapter((FragmentActivity)context, gruposAlumno);
+        listGrupos.setAdapter(grupoAdapter);
 
         listGrupos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -266,7 +270,138 @@ public class GruposTab extends Fragment {
             }
         });
 
-        listGrupos.setAdapter(grupoAdapter);
+        listGrupos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final Grupo grupo = (Grupo)adapterView.getItemAtPosition(i);
+
+                if (grupo.getAmIaMember()){
+                    new AlertDialog.Builder(context)
+                            .setTitle("¿Abandonar grupo?")
+                            .setMessage(grupo.getNombre())
+                            .setPositiveButton("Abandonar", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    abandonarGrupo(grupo);
+                                }
+                            })
+                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+
+                }else{
+                    new AlertDialog.Builder(context)
+                            .setTitle("Ingresar al grupo?")
+                            .setMessage(grupo.getNombre())
+                            .setPositiveButton("Ingresar", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ingresarGrupo(grupo);
+                                }
+                            })
+                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+                return true;
+            }
+        });
+    }
+
+    private void ingresarGrupo(final Grupo grupo){
+        String url = getURLAPI()+"/students/"+getUsername()+"/groups/"+grupo.getId();
+
+        JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.POST,
+                url,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Popup.showText(context, "Te inscribiste al grupo "+grupo.getNombre(), Toast.LENGTH_LONG).show();
+                        gruposAlumno.remove(grupo);
+                        grupo.setCantMiembros(grupo.getCantMiembros()+1);
+                        grupo.setAmIaMember(true);
+                        gruposAlumno.add(grupo);
+
+                        grupoAdapter.notifyDataSetChanged();
+                    }
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Popup.showText(context, "Ha ocurrido un error. " +
+                                "Probá nuevamente en unos minutos", Toast.LENGTH_LONG).show();
+                    }
+                }
+        ){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", getToken());
+                return headers;
+            }
+
+        };
+        VolleyController.getInstance().addToRequestQueue(jsonReq);
+    }
+
+    private void abandonarGrupo(final Grupo grupo){
+        String url = getURLAPI()+"/students/"+getUsername()+"/groups/"+grupo.getId();
+
+        JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.DELETE,
+                url,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Popup.showText(context, "Abandonaste el grupo "+grupo.getNombre(), Toast.LENGTH_LONG).show();
+                        getGrupos();
+                    }
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        if (error.networkResponse == null){
+
+                            Popup.showText(context, "Abandonaste el grupo "+grupo.getNombre(), Toast.LENGTH_LONG).show();
+                            getGrupos();
+
+                        }else{
+                            Popup.showText(context, "Ha ocurrido un error. " +
+                                    "Probá nuevamente en unos minutos", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+        ){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", getToken());
+                return headers;
+            }
+
+        };
+        VolleyController.getInstance().addToRequestQueue(jsonReq);
+    }
+
+    private String getToken(){
+        DataAccess dataAccess = new DataAccess(getActivity());
+        return dataAccess.getToken();
+    }
+
+    private String getUsername(){
+        DataAccess dataAccess = new DataAccess(getActivity());
+        return dataAccess.getUserName();
+    }
+
+    private String getURLAPI(){
+        DataAccess dataAccess = new DataAccess(getActivity());
+        return dataAccess.getURLAPI();
     }
 
     @Override
