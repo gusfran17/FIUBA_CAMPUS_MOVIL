@@ -19,7 +19,12 @@
 	<script src="resources/js/controllers/StateModalController.js"></script>
 	<script src="resources/js/controllers/GroupController.js"></script>
 	<script src="resources/js/controllers/ReportController.js"></script>
-	
+		
+	<script src="resources/js/lib/ng-google-chart.js"></script>
+	<script src="resources/js/lib/jquery-1.11.2.min.js"></script>
+	<script src="resources/js/lib/jspdf.js"></script>
+	<script src="resources/js/lib/jspdf.plugin.autotable.js"></script>
+		
 	<style type="text/css">
     	.bs-example{
     		margin: 20px;

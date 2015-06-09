@@ -2,7 +2,7 @@
 
 var FiubappWebAdminApp = {};
 
-var App = angular.module('FiubappWebAdminApp', ['FiubappWebAdminApp.services','ui.bootstrap', 'ngRoute']).
+var App = angular.module('FiubappWebAdminApp', ['FiubappWebAdminApp.services','ui.bootstrap', 'ngRoute', 'googlechart']).
 config(['$routeProvider', '$locationProvider', function($routeProvider,$locationProvider) {
 	
 	$routeProvider.when('/login', {
