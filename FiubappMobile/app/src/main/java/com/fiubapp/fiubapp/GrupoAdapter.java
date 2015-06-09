@@ -107,13 +107,10 @@ public class GrupoAdapter extends BaseAdapter {
         cantidadGrupo.setText(cantidad);
 
         if (grupoSeleccionado.getAmIaMember()){
-            //button.setText("Abandonar");
             button.setVisibility(View.INVISIBLE);
-			//alertaAbandonarGrupo(grupoSeleccionado,grupoFilaView);
         }else{
-            button.setVisibility(View.INVISIBLE);
-            //button.setText("Ingresar");
-            //alertaIngresarGrupo(grupoSeleccionado,grupoFilaView);
+            button.setText("Ingresar");
+            alertaIngresarGrupo(grupoSeleccionado,grupoFilaView);
         }
 
         return grupoFilaView;
@@ -183,6 +180,69 @@ public class GrupoAdapter extends BaseAdapter {
             }
         };
 
+        VolleyController.getInstance().addToRequestQueue(jsonReq);
+    }
+
+    public void alertaIngresarGrupo(final Grupo grupo, View view){
+
+        final Button buttonIngresar = (Button)view.findViewById(R.id.childButton);
+
+        buttonIngresar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(activity)
+                        .setTitle("Ingresar al grupo?")
+                        .setMessage(grupo.getNombre())
+                        .setPositiveButton("Ingresar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                ingresarGrupo(grupo);
+                            }
+                        })
+                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
+
+    }
+
+    private void ingresarGrupo(final Grupo grupo){
+        String url = getURLAPI()+"/students/"+getUsername()+"/groups/"+grupo.getId();
+
+        JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.POST,
+                url,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Popup.showText(activity, "Te inscribiste al grupo "+grupo.getNombre(), Toast.LENGTH_LONG).show();
+                        grupoItems.remove(grupo);
+                        grupo.setCantMiembros(grupo.getCantMiembros()+1);
+                        grupo.setAmIaMember(true);
+                        grupoItems.add(grupo);
+
+                        notifyDataSetChanged();
+                    }
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Popup.showText(activity, "Ha ocurrido un error. " +
+                                "Probá nuevamente en unos minutos", Toast.LENGTH_LONG).show();
+                    }
+                }
+        ){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", getToken());
+                return headers;
+            }
+
+        };
         VolleyController.getInstance().addToRequestQueue(jsonReq);
     }
 

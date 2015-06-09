@@ -104,22 +104,6 @@ public class GroupsSearch extends Activity{
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
 
-                }else{
-                    new AlertDialog.Builder(GroupsSearch.this)
-                            .setTitle("Ingresar al grupo?")
-                            .setMessage(grupo.getNombre())
-                            .setPositiveButton("Ingresar", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    ingresarGrupo(grupo);
-                                }
-                            })
-                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // do nothing
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
                 }
                 return true;
             }
