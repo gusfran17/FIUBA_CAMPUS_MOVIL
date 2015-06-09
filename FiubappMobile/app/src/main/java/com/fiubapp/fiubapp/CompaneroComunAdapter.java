@@ -1,4 +1,4 @@
-package ar.uba.fi.fiubappMobile.groups;
+package com.fiubapp.fiubapp;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,10 +20,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
-import com.fiubapp.fiubapp.Alumno;
-import com.fiubapp.fiubapp.Popup;
-import com.fiubapp.fiubapp.R;
-import com.fiubapp.fiubapp.VolleyController;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,13 +31,13 @@ import java.util.Map;
 
 import ar.uba.fi.fiubappMobile.utils.DataAccess;
 
-public class MiembroAdapter extends BaseAdapter {
+public class CompaneroComunAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
     private List<Alumno> alumnoItems;
     ImageLoader imageLoader = VolleyController.getInstance().getImageLoader();
 
-    public MiembroAdapter(Activity activity, List<Alumno> alumnoItems) {
+    public CompaneroComunAdapter(Activity activity, List<Alumno> alumnoItems) {
         this.activity = activity;
         this.alumnoItems = alumnoItems;
     }
@@ -158,7 +154,7 @@ public class MiembroAdapter extends BaseAdapter {
                                         Popup.showText(activity, message, Toast.LENGTH_LONG).show();
                                     }
 
-                                    Log.d("Error 415: ", responseBody);
+                                    Log.d("Error 415: ",responseBody);
                                 } catch (UnsupportedEncodingException e) {
                                     e.printStackTrace();
                                 } catch (JSONException e) {
@@ -196,8 +192,7 @@ public class MiembroAdapter extends BaseAdapter {
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                companero.setIsMyMate(false);
-                                //alumnoItems.remove(position);
+                                alumnoItems.remove(position);
                                 notifyDataSetChanged();
                             }
                         },
@@ -208,8 +203,7 @@ public class MiembroAdapter extends BaseAdapter {
                                 //el response es null cuando borra al compañero,
                                 //entonces se borra del listado
                                 if (error.networkResponse == null){
-                                    companero.setIsMyMate(false);
-                                    //alumnoItems.remove(position);
+                                    alumnoItems.remove(position);
                                     notifyDataSetChanged();
                                 }
 

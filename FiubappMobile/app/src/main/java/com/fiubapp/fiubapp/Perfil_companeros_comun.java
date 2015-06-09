@@ -29,7 +29,7 @@ import ar.uba.fi.fiubappMobile.utils.DataAccess;
 
 public class Perfil_companeros_comun extends Fragment {
 
-    private AlumnoAdapter alumnoAdapter;
+    private CompaneroComunAdapter companeroComunAdapter;
     private List<Alumno> alumnoList = new ArrayList<Alumno>();
     private ListView alumnoListView;
     private View view = null;
@@ -47,8 +47,8 @@ public class Perfil_companeros_comun extends Fragment {
         view = inflater.inflate(R.layout.listado, container, false);
 
         alumnoListView = (ListView)view.findViewById(R.id.list);
-        alumnoAdapter = new AlumnoAdapter(getActivity(), alumnoList);
-        alumnoListView.setAdapter(alumnoAdapter);
+        companeroComunAdapter = new CompaneroComunAdapter(getActivity(), alumnoList);
+        alumnoListView.setAdapter(companeroComunAdapter);
 
         alumnoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -105,6 +105,7 @@ public class Perfil_companeros_comun extends Fragment {
                                 miembro.setNombre(obj.getString("name"));
                                 miembro.setApellido(obj.getString("lastName"));
                                 miembro.setIntercambio(obj.getBoolean("isExchangeStudent"));
+                                miembro.setComentario(obj.getString("comments"));
                                 miembro.setIsMyMate(obj.getBoolean("isMyMate"));
                                 miembro.setUsername(obj.getString("userName"));
                                 miembro.setImgURL(obj.getString("profilePicture"));
@@ -127,7 +128,7 @@ public class Perfil_companeros_comun extends Fragment {
                             }
                         }
 
-                        alumnoAdapter.notifyDataSetChanged();
+                        companeroComunAdapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
             @Override

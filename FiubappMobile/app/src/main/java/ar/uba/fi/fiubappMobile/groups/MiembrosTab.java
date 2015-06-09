@@ -110,6 +110,7 @@ public class MiembrosTab extends Fragment {
                                 miembro.setIsMyMate(obj.getBoolean("isMyMate"));
                                 miembro.setUsername(obj.getString("userName"));
                                 miembro.setImgURL(obj.getString("profilePicture"));
+                                miembro.setComentario(obj.getString("comments"));
 
                                 JSONArray JSONCareers = new JSONArray(obj.getString("careers"));
                                 ArrayList<String> carreras = new ArrayList<>();
