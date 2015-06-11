@@ -18,7 +18,8 @@
 	<script src="resources/js/controllers/StudentController.js"></script>
 	<script src="resources/js/controllers/StateModalController.js"></script>
 	<script src="resources/js/controllers/GroupController.js"></script>
-	<script src="resources/js/controllers/ReportController.js"></script>
+	<script src="resources/js/controllers/ReportAlumnosController.js"></script>
+	<script src="resources/js/controllers/ReportDiscusionesController.js"></script>
 		
 	<script src="resources/js/lib/ng-google-chart.js"></script>
 	<script src="resources/js/lib/jquery-1.11.2.min.js"></script>
@@ -45,7 +46,8 @@
     <ul ng-show="loggedUser.logged" class="menu" style="font-size : 23px;">
     	<li><a href="#/student">Alumnos</a></li>    	
         <li><a href="#/group">Grupos</a></li>
-        <li><a href="#/report">Reportes</a></li>        
+        <li><a href="#/reportDiscusiones">Reporte Discusiones</a></li>
+        <li><a href="#/reportAlumnos">Reporte Alumnos</a></li>        
         <li><a href="#/logout">Salir</a></li>
     </ul>
          

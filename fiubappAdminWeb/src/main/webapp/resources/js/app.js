@@ -25,11 +25,16 @@ config(['$routeProvider', '$locationProvider', function($routeProvider,$location
         controller: GroupController
     });
     
-    $routeProvider.when('/report', {
-        templateUrl: 'webapp/report/layout',
-        controller: ReportController
+    $routeProvider.when('/reportAlumnos', {
+        templateUrl: 'webapp/reportAlumnos/layout',
+        controller: ReportAlumnosController
     });
 
+    $routeProvider.when('/reportDiscusiones', {
+        templateUrl: 'webapp/reportDiscusiones/layout',
+        controller: ReportDiscusionesController
+    });
+    
     $routeProvider.otherwise({redirectTo: '/student'});
     
  }])
