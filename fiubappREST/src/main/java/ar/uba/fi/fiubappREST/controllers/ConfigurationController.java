@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import ar.uba.fi.fiubappREST.domain.LocationConfiguration;
+import ar.uba.fi.fiubappREST.domain.WallConfiguration;
 import ar.uba.fi.fiubappREST.services.ConfigurationService;
 import ar.uba.fi.fiubappREST.services.SessionService;
 
@@ -41,6 +42,20 @@ public class ConfigurationController {
 	public @ResponseBody LocationConfiguration updateLocationNotification(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestBody LocationConfiguration locationConfiguration) {
 		this.sessionService.validateThisStudent(token, userName);
 		return this.configurationService.updateLocationConfiguration(userName, locationConfiguration);
+	}
+	
+	@RequestMapping(value="wall", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	public @ResponseBody WallConfiguration getWallConfiguration(@RequestHeader(value="Authorization") String token, @PathVariable String userName) {
+		this.sessionService.validateThisStudentOrMate(token, userName);
+		return this.configurationService.getWallConfiguration(userName);
+	}
+	
+	@RequestMapping(value="wall", method = RequestMethod.PUT)
+	@ResponseStatus(value = HttpStatus.OK)
+	public @ResponseBody WallConfiguration updateLocationNotification(@RequestHeader(value="Authorization") String token, @PathVariable String userName, @RequestBody WallConfiguration wallConfiguration) {
+		this.sessionService.validateThisStudent(token, userName);
+		return this.configurationService.updateWallConfiguration(userName, wallConfiguration);
 	}
 	
 }

@@ -27,6 +27,7 @@ import ar.uba.fi.fiubappREST.domain.ProfilePicture;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentCareer;
 import ar.uba.fi.fiubappREST.domain.StudentState;
+import ar.uba.fi.fiubappREST.domain.WallConfiguration;
 import ar.uba.fi.fiubappREST.exceptions.CareerNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyExistsException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
@@ -99,8 +100,15 @@ public class StudentServiceImpl implements StudentService {
 		locationConfiguration.setIsEnabled(false);
 		locationConfiguration.setDistanceInKm(this.defaultDistanceInKm);
 		locationConfiguration.setStudent(student);
+		
+		WallConfiguration wallConfiguration = new WallConfiguration();
+		wallConfiguration.setIsEnabled(true);
+		wallConfiguration.setStudent(student);
+		
 		student.setConfigurations(new HashSet<Configuration>());
+		
 		student.getConfigurations().add(locationConfiguration);
+		student.getConfigurations().add(wallConfiguration);
 	}
 	
 	private void createDefaultProfileImage(Student student) {
