@@ -11,7 +11,7 @@
         
     <script src="resources/bootstrap/js/bootstrap.js"></script>
     <script src="resources/js/app.js"></script>
-    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.6.0.js"></script>
+    <script src="resources/js/lib/ui-bootstrap-tpls-0.6.0.js"></script>
 	<script src="resources/js/services.js"></script>
 	<script src="resources/js/controllers/LoginController.js"></script>
 	<script src="resources/js/controllers/LogoutController.js"></script>
@@ -20,6 +20,7 @@
 	<script src="resources/js/controllers/GroupController.js"></script>
 	<script src="resources/js/controllers/ReportAlumnosController.js"></script>
 	<script src="resources/js/controllers/ReportDiscusionesController.js"></script>
+	<script src="https://code.angularjs.org/1.0.8/i18n/angular-locale_es-ar.js"></script>
 		
 	<script src="resources/js/lib/ng-google-chart.js"></script>
 	<script src="resources/js/lib/jquery-1.11.2.min.js"></script>

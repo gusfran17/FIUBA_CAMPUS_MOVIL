@@ -1,69 +1,60 @@
-<style>
-  .full button span {
-    background-color: limegreen;
-    border-radius: 32px;
-    color: black;
-  }
-  .partially button span {
-    background-color: orange;
-    border-radius: 32px;
-    color: black;
-  }
-</style>
-
-<div ng-controller="ReportDiscusionesController">	
-<form class="form-horizontal">
- 
-
-  <input type="text" class="form-control" ng-disabled="true" datepicker-popup="{{format}}" 
-  										ng-model="dt" is-open="opened" min-date="minDate" max-date="'2015-06-22'" 
-  										datepicker-options="dateOptions" date-disabled="disabled(date, mode)" 
-  										ng-required="true" close-text="Close" />
-  <span class="input-group-btn">
-  	<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-  </span>
-        
- 	<div class="control-group">
-        
-		<label class="span1">Desde</label>
+<form class="form-horizontal"> 	
+ 	<div style="margin-left: 150px;"> 
+ 		 	 	
+        <label class="input-group">Desde</label>
+        <p class="input-group">
+        	<input class="input-datepicker" type="text" ng-disabled="true" datepicker-popup="dd/MM/yyyy" show-weeks="false"
+        		   ng-model="searchParams.fechaDesde" is-open="openedFechaDesde" ng-required="true" />  						     		
+			<button type="button" class="btn btn-default" ng-click="openFechaDesde($event)"><i class="icon-calendar"></i></button>
+		</p>
+		<label class="input-group">Hasta</label>
+		<p class="input-group">
+			<input class="input-datepicker" type="text" ng-disabled="true" datepicker-popup="dd/MM/yyyy" show-weeks="false"
+				   ng-model="searchParams.fechaHasta" is-open="openedFechaHasta" ng-required="true" />  						     		
+			<button type="button" class="btn btn-default " ng-click="openFechaHasta($event)"><i class="icon-calendar"></i></button>
+		</p>
 		
-		<label class="span1">Hasta</label>
-		<label class="span2">#Discusiones</label>
-        <select class="span1 selectpicker" ng-model="searchParams.state" ng-options="c for c in states"></select>
-       	<a class="btn btn-primary" ng-click="search(searchParams)">Generar</a>        	
-        
+        <label class="input-group">#Discusiones</label>	
+        <select class="input-group col-md-1 selectpicker" ng-model="searchParams.cantidad" ng-options="c for c in cantidades"></select>        
+       	<a class="btn btn-primary col-md-1" ng-click="search(searchParams)">Generar</a>       
     </div>
-    
-    <div class="alert alert-info" ng-show="results.length == 0">
-    	No se encontró ningún resultado
-	</div>
-
+</form>   
+ 
+<br/><br/>
+ 
+<div ng-show="results.length > 0">
 	<div google-chart chart="chartGruposMayorActividad" style="{{chartGruposMayorActividad.cssStyle}}" on-ready="readyChartGruposMayorActividad()" />
-		
-	<br/><br/>
-	<div>
-	<table ng-show="results.length > 0" class="table table-striped">
-	    <thead>
-	        <tr>
-	            <th data-align="center">Discusión</th>
-	            <th data-align="center">Grupo</th>
-	            <th data-align="center">#Comentarios</th>
-	            <th data-align="center">#Miembros</th>	            
-	        </tr>
-	    </thead>
-	    <tbody>
-			<tr ng-repeat="result in results">
-        		<td>{{result.discussionName}}</td>        		
-        		<td>{{result.groupName}}</td>
-        		<td>{{result.amountOfComments}}</td>
-        		<td>{{result.amountOfGroupMembers}}</td>        		
-      		</tr>
-		</tbody>
-	</table>
-	</div>
-
-	<br/>
-	<a class="btn btn-primary" ng-show="results.length > 0" ng-click="exportar()">Exportar a PDF</a>
-	        
-</form>
 </div>
+	
+<br/><br/>
+<div>
+<table ng-show="results.length > 0" class="table table-striped">
+    <thead>
+        <tr>
+            <th data-align="center">Discusión</th>
+            <th data-align="center">Grupo</th>
+            <th data-align="center">#Comentarios</th>
+            <th data-align="center">#Miembros</th>	            
+        </tr>
+    </thead>
+    <tbody>
+		<tr ng-repeat="result in results">
+       		<td>{{result.discussionName}}</td>        		
+       		<td>{{result.groupName}}</td>
+       		<td>{{result.amountOfComments}}</td>
+       		<td>{{result.amountOfGroupMembers}}</td>        		
+     		</tr>
+	</tbody>
+</table>
+</div>
+
+<br/>
+<a class="btn btn-primary" ng-show="results.length > 0" ng-click="exportar()">Exportar a PDF</a>
+<br/>
+<div ng-show="noHayResultados && !error">
+	<br/><br/><br/>
+	<div class="alert alert-info">
+		No se encontró ningún resultado
+	</div>
+</div>
+<br/>

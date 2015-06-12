@@ -1,36 +1,47 @@
 'use strict';
 
 var ReportDiscusionesController = function(ReportService, MessageService, $scope, $routeParams, $modal) {
-		 
-	$scope.format = 'dd/MM/yyyy';
-	  
-	 $scope.open = function($event) {
+	
+	$scope.openFechaDesde = function($event) {
 	    $event.preventDefault();
 	    $event.stopPropagation();
 	
-	    $scope.opened = true;
-	  };
-		  
+	    $scope.openedFechaDesde = true;
+	};
+		
 	$scope.dateOptions = {
-	    formatYear: 'yy',
-	    startingDay: 1
+	        'clear-text': 'aaa'
+	};
+	  
+	$scope.openFechaHasta = function($event) {
+	    $event.preventDefault();
+	    $event.stopPropagation();
+	
+	    $scope.openedFechaHasta = true;
 	};
 	  
 	$scope.searchParams = {};
-	$scope.mostrarBoton = false;
-	
+		
 	$scope.cantidades = ['10', '20', '30'];
 	$scope.searchParams.cantidad = $scope.cantidades[0];
 	
-	$scope.searchParams.fechaDesde = '01/01/2000';
-	$scope.searchParams.fechaHasta = '01/06/2030';
-	$scope.searchParams.cantidad = 10; 
+	var hoy = new Date();	
+	var haceUnMes = new Date(hoy.getFullYear(), hoy.getMonth() - 1, hoy.getDate());
+		
+	$scope.searchParams.fechaDesde = haceUnMes;		
+	$scope.searchParams.fechaHasta = hoy;
 	
 	$scope.filasTablaReporte = "";
 	
 	$scope.search = function(searchParams) {
 		
+		$scope.results = [];		
 		MessageService.resetError();
+		$scope.filasTablaReporte = "";
+		
+		if(searchParams.fechaDesde == null || searchParams.fechaHasta == null){			
+			MessageService.setError("Verifique que las fechas est\u00E9n cargadas");
+		}
 		
 		var path = $scope.getParamsPath(searchParams);
 		
@@ -38,8 +49,8 @@ var ReportDiscusionesController = function(ReportService, MessageService, $scope
 			
 			$scope.procesarDatos(data);
 			
-			//SearchStorageService.push(searchParams, $scope.results);
-			//$scope.previousSearchs = SearchStorageService.getAll();
+			SearchStorageService.push(searchParams, $scope.results);
+			$scope.previousSearchs = SearchStorageService.getAll();
 			
         }, function(errorMessage){
         	MessageService.setError(errorMessage);
@@ -49,8 +60,44 @@ var ReportDiscusionesController = function(ReportService, MessageService, $scope
 	$scope.getParamsPath = function(searchParams){
 		var params = [];
 		
-		$scope.addParamToArray(params, "dateFrom", searchParams.fechaDesde);
-		$scope.addParamToArray(params, "dateTo", searchParams.fechaHasta);
+		var diaDesde = searchParams.fechaDesde.getDate();
+		var mesDesde = searchParams.fechaDesde.getMonth();
+		var anioDesde = searchParams.fechaDesde.getFullYear();
+		
+		var diaDesdeStr = "";
+		var mesDesdeStr = "";
+			
+		diaDesdeStr = diaDesde.toString();
+		if(diaDesde < 10)
+			diaDesdeStr = '0' + diaDesde.toString();
+		
+		mesDesdeStr = (mesDesde + 1).toString();
+		if(mesDesde + 1 < 10)
+			mesDesdeStr = '0' + (mesDesde + 1).toString();
+		
+		var fechaDesde = diaDesdeStr + "/" + mesDesdeStr + "/" + anioDesde.toString();
+		$scope.fechaDesdeStr = fechaDesde;
+		
+		var diaHasta = searchParams.fechaHasta.getDate();
+		var mesHasta = searchParams.fechaHasta.getMonth();
+		var anioHasta = searchParams.fechaHasta.getFullYear();
+		
+		var diaHastaStr = "";
+		var mesHastaStr = "";
+				
+		diaHastaStr = diaHasta.toString();
+		if(diaHasta < 10)
+			diaHastaStr = '0' + diaHasta.toString();
+		
+		mesHastaStr = (mesHasta + 1).toString();
+		if(mesHasta + 1 < 10)
+			mesHastaStr = '0' + (mesHasta + 1).toString();
+		
+		var fechaHasta = diaHastaStr + "/" + mesHastaStr + "/" + anioHasta.toString();
+		$scope.fechaHastaStr = fechaHasta; 
+		
+		$scope.addParamToArray(params, "dateFrom", fechaDesde);
+		$scope.addParamToArray(params, "dateTo", fechaHasta);
 		$scope.addParamToArray(params, "values", searchParams.cantidad);
 				
 		return $scope.buildParamsPath(params);
@@ -108,7 +155,9 @@ var ReportDiscusionesController = function(ReportService, MessageService, $scope
 	          			};
 
 	    chart1.formatters = {};    
-	    $scope.chartGruposMayorActividad = chart1;	    
+	    $scope.chartGruposMayorActividad = chart1;	
+	    
+	    $scope.noHayResultados = ($scope.results.length == 0);
 	};
 	
 	$scope.crearDatosGrafico = function(data){
@@ -140,19 +189,18 @@ var ReportDiscusionesController = function(ReportService, MessageService, $scope
 	};	
 	
 	    
-// Reporte
-var barras;
+	// Reporte
+	var barras;
 
-$scope.readyChartGruposMayorActividad = function readyChartGruposMayorActividad() {
-	if( !($scope.chartWrapperBarra === undefined)){
-		barras = $scope.chartWrapperBarra.getChart().getImageURI();
-		$scope.mostrarBoton = true;		
-	}	
-	
-};
-
-$scope.exportar = function exportar() {
+	$scope.readyChartGruposMayorActividad = function readyChartGruposMayorActividad() {
+		if( !($scope.chartWrapperBarra === undefined)){
+			barras = $scope.chartWrapperBarra.getChart().getImageURI();				
+		}	
 		
+	};
+
+	$scope.exportar = function exportar() {
+			
 		var columns = [
 			{title: "Discusi\u00F3n", key: "discusion"},
 			{title: "Grupo", key: "grupo"}, 
@@ -168,14 +216,15 @@ $scope.exportar = function exportar() {
 		doc.text(40, 40, 'Reporte de discusiones/grupos de mayor actividad');
 		
 		doc.setFontSize(10);
-		doc.text(40, 60, 'Filtros: Fecha desde:' + $scope.searchParams.fechaDesde + ', Fecha hasta:' + $scope.searchParams.fechaHasta + ', #Discusiones: ' + $scope.searchParams.cantidad);
+		doc.text(40, 60, 'Filtros: Fecha desde:' + $scope.fechaDesdeStr + ', Fecha hasta:' + $scope.fechaHastaStr + ', #Discusiones: ' + $scope.searchParams.cantidad);
 		
-		doc.addImage(barras, 'PNG', -10, 80, 700, 140);
+		doc.addImage(barras, 'PNG', -10, 80, 650, 340);
 		
-		doc.autoTable(columns, data, {margins: { right: 40, left: 40, top: 250, bottom: 40 }, startY: false });
+		doc.addPage();
+		doc.autoTable(columns, data, {margins: { right: 40, left: 40, top: 40, bottom: 40 }, startY: false });
 		
 		doc.save('Reporte_Discusiones_Grupos_Mayor_Actividad.pdf');
-	  };  
+	};  
 	  
-	  MessageService.resetError();
+	MessageService.resetError();
 };
