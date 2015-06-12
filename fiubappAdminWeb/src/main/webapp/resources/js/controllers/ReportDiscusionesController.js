@@ -8,10 +8,6 @@ var ReportDiscusionesController = function(ReportService, MessageService, $scope
 	
 	    $scope.openedFechaDesde = true;
 	};
-		
-	$scope.dateOptions = {
-	        'clear-text': 'aaa'
-	};
 	  
 	$scope.openFechaHasta = function($event) {
 	    $event.preventDefault();
