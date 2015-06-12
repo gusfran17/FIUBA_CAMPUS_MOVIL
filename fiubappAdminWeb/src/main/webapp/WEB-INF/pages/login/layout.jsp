@@ -1,7 +1,7 @@
 <div ng-controller="LoginController">
 
 	<form name="loginForm" class="form-horizontal" ng-submit="login()">
-	    <div class="control-group">
+	    <div class="control-group" style="margin-left: 250px;">
 	    
 	        <label class="control-label">Nombre de usuario</label>
 	
@@ -11,7 +11,7 @@
 	        </div>
 	    </div>
 	    
-	    <div class="control-group">
+	    <div class="control-group" style="margin-left: 250px;">
 	        <label class="control-label">Contraseña</label>
 	
 	        <div class="controls">
@@ -22,7 +22,7 @@
 	                
 	    <div class="control-group">
 	        <hr />
-	        <div class="controls">
+	        <div class="controls" style="margin-left: 460px;">
 	            <input type="submit" value="Ingresar" class="btn btn-primary"/><br>
 	        </div>
 	    </div>
