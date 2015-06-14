@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import ar.uba.fi.fiubappREST.domain.Career;
@@ -21,10 +22,12 @@ import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
 import ar.uba.fi.fiubappREST.domain.DiscussionReportInformation;
 import ar.uba.fi.fiubappREST.domain.Group;
+import ar.uba.fi.fiubappREST.domain.MonthlyApprovedStudentsInformation;
 import ar.uba.fi.fiubappREST.domain.StudentCareerInformation;
 import ar.uba.fi.fiubappREST.persistance.CareerRepository;
 import ar.uba.fi.fiubappREST.persistance.DiscussionRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
+import ar.uba.fi.fiubappREST.persistance.MonthlyStudentInformationRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentCareerRepository;
 
 @Service
@@ -36,16 +39,18 @@ public class ReportServiceImpl implements ReportService {
 	private DiscussionRepository discussionRepository;
 	private CareerRepository careerRepository;
 	private StudentCareerRepository studentCareerRepository;
+	private MonthlyStudentInformationRepository monthlyStudentInformationRepository;
 	
 	@Value("classpath:defaultGroupPicture.png")
 	private Resource defaultGroupPicture;
 		
 	@Autowired
-	public ReportServiceImpl(GroupRepository groupRepository, DiscussionRepository discussionRepository, CareerRepository careerRepository, StudentCareerRepository studentCareerRepository){
+	public ReportServiceImpl(GroupRepository groupRepository, DiscussionRepository discussionRepository, CareerRepository careerRepository, StudentCareerRepository studentCareerRepository, MonthlyStudentInformationRepository monthlyStudentInformationRepository){
 		this.groupRepository = groupRepository;
 		this.discussionRepository = discussionRepository;
 		this.careerRepository = careerRepository;
 		this.studentCareerRepository = studentCareerRepository;
+		this.monthlyStudentInformationRepository = monthlyStudentInformationRepository;
 	}
 	
 	@Override
@@ -117,5 +122,12 @@ public class ReportServiceImpl implements ReportService {
 			informations.add(information);
 		}
 		return informations;
+	}
+
+	@Override
+	public List<MonthlyApprovedStudentsInformation> getApprovedStudents() {
+		List<MonthlyApprovedStudentsInformation> information = this.monthlyStudentInformationRepository.findAllOrderByMonthYeDesc(new PageRequest(1, 12));
+		Collections.reverse(information);
+		return information;
 	}
 }

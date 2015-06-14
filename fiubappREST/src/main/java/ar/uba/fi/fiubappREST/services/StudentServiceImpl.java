@@ -32,6 +32,7 @@ import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyExistsException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.UnexpectedErrorReadingProfilePictureFileException;
 import ar.uba.fi.fiubappREST.persistance.CareerRepository;
+import ar.uba.fi.fiubappREST.persistance.MonthlyStudentInformationRepository;
 import ar.uba.fi.fiubappREST.persistance.ProfilePictureRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
@@ -50,6 +51,7 @@ public class StudentServiceImpl implements StudentService {
 	private StudentConverter studentConverter;
 	private Md5PasswordEncoder passwordEncoder;
 	private StudentProfileConverter studentProfileConverter;
+	private MonthlyStudentInformationRepository monthlyStudentInformationRepository;
 
 	@Value("${configurations.defaultDistanceInKm}")
 	private Double defaultDistanceInKm;
@@ -59,13 +61,14 @@ public class StudentServiceImpl implements StudentService {
 	
 	@Autowired
 	public StudentServiceImpl(StudentRepository studentRepository, CareerRepository careerRepository, ProfilePictureRepository profilePictureRepository, 
-			StudentConverter studentConverter, Md5PasswordEncoder passwordEncoder, StudentProfileConverter studentProfileConverter){
+			StudentConverter studentConverter, Md5PasswordEncoder passwordEncoder, StudentProfileConverter studentProfileConverter, MonthlyStudentInformationRepository monthlyStudentInformationRepository){
 		this.studentRepository = studentRepository;
 		this.careerRepository = careerRepository;
 		this.profilePictureRepository = profilePictureRepository;
 		this.studentConverter = studentConverter;
 		this.passwordEncoder = passwordEncoder;
 		this.studentProfileConverter = studentProfileConverter;
+		this.monthlyStudentInformationRepository = monthlyStudentInformationRepository;
 	}
 
 	@Override
@@ -260,8 +263,12 @@ public class StudentServiceImpl implements StudentService {
 		student.setState(stateRepresentation.getState());
 		student = this.studentRepository.save(student);
 		stateRepresentation.setState(student.getState());
+		this.countStudent(stateRepresentation.getState());
 		LOGGER.info(String.format("State for sudent with userName %s was updated.", userName));
 		return stateRepresentation;
+	}
+
+	private void countStudent(StudentState state) {
 	}
 
 	public Double getDefaultDistanceInKm() {

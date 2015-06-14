@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import ar.uba.fi.fiubappREST.domain.DiscussionReportInformation;
+import ar.uba.fi.fiubappREST.domain.MonthlyApprovedStudentsInformation;
 import ar.uba.fi.fiubappREST.domain.StudentCareerInformation;
 import ar.uba.fi.fiubappREST.services.ReportService;
 import ar.uba.fi.fiubappREST.services.SessionService;
@@ -45,5 +46,12 @@ public class ReportController {
 	public @ResponseBody List<StudentCareerInformation> getStudentsCareers(@RequestHeader(value="Authorization") String token) {
 		this.sessionService.validateAdminSession(token);
 		return this.reportService.getStudentCareers();
+	}
+	
+	@RequestMapping(value="students/approved", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	public @ResponseBody List<MonthlyApprovedStudentsInformation> getApprovedStudents(@RequestHeader(value="Authorization") String token) {
+		this.sessionService.validateAdminSession(token);
+		return this.reportService.getApprovedStudents();
 	}
 }
