@@ -49,6 +49,8 @@ public class GroupFileController {
 		GroupFile file = this.groupFileService.findGroupFile(groupId, fileId, session.getUserName());
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.valueOf(file.getContentType()));
+		headers.add("Content-Disposition", "attachment; filename=" + file.getName().replace(" ", "_"));
+ 		headers.setContentLength(file.getFile().length);		
 		return new ResponseEntity<byte[]>(file.getFile(), headers, HttpStatus.OK);
 	}
 	
