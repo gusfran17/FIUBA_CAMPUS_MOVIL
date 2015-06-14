@@ -65,6 +65,7 @@ public class GroupFileControllerTest {
 		GroupFile groupFile = mock(GroupFile.class);
 		byte[] bytes = "Mock".getBytes(); 
 		doReturn(bytes).when(groupFile).getFile();
+		doReturn("aName.png").when(groupFile).getName();
 		doReturn(MediaType.IMAGE_PNG_VALUE).when(groupFile).getContentType();
 		doReturn(groupFile).when(service).findGroupFile(A_GROUP_ID, A_FILE_ID, AN_USER_NAME);
 				
