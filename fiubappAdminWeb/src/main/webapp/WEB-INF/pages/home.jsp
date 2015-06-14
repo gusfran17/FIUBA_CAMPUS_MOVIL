@@ -11,15 +11,22 @@
         
     <script src="resources/bootstrap/js/bootstrap.js"></script>
     <script src="resources/js/app.js"></script>
-    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.6.0.js"></script>
+    <script src="resources/js/lib/ui-bootstrap-tpls-0.6.0.js"></script>
 	<script src="resources/js/services.js"></script>
 	<script src="resources/js/controllers/LoginController.js"></script>
 	<script src="resources/js/controllers/LogoutController.js"></script>
 	<script src="resources/js/controllers/StudentController.js"></script>
 	<script src="resources/js/controllers/StateModalController.js"></script>
 	<script src="resources/js/controllers/GroupController.js"></script>
-	<script src="resources/js/controllers/ReportController.js"></script>
-	
+	<script src="resources/js/controllers/ReportAlumnosController.js"></script>
+	<script src="resources/js/controllers/ReportDiscusionesController.js"></script>
+	<script src="https://code.angularjs.org/1.0.8/i18n/angular-locale_es-ar.js"></script>
+		
+	<script src="resources/js/lib/ng-google-chart.js"></script>
+	<script src="resources/js/lib/jquery-1.11.2.min.js"></script>
+	<script src="resources/js/lib/jspdf.js"></script>
+	<script src="resources/js/lib/jspdf.plugin.autotable.js"></script>
+		
 	<style type="text/css">
     	.bs-example{
     		margin: 20px;
@@ -40,7 +47,8 @@
     <ul ng-show="loggedUser.logged" class="menu" style="font-size : 23px;">
     	<li><a href="#/student">Alumnos</a></li>    	
         <li><a href="#/group">Grupos</a></li>
-        <li><a href="#/report">Reportes</a></li>        
+        <li><a href="#/reportDiscusiones">Reporte Discusiones</a></li>
+        <li><a href="#/reportAlumnos">Reporte Alumnos</a></li>        
         <li><a href="#/logout">Salir</a></li>
     </ul>
          

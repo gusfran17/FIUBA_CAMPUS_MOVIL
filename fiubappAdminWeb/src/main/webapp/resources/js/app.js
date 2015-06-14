@@ -2,9 +2,8 @@
 
 var FiubappWebAdminApp = {};
 
-var App = angular.module('FiubappWebAdminApp', ['FiubappWebAdminApp.services','ui.bootstrap', 'ngRoute']).
-config(['$routeProvider', '$locationProvider', function($routeProvider,$locationProvider) {
-	
+var App = angular.module('FiubappWebAdminApp', ['FiubappWebAdminApp.services','ui.bootstrap', 'ngRoute', 'googlechart']).
+config(['$routeProvider', '$locationProvider', function($routeProvider,$locationProvider) {	
 	$routeProvider.when('/login', {
         templateUrl: 'webapp/login/layout',
         controller: LoginController
@@ -25,11 +24,16 @@ config(['$routeProvider', '$locationProvider', function($routeProvider,$location
         controller: GroupController
     });
     
-    $routeProvider.when('/report', {
-        templateUrl: 'webapp/report/layout',
-        controller: ReportController
+    $routeProvider.when('/reportAlumnos', {
+        templateUrl: 'webapp/reportAlumnos/layout',
+        controller: ReportAlumnosController
     });
 
+    $routeProvider.when('/reportDiscusiones', {
+        templateUrl: 'webapp/reportDiscusiones/layout',
+        controller: ReportDiscusionesController
+    });
+    
     $routeProvider.otherwise({redirectTo: '/student'});
     
  }])

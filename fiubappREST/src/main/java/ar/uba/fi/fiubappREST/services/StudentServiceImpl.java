@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.providers.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import ar.uba.fi.fiubappREST.domain.Configuration;
 import ar.uba.fi.fiubappREST.domain.Gender;
 import ar.uba.fi.fiubappREST.domain.Location;
 import ar.uba.fi.fiubappREST.domain.LocationConfiguration;
+import ar.uba.fi.fiubappREST.domain.MonthlyApprovedStudentsInformation;
 import ar.uba.fi.fiubappREST.domain.ProfilePicture;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.domain.StudentCareer;
@@ -33,12 +36,14 @@ import ar.uba.fi.fiubappREST.exceptions.StudentAlreadyExistsException;
 import ar.uba.fi.fiubappREST.exceptions.StudentNotFoundException;
 import ar.uba.fi.fiubappREST.exceptions.UnexpectedErrorReadingProfilePictureFileException;
 import ar.uba.fi.fiubappREST.persistance.CareerRepository;
+import ar.uba.fi.fiubappREST.persistance.MonthlyStudentInformationRepository;
 import ar.uba.fi.fiubappREST.persistance.ProfilePictureRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.StudentCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentStateRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentUpdateRepresentation;
+import ar.uba.fi.fiubappREST.utils.ApprovedStudentsReportUpdater;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -51,6 +56,8 @@ public class StudentServiceImpl implements StudentService {
 	private StudentConverter studentConverter;
 	private Md5PasswordEncoder passwordEncoder;
 	private StudentProfileConverter studentProfileConverter;
+	private MonthlyStudentInformationRepository monthlyStudentInformationRepository;
+	private ApprovedStudentsReportUpdater reportUpdater;
 
 	@Value("${configurations.defaultDistanceInKm}")
 	private Double defaultDistanceInKm;
@@ -59,14 +66,16 @@ public class StudentServiceImpl implements StudentService {
 	private Resource defaultProfilePicture;
 	
 	@Autowired
-	public StudentServiceImpl(StudentRepository studentRepository, CareerRepository careerRepository, ProfilePictureRepository profilePictureRepository, 
-			StudentConverter studentConverter, Md5PasswordEncoder passwordEncoder, StudentProfileConverter studentProfileConverter){
+	public StudentServiceImpl(StudentRepository studentRepository, CareerRepository careerRepository, ProfilePictureRepository profilePictureRepository, StudentConverter studentConverter, 
+			Md5PasswordEncoder passwordEncoder, StudentProfileConverter studentProfileConverter, MonthlyStudentInformationRepository monthlyStudentInformationRepository, ApprovedStudentsReportUpdater reportUpdater){
 		this.studentRepository = studentRepository;
 		this.careerRepository = careerRepository;
 		this.profilePictureRepository = profilePictureRepository;
 		this.studentConverter = studentConverter;
 		this.passwordEncoder = passwordEncoder;
 		this.studentProfileConverter = studentProfileConverter;
+		this.monthlyStudentInformationRepository = monthlyStudentInformationRepository;
+		this.reportUpdater = reportUpdater;
 	}
 
 	@Override
@@ -268,8 +277,21 @@ public class StudentServiceImpl implements StudentService {
 		student.setState(stateRepresentation.getState());
 		student = this.studentRepository.save(student);
 		stateRepresentation.setState(student.getState());
+		this.countStudent(stateRepresentation.getState());
 		LOGGER.info(String.format("State for sudent with userName %s was updated.", userName));
 		return stateRepresentation;
+	}
+
+	private void countStudent(StudentState state) {
+		this.reportUpdater.regenerateInformation();
+		Pageable topOne = new PageRequest(0, 1);
+		MonthlyApprovedStudentsInformation lastInformation = this.monthlyStudentInformationRepository.findByOrderByMonthYearDesc(topOne).get(0);
+		if(state.equals(StudentState.APPROVED)){
+			lastInformation.increaseAmountOfStudents();
+		}else{
+			lastInformation.decreaseAmountOfStudents();
+		}
+		this.monthlyStudentInformationRepository.save(lastInformation);
 	}
 
 	public Double getDefaultDistanceInKm() {

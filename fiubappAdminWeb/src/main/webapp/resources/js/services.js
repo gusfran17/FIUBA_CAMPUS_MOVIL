@@ -126,7 +126,69 @@ AppServices.service('GroupService', function($http, $q) {
 });
 		
 AppServices.service('ReportService', function($http, $q) {
+	
+	this.searchDiscusiones = function(searchPath) {
+    	
+    	var deferred = $q.defer();
+    	
+    	var req = {
+    			method: 'GET',
+    			url: 'http://localhost:8080/fiubappREST/api/reports/groups/discussions' + searchPath,
+    			headers: {
+    				'Authorization': localStorage.getItem("token")
+    			}
+    	}
+
+    	$http(req).success(function(data){
+            deferred.resolve(data);
+        }).error(function(data){
+        	deferred.reject(data.message);
+        });
+    	
+    	return deferred.promise;
+    };
     
+    this.searchAlumnosTorta = function() {
+    	
+    	var deferred = $q.defer();
+    	
+    	var req = {
+    			method: 'GET',
+    			url: 'http://localhost:8080/fiubappREST/api/reports/students/careers',
+    			headers: {
+    				'Authorization': localStorage.getItem("token")
+    			}
+    	}
+
+    	$http(req).success(function(data){
+            deferred.resolve(data);
+        }).error(function(data){
+        	deferred.reject(data.message);
+        });
+    	
+    	return deferred.promise;
+    };
+    
+    this.searchAlumnosLinea = function() {
+    	
+    	var deferred = $q.defer();
+    	
+    	var req = {
+    			method: 'GET',
+    			url: 'http://localhost:8080/fiubappREST/api/reports/students/approved',
+    			headers: {
+    				'Authorization': localStorage.getItem("token")
+    			}
+    	}
+
+    	$http(req).success(function(data){
+            deferred.resolve(data);
+        }).error(function(data){
+        	deferred.reject(data.message);
+        });
+    	
+    	return deferred.promise;
+    };
 });
 
 
