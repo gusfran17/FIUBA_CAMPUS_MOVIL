@@ -15,7 +15,7 @@
 		</p>
 		
         <label class="input-group">#Discusiones</label>	
-        <select class="input-group col-md-1 selectpicker" ng-model="searchParams.cantidad" ng-options="c for c in cantidades"></select>        
+        <select class="input-group selectpicker" style="width:60px;" ng-model="searchParams.cantidad" ng-options="c for c in cantidades"></select>        
        	<a class="btn btn-primary col-md-1" ng-click="search(searchParams)">Generar</a>       
     </div>
 </form>   
