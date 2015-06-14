@@ -25,7 +25,7 @@
     </string-array>
     <string-array name="config">
         <item>Perfil</item>
-        <item>Notificaciones</item>
+        <item>Muro</item>
         <item>Localización</item>
         <item>Salir</item>
     </string-array>
@@ -81,4 +81,6 @@
     <string name="companeros_en_comun">EN COMÚN</string>
     <string name="lbl_upload">Subir Archivo</string>
     <string name="lbl_uploaded">Archivo subido</string>
+    <string name="txt_wall_configuration">Habilitar escritura de mensaje</string>
+    <string name="configurar_Muro">Configurar Muro</string>
 </resources>

@@ -71,6 +71,49 @@ public class Principal extends FragmentActivity {
     }
 
     public void obtenerPreferenciasConfiguracion() {
+        getWallConfiguration();
+        getLocationConfiguration();
+    }
+
+    private void getWallConfiguration() {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = this.getString(R.string.urlAPI) + "/students/" + getUsername() + "/configurations/wall";
+
+        JSONObject jsonParams = new JSONObject();
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, jsonParams,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String isEnabled = response.getString("isEnabled");
+
+                            SharedPreferences settings = getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.putString("isEnabledWall", isEnabled);
+
+                            editor.commit();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }){
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", dataAccess.getToken());
+                return headers;
+            }
+        };
+        queue.add(jsObjRequest);
+    }
+
+    private void getLocationConfiguration() {
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = this.getString(R.string.urlAPI) + "/students/" + getUsername() + "/configurations/location";
 
