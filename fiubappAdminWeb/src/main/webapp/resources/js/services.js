@@ -12,7 +12,7 @@ AppServices.service('SecurityService', function($http, $q) {
 		
 		var req = {
     			method: 'GET',
-    			url: 'http://localhost:8081/fiubappREST/api/sessions/administrators',
+    			url: 'http://localhost:8080/fiubappREST/api/sessions/administrators',
     			headers: {
     				'Authorization': localStorage.getItem("token")
     			}
@@ -37,7 +37,7 @@ AppServices.service('SecurityService', function($http, $q) {
     	
     	var deferred = $q.defer();
     	    	
-    	$http.post('http://localhost:8081/fiubappREST/api/sessions/administrators', credentials).success(function(data) {
+    	$http.post('http://localhost:8080/fiubappREST/api/sessions/administrators', credentials).success(function(data) {
             localStorage.setItem("token", data.token);
             deferred.resolve(data);
 	    }).error(function(data, status, headers, config){
@@ -53,7 +53,7 @@ AppServices.service('SecurityService', function($http, $q) {
 		
 		var req = {
     			method: 'DELETE',
-    			url: 'http://localhost:8081/fiubappREST/api/sessions/administrators',
+    			url: 'http://localhost:8080/fiubappREST/api/sessions/administrators',
     			headers: {
     				'Authorization': localStorage.getItem("token")
     			}
@@ -80,7 +80,7 @@ AppServices.service('StudentService', function($http, $q) {
     	
     	var req = {
     			method: 'GET',
-    			url: 'http://localhost:8081/fiubappREST/api/students' + searchPath,
+    			url: 'http://localhost:8080/fiubappREST/api/students' + searchPath,
     			headers: {
     				'Authorization': localStorage.getItem("token")
     			}
@@ -103,7 +103,7 @@ AppServices.service('StudentService', function($http, $q) {
     	
     	var req = {
     			method: 'PUT',
-    			url: 'http://localhost:8081/fiubappREST/api/students/' + userName + '/state',
+    			url: 'http://localhost:8080/fiubappREST/api/students/' + userName + '/state',
     			headers: {
     				'Authorization': localStorage.getItem("token"),
     				'Content-Type' : 'application/json'
@@ -133,7 +133,7 @@ AppServices.service('ReportService', function($http, $q) {
     	
     	var req = {
     			method: 'GET',
-    			url: 'http://localhost:8081/fiubappREST/api/reports/groups/discussions' + searchPath,
+    			url: 'http://localhost:8080/fiubappREST/api/reports/groups/discussions' + searchPath,
     			headers: {
     				'Authorization': localStorage.getItem("token")
     			}
@@ -148,13 +148,13 @@ AppServices.service('ReportService', function($http, $q) {
     	return deferred.promise;
     };
     
-    this.searchAlumnosTorta = function(searchPath) {
+    this.searchAlumnosTorta = function() {
     	
     	var deferred = $q.defer();
     	
     	var req = {
     			method: 'GET',
-    			url: 'http://localhost:8081/fiubappREST/api/reports/groups/discussions' + searchPath,
+    			url: 'http://localhost:8080/fiubappREST/api/reports/students/careers',
     			headers: {
     				'Authorization': localStorage.getItem("token")
     			}
@@ -169,13 +169,13 @@ AppServices.service('ReportService', function($http, $q) {
     	return deferred.promise;
     };
     
-    this.searchAlumnosLinea = function(searchPath) {
+    this.searchAlumnosLinea = function() {
     	
     	var deferred = $q.defer();
     	
     	var req = {
     			method: 'GET',
-    			url: 'http://localhost:8081/fiubappREST/api/reports/groups/discussions' + searchPath,
+    			url: 'http://localhost:8080/fiubappREST/api/reports/students/careers',
     			headers: {
     				'Authorization': localStorage.getItem("token")
     			}

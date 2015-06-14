@@ -5,65 +5,21 @@
 	</div>
 		
 	<div class="input-group">
-		<br/><br/>
-		<table class="table table-striped">
+		<br/><br/>			
+		<table ng-show="resultsTorta.length > 0" class="table table-striped">
 		    <thead>
 		        <tr>
 		            <th data-align="center">Fecha</th>
-		            <th data-align="center">Usuarios habilitados</th>		            	            
+		            <th data-align="center">Usuarios habilitados</th>		            
 		        </tr>
 		    </thead>
 		    <tbody>
-				<tr>
-		       		<td>enero-14</td>        		
-		       		<td>23</td>		       		        		
-	     		</tr>
-	     		<tr>
-		       		<td>febereo-14</td>        		
-		       		<td>23</td>		       		        		
-	     		</tr>
-	     		<tr>
-		       		<td>marzo-14</td>        		
-		       		<td>23</td>		       		        		
-	     		</tr>
-	     		<tr>
-		       		<td>abril-14</td>        		
-		       		<td>23</td>		       		        		
-	     		</tr>
-	     		<tr>
-		       		<td>mayo-14</td>        		
-		       		<td>23</td>		       		        		
-	     		</tr>
-	     		<tr>
-		       		<td>junio-14</td>        		
-		       		<td>23</td>		       		        		
-	     		</tr>
-	     		<tr>
-		       		<td>enero-14</td>        		
-		       		<td>23</td>		       		        		
-	     		</tr>
-	     		<tr>
-		       		<td>enero-14</td>        		
-		       		<td>23</td>		       		        		
-	     		</tr>
-	     		<tr>
-		       		<td>enero-14</td>        		
-		       		<td>23</td>		       		        		
-	     		</tr>
-	     		<tr>
-		       		<td>enero-14</td>        		
-		       		<td>23</td>		       		        		
-	     		</tr>
-	     		<tr>
-		       		<td>enero-14</td>        		
-		       		<td>23</td>		       		        		
-	     		</tr>
-	     		<tr>
-		       		<td>enero-14</td>        		
-		       		<td>23</td>		       		        		
-	     		</tr>
+				<tr ng-repeat="result in resultsTorta">
+	        		<td width="150px;">{{result.careerName}}</td>        		
+	        		<td width="1px;">{{result.amountOfStudents}}</td>	        		
+	      		</tr>
 			</tbody>
-		</table>
+		</table>		
 	</div>
 				
 	<div class="input-group">
@@ -71,42 +27,24 @@
 	</div>
 	
 	<div class="input-group">
-		<br/><br/>	
-		<table class="table table-striped">
+		<br/><br/>			
+		<table ng-show="resultsTorta.length > 0" class="table table-striped">
 		    <thead>
 		        <tr>
 		            <th data-align="center">Carrera</th>
-		            <th data-align="center">#Usuarios</th>		            	            
+		            <th data-align="center">#Usuarios</th>		            
 		        </tr>
 		    </thead>
 		    <tbody>
-				<tr>
-		       		<td>enero-14</td>        		
-		       		<td>23</td>		       		        		
-	     		</tr>
-	     		<tr>
-		       		<td>enero-14</td>        		
-		       		<td>23</td>		       		        		
-	     		</tr>
-	     		<tr>
-		       		<td>enero-14</td>        		
-		       		<td>23</td>		       		        		
-	     		</tr>
-	     		<tr>
-		       		<td>enero-14</td>        		
-		       		<td>23</td>		       		        		
-	     		</tr>
+				<tr ng-repeat="result in resultsTorta">
+	        		<td width="200px;">{{result.careerName}}</td>        		
+	        		<td width="1px;">{{result.amountOfStudents}}</td>	        		
+	      		</tr>
 			</tbody>
-		</table>	
+		</table>		
 	</div>
-			
-	<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-	<!-- 
-	<a class="btn btn-primary" ng-show="resultsLinea.length > 0 || resultsTorta.length > 0" ng-click="exportar()">Exportar a PDF</a>
-	-->
-	
-		<a class="btn btn-primary" ng-click="exportar()">Exportar a PDF</a>
-	
+		
+	<a class="btn btn-primary" ng-click="exportar()">Exportar a PDF</a>
 	
 	<br/>
 	<div ng-show="noHayResultadosLinea && noHayResultadosTorta && !error">
