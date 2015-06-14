@@ -3,16 +3,17 @@ package ar.uba.fi.fiubappREST.persistance;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import ar.uba.fi.fiubappREST.domain.MonthlyApprovedStudentsInformation;
 
 @Repository
-public interface MonthlyStudentInformationRepository extends CrudRepository<MonthlyApprovedStudentsInformation, Integer> {
+public interface MonthlyStudentInformationRepository extends JpaRepository<MonthlyApprovedStudentsInformation, Integer> {
 	
-	public MonthlyApprovedStudentsInformation findByMonthYear(Date monthYear);
+	public List<MonthlyApprovedStudentsInformation> findByOrderByMonthYearDesc(Pageable pageable);
 	
-	public List<MonthlyApprovedStudentsInformation> findAll();
+	public List<MonthlyApprovedStudentsInformation> findByMonthYearAfterOrderByMonthYearAsc(Date startMonthYear);
 
 }

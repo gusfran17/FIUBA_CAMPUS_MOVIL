@@ -1,8 +1,7 @@
 package ar.uba.fi.fiubappREST.services;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -14,8 +13,6 @@ import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import ar.uba.fi.fiubappREST.domain.Career;
@@ -30,6 +27,7 @@ import ar.uba.fi.fiubappREST.persistance.DiscussionRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
 import ar.uba.fi.fiubappREST.persistance.MonthlyStudentInformationRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentCareerRepository;
+import ar.uba.fi.fiubappREST.utils.ApprovedStudentsReportUpdater;
 
 @Service
 public class ReportServiceImpl implements ReportService {
@@ -41,17 +39,16 @@ public class ReportServiceImpl implements ReportService {
 	private CareerRepository careerRepository;
 	private StudentCareerRepository studentCareerRepository;
 	private MonthlyStudentInformationRepository monthlyStudentInformationRepository;
-	
-	@Value("classpath:defaultGroupPicture.png")
-	private Resource defaultGroupPicture;
-		
+	private ApprovedStudentsReportUpdater reportUpdater; 
+			
 	@Autowired
-	public ReportServiceImpl(GroupRepository groupRepository, DiscussionRepository discussionRepository, CareerRepository careerRepository, StudentCareerRepository studentCareerRepository, MonthlyStudentInformationRepository monthlyStudentInformationRepository){
+	public ReportServiceImpl(GroupRepository groupRepository, DiscussionRepository discussionRepository, CareerRepository careerRepository, StudentCareerRepository studentCareerRepository, MonthlyStudentInformationRepository monthlyStudentInformationRepository, ApprovedStudentsReportUpdater reportUpdater){
 		this.groupRepository = groupRepository;
 		this.discussionRepository = discussionRepository;
 		this.careerRepository = careerRepository;
 		this.studentCareerRepository = studentCareerRepository;
 		this.monthlyStudentInformationRepository = monthlyStudentInformationRepository;
+		this.reportUpdater = reportUpdater;
 	}
 	
 	@Override
@@ -127,21 +124,17 @@ public class ReportServiceImpl implements ReportService {
 
 	@Override
 	public List<MonthlyApprovedStudentsInformation> getApprovedStudents() {
-		//List<MonthlyApprovedStudentsInformation> information = this.monthlyStudentInformationRepository.findAllOrderByMonthYearDesc(new PageRequest(1, 12));
-		List<MonthlyApprovedStudentsInformation> information = this.monthlyStudentInformationRepository.findAll();
+		this.reportUpdater.regenerateInformation();
+		Date lastYear = getLastYearMonth();
+		List<MonthlyApprovedStudentsInformation> information = this.monthlyStudentInformationRepository.findByMonthYearAfterOrderByMonthYearAsc(lastYear);
 		Collections.reverse(information);
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy");
-		Date date = null;
-		try {
-			date = sdf.parse("04-2015");
-			MonthlyApprovedStudentsInformation m = new MonthlyApprovedStudentsInformation();
-			m.setMonthYear(date);
-			m.setAmountOfStudents(38);
-			this.monthlyStudentInformationRepository.save(m);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}	
 		return information;
+	}
+
+	private Date getLastYearMonth() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.YEAR, -1);
+		Date lastYear = calendar.getTime();
+		return lastYear;
 	}
 }
