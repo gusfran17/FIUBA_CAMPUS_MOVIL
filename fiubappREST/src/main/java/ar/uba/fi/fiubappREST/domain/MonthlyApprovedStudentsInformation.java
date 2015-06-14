@@ -9,6 +9,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import ar.uba.fi.fiubappREST.utils.CustomDateDeserializer;
+import ar.uba.fi.fiubappREST.utils.CustomDateSerializer;
 
 @Entity
 @Table(name = "monthly_approved_students")
@@ -31,10 +36,12 @@ public class MonthlyApprovedStudentsInformation {
 		this.id = id;
 	}
 
+	@JsonSerialize(using = CustomDateSerializer.class)
 	public Date getMonthYear() {
 		return monthYear;
 	}
 
+	@JsonDeserialize(using = CustomDateDeserializer.class)
 	public void setMonthYear(Date monthYear) {
 		this.monthYear = monthYear;
 	}

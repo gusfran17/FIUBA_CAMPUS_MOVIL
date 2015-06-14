@@ -1,5 +1,7 @@
 package ar.uba.fi.fiubappREST.services;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import ar.uba.fi.fiubappREST.domain.Career;
@@ -126,8 +127,21 @@ public class ReportServiceImpl implements ReportService {
 
 	@Override
 	public List<MonthlyApprovedStudentsInformation> getApprovedStudents() {
-		List<MonthlyApprovedStudentsInformation> information = this.monthlyStudentInformationRepository.findAllOrderByMonthYeDesc(new PageRequest(1, 12));
+		//List<MonthlyApprovedStudentsInformation> information = this.monthlyStudentInformationRepository.findAllOrderByMonthYearDesc(new PageRequest(1, 12));
+		List<MonthlyApprovedStudentsInformation> information = this.monthlyStudentInformationRepository.findAll();
 		Collections.reverse(information);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy");
+		Date date = null;
+		try {
+			date = sdf.parse("04-2015");
+			MonthlyApprovedStudentsInformation m = new MonthlyApprovedStudentsInformation();
+			m.setMonthYear(date);
+			m.setAmountOfStudents(38);
+			this.monthlyStudentInformationRepository.save(m);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}	
 		return information;
 	}
 }
