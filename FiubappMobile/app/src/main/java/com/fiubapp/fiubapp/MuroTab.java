@@ -49,7 +49,6 @@ public class MuroTab extends Fragment {
     private ListView listView;
     private MuroAdapter adapter;
     private Context context;
-    private static boolean isOwnWall = true;
 
 
     @Override
@@ -64,10 +63,16 @@ public class MuroTab extends Fragment {
         View view = inflater.inflate(R.layout.muro_tab, container, false);
         Button botonEscribir = (Button)view.findViewById(R.id.escribirButton);
         listView = (ListView)view.findViewById(R.id.muroList);
-
-        if (!isOwnWall){
-            getWallConfigurationForMate(this.getArguments().getString("userName"));
+        String userName = null;
+        try {
+            userName = this.getArguments().getString("userName");
+        } catch (Exception e){
         }
+
+        if(userName != null){
+            getWallConfigurationForMate(userName);
+        }
+
 
 
         if (getArguments() != null) {
@@ -352,8 +357,6 @@ public class MuroTab extends Fragment {
         args.putBoolean("isMyMate",companero.isMyMate());
 
         perfil.setArguments(args);
-
-        isOwnWall = false;
 
         return perfil;
 
