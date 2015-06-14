@@ -22,6 +22,7 @@ import ar.uba.fi.fiubappREST.domain.DiscussionReportInformation;
 import ar.uba.fi.fiubappREST.domain.Group;
 import ar.uba.fi.fiubappREST.domain.MonthlyApprovedStudentsInformation;
 import ar.uba.fi.fiubappREST.domain.StudentCareerInformation;
+import ar.uba.fi.fiubappREST.exceptions.InvalidDateRangeException;
 import ar.uba.fi.fiubappREST.persistance.CareerRepository;
 import ar.uba.fi.fiubappREST.persistance.DiscussionRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
@@ -54,11 +55,18 @@ public class ReportServiceImpl implements ReportService {
 	@Override
 	public List<DiscussionReportInformation> getMostActiveDiscussions(Date dateFrom, Date dateTo, Integer values) {
 		LOGGER.info(String.format("Creating %s registers for discussions report from %tm/%td/%ty to %tm/%td/%ty.", values, dateFrom, dateFrom, dateFrom, dateTo, dateTo, dateTo));
+		this.validateDatesRange(dateFrom, dateTo);
 		List<Discussion> discussions = (List<Discussion>) this.discussionRepository.findAll();
 		List<Discussion> filteredDiscussions = getFilteredDiscussions(dateFrom,	dateTo, values, discussions);
 		List<DiscussionReportInformation> discussionReporInformations = buildReportInformation(filteredDiscussions);
 		LOGGER.info(String.format("%s registers were created for discussions report from %tm/%td/%ty to %tm/%td/%ty.", values, dateFrom, dateFrom, dateFrom, dateTo, dateTo, dateTo));
 		return discussionReporInformations;
+	}
+
+	private void validateDatesRange(Date dateFrom, Date dateTo) {
+		if(dateFrom.after(dateTo) || dateFrom.after(new Date())){
+			throw new InvalidDateRangeException();
+		}
 	}
 
 	private List<DiscussionReportInformation> buildReportInformation(List<Discussion> filteredDiscussions) {
