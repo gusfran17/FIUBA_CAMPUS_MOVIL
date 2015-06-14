@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ar.uba.fi.fiubappREST.domain.LocationConfiguration;
+import ar.uba.fi.fiubappREST.domain.WallConfiguration;
 import ar.uba.fi.fiubappREST.persistance.ConfigurationRepository;
 
 @Service
@@ -35,5 +36,21 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 		savedLocationConfiguration.setDistanceInKm(locationConfiguration.getDistanceInKm());
 		this.configurationRepository.save(savedLocationConfiguration);
 		return savedLocationConfiguration;
+	}
+
+	@Override
+	public WallConfiguration getWallConfiguration(String userName) {
+		LOGGER.info(String.format("Finding wall configuration for student with userName %s.", userName));
+		WallConfiguration wallConfiguration = this.configurationRepository.findWallConfigurationByUserName(userName);
+		LOGGER.info(String.format("Wall Configuration for student with userName %s were found.", userName));
+		return wallConfiguration;
+	}
+
+	@Override
+	public WallConfiguration updateWallConfiguration(String userName, WallConfiguration wallConfiguration) {
+		WallConfiguration savedWallConfiguration = this.configurationRepository.findWallConfigurationByUserName(userName);
+		savedWallConfiguration.setIsEnabled(wallConfiguration.getIsEnabled());
+		this.configurationRepository.save(savedWallConfiguration);
+		return savedWallConfiguration;
 	}
 }

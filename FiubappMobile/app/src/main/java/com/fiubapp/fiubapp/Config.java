@@ -69,6 +69,7 @@ public class Config extends Fragment {
                         break;
 
                     case 1:
+                        wallConfiguration();
                         break;
 
                     case 2:
@@ -83,6 +84,107 @@ public class Config extends Fragment {
         });
 
         return view;
+    }
+
+    private void wallConfiguration() {
+        LayoutInflater li = LayoutInflater.from(this.getActivity().getApplicationContext());
+        View wallConfigView = li.inflate(R.layout.configurar_muro, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getActivity());
+        alertDialogBuilder.setView(wallConfigView);
+
+        final CheckBox cb_wall_configuration = (CheckBox)wallConfigView.findViewById(R.id.cb_wall_configuration);
+
+        SharedPreferences settings = this.getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
+        final String isEnabledWall = settings.getString("isEnabledWall", "false");
+
+        if(isEnabledWall.equals("false"))
+            cb_wall_configuration.setChecked(false);
+        else
+            cb_wall_configuration.setChecked(true);
+
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setTitle(getResources().getString(R.string.configurar_Muro))
+                .setPositiveButton("Aceptar",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                    saveWallConfiguration(String.valueOf(cb_wall_configuration.isChecked()));
+                            }
+                        })
+                .setNegativeButton("Cancelar",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+    }
+
+    private void saveWallConfiguration(String isEnabled) {
+        SharedPreferences settings = this.getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("isEnabledWall", isEnabled.toLowerCase());
+        editor.commit();
+
+        boolean enabled = true;
+        if(isEnabled.toLowerCase().equals("false"))
+            enabled = false;
+
+        saveWallConfiguration(enabled);
+
+
+    }
+
+    private void saveWallConfiguration(boolean isEnabled) {
+        final SharedPreferences settings = this.getActivity().getSharedPreferences(this.getActivity().getResources().getString(R.string.prefs_name), 0);
+
+        RequestQueue queue = Volley.newRequestQueue(this.getActivity());
+
+        String url = this.getString(R.string.urlAPI) + "/students/" + settings.getString("username", null) + "/configurations/wall";
+
+        JSONObject jsonParams = new JSONObject();
+
+        try {
+            jsonParams.put("isEnabled", isEnabled);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.PUT, url, jsonParams,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //parseo la respuesta del server para obtener JSON
+                        String body = null;
+                        try {
+                            body = new String(error.networkResponse.data, HttpHeaderParser.parseCharset(error.networkResponse.headers));
+
+                            JSONObject JSONBody = new JSONObject(body);
+                            String codigoError = JSONBody.getString("code");
+                        } catch (Exception e) {
+                            return;
+                        }
+                    }
+                }){
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", settings.getString("token", null));
+                return headers;
+            }
+        };
+
+        queue.add(jsObjRequest);
+
     }
 
     private void logout(){
@@ -159,12 +261,9 @@ public class Config extends Fragment {
         final CheckBox cbMostrarMiUbicacion = (CheckBox)crearGrupoView.findViewById(R.id.cbMostrarMiUbicacion);
 
         SharedPreferences settings = this.getActivity().getSharedPreferences(getResources().getString(R.string.prefs_name), 0);
-        final String isEnabledLocation = settings.getString("isEnabledLocation", "false");
-        final String distanceInKmLocation = settings.getString("distanceInKmLocation", "1");
+        final String isEnabledLocation = settings.getString("isEnabledLocalization", "false");
 
-        etMostrarHasta.setText(distanceInKmLocation);
-
-        if(isEnabledLocation.equals("false"))
+        if(isEnabledLocation.equals("true"))
             cbMostrarMiUbicacion.setChecked(false);
         else
             cbMostrarMiUbicacion.setChecked(true);
@@ -221,7 +320,7 @@ public class Config extends Fragment {
         if(isEnabled.toLowerCase().equals("false"))
             habilitado = false;
 
-        guardarConfiguracionEnServidor(habilitado, distanceInKm);
+        guardarConfiguracionDeLocalizacionEnServidor(habilitado, distanceInKm);
 
         if(isEnabled.toLowerCase().equals("true")){
             obtenerLocalizacion();
@@ -231,7 +330,7 @@ public class Config extends Fragment {
         }
     }
 
-    private void guardarConfiguracionEnServidor(boolean isEnabled, String distanceInKm){
+    private void guardarConfiguracionDeLocalizacionEnServidor(boolean isEnabled, String distanceInKm){
         final SharedPreferences settings = this.getActivity().getSharedPreferences(this.getActivity().getResources().getString(R.string.prefs_name), 0);
 
         RequestQueue queue = Volley.newRequestQueue(this.getActivity());

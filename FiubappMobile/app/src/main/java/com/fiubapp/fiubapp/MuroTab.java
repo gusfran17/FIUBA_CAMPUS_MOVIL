@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,10 +21,12 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.fiubapp.fiubapp.dominio.MensajeMuro;
 
 import org.json.JSONArray;
@@ -46,6 +49,8 @@ public class MuroTab extends Fragment {
     private ListView listView;
     private MuroAdapter adapter;
     private Context context;
+    private static boolean isOwnWall = true;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +64,11 @@ public class MuroTab extends Fragment {
         View view = inflater.inflate(R.layout.muro_tab, container, false);
         Button botonEscribir = (Button)view.findViewById(R.id.escribirButton);
         listView = (ListView)view.findViewById(R.id.muroList);
+
+        if (!isOwnWall){
+            getWallConfigurationForMate(this.getArguments().getString("userName"));
+        }
+
 
         if (getArguments() != null) {
 
@@ -289,6 +299,48 @@ public class MuroTab extends Fragment {
         VolleyController.getInstance().addToRequestQueue(jsonReq);
     }
 
+    private void getWallConfigurationForMate(String userName) {
+        RequestQueue queue = Volley.newRequestQueue(this.getActivity());
+        String url = this.getString(R.string.urlAPI) + "/students/" + userName + "/configurations/wall";
+
+        JSONObject jsonParams = new JSONObject();
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, jsonParams,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String isEnabled = response.getString("isEnabled");
+                            if (isEnabled.equals(String.valueOf(false))){
+                                disableWall();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }){
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", getToken());
+                return headers;
+            }
+        };
+        queue.add(jsObjRequest);
+    }
+
+    private void disableWall() {
+
+        Button botonEscribir = (Button) this.getActivity().findViewById(R.id.escribirButton);
+        botonEscribir.setVisibility(View.GONE);
+
+    }
+
+
     public static MuroTab newContact(Alumno companero) {
 
         MuroTab perfil = new MuroTab();
@@ -300,6 +352,8 @@ public class MuroTab extends Fragment {
         args.putBoolean("isMyMate",companero.isMyMate());
 
         perfil.setArguments(args);
+
+        isOwnWall = false;
 
         return perfil;
 
