@@ -14,6 +14,6 @@ public interface MonthlyStudentInformationRepository extends JpaRepository<Month
 	
 	public List<MonthlyApprovedStudentsInformation> findByOrderByMonthYearDesc(Pageable pageable);
 	
-	public List<MonthlyApprovedStudentsInformation> findByMonthYearAfterOrderByMonthYearAsc(Date startMonthYear);
+	public List<MonthlyApprovedStudentsInformation> findByMonthYearAfterOrderByMonthYearDesc(Date startMonthYear);
 
 }

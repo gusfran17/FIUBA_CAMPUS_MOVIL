@@ -126,7 +126,7 @@ public class ReportServiceImpl implements ReportService {
 	public List<MonthlyApprovedStudentsInformation> getApprovedStudents() {
 		this.reportUpdater.regenerateInformation();
 		Date lastYear = getLastYearMonth();
-		List<MonthlyApprovedStudentsInformation> information = this.monthlyStudentInformationRepository.findByMonthYearAfterOrderByMonthYearAsc(lastYear);
+		List<MonthlyApprovedStudentsInformation> information = this.monthlyStudentInformationRepository.findByMonthYearAfterOrderByMonthYearDesc(lastYear);
 		Collections.reverse(information);
 		return information;
 	}
