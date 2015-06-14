@@ -44,15 +44,12 @@ public class GroupFileController {
 	}
 	
 	@RequestMapping(value="{fileId}", method = RequestMethod.GET)
-	public ResponseEntity<byte[]> getGroupFile(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @PathVariable Integer fileId) {
-		Session session = this.sessionService.findStudentSession(token);		
-		GroupFile file = this.groupFileService.findGroupFile(groupId, fileId, session.getUserName());
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.valueOf(file.getContentType()));
-		headers.add("Content-Disposition", "attachment; filename=" + file.getName().replace(" ", "_"));
- 		headers.setContentLength(file.getFile().length);		
-		return new ResponseEntity<byte[]>(file.getFile(), headers, HttpStatus.OK);
-	}
+	public ResponseEntity<byte[]> getGroupFile(@PathVariable Integer groupId, @PathVariable Integer fileId) {
+	  GroupFile file = this.groupFileService.findGroupFile(groupId, fileId, "89001");
+	  HttpHeaders headers = new HttpHeaders();
+	  headers.setContentType(MediaType.valueOf(file.getContentType()));
+	  return new ResponseEntity<byte[]>(file.getFile(), headers, HttpStatus.OK);
+	 }
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)

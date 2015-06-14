@@ -39,6 +39,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +93,7 @@ public class ArchivosTab extends Fragment {
                 File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                         + "/" + archivo.getName());
 
+                Log.d("Archi path",file.getAbsolutePath());
                 if (file.exists()) {
 
                     Intent intent = new Intent();
@@ -142,7 +145,11 @@ public class ArchivosTab extends Fragment {
                                 e.printStackTrace();
                             }
                         }
-
+                        Collections.sort(archivos, new Comparator<Archivo>() {
+                            public int compare(Archivo p1, Archivo p2) {
+                                return p1.getName().compareToIgnoreCase(p2.getName());
+                            }
+                        });
                         adapter.notifyDataSetChanged();
                     }
                 },
@@ -178,7 +185,6 @@ public class ArchivosTab extends Fragment {
                 String filename = filePath.substring(filePath.lastIndexOf("/") + 1);
 
                 Uri selectedfile = ReturnedIntent.getData();
-
                 String mimeType = getMimeType(ReturnedIntent.getData());
 
                 HashMap<String, String> headers = new HashMap<String, String>();

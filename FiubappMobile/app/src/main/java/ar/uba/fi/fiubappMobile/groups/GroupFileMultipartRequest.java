@@ -31,7 +31,7 @@ public class GroupFileMultipartRequest<T> extends Request<T> {
 
     private MultipartEntityBuilder mBuilder = MultipartEntityBuilder.create();
     private final Response.Listener<T> mListener;
-    private final File mImageFile;
+    private File mImageFile;
     private final Uri uri;
     protected Map<String, String> headers;
     private Context context;
@@ -52,7 +52,6 @@ public class GroupFileMultipartRequest<T> extends Request<T> {
         this.context = context;
         this.headers = headers;
         this.mimeType = mimeType;
-        mImageFile = new File(getRealPathFromURI(context,uri));
 
         buildMultipartEntity();
     }
@@ -81,7 +80,7 @@ public class GroupFileMultipartRequest<T> extends Request<T> {
                 fileName = uri.getPath();
             }
         }
-
+        mImageFile = new File(fileName);
         mBuilder.addBinaryBody(FILE_PART_NAME, mImageFile, ContentType.create(this.mimeType), fileName);
         mBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         mBuilder.setLaxMode().setBoundary("xx").setCharset(Charset.forName("UTF-8"));

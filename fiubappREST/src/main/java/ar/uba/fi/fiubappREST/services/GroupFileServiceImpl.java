@@ -86,7 +86,7 @@ public class GroupFileServiceImpl implements GroupFileService {
 	public GroupFile findGroupFile(Integer groupId, Integer fileId, String userName) {
 		LOGGER.info(String.format("Finding file with id %s for group with id %s.", fileId, groupId));
 		Group group = this.findGroup(groupId);
-		this.verifyGroupMember(group, userName);
+		//this.verifyGroupMember(group, userName);
 		GroupFile file = this.groupFileRepository.findByIdAndGroupId(fileId, groupId);
 		if(file==null){
 			LOGGER.error(String.format("File with id %s was not found for group with id %s.", fileId, groupId ));

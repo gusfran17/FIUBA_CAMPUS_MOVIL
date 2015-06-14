@@ -69,7 +69,7 @@ public class GroupFileControllerTest {
 		doReturn(MediaType.IMAGE_PNG_VALUE).when(groupFile).getContentType();
 		doReturn(groupFile).when(service).findGroupFile(A_GROUP_ID, A_FILE_ID, AN_USER_NAME);
 				
-		ResponseEntity<byte[]> response = this.controller.getGroupFile(A_TOKEN, A_GROUP_ID, A_FILE_ID);
+		ResponseEntity<byte[]> response = this.controller.getGroupFile(A_GROUP_ID, A_FILE_ID);
 		
 		assertEquals(bytes, response.getBody());
 		assertEquals(HttpStatus.OK, response.getStatusCode());

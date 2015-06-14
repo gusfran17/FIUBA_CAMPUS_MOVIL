@@ -1,11 +1,14 @@
 package ar.uba.fi.fiubappMobile.groups;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
@@ -102,72 +105,31 @@ public class ArchivoAdapter extends BaseAdapter {
         return archivoFilaView;
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void descargarArchivo(final Archivo archivo){
 
         String url = getURLAPI()+"/groups/"+idGrupo+"/files/"+archivo.getId();
         final String filename = archivo.getName();
 
-        File fileTest = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + filename);
+        String ruta = Environment.getExternalStorageDirectory() + "/Download/";
+        File fileTest = new File(ruta + filename);
 
         if (fileTest.exists()){
             Popup.showText(activity,"El archivo ya se encuentra descargado",Toast.LENGTH_LONG).show();
         }else {
 
-            StringRequest jsonReq = new StringRequest(Request.Method.GET,
-                    url,
-                    new Response.Listener<String>() {
+            DownloadManager.Request r = new DownloadManager.Request(Uri.parse(url));
 
-                        @Override
-                        public void onResponse(String response) {
+            // This put the download in the same Download dir the browser uses
+            //r.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
+            r.setDestinationUri(Uri.fromFile(new File(ruta + filename)));
+            Log.d("ArchivoAdapter",ruta+filename);
+            // Start download
+            DownloadManager dm = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
+            dm.enqueue(r);
+            Popup.showText(activity,"El archivo se ha descargado",Toast.LENGTH_LONG).show();
 
-                            Log.d(ArchivosTab.class.getSimpleName(), "OK");
 
-                            try {
-
-                                FileWriter file = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + filename);
-                                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + filename));
-
-                                String decoded = Base64.encodeToString(response.toString().getBytes(),0);
-
-                                oos.writeObject(decoded.getBytes());
-                                oos.close();
-
-                                /*try {
-                                    //file.write(response);
-                                    Popup.showText(activity,"El archivo se ha descargado",Toast.LENGTH_LONG).show();
-
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-
-                                } finally {
-                                    file.flush();
-                                    file.close();
-                                    oos.close();
-                                }*/
-
-                            } catch (IOException e) {
-
-                            }
-
-                            notifyDataSetChanged();
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.d(ArchivosTab.class.getSimpleName(), error.toString());
-                        }
-                    }
-            ) {
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    Map<String, String> headers = new HashMap<String, String>();
-                    headers.put("Authorization", getToken());
-                    return headers;
-                }
-
-            };
-            VolleyController.getInstance().addToRequestQueue(jsonReq);
         }
 
     }
