@@ -16,12 +16,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import ar.uba.fi.fiubappREST.domain.Career;
 import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
 import ar.uba.fi.fiubappREST.domain.DiscussionReportInformation;
 import ar.uba.fi.fiubappREST.domain.Group;
+import ar.uba.fi.fiubappREST.domain.StudentCareerInformation;
+import ar.uba.fi.fiubappREST.persistance.CareerRepository;
 import ar.uba.fi.fiubappREST.persistance.DiscussionRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
+import ar.uba.fi.fiubappREST.persistance.StudentCareerRepository;
 
 @Service
 public class ReportServiceImpl implements ReportService {
@@ -30,14 +34,18 @@ public class ReportServiceImpl implements ReportService {
 	
 	private GroupRepository groupRepository;
 	private DiscussionRepository discussionRepository;
+	private CareerRepository careerRepository;
+	private StudentCareerRepository studentCareerRepository;
 	
 	@Value("classpath:defaultGroupPicture.png")
 	private Resource defaultGroupPicture;
 		
 	@Autowired
-	public ReportServiceImpl(GroupRepository groupRepository, DiscussionRepository discussionRepository){
+	public ReportServiceImpl(GroupRepository groupRepository, DiscussionRepository discussionRepository, CareerRepository careerRepository, StudentCareerRepository studentCareerRepository){
 		this.groupRepository = groupRepository;
 		this.discussionRepository = discussionRepository;
+		this.careerRepository = careerRepository;
+		this.studentCareerRepository = studentCareerRepository;
 	}
 	
 	@Override
@@ -94,5 +102,20 @@ public class ReportServiceImpl implements ReportService {
 				return message.getCreationDate().after(dateFrom) && message.getCreationDate().before(dateTo);
 			}
 		});
+	}
+
+	@Override
+	public List<StudentCareerInformation> getStudentCareers() {
+		List<Career> careers = this.careerRepository.findAll();
+		List<StudentCareerInformation> informations = new ArrayList<StudentCareerInformation>();
+		for (Career career : careers) {
+			StudentCareerInformation information = new StudentCareerInformation();
+			information.setCareerCode(career.getCode());
+			information.setCareerName(career.getName());
+			Long amountOfStudents = this.studentCareerRepository.countAprovedStudentsByCareerCode(career.getCode());
+			information.setAmountOfStudents(amountOfStudents);
+			informations.add(information);
+		}
+		return informations;
 	}
 }

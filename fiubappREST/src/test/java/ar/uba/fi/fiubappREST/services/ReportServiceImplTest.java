@@ -68,7 +68,7 @@ public class ReportServiceImplTest {
 	public void setUp() throws ParseException{
 		this.groupRepository = mock(GroupRepository.class);
 		this.discussionRepository = mock(DiscussionRepository.class);		
-		this.service = new ReportServiceImpl(groupRepository, discussionRepository);
+		this.service = new ReportServiceImpl(groupRepository, discussionRepository, null, null);
 	}
 		
 	@Test

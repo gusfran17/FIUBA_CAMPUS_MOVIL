@@ -9,5 +9,8 @@ public interface StudentCareerRepository extends CrudRepository<StudentCareer, I
 	
 	@Query(value = "SELECT * FROM student_career WHERE code = ?1 AND userName = ?2", nativeQuery = true)
 	public StudentCareer findByCodeAndUserName(Integer code, String userName);
-
+		
+	@Query("select count(sc) from StudentCareer sc WHERE sc.career.code = ?1 AND sc.student.state = 1")
+	public Long countAprovedStudentsByCareerCode(Integer careerCode);
+	
 }

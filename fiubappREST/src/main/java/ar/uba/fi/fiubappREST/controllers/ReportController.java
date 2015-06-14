@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import ar.uba.fi.fiubappREST.domain.DiscussionReportInformation;
+import ar.uba.fi.fiubappREST.domain.StudentCareerInformation;
 import ar.uba.fi.fiubappREST.services.ReportService;
 import ar.uba.fi.fiubappREST.services.SessionService;
 
@@ -37,5 +38,12 @@ public class ReportController {
 	public @ResponseBody List<DiscussionReportInformation> getMostActiveDiscussions(@RequestHeader(value="Authorization") String token, @RequestParam(value="dateFrom", required=true) @DateTimeFormat(pattern="dd/MM/yyyy") Date dateFrom, @RequestParam(value="dateTo", required=true) @DateTimeFormat(pattern="dd/MM/yyyy") Date dateTo, @RequestParam(value="values", required=true) Integer values) {
 		this.sessionService.validateAdminSession(token);
 		return this.reportService.getMostActiveDiscussions(dateFrom, dateTo, values);
+	}
+	
+	@RequestMapping(value="students/careers", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	public @ResponseBody List<StudentCareerInformation> getStudentsCareers(@RequestHeader(value="Authorization") String token) {
+		this.sessionService.validateAdminSession(token);
+		return this.reportService.getStudentCareers();
 	}
 }
