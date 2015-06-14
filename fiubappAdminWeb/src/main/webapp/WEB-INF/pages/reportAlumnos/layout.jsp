@@ -6,7 +6,7 @@
 		
 	<div class="input-group">
 		<br/><br/>			
-		<table ng-show="resultsTorta.length > 0" class="table table-striped">
+		<table ng-show="resultsLinea.length > 0" class="table table-striped">
 		    <thead>
 		        <tr>
 		            <th data-align="center">Fecha</th>
@@ -14,8 +14,8 @@
 		        </tr>
 		    </thead>
 		    <tbody>
-				<tr ng-repeat="result in resultsTorta">
-	        		<td width="150px;">{{result.careerName}}</td>        		
+				<tr ng-repeat="result in resultsLinea">
+	        		<td width="150px;">{{result.monthYear}}</td>        		
 	        		<td width="1px;">{{result.amountOfStudents}}</td>	        		
 	      		</tr>
 			</tbody>

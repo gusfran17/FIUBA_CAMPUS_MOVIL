@@ -137,7 +137,7 @@ var ReportDiscusionesController = function(ReportService, MessageService, $scope
 								title: 'Nombre de la discusi\u00F3n'
 							},
 							vAxis: {
-								title: 'Cantidad respuestas'
+								title: 'Cantidad comentarios'
 							},
 							chartArea: {
 								width: '' + ancho  + ''
@@ -160,7 +160,7 @@ var ReportDiscusionesController = function(ReportService, MessageService, $scope
 		
 		var columnas = '{"cols":[' +
 							'{"label":"Discusi\u00F3n","type":"string"},' +
-							'{"label":"Respuestas","type":"number"},' + 
+							'{"label":"Comentarios","type":"number"},' + 
 							'{"role":"style","type":"string","p":{"role":"style"}}' +
 						'],';
 		

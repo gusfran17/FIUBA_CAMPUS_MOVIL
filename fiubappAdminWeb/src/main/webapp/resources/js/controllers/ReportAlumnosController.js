@@ -44,20 +44,6 @@ var ReportAlumnosController = function(ReportService, MessageService, $scope, $r
 	
 	$scope.procesarDatosLinea = function(data){
 		
-		data = {"cols":[{"label":"Mes","type":"string"},{"label":"Usuarios","type":"number"}],
-	 			   "rows":[{"c":[{"v":"julio-2014"},{"v":2}]},
-	 			           {"c":[{"v":"agosto-2014"},{"v":4}]},
-	 			           {"c":[{"v":"septiembre-2014"},{"v":6}]},
-	 			           {"c":[{"v":"octubre-2014"},{"v":13}]},
-	 			           {"c":[{"v":"noviembre-2014"},{"v":45}]},
-	 			           {"c":[{"v":"diciembre-2014"},{"v":60}]},
-	 			           {"c":[{"v":"enero-2015"},{"v":90}]},
-	 			           {"c":[{"v":"febrero-2015"},{"v":112}]},
-	 			           {"c":[{"v":"marzo-2015"},{"v":150}]},
-	 			           {"c":[{"v":"abril-2015"},{"v":200}]},
-	 			           {"c":[{"v":"mayo-2015"},{"v":567}]},
-	 			           {"c":[{"v":"junio-2015"},{"v":600}]}]};
-		
 		$scope.resultsLinea = data;
 				
 		var chart2 = {};
@@ -65,7 +51,7 @@ var ReportAlumnosController = function(ReportService, MessageService, $scope, $r
 		chart2.cssStyle = "height:500px;width:650px;";
 			
 		chart2.data = data;
-		//chart2.data = $scope.crearDatosGrafico(data);
+		chart2.data = $scope.crearDatosGraficoLineas(data);
 		
 		chart2.options = {
 			    title: 'Cantidad usuarios activos',
@@ -79,6 +65,32 @@ var ReportAlumnosController = function(ReportService, MessageService, $scope, $r
 	    $scope.noHayResultadosLinea = ($scope.resultsLinea.length == 0);
 	};
 	
+	$scope.crearDatosGraficoLineas = function(data){
+		
+		var columnas = '{"cols":[' +
+							'{"label":"Mes","type":"string"},' +
+							'{"label":"Usuarios","type":"number"}' +
+						'],';
+		
+		var filas =   '"rows":[';
+		
+		for(var i = 0; i < data.length; i++){
+			
+			filas += '{"c":[{"v":"' + data[i].monthYear + '"},{"v":' + data[i].amountOfStudents + '}]}';			
+			$scope.filasTablaReporteLineas += '{"fecha": "' + data[i].monthYear + '", "habilitados": "' + data[i].amountOfStudents + '"}';
+			
+			if(i != data.length - 1){
+				filas += ',';				
+				$scope.filasTablaReporteLineas += ',';
+			}
+		}
+				
+		filas += ']}';
+		
+		var columnasFilas = columnas + filas;
+		
+		return JSON.parse(columnasFilas);
+	};	
 	
 	$scope.crearDatosGraficoTorta = function(data){
 		
@@ -93,12 +105,10 @@ var ReportAlumnosController = function(ReportService, MessageService, $scope, $r
 			
 			filas += '{"c":[{"v":"' + data[i].careerName + '"},{"v":' + data[i].amountOfStudents + '}]}';
 			$scope.filasTablaReporteTorta += '{"carrera": "' + data[i].careerName + '", "usuarios": "' + data[i].amountOfStudents + '"}';
-			$scope.filasTablaReporteLineas += '{"fecha": "' + data[i].careerName + '", "habilitados": "' + data[i].amountOfStudents + '"}';
-			
+						
 			if(i != data.length - 1){
 				filas += ',';
-				$scope.filasTablaReporteTorta += ',';
-				$scope.filasTablaReporteLineas += ',';
+				$scope.filasTablaReporteTorta += ',';				
 			}
 		}
 				
@@ -143,7 +153,7 @@ var ReportAlumnosController = function(ReportService, MessageService, $scope, $r
 		var doc = new jsPDF('p', 'pt');
 		
 		doc.setFontSize(15);
-		doc.text(40, 40, 'Reporte de usuarios activos de los ultimos 12 meses');
+		doc.text(40, 40, 'Reporte de usuarios activos de los \u00FAltimos 12 meses');
 	
 		doc.addImage(lineas, 'PNG', 60, 50, 480, 380);		
 		doc.autoTable(columnsLineas, dataLineas, {margins: { right: 40, left: 40, top: 440, bottom: 40 }, startY: false });

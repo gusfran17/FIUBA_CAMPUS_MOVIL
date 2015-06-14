@@ -175,7 +175,7 @@ AppServices.service('ReportService', function($http, $q) {
     	
     	var req = {
     			method: 'GET',
-    			url: 'http://localhost:8080/fiubappREST/api/reports/students/careers',
+    			url: 'http://localhost:8080/fiubappREST/api/reports/students/approved',
     			headers: {
     				'Authorization': localStorage.getItem("token")
     			}
