@@ -240,10 +240,16 @@ public class ExceptionsHandler {
 	public @ResponseBody ErrorResponse handle(WallMessageNotFoundForStudentException exception){
 		return buildResponse(exception);
 	}
-	
+
 	@ExceptionHandler(DiscussionMessageFileNotFound.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
 	public @ResponseBody ErrorResponse handle(DiscussionMessageFileNotFound exception){
+		return buildResponse(exception);
+	}
+
+	@ExceptionHandler(GroupFileNotFoundException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST) 
+	public @ResponseBody ErrorResponse handle(GroupFileNotFoundException exception){
 		return buildResponse(exception);
 	}
 	
