@@ -120,78 +120,80 @@ public class GrupoSearchAdapter extends BaseAdapter {
     }
 
     public void alertaIngresarGrupo(final Grupo grupo, View view){
+
         final Button buttonIngresar = (Button)view.findViewById(R.id.childButton);
 
         buttonIngresar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                        new AlertDialog.Builder(activity)
-                                        .setTitle(R.string.ingresar_a_grupo)
-                                        .setMessage(grupo.getNombre())
-                                        .setPositiveButton("Ingresar", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                ingresarGrupo(grupo);
-                                            }
-                                        })
-                                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                // do nothing
-                                            }
-                                        })
-                                        .setIcon(android.R.drawable.ic_dialog_alert)
-                                        .show();
+            new AlertDialog.Builder(activity)
+                .setTitle(R.string.ingresar_a_grupo)
+                .setMessage(grupo.getNombre())
+                .setPositiveButton("Ingresar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        ingresarGrupo(grupo);
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
                     }
             });
     }
 
     private void ingresarGrupo(final Grupo grupo){
-                String url = getURLAPI()+"/students/"+getUsername()+"/groups/"+grupo.getId();
+    String url = getURLAPI()+"/students/"+getUsername()+"/groups/"+grupo.getId();
 
-                        JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.POST,
-                                url,
-                                new Response.Listener<JSONObject>() {
-                                        @Override
-                                        public void onResponse(JSONObject response) {
-                                                Popup.showText(activity, "Te inscribiste al grupo "+grupo.getNombre(), Toast.LENGTH_LONG).show();
-                                                grupoItems.remove(grupo);
-                                                grupo.setCantMiembros(grupo.getCantMiembros() + 1);
-                                                grupo.setAmIaMember(true);
-                                                grupoItems.add(grupo);
-
-                                                        notifyDataSetChanged();
-                                            }
-                                    },
-                                new Response.ErrorListener(){
-                                        @Override
-                                        public void onErrorResponse(VolleyError error) {
-                                                Popup.showText(activity, "Ha ocurrido un error. " +
-                                                                "Probá nuevamente en unos minutos", Toast.LENGTH_LONG).show();
-                                            }
-                                    }
-                                ){
+            JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.POST,
+                url,
+                new Response.Listener<JSONObject>() {
                         @Override
-                        public Map<String, String> getHeaders() throws AuthFailureError {
-                                Map<String, String> headers = new HashMap<String, String>();
-                                headers.put("Authorization", getToken());
-                                return headers;
-                            }
+                        public void onResponse(JSONObject response) {
+                                Popup.showText(activity, "Te inscribiste al grupo "+grupo.getNombre(), Toast.LENGTH_LONG).show();
+                                grupoItems.remove(grupo);
+                                grupo.setCantMiembros(grupo.getCantMiembros() + 1);
+                                grupo.setAmIaMember(true);
+                                grupoItems.add(grupo);
 
-                            };
-                VolleyController.getInstance().addToRequestQueue(jsonReq);
-            }
+                                        notifyDataSetChanged();
+                            }
+                    },
+                new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                                Popup.showText(activity, "Ha ocurrido un error. " +
+                                                "Probá nuevamente en unos minutos", Toast.LENGTH_LONG).show();
+                            }
+                    }
+                ){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<String, String>();
+                    headers.put("Authorization", getToken());
+                    return headers;
+                }
+
+            };
+        VolleyController.getInstance().addToRequestQueue(jsonReq);
+    }
 
     private String getToken(){
-                DataAccess dataAccess = new DataAccess(activity);
-                return dataAccess.getToken();
-            }
+        DataAccess dataAccess = new DataAccess(activity);
+        return dataAccess.getToken();
+    }
 
-                private String getUsername(){
-               DataAccess dataAccess = new DataAccess(activity);
-                return dataAccess.getUserName();
-            }
+    private String getUsername(){
+        DataAccess dataAccess = new DataAccess(activity);
+        return dataAccess.getUserName();
+    }
 
-                private String getURLAPI(){
-                DataAccess dataAccess = new DataAccess(activity);
-                return dataAccess.getURLAPI();
-            }
+    private String getURLAPI(){
+        DataAccess dataAccess = new DataAccess(activity);
+        return dataAccess.getURLAPI();
+    }
+
 }

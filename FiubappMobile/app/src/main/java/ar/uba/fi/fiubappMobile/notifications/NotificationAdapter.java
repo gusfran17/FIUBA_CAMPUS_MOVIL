@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,8 +74,62 @@ public class NotificationAdapter extends BaseAdapter {
         } else {
             Log.d("NotificationAdapter:", "Convertview NOT NULL");
         }
-        this.populateApplicationNotification((ApplicationNotification) notifications.get(position), convertView, parent.getContext(), position);
+
+        String tipoNotification = notifications.get(position).getClass().toString();
+        Log.d("NotificationAdapter",tipoNotification);
+        if (tipoNotification.equals("class ar.uba.fi.fiubappMobile.notifications.ApplicationNotification"))
+            this.populateApplicationNotification((ApplicationNotification) notifications.get(position), convertView, parent.getContext(), position);
+        else if (tipoNotification.equals("class ar.uba.fi.fiubappMobile.notifications.DiscussionNotification"))
+            this.populateDiscussionNotification((DiscussionNotification) notifications.get(position), convertView, parent.getContext(), position);
+
         return convertView;
+    }
+
+    private void populateDiscussionNotification(final DiscussionNotification notification, final View convertView, final Context context, final int position) {
+        if (imageLoader == null)
+            imageLoader = VolleyController.getInstance().getImageLoader();
+        NetworkImageView thumbNail = (NetworkImageView) convertView
+                .findViewById(R.id.thumbnail);
+
+        TextView name = (TextView) convertView.findViewById(R.id.name);
+        TextView description = (TextView) convertView.findViewById(R.id.description);
+        TextView creationDate = (TextView) convertView.findViewById(R.id.creationDate);
+        TextView markAsViewed = (TextView) convertView.findViewById(R.id.viewed);
+
+        name.setText(notification.getCommenter().getNombre() + " " + notification.getCommenter().getApellido());
+        String descripcionDiscusion = activity.getString(R.string.discussion_message) + " " + notification.getDiscussionName();
+        description.setText(descripcionDiscusion);
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        creationDate.setText(df.format(notification.getCreationDate()));
+
+        thumbNail.setImageUrl(notification.getCommenter().getImgURL(),imageLoader);
+        thumbNail.setDefaultImageResId(R.drawable.no_image);
+        thumbNail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = notification.getCommenter().getImgURL();
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                activity.startActivity(i);
+            }
+        });
+
+        final Map<String, String> params = new HashMap<String, String>();
+        params.put("userName", notification.getCommenter().getUsername());
+
+        final ImageView deleteButton = (ImageView)convertView.findViewById(R.id.deleteButton);
+        deleteButton.setVisibility(View.INVISIBLE);
+
+        final ImageView acceptButton = (ImageView)convertView.findViewById(R.id.acceptButton);
+
+        acceptButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(final View arg0) {
+                setViewedNotification(notification,context, position);
+            }
+
+        });
     }
 
     private void populateApplicationNotification(final ApplicationNotification notification, final View convertView, final Context context, final int position) {
@@ -109,7 +164,16 @@ public class NotificationAdapter extends BaseAdapter {
         final Map<String, String> params = new HashMap<String, String>();
         params.put("userName", notification.getApplicant().getUsername());
 
-        final Button acceptButton = (Button)convertView.findViewById(R.id.acceptButton);
+        final ImageView deleteButton = (ImageView)convertView.findViewById(R.id.deleteButton);
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setViewedNotification(notification,context, position);
+            }
+        });
+
+        final ImageView acceptButton = (ImageView)convertView.findViewById(R.id.acceptButton);
 
         acceptButton.setOnClickListener(new View.OnClickListener() {
 
@@ -158,7 +222,7 @@ public class NotificationAdapter extends BaseAdapter {
         });
     }
 
-    private void setViewedNotification(final ApplicationNotification notification, final Context context, final int position) {
+    private void setViewedNotification(final Notification notification, final Context context, final int position) {
 
         final Map<String, String> params = new HashMap<String, String>();
         params.put("isViewed", "true");

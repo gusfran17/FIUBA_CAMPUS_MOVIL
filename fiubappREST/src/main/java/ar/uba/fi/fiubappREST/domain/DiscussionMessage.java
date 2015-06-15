@@ -29,9 +29,7 @@ public class DiscussionMessage {
 	private Integer id;
 	
 	private String message;
-	
-	private Integer IdMessage;
-	
+		
 	private Date creationDate;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
