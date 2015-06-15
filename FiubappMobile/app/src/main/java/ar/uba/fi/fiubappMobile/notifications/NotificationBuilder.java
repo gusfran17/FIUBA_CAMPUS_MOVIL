@@ -75,8 +75,8 @@ public class NotificationBuilder {
         notification.setCreationDate(creationDate);
 
         notification.setIsViewed(obj.getBoolean("isViewed"));
-        notification.setGroupId(obj.getString("groupID"));
-        notification.setDiscussionId(obj.getString("discussionID"));
+        notification.setGroupId(obj.getString("groupId"));
+        notification.setDiscussionId(obj.getString("discussionId"));
         notification.setDiscussionName(obj.getString("discussionName"));
         notification.setDiscussionMessageId("discussionMessageId");
 

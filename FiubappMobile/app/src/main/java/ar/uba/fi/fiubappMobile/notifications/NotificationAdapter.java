@@ -97,7 +97,8 @@ public class NotificationAdapter extends BaseAdapter {
         TextView markAsViewed = (TextView) convertView.findViewById(R.id.viewed);
 
         name.setText(notification.getCommenter().getNombre() + " " + notification.getCommenter().getApellido());
-        description.setText(R.string.application_notification_message);
+        String descripcionDiscusion = activity.getString(R.string.discussion_message) + " " + notification.getDiscussionName();
+        description.setText(descripcionDiscusion);
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         creationDate.setText(df.format(notification.getCreationDate()));
 
@@ -125,44 +126,7 @@ public class NotificationAdapter extends BaseAdapter {
 
             @Override
             public void onClick(final View arg0) {
-
-                JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.POST,
-                        buildNotificationsUrl(),
-                        new JSONObject(params),
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                String message = notification.getCommenter().getNombre() + " "
-                                        + notification.getCommenter().getApellido() + " y vos ahora son compañeros!";
-                                Popup.showText(context, message, Toast.LENGTH_LONG).show();
-                                setViewedNotification(notification, context, position);
-                            }
-                        },
-                        new Response.ErrorListener(){
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-
-                                String responseBody = null;
-
-                                try {
-                                    responseBody = new String( error.networkResponse.data, "utf-8" );
-                                    JSONObject jsonObject = new JSONObject( responseBody );
-                                    //Popup.showText(context, jsonObject.getString("message") , Toast.LENGTH_LONG).show();
-                                    setViewedNotification(notification,context, position);
-                                } catch (Exception e) {
-                                }
-                            }
-                        }
-                ){
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> headers = new HashMap<String, String>();
-                        headers.put("Authorization", getToken());
-                        return headers;
-                    }
-
-                };
-                VolleyController.getInstance().addToRequestQueue(jsonReq);
+                setViewedNotification(notification,context, position);
             }
 
         });

@@ -26,7 +26,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ar.uba.fi.fiubappMobile.groups.Discussions.DiscussionActivity;
 import ar.uba.fi.fiubappMobile.notifications.ApplicationNotification;
+import ar.uba.fi.fiubappMobile.notifications.DiscussionNotification;
 import ar.uba.fi.fiubappMobile.notifications.Notification;
 import ar.uba.fi.fiubappMobile.notifications.NotificationAdapter;
 import ar.uba.fi.fiubappMobile.notifications.NotificationBuilder;
@@ -54,25 +56,46 @@ public class NotificationsTab extends Fragment {
 
         listView = (ListView)view.findViewById(R.id.list_notif);
         adapter = new NotificationAdapter(getActivity(), notifications, urlAPI);
+
+
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Alumno companero = ((ApplicationNotification)notifications.get(position)).getApplicant();
-                String name = companero.getNombre();
-                String lastName = companero.getApellido();
-                String comments = companero.getComentario();
-                boolean isExchange = companero.isIntercambio();
-                boolean isMyMate = companero.isMyMate();
-                String userName = companero.getUsername();
+                String tipoNotification = notifications.get(position).getClass().toString();
 
-                Intent i = new Intent(getActivity(),PerfilTabsCompanero.class);
-                i.putExtra("name",name);
-                i.putExtra("lastName",lastName);
-                i.putExtra("userName",userName);
-                i.putExtra("comments",comments);
-                i.putExtra("isMyMate",isMyMate);
-                startActivity(i);
+                if (tipoNotification.equals("class ar.uba.fi.fiubappMobile.notifications.ApplicationNotification")){
+                    Alumno companero = ((ApplicationNotification)notifications.get(position)).getApplicant();
+                    String name = companero.getNombre();
+                    String lastName = companero.getApellido();
+                    String comments = companero.getComentario();
+                    boolean isExchange = companero.isIntercambio();
+                    boolean isMyMate = companero.isMyMate();
+                    String userName = companero.getUsername();
+
+                    Intent i = new Intent(getActivity(),PerfilTabsCompanero.class);
+                    i.putExtra("name",name);
+                    i.putExtra("lastName",lastName);
+                    i.putExtra("userName",userName);
+                    i.putExtra("comments",comments);
+                    i.putExtra("isMyMate",isMyMate);
+                    startActivity(i);
+
+                }else if (tipoNotification.equals("class ar.uba.fi.fiubappMobile.notifications.DiscussionNotification")){
+                    DiscussionNotification notification = ((DiscussionNotification)notifications.get(position));
+                    String discussionId = notification.getDiscussionId();
+                    String discussionName = notification.getDiscussionName();
+                    String groupId = notification.getGroupId();
+
+                    Intent i = new Intent(getActivity(),DiscussionActivity.class);
+                    i.putExtra("discussionId",Integer.valueOf(discussionId));
+                    i.putExtra("groupId",Integer.valueOf(groupId));
+                    i.putExtra("discussionName",discussionName);
+                    startActivity(i);
+                }
+
+
             }
         });
         listView.setAdapter(adapter);
