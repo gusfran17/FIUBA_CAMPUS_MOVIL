@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,10 +84,11 @@ public class ReportServiceImpl implements ReportService {
 		return discussionReporInformations;
 	}
 
-	private List<Discussion> getFilteredDiscussions(Date dateFrom, Date dateTo,
-			Integer values, List<Discussion> discussions) {
+	private List<Discussion> getFilteredDiscussions(Date dateFrom, Date dateTo, Integer values, List<Discussion> discussions) {
+		Date dateToMidnight = DateUtils.addHours(dateTo, 23);
+		dateToMidnight = DateUtils.addMinutes(dateToMidnight, 59);
 		for (Discussion discussion : discussions) {		
-			this.filterMessages(discussion.getMessages(), dateFrom, dateTo);
+			this.filterMessages(discussion.getMessages(), dateFrom, dateToMidnight);
 		}
 		this.sortDiscussionByAmountOfMessages(discussions);
 		

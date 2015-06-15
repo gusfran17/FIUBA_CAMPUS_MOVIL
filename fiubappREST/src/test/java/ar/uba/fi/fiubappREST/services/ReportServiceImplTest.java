@@ -3,6 +3,7 @@ package ar.uba.fi.fiubappREST.services;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.any;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -115,15 +116,15 @@ public class ReportServiceImplTest {
 		
 		dateInRange = mock(Date.class);
 		when(dateInRange.after(dateFrom)).thenReturn(true);
-		when(dateInRange.before(dateTo)).thenReturn(true);
+		when(dateInRange.before(any(Date.class))).thenReturn(true);
 		
 		dateNotInRange = mock(Date.class);
 		when(dateNotInRange.after(dateFrom)).thenReturn(false);
-		when(dateNotInRange.before(dateTo)).thenReturn(false);
+		when(dateNotInRange.before(any(Date.class))).thenReturn(false);
 		
 		anotherDateNotInRange = mock(Date.class);
 		when(anotherDateNotInRange.after(dateFrom)).thenReturn(true);
-		when(anotherDateNotInRange.before(dateTo)).thenReturn(false);
+		when(anotherDateNotInRange.before(any(Date.class))).thenReturn(false);
 		
 		group = mock(Group.class);
 		when(group.getName()).thenReturn(A_GROUP_NAME);
