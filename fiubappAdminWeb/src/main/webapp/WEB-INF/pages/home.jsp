@@ -43,21 +43,22 @@
 	</div>
 	
 	<br>
+	<div role="tabpanel">
+
+		<ul class="nav nav-tabs" role="tablist" ng-show="loggedUser.logged" style="font-size : 20px;">
+			<li id="studentTab" role="presentation" class="active"><a href="#/student" aria-controls="student" role="tab" data-toggle="tab">Alumnos</a></li>
+		    <li id="groupTab" role="presentation"><a href="#/group" aria-controls="group" role="tab" data-toggle="tab">Grupos</a></li>
+		    <li id="reportDiscusionesTab" role="presentation"><a href="#/reportDiscusiones" aria-controls="reportDiscusiones" role="tab" data-toggle="tab">Reporte Discusiones</a></li>
+		    <li id="reportAlumnosTab" role="presentation"><a href="#/reportAlumnos" aria-controls="reportAlumnos" role="tab" data-toggle="tab">Reporte Alumnos</a></li>
+		    <li id="logoutTab" role="presentation"><a href="#/logout" aria-controls="logout" role="tab" data-toggle="tab">Salir</a></li>
+		</ul>
         
-    <ul ng-show="loggedUser.logged" class="menu" style="font-size : 23px;">
-    	<li><a href="#/student">Alumnos</a></li>    	
-        <li><a href="#/group">Grupos</a></li>
-        <li><a href="#/reportDiscusiones">Reporte Discusiones</a></li>
-        <li><a href="#/reportAlumnos">Reporte Alumnos</a></li>        
-        <li><a href="#/logout">Salir</a></li>
-    </ul>
-         
-    <hr class="" />
-    <div class="alert alert-error" ng-show="error">
-    	{{errorMessage}}
-	</div>
+    	<div class="alert alert-error" ng-show="error">
+    		{{errorMessage}}
+		</div>
     
-    <div ng-view></div>
+    	<div ng-view></div>
+    </div>
 
 </div>
 </body>

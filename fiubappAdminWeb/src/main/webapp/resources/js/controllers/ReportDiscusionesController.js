@@ -1,6 +1,8 @@
 'use strict';
 
-var ReportDiscusionesController = function(ReportService, MessageService, $scope, $routeParams, $modal) {
+var ReportDiscusionesController = function(ReportService, MessageService, $scope, $routeParams, $modal, TabService) {
+	
+	TabService.reload('reportDiscusionesTab');
 	
 	$scope.openFechaDesde = function($event) {
 	    $event.preventDefault();

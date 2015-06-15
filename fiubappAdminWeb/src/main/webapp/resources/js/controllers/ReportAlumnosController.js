@@ -1,6 +1,9 @@
 'use strict';
 
-var ReportAlumnosController = function(ReportService, MessageService, $scope, $routeParams, $modal) {
+var ReportAlumnosController = function(ReportService, MessageService, $scope, $routeParams, $modal, TabService) {
+	
+	TabService.reload('reportAlumnosTab');
+	
 	MessageService.resetError();
 	
 	$scope.filasTablaReporteTorta = "";

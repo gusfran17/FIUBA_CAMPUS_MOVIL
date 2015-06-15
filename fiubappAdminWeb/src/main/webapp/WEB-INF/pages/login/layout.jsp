@@ -1,3 +1,5 @@
+<hr class="" />
+
 <div ng-controller="LoginController">
 
 	<form name="loginForm" class="form-horizontal" ng-submit="login()">
@@ -5,7 +7,7 @@
 	    
 	        <label class="control-label">Nombre de usuario</label>
 	
-	        <div class="controls">
+	        <div class="controls" style="margin-bottom: 20px;">
 	            <input name="userName" type="text" ng-model="username" placeholder="Nombre de usuario" required oninvalid="this.setCustomValidity('Ingresá un nombre de usuario')"
     oninput="setCustomValidity('')"> 
 	        </div>

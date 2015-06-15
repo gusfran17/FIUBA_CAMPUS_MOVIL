@@ -204,3 +204,16 @@ AppServices.service('MessageService', function($rootScope, $q) {
 		$rootScope.errorMessage = '';
 	};
 });
+
+AppServices.service('TabService', function($rootScope, $q) {
+    
+	this.reload = function(tabId) {
+		angular.element($('#studentTab')).removeClass("active");
+		angular.element($('#groupTab')).removeClass("active");
+		angular.element($('#reportDiscusionesTab')).removeClass("active");
+		angular.element($('#reportAlumnosTab')).removeClass("active");
+		angular.element($('#logoutTab')).removeClass("active");
+		
+		angular.element($('#'+tabId)).addClass("active");
+    };
+});

@@ -1,7 +1,9 @@
 'use strict';
 
-var StudentController = function(StudentService, MessageService, $scope, $routeParams, $modal) {
+var StudentController = function(StudentService, MessageService, $scope, $routeParams, $modal, TabService) {
 
+	TabService.reload('studentTab');
+	
 	$scope.searchParams = {};
 		
 	$scope.states = ['Todos', 'Pendiente', 'Habilitado', 'Suspendido'];
