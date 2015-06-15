@@ -11,7 +11,7 @@
     <string name="soyIntercambio">Soy de intercambio</string>
     <string name="soyNuevo">Soy nuevo</string>
     <string name="pasaporte">Pasaporte</string>
-    <string name="urlAPI">http://192.168.56.1:8080/fiubappREST/api</string>
+    <string name="urlAPI">http://10.0.3.2:3308/fiubappREST/api</string>
     <string name="prefs_name">MyPrefsFile</string>
     <string name="educacionSecundaria">Educación secundaria</string>
     <string name="escuela">Escuela</string>
@@ -85,5 +85,5 @@
     <string name="configurar_Muro">Configurar Muro</string>
     <string name="subir_archivo">SUBIR ARCHIVO</string>
     <string name="ingresar_a_grupo">¿Ingresar al grupo?</string>
-    <string name="discussion_message">comento en la discusion</string>
+    <string name="discussion_message">comentó en la discusión</string>
 </resources>
