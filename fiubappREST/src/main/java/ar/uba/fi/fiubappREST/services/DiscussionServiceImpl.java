@@ -23,6 +23,7 @@ import ar.uba.fi.fiubappREST.converters.GroupConverter;
 import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.DiscussionMessage;
 import ar.uba.fi.fiubappREST.domain.DiscussionMessageFile;
+import ar.uba.fi.fiubappREST.domain.DiscussionMessageNotification;
 import ar.uba.fi.fiubappREST.domain.Group;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.DiscussionMessageFileNotFound;
@@ -34,6 +35,7 @@ import ar.uba.fi.fiubappREST.persistance.DiscussionMessageFileRepository;
 import ar.uba.fi.fiubappREST.persistance.DiscussionMessageRepository;
 import ar.uba.fi.fiubappREST.persistance.DiscussionRepository;
 import ar.uba.fi.fiubappREST.persistance.GroupRepository;
+import ar.uba.fi.fiubappREST.persistance.NotificationRepository;
 import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.DiscussionCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.DiscussionMessageRepresentation;
@@ -52,11 +54,12 @@ public class DiscussionServiceImpl implements DiscussionService{
 	private DiscussionMessageConverter discussionMessageConverter;
 	private DiscussionMessageRepository discussionMessageRepository;
 	private DiscussionMessageFileRepository discussionMessageFileRepository;
+	private NotificationRepository notificationRepository;
 	
 	private GroupConverter groupConverter;
 	
 	@Autowired
-	public DiscussionServiceImpl(DiscussionRepository discussionRepository, GroupRepository groupRepository, StudentRepository studentRepository, DiscussionMessageRepository discussionMessageRepository, DiscussionConverter discussionConverter, DiscussionMessageConverter discussionMessageConverter, GroupConverter groupConverter, DiscussionMessageFileRepository discussionMessageFileRepository){
+	public DiscussionServiceImpl(DiscussionRepository discussionRepository, GroupRepository groupRepository, StudentRepository studentRepository, DiscussionMessageRepository discussionMessageRepository, DiscussionConverter discussionConverter, DiscussionMessageConverter discussionMessageConverter, GroupConverter groupConverter, DiscussionMessageFileRepository discussionMessageFileRepository, NotificationRepository notificationRepository){
 		this.discussionRepository = discussionRepository;
 		this.groupRepository = groupRepository;
 		this.studentRepository = studentRepository;
@@ -65,6 +68,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 		this.groupConverter = groupConverter;
 		this.discussionMessageRepository = discussionMessageRepository;
 		this.discussionMessageFileRepository = discussionMessageFileRepository;
+		this.notificationRepository = notificationRepository;
 	}
 
 	@Override
@@ -120,11 +124,29 @@ public class DiscussionServiceImpl implements DiscussionService{
 			discussionMessage.setFileName(fileName);
 		}
 		discussionMessageRepository.save(discussionMessage);
-		discussionRepository.save(discussion);		
-				
+		discussionRepository.save(discussion);
+		
+		this.createNotificationForGroupMembers(group, discussion, discussionMessage);
 		return this.discussionMessageConverter.convert(discussionMessage, groupId, discussionId);
 	}
 	
+	private void createNotificationForGroupMembers(Group group, Discussion discussion, DiscussionMessage discussionMessage) {
+		for (Student member : group.getMembers()) {
+			if(!member.equals(discussionMessage.getCreator())){
+				DiscussionMessageNotification notification = new DiscussionMessageNotification();
+				notification.setCreationDate(new Date());
+				notification.setIsViewed(false);
+				notification.setStudent(member);
+				notification.setGroup(group);
+				notification.setDiscussion(discussion);
+				notification.setDiscussionMessage(discussionMessage);
+				
+				this.notificationRepository.save(notification);
+			}
+		}
+		
+	}
+
 	private DiscussionMessageFile createFile(DiscussionMessage message, MultipartFile file) {
 		DiscussionMessageFile messageFile = new DiscussionMessageFile();
 		messageFile.setMessage(message);

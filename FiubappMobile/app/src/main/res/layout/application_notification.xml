@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/name"
         android:layout_marginTop="1dip"
+        android:layout_marginRight="60dp"
         android:layout_toRightOf="@+id/thumbnail"
         android:textSize="@dimen/genre" />
 
@@ -46,17 +47,25 @@
         android:layout_height="wrap_content"
         android:textColor="@color/genre"
         android:textSize="@dimen/genre"
-        android:layout_alignTop="@+id/creationDate"
-        android:layout_toLeftOf="@+id/acceptButton" />
+        android:layout_alignTop="@+id/creationDate"/>
 
-    <Button
-        android:id="@+id/acceptButton"
-        android:layout_width="100dp"
-        android:layout_height="20dp"
-        android:text="Aceptar"
+    <ImageView
+        android:id="@+id/deleteButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_basura"
         android:focusable="false"
         android:layout_centerVertical="true"
-        android:background="#ff2ec7e8"
-        android:layout_alignRight="@+id/description" />
+        android:layout_toLeftOf="@+id/acceptButton"
+        android:layout_marginRight="10dp" />
+
+    <ImageView
+        android:id="@+id/acceptButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_save"
+        android:focusable="false"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"/>
 
 </RelativeLayout>
