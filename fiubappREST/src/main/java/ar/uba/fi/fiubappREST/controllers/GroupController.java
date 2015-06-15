@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
+import ar.uba.fi.fiubappREST.domain.GroupState;
 import ar.uba.fi.fiubappREST.domain.Session;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
+import ar.uba.fi.fiubappREST.representations.GroupStateRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupUpdateRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 import ar.uba.fi.fiubappREST.services.GroupService;
@@ -51,9 +53,13 @@ public class GroupController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	public @ResponseBody List<GroupRepresentation> findGroups(@RequestHeader(value="Authorization") String token, @RequestParam(value="name", required=false) String name) {
-		Session session = this.sessionService.findStudentSession(token);
-		return this.groupService.findByProperties(session.getUserName(), name);
+	public @ResponseBody List<GroupRepresentation> findGroups(@RequestHeader(value="Authorization") String token, @RequestParam(value="name", required=false) String name, @RequestParam(value="state", required=false) String state) {
+		Session session = this.sessionService.findSession(token);
+		if(session.isAdminSession()){
+			GroupState groupState = (state==null) ? null : GroupState.create(state);
+			return this.groupService.findByPropertiesForAdmin(name, groupState);
+		}
+		return this.groupService.findByPropertiesForStudent(session.getUserName(), name);
 	}
 	
 	@RequestMapping(value="{groupId}", method = RequestMethod.GET)
@@ -91,7 +97,13 @@ public class GroupController {
 		Session session = this.sessionService.findStudentSession(token);
 		return groupService.getMembers(groupId, session.getUserName());
 	}
-
+	
+	@RequestMapping(method = RequestMethod.PUT, value="{groupId}/state")
+	@ResponseStatus(value = HttpStatus.OK)
+	public @ResponseBody GroupStateRepresentation updateGroupState(@RequestHeader(value="Authorization") String token, @PathVariable Integer groupId, @RequestBody GroupStateRepresentation stateRepresentation) {
+		this.sessionService.validateAdminSession(token);
+		return this.groupService.updateGroupState(groupId, stateRepresentation); 
+	}
 }
 
 

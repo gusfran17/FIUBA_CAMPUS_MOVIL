@@ -29,6 +29,22 @@ public class GroupConverter {
 		groupRepresentation.setOwner(studentRepresentation);
 		groupRepresentation.setAmountOfMembers(group.getMembers().size());
 		groupRepresentation.setAmIAMember(me.isMemberOf(group));
+		groupRepresentation.setState(group.getState().getName());
+		return groupRepresentation;
+	}
+	
+	public GroupRepresentation convert(Group group){
+		GroupRepresentation groupRepresentation = new GroupRepresentation();
+		groupRepresentation.setId(group.getId());
+		groupRepresentation.setName(group.getName());
+		groupRepresentation.setDescription(group.getDescription());
+		groupRepresentation.setCreationDate(group.getCreationDate());
+		groupRepresentation.setGroupPicture(group.getGroupPictureUrl());
+		StudentProfileRepresentation studentRepresentation = this.studentConverter.convert(group.getOwner());
+		groupRepresentation.setOwner(studentRepresentation);
+		groupRepresentation.setAmountOfMembers(group.getMembers().size());
+		groupRepresentation.setAmIAMember(false);
+		groupRepresentation.setState(group.getState().getName());
 		return groupRepresentation;
 	}
 }

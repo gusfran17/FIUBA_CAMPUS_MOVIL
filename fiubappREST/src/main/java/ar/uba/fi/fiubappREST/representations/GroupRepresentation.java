@@ -25,6 +25,8 @@ public class GroupRepresentation {
 	private Integer amountOfMembers;
 	
 	private Boolean amIAMember;
+	
+	private String state;
 
 	public Integer getId() {
 		return id;
@@ -90,6 +92,14 @@ public class GroupRepresentation {
 
 	public void setAmIAMember(Boolean amIAMember) {
 		this.amIAMember = amIAMember;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
 	}
 	
 }

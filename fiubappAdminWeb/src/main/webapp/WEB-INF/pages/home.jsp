@@ -18,6 +18,7 @@
 	<script src="resources/js/controllers/StudentController.js"></script>
 	<script src="resources/js/controllers/StateModalController.js"></script>
 	<script src="resources/js/controllers/GroupController.js"></script>
+	<script src="resources/js/controllers/GroupModalController.js"></script>
 	<script src="resources/js/controllers/ReportAlumnosController.js"></script>
 	<script src="resources/js/controllers/ReportDiscusionesController.js"></script>
 	<script src="https://code.angularjs.org/1.0.8/i18n/angular-locale_es-ar.js"></script>

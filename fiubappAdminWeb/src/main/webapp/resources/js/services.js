@@ -123,6 +123,51 @@ AppServices.service('StudentService', function($http, $q) {
 
 AppServices.service('GroupService', function($http, $q) {
     
+	this.searchGroups = function(searchPath) {
+    	
+    	var deferred = $q.defer();
+    	
+    	var req = {
+    			method: 'GET',
+    			url: 'http://localhost:8080/fiubappREST/api/groups' + searchPath,
+    			headers: {
+    				'Authorization': localStorage.getItem("token")
+    			}
+    	}
+
+    	$http(req).success(function(data){
+            deferred.resolve(data);
+        }).error(function(data){
+        	deferred.reject(data.message);
+        });
+    	
+    	return deferred.promise;
+    };
+    
+    this.updateGroupState = function(groupId, newState) {
+    	    	
+    	var state = {"state": newState};
+    	
+    	var deferred = $q.defer();
+    	
+    	var req = {
+    			method: 'PUT',
+    			url: 'http://localhost:8080/fiubappREST/api/groups/' + groupId + '/state',
+    			headers: {
+    				'Authorization': localStorage.getItem("token"),
+    				'Content-Type' : 'application/json'
+    			},
+    			data: state 
+    	}
+
+    	$http(req).success(function(data){
+            deferred.resolve(data);
+        }).error(function(data){
+        	deferred.reject(data.message);
+        });
+    	
+    	return deferred.promise;
+    };
 });
 		
 AppServices.service('ReportService', function($http, $q) {

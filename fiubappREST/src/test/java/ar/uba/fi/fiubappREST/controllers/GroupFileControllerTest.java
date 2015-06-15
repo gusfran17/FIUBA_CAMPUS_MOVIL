@@ -67,7 +67,7 @@ public class GroupFileControllerTest {
 		doReturn(bytes).when(groupFile).getFile();
 		doReturn("aName.png").when(groupFile).getName();
 		doReturn(MediaType.IMAGE_PNG_VALUE).when(groupFile).getContentType();
-		doReturn(groupFile).when(service).findGroupFile(A_GROUP_ID, A_FILE_ID, AN_USER_NAME);
+		doReturn(groupFile).when(service).findGroupFile(A_GROUP_ID, A_FILE_ID, "");
 				
 		ResponseEntity<byte[]> response = this.controller.getGroupFile(A_GROUP_ID, A_FILE_ID);
 		

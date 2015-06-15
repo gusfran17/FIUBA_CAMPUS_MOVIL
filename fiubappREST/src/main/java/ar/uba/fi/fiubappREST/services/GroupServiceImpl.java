@@ -27,6 +27,7 @@ import ar.uba.fi.fiubappREST.converters.StudentProfileConverter;
 import ar.uba.fi.fiubappREST.domain.Discussion;
 import ar.uba.fi.fiubappREST.domain.Group;
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
+import ar.uba.fi.fiubappREST.domain.GroupState;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.GroupAlreadyExistsException;
 import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
@@ -42,6 +43,7 @@ import ar.uba.fi.fiubappREST.persistance.StudentRepository;
 import ar.uba.fi.fiubappREST.representations.DiscussionRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupCreationRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupRepresentation;
+import ar.uba.fi.fiubappREST.representations.GroupStateRepresentation;
 import ar.uba.fi.fiubappREST.representations.GroupUpdateRepresentation;
 import ar.uba.fi.fiubappREST.representations.StudentProfileRepresentation;
 
@@ -106,6 +108,7 @@ public class GroupServiceImpl implements GroupService {
 		group.setMembers(new HashSet<Student>());
 		group.setOwner(owner);
 		group.addMember(owner);
+		group.setState(GroupState.ENABLED);
 		return group;
 	}
 
@@ -126,17 +129,31 @@ public class GroupServiceImpl implements GroupService {
 	}
 	
 	@Override
-	public List<GroupRepresentation> findByProperties(String userName, String name) {
+	public List<GroupRepresentation> findByPropertiesForStudent(String userName, String name) {
 		LOGGER.info(String.format("Finding groups by criteria."));
 		Student me = this.findStudent(userName);
-		List<Group> groups = this.groupRepository.findByProperties(name);
+		List<Group> groups = this.groupRepository.findByProperties(name, GroupState.ENABLED.getId());
 		List<GroupRepresentation> groupRepresentations = new ArrayList<GroupRepresentation>();
-		for (Group group : groups) {
+		for (Group group : groups) {			
 			groupRepresentations.add(this.groupConverter.convert(me, group));
 		}
 		LOGGER.info(String.format("All groups meeting the criteria were found."));
 		return groupRepresentations;
 	}
+	
+
+	@Override
+	public List<GroupRepresentation> findByPropertiesForAdmin(String name, GroupState state) {
+		LOGGER.info(String.format("Finding groups by criteria."));
+		Integer groupState = (state==null) ? null : state.getId();
+		List<Group> groups = this.groupRepository.findByProperties(name, groupState);
+		List<GroupRepresentation> groupRepresentations = new ArrayList<GroupRepresentation>();
+		for (Group group : groups) {
+			groupRepresentations.add(this.groupConverter.convert(group));
+		}
+		LOGGER.info(String.format("All groups meeting the criteria were found."));
+		return groupRepresentations;
+	}	
 
 	@Override
 	public GroupRepresentation registerStudent(String userName, Integer groupId) {
@@ -161,7 +178,9 @@ public class GroupServiceImpl implements GroupService {
 		Student student = this.findStudent(userName);
 		List<GroupRepresentation> groupRepresentations = new ArrayList<GroupRepresentation>();
 		for (Group group : this.orderGroups(student.getGroups())) {
-			groupRepresentations.add(this.groupConverter.convert(student, group));
+			if(group.getState().equals(GroupState.ENABLED)){				
+				groupRepresentations.add(this.groupConverter.convert(student, group));
+			}
 		}
 		LOGGER.info(String.format("All groups for student with userName %s were found.", userName));
 		return groupRepresentations;
@@ -326,6 +345,21 @@ public class GroupServiceImpl implements GroupService {
 		}		
 		LOGGER.info(String.format("Members of group with id %s was found for student with userName %s.", groupId, userName));
 		return members;
-	}	
+	}
+
+	@Override
+	public GroupStateRepresentation updateGroupState(Integer groupId, GroupStateRepresentation stateRepresentation) {
+		LOGGER.info(String.format("Updating state for group with id %s.", groupId));
+		Group group = this.groupRepository.findOne(groupId);
+		if(group==null){
+			LOGGER.error(String.format("Group with id %s does not exist.", groupId ));
+			throw new GroupNotFoundException(groupId);
+		}
+		group.setState(stateRepresentation.getState());
+		group = this.groupRepository.save(group);
+		stateRepresentation.setState(group.getState());
+		LOGGER.info(String.format("State for group with id %s was updated.", groupId));
+		return stateRepresentation;
+	}
 		
 }

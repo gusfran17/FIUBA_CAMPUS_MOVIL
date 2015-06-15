@@ -34,7 +34,6 @@ public class GroupControllerTest {
 	private static final String A_TOKEN = "aToken";
 	private static final Integer A_GROUP_ID = 14;
 
-	@SuppressWarnings("rawtypes")
 	private GroupController controller;
 	
 	@Mock
@@ -42,8 +41,6 @@ public class GroupControllerTest {
 	@Mock
 	private SessionService studentSessionService;
 	
-	
-	@SuppressWarnings("rawtypes")
 	@Before
 	public void setUp(){
 		this.service = mock(GroupService.class);
@@ -68,16 +65,16 @@ public class GroupControllerTest {
 	public void testFindGroups(){
 		Session session = mock(Session.class);
 		when(session.getUserName()).thenReturn(AN_USER_NAME);
-		when(this.studentSessionService.findStudentSession(A_TOKEN)).thenReturn(session);
+		when(session.isAdminSession()).thenReturn(false);
+		when(this.studentSessionService.findSession(A_TOKEN)).thenReturn(session);
 		GroupRepresentation aRepresentation = mock(GroupRepresentation.class);
 		GroupRepresentation anotherRepresentation = mock(GroupRepresentation.class);
 		List<GroupRepresentation> representations = new ArrayList<GroupRepresentation>();
 		representations.add(aRepresentation);
 		representations.add(anotherRepresentation);
-		when(this.service.findByProperties(AN_USER_NAME, A_NAME)).thenReturn(representations);
+		when(this.service.findByPropertiesForStudent(AN_USER_NAME, A_NAME)).thenReturn(representations);
 		
-		@SuppressWarnings("unchecked")
-		List<GroupRepresentation> foundGroups = this.controller.findGroups(A_TOKEN, A_NAME);
+		List<GroupRepresentation> foundGroups = this.controller.findGroups(A_TOKEN, A_NAME, null);
 		
 		assertEquals(2, foundGroups.size());
 	}
@@ -103,7 +100,6 @@ public class GroupControllerTest {
 		doReturn(MediaType.IMAGE_PNG_VALUE).when(picture).getContentType();
 		doReturn(picture).when(service).getPicture(A_GROUP_ID);
 				
-		@SuppressWarnings("unchecked")
 		ResponseEntity<byte[]> response = this.controller.getGroupPicture(A_GROUP_ID);
 		
 		assertEquals(bytes, response.getBody());

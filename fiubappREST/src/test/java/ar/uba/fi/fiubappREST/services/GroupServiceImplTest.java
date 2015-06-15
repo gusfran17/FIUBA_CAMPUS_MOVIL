@@ -27,6 +27,7 @@ import ar.uba.fi.fiubappREST.converters.GroupConverter;
 import ar.uba.fi.fiubappREST.converters.StudentProfileConverter;
 import ar.uba.fi.fiubappREST.domain.Group;
 import ar.uba.fi.fiubappREST.domain.GroupPicture;
+import ar.uba.fi.fiubappREST.domain.GroupState;
 import ar.uba.fi.fiubappREST.domain.Student;
 import ar.uba.fi.fiubappREST.exceptions.GroupAlreadyExistsException;
 import ar.uba.fi.fiubappREST.exceptions.GroupNotFoundException;
@@ -129,16 +130,18 @@ public class GroupServiceImplTest {
 		when(this.studentRepository.findByUserNameAndFetchMatesAndGroupsEagerly(AN_USER_NAME)).thenReturn(student);
 		List<Group> groups = new ArrayList<Group>();
 		Group aGroup = mock(Group.class);
+		when(aGroup.getState()).thenReturn(GroupState.ENABLED);
 		Group anotherGroup = mock(Group.class);
+		when(anotherGroup.getState()).thenReturn(GroupState.ENABLED);
 		groups.add(aGroup);
 		groups.add(anotherGroup);
-		when(this.groupRepository.findByProperties(A_NAME)).thenReturn(groups);
+		when(this.groupRepository.findByProperties(A_NAME, GroupState.ENABLED.getId())).thenReturn(groups);
 		GroupRepresentation aRepresentation = mock(GroupRepresentation.class);
 		GroupRepresentation anotherRepresentation = mock(GroupRepresentation.class);
 		when(this.converter.convert(student, aGroup)).thenReturn(aRepresentation);
 		when(this.converter.convert(student, anotherGroup)).thenReturn(anotherRepresentation);
 		
-		List<GroupRepresentation> representations = this.service.findByProperties(AN_USER_NAME, A_NAME);
+		List<GroupRepresentation> representations = this.service.findByPropertiesForStudent(AN_USER_NAME, A_NAME);
 		
 		assertEquals(2, representations.size());
 	}
@@ -168,7 +171,9 @@ public class GroupServiceImplTest {
 	public void testGetStudentGroups(){
 		when(this.studentRepository.findByUserNameAndFetchMatesAndGroupsEagerly(AN_USER_NAME)).thenReturn(student);
 		Group aGroup = mock(Group.class);
+		when(aGroup.getState()).thenReturn(GroupState.ENABLED);
 		Group anotherGroup = mock(Group.class);
+		when(anotherGroup.getState()).thenReturn(GroupState.ENABLED);
 		Set<Group> groups = new HashSet<Group>();
 		groups.add(aGroup);
 		groups.add(anotherGroup);

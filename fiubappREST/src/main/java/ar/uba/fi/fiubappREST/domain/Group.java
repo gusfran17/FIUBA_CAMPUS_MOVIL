@@ -43,6 +43,8 @@ public class Group {
 	
 	private Date creationDate;
 	
+	private GroupState state;
+	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="ownerUserName")
 	private Student owner;
@@ -98,6 +100,14 @@ public class Group {
 	@JsonDeserialize(using = CustomDateDeserializer.class)
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	public GroupState getState() {
+		return state;
+	}
+
+	public void setState(GroupState state) {
+		this.state = state;
 	}
 
 	public Student getOwner() {
