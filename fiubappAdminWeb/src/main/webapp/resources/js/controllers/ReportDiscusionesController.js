@@ -31,8 +31,12 @@ var ReportDiscusionesController = function(ReportService, MessageService, $scope
 	
 	$scope.filasTablaReporte = "";
 	
-	$scope.search = function(searchParams) {
-		
+	$scope.$on('$viewContentLoaded', function(){
+		// Al entrar a la pagina realizar una busqueda por lo parametros por defecto
+		$scope.search($scope.searchParams);
+	});
+	 
+	$scope.search = function(searchParams) {		
 		$scope.results = [];		
 		MessageService.resetError();
 		$scope.filasTablaReporte = "";
