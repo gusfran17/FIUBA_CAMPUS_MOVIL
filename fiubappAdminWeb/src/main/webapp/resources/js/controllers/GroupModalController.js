@@ -6,7 +6,7 @@ GroupModalController = function (GroupService, $filter, $scope, $modalInstance, 
 		$scope.resetError();
 		GroupService.updateGroupState($scope.group.id, 'Suspendido').then(function(data){
 			$scope.group.state = 'Suspendido';
-			$modalInstance.dismiss('cancel');
+			$modalInstance.close();
         }, function(errorMessage){
         	$scope.setError(errorMessage);
         });
@@ -16,7 +16,7 @@ GroupModalController = function (GroupService, $filter, $scope, $modalInstance, 
 		$scope.resetError();
 		GroupService.updateGroupState($scope.group.id, 'Habilitado').then(function(data){
 			$scope.group.state = 'Habilitado';
-			$modalInstance.dismiss('cancel');
+			$modalInstance.close();
         }, function(errorMessage){
         	$scope.setError(errorMessage);
         });

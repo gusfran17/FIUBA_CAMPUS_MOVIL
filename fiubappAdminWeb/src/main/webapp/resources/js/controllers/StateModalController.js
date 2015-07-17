@@ -6,7 +6,7 @@ StateModalController = function (StudentService, $filter, $scope, $modalInstance
 		$scope.resetError();
 		StudentService.updateStudentState($scope.student.userName, 'Suspendido').then(function(data){
 			$scope.student.state = 'Suspendido';
-			$modalInstance.dismiss('cancel');
+			$modalInstance.close();
         }, function(errorMessage){
         	$scope.setError(errorMessage);
         });
@@ -16,7 +16,7 @@ StateModalController = function (StudentService, $filter, $scope, $modalInstance
 		$scope.resetError();
 		StudentService.updateStudentState($scope.student.userName, 'Habilitado').then(function(data){
 			$scope.student.state = 'Habilitado';
-			$modalInstance.dismiss('cancel');
+			$modalInstance.close();
         }, function(errorMessage){
         	$scope.setError(errorMessage);
         });

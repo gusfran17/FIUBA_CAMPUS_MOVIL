@@ -9,7 +9,7 @@
 			<div class="controls">
             	<img src="{{group.groupPicture}}"width="100" height="100" style="float:left; PADDING-RIGHT: 20px;">
             	<h4 class="modal-title">{{group.name}}</h4>
-            	<h5 class="modal-title">Fecha de creación {{group.creationName}}</h5>
+            	<h5 class="modal-title">Fecha de creación {{group.creationDate}}</h5>
             	<h5 class="modal-title">{{group.amountOfMembers}} miembros</h5>
 			</div>
 		</div>

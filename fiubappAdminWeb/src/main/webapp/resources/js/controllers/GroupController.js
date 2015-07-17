@@ -6,6 +6,8 @@ var GroupController = function(GroupService, SecurityService, MessageService, $s
 	
 	$scope.searchParams = {};
 	
+	$scope.lastSearchStateParam = null;
+	
 	$scope.states = ['Todos', 'Habilitado', 'Suspendido'];
 	$scope.searchParams.state = $scope.states[0];
 	
@@ -31,6 +33,8 @@ var GroupController = function(GroupService, SecurityService, MessageService, $s
 	$scope.search = function(searchParams) {
 				
 		MessageService.resetError();
+		
+		$scope.lastSearchStateParam = $scope.searchParams.state; 
 		
 		var path = $scope.getParamsPath(searchParams);
 		
@@ -69,8 +73,8 @@ var GroupController = function(GroupService, SecurityService, MessageService, $s
 		return path;
 	};
 		
-	$scope.openStateModal = function ($index) {	    
-		$modal.open({
+	$scope.openStateModal = function ($index) {
+		var modalInstance = $modal.open({
 				templateUrl: 'webapp/group/state-modal',
 				controller: GroupModalController,
 				resolve: {
@@ -79,7 +83,15 @@ var GroupController = function(GroupService, SecurityService, MessageService, $s
 			        }
 			    }
 		});
+		
+		modalInstance.result.then(function () {
+				if($scope.lastSearchStateParam != 'Todos'){
+					$scope.results.splice($index,1);
+				}
+			}
+		);
 	};
+	
 	
 	MessageService.resetError();
 };

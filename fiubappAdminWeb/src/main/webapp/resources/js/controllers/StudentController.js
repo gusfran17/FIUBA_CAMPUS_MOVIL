@@ -5,6 +5,8 @@ var StudentController = function(StudentService, MessageService, $scope, $routeP
 	TabService.reload('studentTab');
 	
 	$scope.searchParams = {};
+	
+	$scope.lastSearchStateParam = null;
 		
 	$scope.states = ['Todos', 'Pendiente', 'Habilitado', 'Suspendido'];
 	$scope.searchParams.state = $scope.states[0];
@@ -31,6 +33,8 @@ var StudentController = function(StudentService, MessageService, $scope, $routeP
 	$scope.search = function(searchParams) {
 				
 		MessageService.resetError();
+		
+		$scope.lastSearchStateParam = $scope.searchParams.state;
 		
 		var path = $scope.getParamsPath(searchParams);
 		
@@ -73,7 +77,7 @@ var StudentController = function(StudentService, MessageService, $scope, $routeP
 	};
 		
 	$scope.openStateModal = function ($index) {	    
-		$modal.open({
+		var modalInstance = $modal.open({
 				templateUrl: 'webapp/student/state-modal',
 				controller: StateModalController,
 				resolve: {
@@ -81,6 +85,12 @@ var StudentController = function(StudentService, MessageService, $scope, $routeP
 			        	return $scope.results[$index];
 			        }
 			    }
+		});
+		
+		modalInstance.result.then(function () {
+			if($scope.lastSearchStateParam != 'Todos'){
+				$scope.results.splice($index,1);
+			}
 		});
 	};
 	

@@ -165,6 +165,7 @@ public class NotificationAdapter extends BaseAdapter {
         params.put("userName", notification.getApplicant().getUsername());
 
         final ImageView deleteButton = (ImageView)convertView.findViewById(R.id.deleteButton);
+        deleteButton.setVisibility(View.VISIBLE);
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
