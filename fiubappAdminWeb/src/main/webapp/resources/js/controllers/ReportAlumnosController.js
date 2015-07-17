@@ -36,7 +36,7 @@ var ReportAlumnosController = function(ReportService, MessageService, $scope, $r
 	    chart3.data = $scope.crearDatosGraficoTorta(data);
 	    
 		chart3.options = {
-		        title: 'Carreras por usuario'
+		        title: 'Usuarios por carrera'
 		};
 		
 		chart3.formatters = {};  
